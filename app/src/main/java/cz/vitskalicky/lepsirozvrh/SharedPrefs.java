@@ -12,6 +12,7 @@ public class SharedPrefs {
     //key constants (do not change in future)
     public static final String USERNAME = "username";
     public static final String PASSWORD_HASH = "passwordHash";
+    public static final String NAME = "name";
 
     public static String getString(Context context, String key) {
         return PreferenceManager
@@ -22,6 +23,12 @@ public class SharedPrefs {
     public static void setString(Context context, String key, String value) {
         SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
         preferenceManager.putString(key, value);
+        preferenceManager.apply();
+    }
+
+    public static void remove(Context context, String key){
+        SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        preferenceManager.remove(key);
         preferenceManager.apply();
     }
 

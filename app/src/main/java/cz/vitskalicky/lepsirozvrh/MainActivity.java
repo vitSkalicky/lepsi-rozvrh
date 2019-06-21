@@ -19,6 +19,8 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    MainActivity context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +31,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Login.login("https://***REMOVED***/bakaweb/login.aspx","***REMOVED***","***REMOVED***", (code, data) -> {
+                    System.out.println("5. Code: " + code + " data:\n" + data);
+                }, context);
+                System.out.println(SharedPrefs.getString(context,SharedPrefs.USERNAME));
+                System.out.println(SharedPrefs.getString(context,SharedPrefs.PASSWORD_HASH));
+                System.out.println(SharedPrefs.getString(context,SharedPrefs.NAME));
+
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -68,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Login.logout(context);
             return true;
         }
 

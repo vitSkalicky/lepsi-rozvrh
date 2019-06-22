@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 public class SharedPrefs {
 
     //key constants (do not change in future)
+    public static final String URL = "url";
     public static final String USERNAME = "username";
     public static final String PASSWORD_HASH = "passwordHash";
     public static final String NAME = "name";

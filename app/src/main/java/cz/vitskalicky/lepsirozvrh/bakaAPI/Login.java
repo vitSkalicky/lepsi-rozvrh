@@ -127,6 +127,7 @@ public class Login {
                             // save credentials
                             SharedPrefs.setString(context,SharedPrefs.USERNAME, username);
                             SharedPrefs.setString(context, SharedPrefs.PASSWORD_HASH, passwordHash);
+                            SharedPrefs.setString(context, SharedPrefs.URL, uniUrl);
                             SharedPrefs.setString(context,SharedPrefs.NAME, name);
 
                             listener.onResponse(SUCCESS,token);
@@ -139,7 +140,7 @@ public class Login {
                         listener.onResponse(UNEXPECTER_RESPONSE, response1);
                     }
                 }, error -> {
-                    System.err.println("Login failed: connection error: url: " + uniUrl + "?hx=<token>" + " code: " + error.networkResponse.statusCode);
+                    System.err.println("Login failed: connection error: url: " + uniUrl + "?hx=<token>" + " error message: " + error.getMessage());
                     error.printStackTrace();
                     listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
                 });
@@ -152,7 +153,7 @@ public class Login {
                 listener.onResponse(UNEXPECTER_RESPONSE, response);
             }
         }, error -> {
-            System.err.println("Login failed: connection error: url: " + uniUrl + "?gethx=" + username + " code: " + error.networkResponse.statusCode);
+            System.err.println("Login failed: connection error: url: " + uniUrl + "?gethx=" + username + " error message: " + error.getMessage());
             error.printStackTrace();
             listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
         });
@@ -166,6 +167,7 @@ public class Login {
     public static void logout(Context context){
         SharedPrefs.remove(context, SharedPrefs.USERNAME);
         SharedPrefs.remove(context, SharedPrefs.PASSWORD_HASH);
+        SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
     }
 

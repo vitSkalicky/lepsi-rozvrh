@@ -22,8 +22,7 @@ import java.util.Calendar;
 
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.bakalab.items.RozvrhRoot;
-import cz.vitskalicky.lepsirozvrh.item.RozvrhLesson;
+import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

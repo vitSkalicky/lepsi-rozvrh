@@ -2,7 +2,7 @@
  Taken from Bakalab <https://github.com/bakalaborg/bakalab>
  Modified by Vít Skalický 2019
 */
-package cz.vitskalicky.lepsirozvrh.bakalab.items;
+package cz.vitskalicky.lepsirozvrh.items;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;

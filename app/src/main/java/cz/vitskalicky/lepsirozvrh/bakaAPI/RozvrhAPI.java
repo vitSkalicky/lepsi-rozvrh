@@ -21,9 +21,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 
-public class Rozvrh {
+public class RozvrhAPI {
     public static interface Listener{
-        public void onResponse(int code, Document document);
+        public void onResponse(int code, String response);
     }
 
     public static final int SUCCESS = 0;
@@ -39,7 +39,7 @@ public class Rozvrh {
      * @param mondayDate Date of monday of the requested week. If {@code null}, permanent timetable is returned.
      * @param listener Listener for returning data
      */
-    private static void fetchXml(Calendar mondayDate, Listener listener, RequestQueue requestQueue, Context context){
+    public static void fetchXml(Calendar mondayDate, Listener listener, RequestQueue requestQueue, Context context){
         String strDate;
         if (mondayDate == null){
             strDate = "perm";
@@ -64,20 +64,20 @@ public class Rozvrh {
 
                 if (result == -1){// Login incorrect
                     System.err.println("Getting timetable failed: login incorrect: url: " + url + " Date: " + strDate + " response:\n" + response);
-                    listener.onResponse(LOGIN_FAILED, document);
+                    listener.onResponse(LOGIN_FAILED, response);
                     return;
                 }
 
-                listener.onResponse(SUCCESS, document);
+                listener.onResponse(SUCCESS, response);
                 return;
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                System.err.println("Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " response:\n" + response);
+                System.err.println("Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " error message: " + e.getMessage() + " response:\n" + response);
                 e.printStackTrace();
-                listener.onResponse(UNEXPECTED_RESPONSE, null);
+                listener.onResponse(UNEXPECTED_RESPONSE, response);
             }
         },error -> {
             System.err.println("Getting timetable failed: network error: " + error.getMessage());
-            listener.onResponse(UNREACHABLE, null);
+            listener.onResponse(UNREACHABLE, "");
             return;
         });
         requestQueue.add(request);

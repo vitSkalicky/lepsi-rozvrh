@@ -6,6 +6,7 @@ package cz.vitskalicky.lepsirozvrh;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -28,5 +29,22 @@ public class Utils {
         int hours = Integer.valueOf(time[0]);
         int minutes = Integer.valueOf(time[1]);
         return minutes+hours*60;
+    }
+
+    public static Calendar getWeekMonday(Calendar date){
+        Calendar ret = Calendar.getInstance();
+        ret.clear();
+        ret.set(Calendar.DATE, date.get(Calendar.DATE));
+        ret.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return ret;
+    }
+
+    public static String dateToString(Calendar date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(date);
+    }
+
+    public static Calendar getCurrentMonday(){
+        return getWeekMonday(Calendar.getInstance());
     }
 }

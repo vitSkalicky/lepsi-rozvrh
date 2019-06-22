@@ -116,6 +116,10 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             }, Volley.newRequestQueue(context),context);
+
+            RozvrhAPI.loadRozvrh(null, (code, rozvrh) -> {
+                System.out.println(code);
+            }, context);
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {

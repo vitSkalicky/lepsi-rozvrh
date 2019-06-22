@@ -33,7 +33,7 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 public class Login {
 
     /**
-     * Listener for returning login data.
+     * ResponseListener for returning login data.
      */
     public static interface Listener{
         public void onResponse(int code, String data);

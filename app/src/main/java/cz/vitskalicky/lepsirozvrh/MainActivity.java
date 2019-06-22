@@ -2,7 +2,6 @@ package cz.vitskalicky.lepsirozvrh;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,7 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import com.android.volley.toolbox.Volley;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.util.Calendar;
+
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakalab.items.RozvrhRoot;
+import cz.vitskalicky.lepsirozvrh.item.RozvrhLesson;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Login.login("https://***REMOVED***/bakaweb/login.aspx","***REMOVED***","***REMOVED***", (code, data) -> {
+                Login.login("https://***REMOVED***/bakaweb/login.aspx","***REMOVED***","cxv", (code, data) -> {
                     System.out.println("5. Code: " + code + " data:\n" + data);
                 }, context);
                 System.out.println(SharedPrefs.getString(context,SharedPrefs.USERNAME));
@@ -91,9 +100,23 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            System.out.println(Login.getToken(context));
         } else if (id == R.id.nav_slideshow) {
-
+            System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
+            RozvrhAPI.fetchXml(Calendar.getInstance(),(code, response) -> {
+                System.out.println("Fetched");
+                System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
+                if (code == RozvrhAPI.SUCCESS){
+                    Serializer serializer = new Persister();
+                    try {
+                        RozvrhRoot root = serializer.read(RozvrhRoot.class, response);
+                        System.out.println(root.getRozvrh().getDny().get(0).getHodiny().get(0).getPr());
+                        System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, Volley.newRequestQueue(context),context);
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {

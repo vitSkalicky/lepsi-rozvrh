@@ -63,7 +63,7 @@ public class RozvrhAPI {
      * @param mondayDate Date of monday of the requested week. If {@code null}, permanent timetable is returned.
      * @param listener ResponseListener for returning data
      */
-    public static void fetchXml(Calendar mondayDate, ResponseListener listener, RequestQueue requestQueue, Context context){
+    private static void fetchXml(Calendar mondayDate, ResponseListener listener, RequestQueue requestQueue, Context context){
         String strDate;
         if (mondayDate == null){
             strDate = "perm";
@@ -76,6 +76,8 @@ public class RozvrhAPI {
         String fullUrl = url + "?hx=" + token + "&pm=rozvrh&pmd=" + strDate;
 
         StringRequest request = new StringRequest(Request.Method.GET, fullUrl, response -> {
+            int retCode;
+            String retResponse;
             try {
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
@@ -88,17 +90,19 @@ public class RozvrhAPI {
 
                 if (result == -1){// Login incorrect
                     Log.i(TAG,"Getting timetable failed: login incorrect: url: " + url + " Date: " + strDate + " response:\n" + response);
-                    listener.onResponse(LOGIN_FAILED, response);
-                    return;
+                    retCode = LOGIN_FAILED;
+                    retResponse = response;
+                }else {
+                    retCode = SUCCESS;
+                    retResponse = response;
                 }
-
-                listener.onResponse(SUCCESS, response);
-                return;
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
                 Log.e(TAG, "Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " error message: " + e.getMessage() + " response:\n" + response);
                 e.printStackTrace();
                 listener.onResponse(UNEXPECTED_RESPONSE, response);
+                return;
             }
+            listener.onResponse(retCode, retResponse);
         },error -> {
             Log.i(TAG,"Getting timetable failed: network error: " + error.getMessage());
             listener.onResponse(UNREACHABLE, "");
@@ -110,16 +114,17 @@ public class RozvrhAPI {
     private static void fetchRozvrh(Calendar mondayDate, RozvrhListener listener, RequestQueue requestQueue, Context context){
         fetchXml(mondayDate, (code, response) -> {
             if (code == SUCCESS){
+                RozvrhRoot root;
                 try{
                     Serializer serializer = new Persister();
-                    RozvrhRoot root = serializer.read(RozvrhRoot.class, response);
-                    listener.onResponse(SUCCESS, root.getRozvrh());
-                    return;
+                    root = serializer.read(RozvrhRoot.class, response);
                 } catch (Exception e) {
-                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " response:\n" + response);
+                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + response);
+                    e.printStackTrace();
                     listener.onResponse(UNEXPECTED_RESPONSE, null);
                     return;
                 }
+                listener.onResponse(SUCCESS, root.getRozvrh());
             }else{
                 listener.onResponse(code, null);
             }
@@ -158,7 +163,7 @@ public class RozvrhAPI {
         });
     }
 
-    public static void loadRozvrh(Calendar monday, RozvrhListener listener, Context context){
+    private static void loadRozvrh(Calendar monday, RozvrhListener listener, Context context){
         AsyncTask.execute(() -> {
             Calendar sureMonday = null;
             if (monday != null)
@@ -171,32 +176,33 @@ public class RozvrhAPI {
                 filename = "rozvrh-" + Utils.dateToString(sureMonday) + ".xml";
             }
 
-
+            RozvrhRoot root;
             try (FileInputStream inputStream = context.openFileInput(filename);
                  FileLock lock = inputStream.getChannel().lock() ){
 
                 Serializer serializer = new Persister();
-                RozvrhRoot root = serializer.read(RozvrhRoot.class, inputStream);
+                root = serializer.read(RozvrhRoot.class, inputStream);
 
-                //todo make this run on ui thread
-                listener.onResponse(SUCCESS, root.getRozvrh());
-                return;
+
             } catch (FileNotFoundException e) {
                 if (sureMonday != null)
                     System.out.println("Timetable for week " + Utils.dateToString(sureMonday) + " not found.");
                 else
                     System.out.println("Timetable for week " + "perm" + " not found.");
 
-                //todo make this run on ui thread
-                listener.onResponse(NO_CACHE, null);
+                new Handler(Looper.getMainLooper()).post(() ->
+                        listener.onResponse(NO_CACHE, null));
                 return;
             } catch (Exception e){
                 Log.e(TAG, "Timetable loading failed: error message: " + e.getMessage() + " stack trace:");
                 e.printStackTrace();
-                //todo make this run on ui thread
-                listener.onResponse(NO_CACHE, null);
+
+                new Handler(Looper.getMainLooper()).post(() ->
+                        listener.onResponse(NO_CACHE, null));
                 return;
             }
+            new Handler(Looper.getMainLooper()).post(() ->
+                    listener.onResponse(SUCCESS, root.getRozvrh()));
         });
     }
 
@@ -211,7 +217,28 @@ public class RozvrhAPI {
      * @param onLoaded Listener using which fetched timetable is returned
      */
     public static void getRozvrh(Calendar mondayDate, RequestQueue requestQueue, Context context, RozvrhListener onCacheLoaded, RozvrhListener onLoaded){
+        fetchXml(mondayDate,(code, xmlString) -> {
+            if (code == SUCCESS){
+                Rozvrh ret;
+                try{
+                    Serializer serializer = new Persister();
+                    RozvrhRoot root = serializer.read(RozvrhRoot.class, xmlString);
+                    ret = root.getRozvrh();
+                } catch (Exception e) {
+                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
+                    e.printStackTrace();
+                    onLoaded.onResponse(UNEXPECTED_RESPONSE, null);
+                    return;
+                }
+                saveRawRozvrh(mondayDate, xmlString, context);
+                onLoaded.onResponse(SUCCESS, ret);
+            }else{
+                onLoaded.onResponse(code, null);
+                return;
+            }
+        }, requestQueue, context);
 
+        loadRozvrh(mondayDate,onCacheLoaded, context);
     }
 
 

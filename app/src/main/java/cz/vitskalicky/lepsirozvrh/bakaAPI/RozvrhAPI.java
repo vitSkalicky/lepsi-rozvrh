@@ -2,6 +2,9 @@ package cz.vitskalicky.lepsirozvrh.bakaAPI;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.text.SimpleDateFormat;
@@ -36,6 +40,7 @@ import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 public class RozvrhAPI {
+    private static String TAG = RozvrhAPI.class.getCanonicalName();
     public static interface ResponseListener {
         public void onResponse(int code, String response);
     }
@@ -82,7 +87,7 @@ public class RozvrhAPI {
                 int result = Integer.parseInt(root.getElementsByTagName("result").item(0).getTextContent());
 
                 if (result == -1){// Login incorrect
-                    System.err.println("Getting timetable failed: login incorrect: url: " + url + " Date: " + strDate + " response:\n" + response);
+                    Log.i(TAG,"Getting timetable failed: login incorrect: url: " + url + " Date: " + strDate + " response:\n" + response);
                     listener.onResponse(LOGIN_FAILED, response);
                     return;
                 }
@@ -90,12 +95,12 @@ public class RozvrhAPI {
                 listener.onResponse(SUCCESS, response);
                 return;
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                System.err.println("Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " error message: " + e.getMessage() + " response:\n" + response);
+                Log.e(TAG, "Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " error message: " + e.getMessage() + " response:\n" + response);
                 e.printStackTrace();
                 listener.onResponse(UNEXPECTED_RESPONSE, response);
             }
         },error -> {
-            System.err.println("Getting timetable failed: network error: " + error.getMessage());
+            Log.i(TAG,"Getting timetable failed: network error: " + error.getMessage());
             listener.onResponse(UNREACHABLE, "");
             return;
         });
@@ -111,7 +116,7 @@ public class RozvrhAPI {
                     listener.onResponse(SUCCESS, root.getRozvrh());
                     return;
                 } catch (Exception e) {
-                    System.err.println("Timetable deserialization failed. error message: " + e.getMessage() + " response:\n" + response);
+                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " response:\n" + response);
                     listener.onResponse(UNEXPECTED_RESPONSE, null);
                     return;
                 }
@@ -147,7 +152,7 @@ public class RozvrhAPI {
                 outputStream.write(rozvrh.getBytes());
 
             } catch (Exception e) {
-                System.err.println("Timetable saving failed: error message: " + e.getMessage() + " stack trace:");
+                Log.e(TAG, "Timetable saving failed: error message: " + e.getMessage() + " stack trace:");
                 e.printStackTrace();
             }
         });
@@ -186,7 +191,7 @@ public class RozvrhAPI {
                 listener.onResponse(NO_CACHE, null);
                 return;
             } catch (Exception e){
-                System.err.println("Timetable loading failed: error message: " + e.getMessage() + " stack trace:");
+                Log.e(TAG, "Timetable loading failed: error message: " + e.getMessage() + " stack trace:");
                 e.printStackTrace();
                 //todo make this run on ui thread
                 listener.onResponse(NO_CACHE, null);

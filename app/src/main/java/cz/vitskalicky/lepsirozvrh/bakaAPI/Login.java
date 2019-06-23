@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.bakaAPI;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,6 +32,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 
 public class Login {
+    private static String TAG = Login.class.getCanonicalName();
+
 
     /**
      * ResponseListener for returning login data.
@@ -76,7 +79,7 @@ public class Login {
                 int res = Integer.parseInt(doc.getElementsByTagName("res").item(0).getTextContent());
 
                 if (res == 2){ //wrong username
-                    System.err.println("Login failed: wrong username - username: " + username + " url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
+                    Log.i(TAG, "Login failed: wrong username - username: " + username + " url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
                     listener.onResponse(WRONG_USERNAME, response);
                     return;
                 }
@@ -103,7 +106,7 @@ public class Login {
 
                         if (result == -1) {
                             //password incorrect
-                            System.err.println("Login failed: wrong password - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
+                            Log.i(TAG, "Login failed: wrong password - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
                             listener.onResponse(WRONG_PASSWORD, response1);
                             return;
                         }else {
@@ -112,7 +115,7 @@ public class Login {
                             String modules = doc1.getElementsByTagName("moduly").item(0).getTextContent();
                             if (!modules.contains("rozvrh")){
                                 // Rozvrh module not enabled
-                                System.err.println("Login failed: rozvrh not enabled - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
+                                Log.i(TAG, "Login failed: rozvrh not enabled - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
                                 listener.onResponse(ROZVRH_DISABLED,response1);
                                 return;
                             }
@@ -121,7 +124,7 @@ public class Login {
                             try {
                                 name = doc1.getElementsByTagName("jmeno").item(0).getTextContent();
                             }catch (Exception e){
-                                System.err.println("Login ecxeption: user's name not found, setting to \"\".");
+                                Log.e(TAG, "Login failed: user's name not found, setting to \"\". response:\n" + response1);
                             }
 
                             // save credentials
@@ -135,12 +138,12 @@ public class Login {
                         }
 
                     } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                        System.err.println("Login failed: unexpected server response. url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
+                        Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
                         e.printStackTrace();
                         listener.onResponse(UNEXPECTER_RESPONSE, response1);
                     }
                 }, error -> {
-                    System.err.println("Login failed: connection error: url: " + uniUrl + "?hx=<token>" + " error message: " + error.getMessage());
+                    Log.i(TAG, "Login failed: connection error: url: " + uniUrl + "?hx=<token>" + " error message: " + error.getMessage());
                     error.printStackTrace();
                     listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
                 });
@@ -148,12 +151,12 @@ public class Login {
                 queue.add(passwordCheck);
 
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                System.err.println("Login failed: unexpected server response. url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
+                Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
                 e.printStackTrace();
                 listener.onResponse(UNEXPECTER_RESPONSE, response);
             }
         }, error -> {
-            System.err.println("Login failed: connection error: url: " + uniUrl + "?gethx=" + username + " error message: " + error.getMessage());
+            Log.i(TAG,"Login failed: connection error: url: " + uniUrl + "?gethx=" + username + " error message: " + error.getMessage());
             error.printStackTrace();
             listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
         });
@@ -177,7 +180,7 @@ public class Login {
     public static String getToken(Context context){
         if (!SharedPrefs.contains(context, SharedPrefs.USERNAME) || !SharedPrefs.contains(context, SharedPrefs.PASSWORD_HASH)){
             //not logged in
-            System.err.println("Getting token failed: lot logged in - returning \"\"");
+            Log.e(TAG, "Getting token failed: lot logged in - returning \"\"");
             return "";
         }
         return calculateToken(SharedPrefs.getString(context,SharedPrefs.USERNAME), SharedPrefs.getString(context, SharedPrefs.PASSWORD_HASH));

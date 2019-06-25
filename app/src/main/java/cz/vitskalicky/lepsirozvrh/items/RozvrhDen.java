@@ -46,11 +46,16 @@ public class RozvrhDen {
 
     public void fixTimes(List<RozvrhHodinaCaption> captionsList) {
         int position = 0;
+        RozvrhHodinaCaption mRozvrhHodinaCaption = null;
         for(RozvrhHodina hodina : hodiny){
-            RozvrhHodinaCaption mRozvrhHodinaCaption = captionsList.get(position);
+            // V jednom caption může být víc hodin (ve stálém rozvrhu - něco sudý týden, něco jiného lichý)
+            if (mRozvrhHodinaCaption == null || !mRozvrhHodinaCaption.getCaption().equals(hodina.getCaption())){
+                mRozvrhHodinaCaption = captionsList.get(position);
+                position++;
+            }
+
             hodina.setBegintime(mRozvrhHodinaCaption.getBegintime());
             hodina.setEndtime(mRozvrhHodinaCaption.getEndtime());
-            position++;
         }
     }
 

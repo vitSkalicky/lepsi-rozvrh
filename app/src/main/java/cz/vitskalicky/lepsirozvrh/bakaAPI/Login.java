@@ -10,6 +10,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -23,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -190,9 +192,9 @@ public class Login {
      * Calculates token valid for current day for Bakaláři API
      */
     public static String calculateToken(String username, String passwordHash){
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMdd");
-        String strDate = mdformat.format(calendar.getTime());
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
+        String strDate = dtf.print(today);
         String token = sha512("*login*" + username + "*pwd*" + passwordHash + "*sgn*ANDR" + strDate);
         token = token.replace("/", "_");
         token = token.replace("+", "-");

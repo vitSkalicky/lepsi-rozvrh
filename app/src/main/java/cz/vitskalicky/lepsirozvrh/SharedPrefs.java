@@ -27,13 +27,13 @@ public class SharedPrefs {
         preferenceManager.apply();
     }
 
-    public static void remove(Context context, String key){
+    public static void remove(Context context, String key) {
         SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
         preferenceManager.remove(key);
         preferenceManager.apply();
     }
 
-    public static boolean contains(Context context, String key){
+    public static boolean contains(Context context, String key) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .contains(key);

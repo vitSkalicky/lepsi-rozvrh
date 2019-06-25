@@ -4,9 +4,13 @@
 */
 package cz.vitskalicky.lepsirozvrh;
 
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,20 +35,19 @@ public class Utils {
         return minutes+hours*60;
     }
 
-    public static Calendar getWeekMonday(Calendar date){
-        Calendar ret = Calendar.getInstance();
-        ret.clear();
-        ret.set(Calendar.DATE, date.get(Calendar.DATE));
-        ret.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return ret;
+    public static LocalDate getWeekMonday(LocalDate date){
+        System.out.println("orig: " + dateToString(date));
+        System.out.println("new: " + dateToString(date.dayOfWeek().setCopy(DateTimeConstants.MONDAY)));
+        return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
+
     }
 
-    public static String dateToString(Calendar date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        return dateFormat.format(date);
+    public static String dateToString(LocalDate date){
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
+        return dtf.print(date);
     }
 
-    public static Calendar getCurrentMonday(){
-        return getWeekMonday(Calendar.getInstance());
+    public static LocalDate getCurrentMonday(){
+        return getWeekMonday(LocalDate.now());
     }
 }

@@ -6,6 +6,7 @@ package cz.vitskalicky.lepsirozvrh.items;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.Commit;
 
 @Root(name = "hod", strict = false)
 public class RozvrhHodina {
@@ -46,6 +47,29 @@ public class RozvrhHodina {
 
     @Element(required = false)
     private String nazev;
+
+    @Element(required = false)
+    private String zkrskup;
+
+    @Element(required = false)
+    private String chng;
+
+    public static final int NONE = 0;
+    public static final int CHANGED = 1;
+    public static final int NO_LESSON = 2;
+
+    private int highlight = 0;
+
+    @Commit
+    public void commit(){
+        if (!chng.equals("")){
+            highlight = CHANGED;
+        }else if (typ.equals("A")){
+            highlight = NO_LESSON;
+        }else {
+            highlight = NONE;
+        }
+    }
 
     private boolean expanded;
 
@@ -107,6 +131,22 @@ public class RozvrhHodina {
 
     public boolean isExpanded() {
         return expanded;
+    }
+
+    public String getChng() {
+        return chng;
+    }
+
+    public void setChng(String chng) {
+        this.chng = chng;
+    }
+
+    public String getZkrskup() {
+        return zkrskup;
+    }
+
+    public void setZkrskup(String zkrskup) {
+        this.zkrskup = zkrskup;
     }
 
     public void setExpanded(boolean expanded) {

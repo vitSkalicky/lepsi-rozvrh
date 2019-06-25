@@ -32,4 +32,8 @@ public class RozvrhHodinaCaption {
     }
 
     public String getEndtime() { return endtime; }
+
+    public String getTimeString(){
+        return getBegintime() + " - " + getEndtime();
+    }
 }

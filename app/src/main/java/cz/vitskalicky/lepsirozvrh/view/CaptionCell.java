@@ -19,15 +19,18 @@ public class CaptionCell {
     TextView twtime;
 
     public CaptionCell(Context context, RozvrhHodinaCaption caption, ViewGroup parent) {
+        this(context, parent);
+        update(caption);
+
+    }
+
+    public CaptionCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = (ConstraintLayout) inflater.inflate(R.layout.cell_caption, parent, false);
 
         twcaption = view.findViewById(R.id.textViewCaption);
         twtime = view.findViewById(R.id.textViewTime);
-
-        update(caption);
-
     }
 
     public void update(RozvrhHodinaCaption caption) {

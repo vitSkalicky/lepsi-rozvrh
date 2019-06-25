@@ -28,6 +28,12 @@ public class Rozvrh {
     @ElementList(required = false)
     private List<RozvrhDen> dny;
 
+    @Element(required = false)
+    private String nazevcyklu;
+
+    @Element(required = false)
+    private String zkratkacyklu;
+
     @Commit
     private void onCommit(){
         deleteNullDays();
@@ -80,5 +86,13 @@ public class Rozvrh {
 
     public String getTyp() {
         return typ;
+    }
+
+    public String getNazevcyklu() {
+        return nazevcyklu;
+    }
+
+    public String getZkratkacyklu() {
+        return zkratkacyklu;
     }
 }

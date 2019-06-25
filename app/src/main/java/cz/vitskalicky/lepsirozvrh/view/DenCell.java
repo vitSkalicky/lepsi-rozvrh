@@ -20,15 +20,17 @@ public class DenCell {
     TextView twdatum;
 
     public DenCell(Context context, RozvrhDen den, ViewGroup parent) {
+        this(context, parent);
+        update(den);
+    }
+
+    public DenCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = (ConstraintLayout) inflater.inflate(R.layout.cell_den, parent, false);
 
         twzkratka = view.findViewById(R.id.textViewZkratka);
         twdatum = view.findViewById(R.id.textViewDatum);
-
-        update(den);
-
     }
 
     public void update(RozvrhDen den) {

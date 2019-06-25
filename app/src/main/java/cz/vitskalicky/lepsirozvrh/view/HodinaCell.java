@@ -22,6 +22,11 @@ public class HodinaCell {
     TextView twzkruc;
 
     public HodinaCell(Context context, RozvrhHodina hodina, ViewGroup parent) {
+        this(context, parent);
+        update(hodina);
+    }
+
+    public HodinaCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = (ConstraintLayout) inflater.inflate(R.layout.cell_hodina, parent, false);
@@ -30,8 +35,6 @@ public class HodinaCell {
         twzkrmist = view.findViewById(R.id.textViewZkrmist);
         twzkrskup = view.findViewById(R.id.textViewZkrskup);
         twzkruc = view.findViewById(R.id.textViewZkruc);
-
-        update(hodina);
     }
 
     public void update(RozvrhHodina hodina) {

@@ -8,4 +8,13 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <fragment
+        android:id="@+id/fragment"
+        android:name="cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

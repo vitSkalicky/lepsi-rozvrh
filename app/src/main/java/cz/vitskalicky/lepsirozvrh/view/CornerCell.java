@@ -25,7 +25,7 @@ public class CornerCell {
     public CornerCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (ConstraintLayout) inflater.inflate(R.layout.cell_hodina, parent, false);
+        view = (ConstraintLayout) inflater.inflate(R.layout.cell_corner, parent, false);
 
         twnazevcyklu = view.findViewById(R.id.textViewNazevcyklu);
     }

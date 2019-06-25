@@ -101,25 +101,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             System.out.println(Login.getToken(context));
         } else if (id == R.id.nav_slideshow) {
-            System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
-            RozvrhAPI.fetchXml(Calendar.getInstance(),(code, response) -> {
-                System.out.println("Fetched");
-                System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
-                if (code == RozvrhAPI.SUCCESS){
-                    Serializer serializer = new Persister();
-                    try {
-                        RozvrhRoot root = serializer.read(RozvrhRoot.class, response);
-                        System.out.println(root.getRozvrh().getDny().get(0).getHodiny().get(0).getPr());
-                        System.out.println(Calendar.getInstance().get(Calendar.SECOND) + ":" + Calendar.getInstance().get(Calendar.MILLISECOND));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, Volley.newRequestQueue(context),context);
 
-            RozvrhAPI.loadRozvrh(null, (code, rozvrh) -> {
-                System.out.println(code);
-            }, context);
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {

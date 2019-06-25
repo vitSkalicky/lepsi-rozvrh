@@ -62,6 +62,7 @@ public class RozvrhHodina {
 
     @Commit
     public void commit(){
+        if (chng == null) chng = "";
         if (!chng.equals("")){
             highlight = CHANGED;
         }else if (typ.equals("A")){

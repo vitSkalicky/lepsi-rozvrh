@@ -36,14 +36,22 @@ public class Utils {
     }
 
     public static LocalDate getWeekMonday(LocalDate date){
-        System.out.println("orig: " + dateToString(date));
-        System.out.println("new: " + dateToString(date.dayOfWeek().setCopy(DateTimeConstants.MONDAY)));
         return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
 
     }
 
     public static String dateToString(LocalDate date){
         DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
+        return dtf.print(date);
+    }
+
+    public static LocalDate parseDate(String date){
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
+        return dtf.parseLocalDate(date);
+    }
+
+    public static String dateToLoacalizedString(LocalDate date){
+        DateTimeFormatter dtf = DateTimeFormat.shortDate();
         return dtf.print(date);
     }
 

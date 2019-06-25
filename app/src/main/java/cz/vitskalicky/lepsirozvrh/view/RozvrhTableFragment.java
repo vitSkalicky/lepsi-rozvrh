@@ -9,10 +9,17 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.android.volley.toolbox.Volley;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 
@@ -50,10 +57,27 @@ public class RozvrhTableFragment extends Fragment {
         captionRow = new TableRow(getContext());
         cornerCell = new CornerCell(getContext(),captionRow);
 
+        RozvrhAPI.getRozvrh(Utils.getCurrentMonday(), Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
+            //on cache
+            if (code == RozvrhAPI.SUCCESS){
+                populate(rozvrh);
+            }else {
+                System.out.println("Cache: Nezdarilo se: " + code);
+            }
+        },(code, rozvrh) -> {
+            //on net
+            if (code == RozvrhAPI.SUCCESS){
+                populate(rozvrh);
+            }else {
+                System.out.println("Net: Nezdarilo se: " + code);
+            }
+        });
+
         return view;
     }
 
     public void populate(Rozvrh rozvrh){
+        System.out.println(LocalTime.now().getSecondOfMinute() + ":" + LocalTime.now().getMillisOfSecond());
         int oldRows = rows;
         int oldColumns = columns;
         rows = rozvrh.getDny().size();
@@ -94,9 +118,10 @@ public class RozvrhTableFragment extends Fragment {
             RozvrhDen den = rozvrh.getDny().get(i);
             denCells[i].update(den);
             for (int j = 0; j < den.getHodiny().size(); j++) {
-                hodinaCells[i][j].update(den.getHodiny().get(i));
+                hodinaCells[i][j].update(den.getHodiny().get(j));
             }
         }
+        System.out.println(LocalTime.now().getSecondOfMinute() + ":" + LocalTime.now().getMillisOfSecond());
     }
 
     private void fillViews(){

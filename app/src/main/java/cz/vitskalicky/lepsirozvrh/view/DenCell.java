@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 
 public class DenCell {
@@ -37,7 +38,7 @@ public class DenCell {
         this.den = den;
 
         twzkratka.setText(den.getZkratka());
-        twdatum.setText(den.getDatum());
+        twdatum.setText(Utils.dateToLoacalizedString(Utils.parseDate(den.getDatum())));
     }
 
     public View getView() {

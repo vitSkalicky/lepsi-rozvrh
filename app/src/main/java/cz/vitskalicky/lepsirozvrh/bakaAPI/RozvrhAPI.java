@@ -42,7 +42,7 @@ public class RozvrhAPI {
     public static final int UNREACHABLE = 3;
     public static final int NO_CACHE = 4;
 
-    private static String TAG = RozvrhAPI.class.getCanonicalName();
+    private static String TAG = RozvrhAPI.class.getSimpleName();
 
     /**
      * Gets raw xml document from the server.
@@ -165,8 +165,7 @@ public class RozvrhAPI {
             }
 
             RozvrhRoot root;
-            try (FileInputStream inputStream = context.openFileInput(filename);
-                 FileLock lock = inputStream.getChannel().lock()) {
+            try (FileInputStream inputStream = context.openFileInput(filename)) {
 
                 Serializer serializer = new Persister();
                 root = serializer.read(RozvrhRoot.class, inputStream);

@@ -46,11 +46,13 @@ public class Utils {
     }
 
     public static LocalDate parseDate(String date){
+        if (date == null || date.equals("")) return null;
         DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
         return dtf.parseLocalDate(date);
     }
 
     public static String dateToLoacalizedString(LocalDate date){
+        if (date == null) return "";
         DateTimeFormatter dtf = DateTimeFormat.shortDate();
         return dtf.print(date);
     }

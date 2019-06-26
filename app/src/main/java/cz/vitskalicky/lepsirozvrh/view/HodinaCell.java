@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import cz.vitskalicky.lepsirozvrh.R;
@@ -15,15 +16,16 @@ public class HodinaCell {
     Context context;
     ConstraintLayout view;
     RozvrhHodina hodina;
+    float weight;
 
     TextView twzkrpr;
     TextView twzkrmist;
     TextView twzkrskup;
     TextView twzkruc;
 
-    public HodinaCell(Context context, RozvrhHodina hodina, ViewGroup parent) {
+    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent) {
         this(context, parent);
-        update(hodina);
+        update(hodina, weight);
     }
 
     public HodinaCell(Context context, ViewGroup parent){
@@ -37,13 +39,22 @@ public class HodinaCell {
         twzkruc = view.findViewById(R.id.textViewZkruc);
     }
 
-    public void update(RozvrhHodina hodina) {
+    public void update(RozvrhHodina hodina, float weight) {
         this.hodina = hodina;
+        updateWeight(weight);
 
         twzkrpr.setText(hodina.getZkrpr());
         twzkrmist.setText(hodina.getZkrmist());
         twzkrskup.setText(hodina.getZkrskup());
         twzkruc.setText(hodina.getZkruc());
+    }
+
+    public void updateWeight(float weight){
+        this.weight = weight;
+
+        view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT,
+                weight));
     }
 
     public View getView() {

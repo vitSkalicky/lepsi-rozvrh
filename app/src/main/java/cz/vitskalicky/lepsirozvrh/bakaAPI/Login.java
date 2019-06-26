@@ -34,7 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 
 public class Login {
-    private static String TAG = Login.class.getCanonicalName();
+    private static String TAG = Login.class.getSimpleName();
 
 
     /**

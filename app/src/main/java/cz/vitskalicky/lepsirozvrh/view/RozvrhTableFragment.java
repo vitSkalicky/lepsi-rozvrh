@@ -141,7 +141,7 @@ public class RozvrhTableFragment extends Fragment {
                 RozvrhHodina item = den.getHodiny().get(j);
 
                 //handling more lessons in same time (permanent timetable - different weeks)
-                if (!(item.getCaption() == null || item.getCaption().equals("")) &&
+                if (item.getCaption() != null && !item.getCaption().equals("") &&
                         item.getCaption().equals(prevCaption)){
                     // if there are more lessons in same time
                     captionsInRow++;
@@ -154,6 +154,8 @@ public class RozvrhTableFragment extends Fragment {
                     // reset captions in row
                     captionsInRow = 1;
                 }
+
+                prevCaption = item.getCaption();
 
                 if (hodinaCells.get(i).size() <= j){
                     hodinaCells.get(i).add(new HodinaCell(getContext(), tableRows[i]));
@@ -172,7 +174,7 @@ public class RozvrhTableFragment extends Fragment {
             String lastCaption = "";
             int captionsInRow = 1;
             for (int j = 0; j < item.getHodiny().size(); j++) {
-                RozvrhHodina item2 = item.getHodiny().get(i);
+                RozvrhHodina item2 = item.getHodiny().get(j);
 
                 if (item2.getCaption() == null || item2.getCaption().equals("")) {
                     captionsInRow = 1;

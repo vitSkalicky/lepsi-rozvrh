@@ -6,6 +6,7 @@ package cz.vitskalicky.lepsirozvrh;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -59,5 +60,14 @@ public class Utils {
 
     public static LocalDate getCurrentMonday(){
         return getWeekMonday(LocalDate.now());
+    }
+
+    /**
+     * For debugging purposes
+     */
+    public static String getDebugTime(){
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("mm:ss.SSS");
+        LocalTime time = LocalTime.now();
+        return dtf.print(time);
     }
 }

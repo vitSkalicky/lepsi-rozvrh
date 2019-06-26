@@ -236,5 +236,24 @@ public class RozvrhAPI {
         public void onResponse(int code, Rozvrh rozvrh);
     }
 
+    public static int getRememberedRows(Context context){
+        if(!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_ROWS))
+            return 0;
+        return SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_ROWS);
+    }
+
+    public static int getRememberedColumns(Context context){
+        if(!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_COLUMNS))
+            return 0;
+        return SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_COLUMNS);
+    }
+
+    public static void rememberRows(Context context, int rows){
+        SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_ROWS, rows);
+    }
+
+    public static void rememberColumns(Context context, int columns){
+        SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_COLUMNS, columns);
+    }
 
 }

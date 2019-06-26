@@ -15,6 +15,9 @@ public class SharedPrefs {
     public static final String PASSWORD_HASH = "passwordHash";
     public static final String NAME = "name";
 
+    public static final String REMEMBERED_ROWS = "remembered_rows";
+    public static final String REMEMBERED_COLUMNS = "remembered_columns";
+
     public static String getString(Context context, String key) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
@@ -24,6 +27,18 @@ public class SharedPrefs {
     public static void setString(Context context, String key, String value) {
         SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
         preferenceManager.putString(key, value);
+        preferenceManager.apply();
+    }
+
+    public static int getInt(Context context, String key){
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getInt(key, 0);
+    }
+
+    public static void setInt(Context context, String key, int value) {
+        SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        preferenceManager.putInt(key, value);
         preferenceManager.apply();
     }
 

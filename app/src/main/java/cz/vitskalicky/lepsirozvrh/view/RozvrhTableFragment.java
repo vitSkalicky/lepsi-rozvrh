@@ -4,6 +4,7 @@ package cz.vitskalicky.lepsirozvrh.view;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
  * A simple {@link Fragment} subclass.
  */
 public class RozvrhTableFragment extends Fragment {
+    public static final String TAG = RozvrhTableFragment.class.getSimpleName();
 
     View view;
     TableLayout tableLayout;
@@ -61,11 +63,14 @@ public class RozvrhTableFragment extends Fragment {
         cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1);
 
         //<debug>
-        RozvrhAPI.getRozvrh(null, Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
+        Log.d(TAG, "start " + Utils.getDebugTime());
+        RozvrhAPI.getRozvrh(Utils.getCurrentMonday(), Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
             //on cache
             if (code == RozvrhAPI.SUCCESS){
+                Log.d(TAG, "cache loaded " + Utils.getDebugTime());
                 System.out.println("Cache: Zdarilo se");
                 populate(rozvrh);
+                Log.d(TAG, "cache displayed " + Utils.getDebugTime());
             }else {
                 System.out.println("Cache: Nezdarilo se: " + code);
             }
@@ -73,11 +78,16 @@ public class RozvrhTableFragment extends Fragment {
             //on net
             if (code == RozvrhAPI.SUCCESS){
                 System.out.println("Net: zdarilo se");
+                Log.d(TAG, "net loaded " + Utils.getDebugTime());
                 populate(rozvrh);
+                Log.d(TAG, "net displayed " + Utils.getDebugTime());
             }else {
                 System.out.println("Net: Nezdarilo se: " + code);
             }
         });
+        Log.d(TAG, "start creating views " + Utils.getDebugTime());
+        createViews();
+        Log.d(TAG, "views created " + Utils.getDebugTime());
         //</debug>
 
         return view;
@@ -90,38 +100,13 @@ public class RozvrhTableFragment extends Fragment {
         columns = rozvrh.getHodiny().size();
         spread = calcucateSpread(rozvrh);
 
+        RozvrhAPI.rememberRows(getContext(), rows);
+        RozvrhAPI.rememberColumns(getContext(), columns);
+
         cornerCell.view.setRows(rows + 1);
 
         if (oldRows != rows || oldColumns != columns){
-            denCells = new DenCell[rows];
-            captionCells = new CaptionCell[columns];
-            hodinaCells = new ArrayList<>();
-            tableRows = new TableRow[rows];
-
-            for (int i = 0; i < rows; i++) {
-                TableRow item = new TableRow(getContext());
-                item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                        TableLayout.LayoutParams.MATCH_PARENT,
-                        1));
-                tableRows[i] = item;
-            }
-
-            for (int i = 0; i < columns; i++) {
-                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
-            }
-
-            for (int i = 0; i < rows; i++) {
-                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
-
-                List<HodinaCell> newList = new ArrayList<>();
-
-                for (int j = 0; j < columns; j++) {
-                    newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1));
-                }
-
-                hodinaCells.add(newList);
-            }
-            fillViews();
+            createViews();
         }
 
         //populate
@@ -170,6 +155,44 @@ public class RozvrhTableFragment extends Fragment {
         }
     }
 
+    public void createViews(){
+        if (rows == 0 && columns == 0){
+            rows = RozvrhAPI.getRememberedRows(getContext());
+            columns = RozvrhAPI.getRememberedColumns(getContext());
+        }
+
+        denCells = new DenCell[rows];
+        captionCells = new CaptionCell[columns];
+        hodinaCells = new ArrayList<>();
+        tableRows = new TableRow[rows];
+
+        for (int i = 0; i < rows; i++) {
+            TableRow item = new TableRow(getContext());
+            item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    1));
+            tableRows[i] = item;
+        }
+
+        for (int i = 0; i < columns; i++) {
+            captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
+        }
+
+        for (int i = 0; i < rows; i++) {
+            denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
+
+            List<HodinaCell> newList = new ArrayList<>();
+
+            for (int j = 0; j < columns; j++) {
+                newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1));
+            }
+
+            hodinaCells.add(newList);
+        }
+        fillViews();
+    }
+
+
     private int calcucateSpread(Rozvrh rozvrh){
         int mostSpread = 1;
         for (int i = 0; i < rozvrh.getDny().size(); i++) {
@@ -195,6 +218,10 @@ public class RozvrhTableFragment extends Fragment {
     }
 
     private void fillViews(){
+        captionRow.removeAllViews();
+        for (int i = 0; i < tableRows.length; i++) {
+            tableRows[i].removeAllViews();
+        }
         tableLayout.removeAllViews();
 
         captionRow.addView(cornerCell.getView());

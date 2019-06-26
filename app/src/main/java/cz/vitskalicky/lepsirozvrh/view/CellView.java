@@ -1,10 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.view.menu.MenuWrapperFactory;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 public class CellView extends ConstraintLayout {
 
@@ -32,28 +34,43 @@ public class CellView extends ConstraintLayout {
     private int width;
     private int rows;
 
-    public void init(View top, int rows){
+    public void init(View top, int rows, int width){
         this.top = top;
         this.rows = rows;
+        this.width = width;
     }
 
-    public void init(View top, int rows, float spread){
-        this.init(top, rows);
+    public void init(View top, int rows, float spread, int width){
+        this.init(top, rows, width);
         setSpread(spread);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int menwidth = getMinWidth();
         int topHeight = top.getMeasuredHeight();
         height = topHeight / rows;
-        width = (int) (height * spread);
+        //width = (int) (height * spread);
 
         int wMSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
         int hMSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 
-        setMeasuredDimension((int) (height * spread), height);
+        setMeasuredDimension((int) (width * spread), height);
         super.onMeasure(wMSpec, hMSpec);
+    }
+
+    /**
+     * Use only on temporal Object - will mess up measurements
+     * @return
+     */
+    @SuppressLint("WrongCall")
+    public int getNaturalWidth(){
+        this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        int wMSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        int hMSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        super.onMeasure(wMSpec, hMSpec);
+        return getMeasuredWidth();
     }
 
     //<editor-fold desc="getters">
@@ -83,5 +100,9 @@ public class CellView extends ConstraintLayout {
 
     public void setRows(int rows) {
         this.rows = rows;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

@@ -1,6 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
@@ -39,6 +41,8 @@ public class RozvrhTableFragment extends Fragment {
     int columns = 0;
     int spread = 1; //how many places should occupy default cell - there may be 2 lessons in one caption
 
+    int cellWidth;
+
     CornerCell cornerCell;
     DenCell[] denCells = new DenCell[0];
     CaptionCell[] captionCells = new CaptionCell[0];
@@ -58,9 +62,12 @@ public class RozvrhTableFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_rozvrh_table, container, false);
 
+        cellWidth = calculateCellWidth(container);
+
         tableLayout = view.findViewById(R.id.tableLayout);
         captionRow = new TableRow(getContext());
-        cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1);
+        cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1, cellWidth);
+
 
         //<debug>
         Log.d(TAG, "start " + Utils.getDebugTime());
@@ -112,14 +119,14 @@ public class RozvrhTableFragment extends Fragment {
         //populate
         cornerCell.update(rozvrh);
         for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
+            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
             captionCells[i].update(rozvrh.getHodiny().get(i));
             captionCells[i].view.setSpread(spread);
         }
 
         for (int i = 0; i < rows; i++) {
             RozvrhDen den = rozvrh.getDny().get(i);
-            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
+            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
             denCells[i].update(den);
 
             String prevCaption = "";
@@ -145,7 +152,7 @@ public class RozvrhTableFragment extends Fragment {
                 prevCaption = item.getCaption();
 
                 if (hodinaCells.get(i).size() <= j){
-                    HodinaCell toAdd = new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1);
+                    HodinaCell toAdd = new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
                     hodinaCells.get(i).add(toAdd);
                     tableRows[i].addView(toAdd.view);
                 }
@@ -153,6 +160,23 @@ public class RozvrhTableFragment extends Fragment {
                 hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread);
             }
         }
+    }
+
+    /**
+     * Creates a cell with reasonably long data and calculates its minimum width
+     */
+    private int calculateCellWidth(ViewGroup parent){
+        RozvrhHodina hodina = new RozvrhHodina();
+        hodina.setZkrpr("MMmM");
+        hodina.setZkruc("Mmmm");
+        hodina.setZkruc("M. 00");
+        hodina.setZkrskup("MMMm 0");
+        hodina.setCycle("XXXX");
+        HodinaCell hodinaCell = new HodinaCell(getContext(), hodina, 1, parent, parent, 1, 1);
+        CellView cellView = hodinaCell.view;
+
+        int minWidth = cellView.getNaturalWidth();
+        return minWidth;
     }
 
     public void createViews(){
@@ -175,16 +199,16 @@ public class RozvrhTableFragment extends Fragment {
         }
 
         for (int i = 0; i < columns; i++) {
-            captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
+            captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
         }
 
         for (int i = 0; i < rows; i++) {
-            denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
+            denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
 
             List<HodinaCell> newList = new ArrayList<>();
 
             for (int j = 0; j < columns; j++) {
-                newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1));
+                newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth));
             }
 
             hodinaCells.add(newList);

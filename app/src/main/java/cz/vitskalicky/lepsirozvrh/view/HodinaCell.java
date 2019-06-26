@@ -23,21 +23,26 @@ public class HodinaCell {
     TextView twzkrskup;
     TextView twzkruc;
 
-    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows) {
-        this(context, parent, top, rows);
+    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width) {
+        this(context, parent, top, rows, width);
         update(hodina, weight);
     }
 
-    public HodinaCell(Context context, ViewGroup parent, View top, int rows){
+    public HodinaCell(Context context, ViewGroup parent, View top, int rows, int width){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = (CellView) inflater.inflate(R.layout.cell_hodina, parent, false);
-        view.init(top, rows);
+        view.init(top, rows, width);
 
         twzkrpr = view.findViewById(R.id.textViewZkrpr);
         twzkrmist = view.findViewById(R.id.textViewZkrmist);
         twzkrskup = view.findViewById(R.id.textViewZkrskup);
         twzkruc = view.findViewById(R.id.textViewZkruc);
+
+        twzkrpr.setText("");
+        twzkrmist.setText("");
+        twzkrskup.setText("");
+        twzkruc.setText("");
     }
 
     public void update(RozvrhHodina hodina, float weight) {

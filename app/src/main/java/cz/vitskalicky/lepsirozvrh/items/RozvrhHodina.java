@@ -54,6 +54,9 @@ public class RozvrhHodina {
     @Element(required = false)
     private String chng;
 
+    @Element(required = false)
+    private String cycle;
+
     public static final int NONE = 0;
     public static final int CHANGED = 1;
     public static final int NO_LESSON = 2;
@@ -152,5 +155,53 @@ public class RozvrhHodina {
 
     public void setExpanded(boolean expanded) {
         this.expanded = expanded;
+    }
+
+    public void setTyp(String typ) {
+        this.typ = typ;
+    }
+
+    public void setZkrpr(String zkrpr) {
+        this.zkrpr = zkrpr;
+    }
+
+    public void setPr(String pr) {
+        this.pr = pr;
+    }
+
+    public void setZkruc(String zkruc) {
+        this.zkruc = zkruc;
+    }
+
+    public void setUc(String uc) {
+        this.uc = uc;
+    }
+
+    public void setZkrmist(String zkrmist) {
+        this.zkrmist = zkrmist;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setZkratka(String zkratka) {
+        this.zkratka = zkratka;
+    }
+
+    public void setNazev(String nazev) {
+        this.nazev = nazev;
+    }
+
+    public String getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(String cycle) {
+        this.cycle = cycle;
     }
 }

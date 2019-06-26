@@ -17,16 +17,16 @@ public class CornerCell {
     String nazevcyklu;
     TextView twnazevcyklu;
 
-    public CornerCell(Context context, Rozvrh rozvrh, ViewGroup parent, View top, int rows) {
-        this(context, parent, top, rows);
+    public CornerCell(Context context, Rozvrh rozvrh, ViewGroup parent, View top, int rows, int width) {
+        this(context, parent, top, rows, width);
         update(rozvrh);
     }
 
-    public CornerCell(Context context, ViewGroup parent, View top, int rows){
+    public CornerCell(Context context, ViewGroup parent, View top, int rows, int width){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = (CellView) inflater.inflate(R.layout.cell_corner, parent, false);
-        view.init(top, rows);
+        view.init(top, rows, width);
 
         twnazevcyklu = view.findViewById(R.id.textViewNazevcyklu);
     }

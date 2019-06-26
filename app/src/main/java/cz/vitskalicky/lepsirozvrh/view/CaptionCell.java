@@ -12,22 +12,23 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodinaCaption;
 
 public class CaptionCell {
     Context context;
-    ConstraintLayout view;
+    CellView view;
     RozvrhHodinaCaption caption;
 
     TextView twcaption;
     TextView twtime;
 
-    public CaptionCell(Context context, RozvrhHodinaCaption caption, ViewGroup parent) {
-        this(context, parent);
+    public CaptionCell(Context context, RozvrhHodinaCaption caption, ViewGroup parent, View top, int rows) {
+        this(context, parent, top, rows);
         update(caption);
 
     }
 
-    public CaptionCell(Context context, ViewGroup parent){
+    public CaptionCell(Context context, ViewGroup parent, View top, int rows){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (ConstraintLayout) inflater.inflate(R.layout.cell_caption, parent, false);
+        view = (CellView) inflater.inflate(R.layout.cell_caption, parent, false);
+        view.init(top, rows);
 
         twcaption = view.findViewById(R.id.textViewCaption);
         twtime = view.findViewById(R.id.textViewTime);

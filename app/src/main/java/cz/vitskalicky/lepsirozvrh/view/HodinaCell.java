@@ -14,7 +14,7 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 public class HodinaCell {
 
     Context context;
-    ConstraintLayout view;
+    CellView view;
     RozvrhHodina hodina;
     float weight;
 
@@ -23,15 +23,16 @@ public class HodinaCell {
     TextView twzkrskup;
     TextView twzkruc;
 
-    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent) {
-        this(context, parent);
+    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows) {
+        this(context, parent, top, rows);
         update(hodina, weight);
     }
 
-    public HodinaCell(Context context, ViewGroup parent){
+    public HodinaCell(Context context, ViewGroup parent, View top, int rows){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (ConstraintLayout) inflater.inflate(R.layout.cell_hodina, parent, false);
+        view = (CellView) inflater.inflate(R.layout.cell_hodina, parent, false);
+        view.init(top, rows);
 
         twzkrpr = view.findViewById(R.id.textViewZkrpr);
         twzkrmist = view.findViewById(R.id.textViewZkrmist);
@@ -52,9 +53,7 @@ public class HodinaCell {
     public void updateWeight(float weight){
         this.weight = weight;
 
-        view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.MATCH_PARENT,
-                weight));
+        view.setSpread(weight);
     }
 
     public View getView() {

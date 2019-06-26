@@ -12,20 +12,21 @@ import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 
 public class CornerCell {
     Context context;
-    ConstraintLayout view;
+    CellView view;
 
     String nazevcyklu;
     TextView twnazevcyklu;
 
-    public CornerCell(Context context, Rozvrh rozvrh, ViewGroup parent) {
-        this(context, parent);
+    public CornerCell(Context context, Rozvrh rozvrh, ViewGroup parent, View top, int rows) {
+        this(context, parent, top, rows);
         update(rozvrh);
     }
 
-    public CornerCell(Context context, ViewGroup parent){
+    public CornerCell(Context context, ViewGroup parent, View top, int rows){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (ConstraintLayout) inflater.inflate(R.layout.cell_corner, parent, false);
+        view = (CellView) inflater.inflate(R.layout.cell_corner, parent, false);
+        view.init(top, rows);
 
         twnazevcyklu = view.findViewById(R.id.textViewNazevcyklu);
     }

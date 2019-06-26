@@ -58,7 +58,7 @@ public class RozvrhTableFragment extends Fragment {
 
         tableLayout = view.findViewById(R.id.tableLayout);
         captionRow = new TableRow(getContext());
-        cornerCell = new CornerCell(getContext(),captionRow);
+        cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1);
 
         //<debug>
         RozvrhAPI.getRozvrh(null, Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
@@ -90,6 +90,8 @@ public class RozvrhTableFragment extends Fragment {
         columns = rozvrh.getHodiny().size();
         spread = calcucateSpread(rozvrh);
 
+        cornerCell.view.setRows(rows + 1);
+
         if (oldRows != rows || oldColumns != columns){
             denCells = new DenCell[rows];
             captionCells = new CaptionCell[columns];
@@ -105,34 +107,34 @@ public class RozvrhTableFragment extends Fragment {
             }
 
             for (int i = 0; i < columns; i++) {
-                captionCells[i] = new CaptionCell(getContext(), captionRow);
+                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
             }
 
             for (int i = 0; i < rows; i++) {
-                denCells[i] = new DenCell(getContext(), tableRows[i]);
+                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
 
                 List<HodinaCell> newList = new ArrayList<>();
 
                 for (int j = 0; j < columns; j++) {
-                    newList.add(new HodinaCell(getContext(), tableRows[i]));
+                    newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1));
                 }
 
                 hodinaCells.add(newList);
             }
-
             fillViews();
         }
 
         //populate
         cornerCell.update(rozvrh);
         for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow);
+            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1);
             captionCells[i].update(rozvrh.getHodiny().get(i));
+            captionCells[i].view.setSpread(spread);
         }
 
         for (int i = 0; i < rows; i++) {
             RozvrhDen den = rozvrh.getDny().get(i);
-            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i]);
+            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1);
             denCells[i].update(den);
 
             String prevCaption = "";
@@ -158,7 +160,9 @@ public class RozvrhTableFragment extends Fragment {
                 prevCaption = item.getCaption();
 
                 if (hodinaCells.get(i).size() <= j){
-                    hodinaCells.get(i).add(new HodinaCell(getContext(), tableRows[i]));
+                    HodinaCell toAdd = new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1);
+                    hodinaCells.get(i).add(toAdd);
+                    tableRows[i].addView(toAdd.view);
                 }
 
                 hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread);

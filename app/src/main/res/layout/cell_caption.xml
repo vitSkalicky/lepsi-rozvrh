@@ -6,29 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <cz.vitskalicky.lepsirozvrh.view.VerticalTextView
         android:id="@+id/textViewBegin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:lineSpacingMultiplier="0.5"
+        android:layout_marginBottom="4dp"
+        android:gravity="bottom"
         android:maxLines="1"
-        android:rotation="270"
         android:text="dsfdsf"
-        android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <cz.vitskalicky.lepsirozvrh.view.VerticalTextView
         android:id="@+id/textViewEnd"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:lineSpacingMultiplier="0.5"
-        android:rotation="270"
+        android:layout_marginBottom="4dp"
+        android:gravity="bottom"
         android:text="TextView"
-        android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -40,8 +36,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/textViewBegin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -2,6 +2,8 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -67,7 +70,6 @@ public class RozvrhTableFragment extends Fragment {
         tableLayout = view.findViewById(R.id.tableLayout);
         captionRow = new TableRow(getContext());
         cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1, cellWidth);
-
 
         //<debug>
         Log.d(TAG, "start " + Utils.getDebugTime());
@@ -190,11 +192,16 @@ public class RozvrhTableFragment extends Fragment {
         hodinaCells = new ArrayList<>();
         tableRows = new TableRow[rows];
 
+        captionRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        captionRow.setDividerDrawable(new ColorDrawable(Color.BLACK));
+
         for (int i = 0; i < rows; i++) {
             TableRow item = new TableRow(getContext());
             item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                     TableLayout.LayoutParams.MATCH_PARENT,
                     1));
+            item.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            item.setDividerDrawable(new ColorDrawable(Color.BLACK));
             tableRows[i] = item;
         }
 

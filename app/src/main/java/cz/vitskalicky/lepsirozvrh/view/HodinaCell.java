@@ -50,6 +50,8 @@ public class HodinaCell {
         updateWeight(weight);
 
         twzkrpr.setText(hodina.getZkrpr());
+        if (hodina.getZkrpr() == null || hodina.getZkrpr().equals(""))
+            twzkrpr.setText(hodina.getPr());
         twzkrmist.setText(hodina.getZkrmist());
         twzkrskup.setText(hodina.getZkrskup());
         twzkruc.setText(hodina.getZkruc());

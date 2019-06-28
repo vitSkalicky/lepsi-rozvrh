@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lepší rozvrh</string>
+    <string name="prev_week">Předchozí týden</string>
+    <string name="next_week">Následující týden</string>
+    <string name="current_week">Aktuální týden</string>
+    <string name="permanent_timetable">Stálý rozvrh</string>
+    <string name="settings">Nastavení</string>
+    <string name="refresh">Obnovit</string>
+</resources>

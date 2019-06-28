@@ -10,31 +10,111 @@
         android:name="cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinatorLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:scrollbarSize="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_collapseMode="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:popupTheme="@style/Theme.AppCompat.Light"
+        app:titleMargin="0dp">
 
-        <!-- Other components and views -->
-
-
-        <android.support.design.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/buttonsLayout"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_gravity="bottom"
-            app:backgroundTint="@color/colorPrimary"
-            app:buttonGravity="bottom|top"
-            app:navigationIcon="@drawable/ic_menu_black_24" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    </android.support.design.widget.CoordinatorLayout>
+            <ImageButton
+                android:id="@+id/settings"
+                style="@style/Widget.AppCompat.ActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/settings"
+                android:src="@drawable/ic_settings_black_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/refresh"
+                app:layout_constraintStart_toEndOf="@id/settings"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/prev"
+                    style="@style/Widget.AppCompat.ActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="0dp"
+                    android:contentDescription="@string/prev_week"
+                    android:src="@drawable/ic_prev_black_24" />
+
+                <ImageButton
+                    android:id="@+id/permanent"
+                    style="@style/Widget.AppCompat.ActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="0dp"
+                    android:contentDescription="@string/permanent_timetable"
+                    android:src="@drawable/ic_permanent_black_24"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/curent"
+                    style="@style/Widget.AppCompat.ActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="0dp"
+                    android:contentDescription="@string/current_week"
+                    android:src="@drawable/ic_today_black_24" />
+
+                <ImageButton
+                    android:id="@+id/next"
+                    style="@style/Widget.AppCompat.ActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="0dp"
+                    android:contentDescription="@string/next_week"
+                    android:src="@drawable/ic_next_black_24" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/refresh"
+                style="@style/Widget.AppCompat.ActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/refresh"
+                android:src="@drawable/ic_refresh_black_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+
 </android.support.constraint.ConstraintLayout>

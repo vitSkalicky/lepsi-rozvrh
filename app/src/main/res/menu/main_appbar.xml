@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_settings_black_24"
         android:title="@string/settings"
         app:showAsAction="always|withText" />
-    <item
+    <!--<item
         android:id="@+id/prev"
         android:icon="@drawable/ic_prev_black_24"
         android:title="@string/prev_week"
@@ -30,5 +30,5 @@
         android:id="@+id/refresh"
         android:icon="@drawable/ic_refresh_black_24"
         android:title="@string/refresh"
-        app:showAsAction="always" />
+        app:showAsAction="always" />-->
 </menu>

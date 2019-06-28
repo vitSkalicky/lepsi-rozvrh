@@ -1,31 +1,38 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.support.design.bottomappbar.BottomAppBar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import cz.vitskalicky.lepsirozvrh.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomAppBar bottomAppBar;
+    Toolbar bottomAppBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomAppBar = findViewById(R.id.bottomAppBar);
-
+        bottomAppBar = findViewById(R.id.toolbar);
         setSupportActionBar(bottomAppBar);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(false);
+        ab.setDisplayShowHomeEnabled(false);
+        ab.setDisplayShowTitleEnabled(false);
+        ab.setDisplayShowCustomEnabled(false);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_appbar, menu);
-        menu.
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -38,5 +45,5 @@ public class MainActivity extends AppCompatActivity {
             // do something here
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

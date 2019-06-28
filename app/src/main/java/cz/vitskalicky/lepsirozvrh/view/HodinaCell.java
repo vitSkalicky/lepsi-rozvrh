@@ -1,14 +1,11 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import cz.vitskalicky.lepsirozvrh.R;
@@ -52,19 +49,27 @@ public class HodinaCell {
         this.hodina = hodina;
         updateWeight(weight);
 
-        twzkrpr.setText(hodina.getZkrpr());
-        if (hodina.getZkrpr() == null || hodina.getZkrpr().equals(""))
-            twzkrpr.setText(hodina.getZkratka());
-        twzkrmist.setText(hodina.getZkrmist());
-        twzkrskup.setText(hodina.getZkrskup());
-        twzkruc.setText(hodina.getZkruc());
+        if (hodina != null) {
+            twzkrpr.setText(hodina.getZkrpr());
+            if (hodina.getZkrpr() == null || hodina.getZkrpr().equals(""))
+                twzkrpr.setText(hodina.getZkratka());
+            twzkrmist.setText(hodina.getZkrmist());
+            twzkrskup.setText(hodina.getZkrskup());
+            twzkruc.setText(hodina.getZkruc());
 
-        if (hodina.getHighlight() == RozvrhHodina.CHANGED){
-            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhX)));
-        } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON){
-            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhA)));
-        } else if (hodina.getHighlight() == RozvrhHodina.NONE){
-            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhH)));
+            if (hodina.getHighlight() == RozvrhHodina.CHANGED) {
+                view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhChang)));
+            } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON) {
+                view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhA)));
+            } else if (hodina.getHighlight() == RozvrhHodina.NONE) {
+                view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhH)));
+            }
+        }else {
+            twzkrpr.setText("");
+            twzkrmist.setText("");
+            twzkrskup.setText("");
+            twzkruc.setText("");
+            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhEmpty)));
         }
     }
 

@@ -2,10 +2,11 @@
 <resources>
     <color name="colorPrimary">#f9a825</color>
     <color name="colorPrimaryDark">#c17900</color>
-    <color name="colorAccent">#424242</color>
-    <color name="rozvrhHeader">#efefef</color>
-    <color name="rozvrhX">#ffd95a</color>
+    <color name="colorAccent">#455a64</color>
+    <color name="rozvrhHeader">#c1d5e0</color>
+    <color name="rozvrhChang">#ffd95a</color>
     <color name="rozvrhA">#ffd95a</color>
-    <color name="rozvrhH">#00FFFFFF</color>
+    <color name="rozvrhH">#eceff1</color>
+    <color name="rozvrhEmpty">#00FFFFFF</color>
     <color name="rozvrhDivider">#000000</color>
 </resources>

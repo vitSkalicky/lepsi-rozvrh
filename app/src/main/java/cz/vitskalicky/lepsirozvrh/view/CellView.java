@@ -49,7 +49,7 @@ public class CellView extends ConstraintLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int topHeight = top.getMeasuredHeight();
-        height = (topHeight / rows);
+        height = (int) Math.ceil(((double)topHeight / rows));
         //width = (int) (height * spread);
 
         int wMSpec = MeasureSpec.makeMeasureSpec((int) (width * spread), MeasureSpec.EXACTLY);
@@ -61,7 +61,6 @@ public class CellView extends ConstraintLayout {
 
     /**
      * Use only on temporal Object - will mess up measurements
-     * @return
      */
     @SuppressLint("WrongCall")
     public int getNaturalWidth(){

@@ -14,6 +14,8 @@ import android.widget.TableRow;
 
 import com.android.volley.toolbox.Volley;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class RozvrhTableFragment extends Fragment {
 
         //<debug>
         Log.d(TAG, "start " + Utils.getDebugTime());
-        RozvrhAPI.getRozvrh(Utils.getCurrentMonday(), Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
+        RozvrhAPI.getRozvrh(Utils.getWeekMonday(LocalDate.now()).minusWeeks(4), Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
             //on cache
             if (code == RozvrhAPI.SUCCESS){
                 Log.d(TAG, "cache loaded " + Utils.getDebugTime());
@@ -126,7 +128,8 @@ public class RozvrhTableFragment extends Fragment {
 
             String prevCaption = "";
             int captionsInRow = 1;
-            for (int j = 0; j < den.getHodiny().size(); j++) {
+            int j = 0;
+            for (; j < den.getHodiny().size(); j++) {
                 RozvrhHodina item = den.getHodiny().get(j);
 
                 //handling more lessons in same time (permanent timetable - different weeks)
@@ -153,6 +156,9 @@ public class RozvrhTableFragment extends Fragment {
                 }
 
                 hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread);
+            }
+            for (; j < columns; j++) {
+                hodinaCells.get(i).get(j).update(null,spread);
             }
         }
     }
@@ -190,8 +196,6 @@ public class RozvrhTableFragment extends Fragment {
             item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                     TableLayout.LayoutParams.MATCH_PARENT,
                     1));
-            item.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-            item.setDividerDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
             tableRows[i] = item;
         }
 
@@ -259,9 +263,6 @@ public class RozvrhTableFragment extends Fragment {
             }
             tableLayout.addView(tableRows[i]);
         }
-
-        captionRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        captionRow.setDividerDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
     }
 
 }

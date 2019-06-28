@@ -48,15 +48,14 @@ public class CellView extends ConstraintLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int menwidth = getMinWidth();
         int topHeight = top.getMeasuredHeight();
-        height = topHeight / rows;
+        height = (topHeight / rows);
         //width = (int) (height * spread);
 
-        int wMSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        int wMSpec = MeasureSpec.makeMeasureSpec((int) (width * spread), MeasureSpec.EXACTLY);
         int hMSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 
-        setMeasuredDimension((int) (width * spread), height);
+        setMeasuredDimension((int) ((width * spread)), height);
         super.onMeasure(wMSpec, hMSpec);
     }
 

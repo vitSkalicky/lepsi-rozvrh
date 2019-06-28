@@ -204,4 +204,8 @@ public class RozvrhHodina {
     public void setCycle(String cycle) {
         this.cycle = cycle;
     }
+
+    public int getHighlight() {
+        return highlight;
+    }
 }

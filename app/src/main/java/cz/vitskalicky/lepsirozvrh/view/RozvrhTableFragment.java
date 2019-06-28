@@ -1,12 +1,9 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +14,8 @@ import android.widget.TableRow;
 
 import com.android.volley.toolbox.Volley;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
@@ -192,16 +185,13 @@ public class RozvrhTableFragment extends Fragment {
         hodinaCells = new ArrayList<>();
         tableRows = new TableRow[rows];
 
-        captionRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        captionRow.setDividerDrawable(new ColorDrawable(Color.BLACK));
-
         for (int i = 0; i < rows; i++) {
             TableRow item = new TableRow(getContext());
             item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
                     TableLayout.LayoutParams.MATCH_PARENT,
                     1));
             item.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-            item.setDividerDrawable(new ColorDrawable(Color.BLACK));
+            item.setDividerDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
             tableRows[i] = item;
         }
 
@@ -220,6 +210,7 @@ public class RozvrhTableFragment extends Fragment {
 
             hodinaCells.add(newList);
         }
+
         fillViews();
     }
 
@@ -268,6 +259,9 @@ public class RozvrhTableFragment extends Fragment {
             }
             tableLayout.addView(tableRows[i]);
         }
+
+        captionRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        captionRow.setDividerDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
     }
 
 }

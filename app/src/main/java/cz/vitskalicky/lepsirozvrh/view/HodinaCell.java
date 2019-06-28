@@ -1,7 +1,10 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +54,18 @@ public class HodinaCell {
 
         twzkrpr.setText(hodina.getZkrpr());
         if (hodina.getZkrpr() == null || hodina.getZkrpr().equals(""))
-            twzkrpr.setText(hodina.getPr());
+            twzkrpr.setText(hodina.getZkratka());
         twzkrmist.setText(hodina.getZkrmist());
         twzkrskup.setText(hodina.getZkrskup());
         twzkruc.setText(hodina.getZkruc());
+
+        if (hodina.getHighlight() == RozvrhHodina.CHANGED){
+            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhX)));
+        } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON){
+            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhA)));
+        } else if (hodina.getHighlight() == RozvrhHodina.NONE){
+            view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhH)));
+        }
     }
 
     public void updateWeight(float weight){

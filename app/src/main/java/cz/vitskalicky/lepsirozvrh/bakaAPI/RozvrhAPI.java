@@ -11,8 +11,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.w3c.dom.Document;
@@ -20,11 +18,14 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.channels.FileLock;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -98,22 +99,31 @@ public class RozvrhAPI {
         requestQueue.add(request);
     }
 
+    private static RozvrhRoot parseRozvrh(String string){
+        RozvrhRoot root;
+        try {
+            Serializer serializer = new Persister();
+            root = serializer.read(RozvrhRoot.class, string);
+        } catch (Exception e) {
+            Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + string);
+            e.printStackTrace();
+            return null;
+        }
+        return root;
+    }
+
     private static void fetchRozvrh(LocalDate mondayDate, RozvrhListener listener, RequestQueue requestQueue, Context context) {
         fetchXml(mondayDate, (code, response) -> {
             if (code == SUCCESS) {
-                RozvrhRoot root;
-                try {
-                    Serializer serializer = new Persister();
-                    root = serializer.read(RozvrhRoot.class, response);
-                } catch (Exception e) {
-                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + response);
-                    e.printStackTrace();
-                    listener.onResponse(UNEXPECTED_RESPONSE, null);
+                RozvrhRoot root = parseRozvrh(response);
+
+                if (root == null || root.getRozvrh() == null){
+                    listener.method(UNEXPECTED_RESPONSE, null);
                     return;
                 }
-                listener.onResponse(SUCCESS, root.getRozvrh());
+                listener.method(SUCCESS, root.getRozvrh());
             } else {
-                listener.onResponse(code, null);
+                listener.method(code, null);
             }
         }, requestQueue, context);
     }
@@ -178,18 +188,61 @@ public class RozvrhAPI {
                     System.out.println("Timetable for week " + "perm" + " not found.");
 
                 new Handler(Looper.getMainLooper()).post(() ->
-                        listener.onResponse(NO_CACHE, null));
+                        listener.method(NO_CACHE, null));
                 return;
             } catch (Exception e) {
                 Log.e(TAG, "Timetable loading failed: error message: " + e.getMessage() + " stack trace:");
                 e.printStackTrace();
 
                 new Handler(Looper.getMainLooper()).post(() ->
-                        listener.onResponse(NO_CACHE, null));
+                        listener.method(NO_CACHE, null));
                 return;
             }
             new Handler(Looper.getMainLooper()).post(() ->
-                    listener.onResponse(SUCCESS, root.getRozvrh()));
+                    listener.method(SUCCESS, root.getRozvrh()));
+        });
+    }
+
+    /**
+     * Deletes Rozvrhs saved in 'cache' which are older than month. operation are run on background.
+     */
+    public static void deleteOldCache(Context context){
+        AsyncTask.execute(() -> {
+
+            File dir = context.getFilesDir();
+
+            LocalDate deleteBefore = LocalDate.now().minusMonths(1);
+
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File fileDir, String name) {
+                    if (fileDir == dir && name.length() > 11){
+                        String date = name.substring(7,name.length() - 4);
+
+                        if (date.equals("perm")) return false;
+
+                        LocalDate fileDate;
+                        try {
+                            fileDate = Utils.parseDate(date);
+                        }catch (IllegalArgumentException e){
+                            return false;
+                        }
+
+                        if (fileDate.isBefore(deleteBefore)){
+                            return true;
+                        }else {
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+            };
+
+            String[] fileNames = dir.list(filter);
+
+            for (String item :fileNames) {
+                context.deleteFile(item);
+            }
         });
     }
 
@@ -214,13 +267,13 @@ public class RozvrhAPI {
                 } catch (Exception e) {
                     Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
                     e.printStackTrace();
-                    onLoaded.onResponse(UNEXPECTED_RESPONSE, null);
+                    onLoaded.method(UNEXPECTED_RESPONSE, null);
                     return;
                 }
                 saveRawRozvrh(mondayDate, xmlString, context);
-                onLoaded.onResponse(SUCCESS, ret);
+                onLoaded.method(SUCCESS, ret);
             } else {
-                onLoaded.onResponse(code, null);
+                onLoaded.method(code, null);
                 return;
             }
         }, requestQueue, context);
@@ -232,9 +285,20 @@ public class RozvrhAPI {
         public void onResponse(int code, String response);
     }
 
+    /**
+     * Listener for returning {@link Rozvrh} objects after slow operation (network of file access)
+     */
     public static interface RozvrhListener {
-        public void onResponse(int code, Rozvrh rozvrh);
+        /**
+         * The only method
+         * @param code status code identifying success or failure; is one of those:
+         *             {@link #SUCCESS}, {@link #LOGIN_FAILED}, {@link #UNEXPECTED_RESPONSE}, {@link #UNREACHABLE}, {@link #NO_CACHE},
+         * @param rozvrh
+         */
+        public void method(int code, Rozvrh rozvrh);
     }
+
+
 
     public static int getRememberedRows(Context context){
         if(!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_ROWS))
@@ -256,4 +320,74 @@ public class RozvrhAPI {
         SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_COLUMNS, columns);
     }
 
+    // NOT-STATIC PART OF THIS CLASS
+    // =============================
+    // This class should be created by an Activity to manage loaded Rozvrh object.
+
+    private HashMap<LocalDate, Rozvrh> saved = new HashMap<>();
+    private RequestQueue requestQueue;
+    private Context context;
+
+    public RozvrhAPI(RequestQueue requestQueue, Context context) {
+        this.requestQueue = requestQueue;
+        this.context = context;
+    }
+
+    /**
+     * Gets Rozvrh from:
+     *  - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
+     *  - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
+     *  - Network (school Bakaláři server) - only available if connected to internet - slow
+     * Neither file storage nor network will be used if requested rozvrh is found in memory.
+     * It is not guaranteed that <code>onCacheLoaded</code> will be called before <code>onNetLoaded</code>!
+     * @param date Monday date identifying week or <code>null</code> for permanent timetable.
+     * @param onCacheLoaded returns Rozvrh object loaded from 'cache'. Will not be called if rozvrh was found in memory.
+     *                      {@code code} = {@link #SUCCESS} -> loading successful, object is in {@code rozvrh}.
+     *                      {@code code} = {@link #NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
+     * @param onNetLoaded returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
+     *                    {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
+     *                    {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
+     *                    {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
+     *                    {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
+     * @return
+     */
+    public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded){
+        final LocalDate monaday = Utils.getWeekMonday(date); //just to be extra sure
+        Rozvrh memory = saved.get(monaday);
+
+        if (memory == null) {
+            loadRozvrh(monaday, (code, rozvrh) -> {
+                if (code == SUCCESS && saved.get(monaday) == null) {
+                    saved.put(monaday, rozvrh);
+                }
+                onCacheLoaded.method(code, rozvrh);
+            }, context);
+
+            fetchXml(monaday, (code, response) -> {
+                if (code == SUCCESS) {
+                    RozvrhRoot root = parseRozvrh(response);
+                    if (root == null || root.getRozvrh() == null) {
+                        onCacheLoaded.method(UNEXPECTED_RESPONSE, null);
+                        return;
+                    }
+
+                    saved.put(monaday, root.getRozvrh());
+                    saveRawRozvrh(monaday, response, context);
+
+                    onNetLoaded.method(SUCCESS, root.getRozvrh());
+                    return;
+                }
+                onNetLoaded.method(code, null);
+            }, requestQueue, context);
+        }
+
+        return memory;
+    }
+
+    /**
+     * Clears object's Rozvrh storage - all rozvrhs will have to load from cache and server again.
+     */
+    public void refresh(){
+        saved.clear();
+    }
 }

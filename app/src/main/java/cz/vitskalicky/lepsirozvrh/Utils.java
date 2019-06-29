@@ -37,6 +37,7 @@ public class Utils {
     }
 
     public static LocalDate getWeekMonday(LocalDate date){
+        if (date == null) return null;
         return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
 
     }

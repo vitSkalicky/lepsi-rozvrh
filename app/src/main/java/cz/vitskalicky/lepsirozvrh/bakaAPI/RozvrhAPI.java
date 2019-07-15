@@ -349,7 +349,7 @@ public class RozvrhAPI {
      *                    {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
      *                    {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
      *                    {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
-     * @return
+     * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
      */
     public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded){
         final LocalDate monaday = Utils.getWeekMonday(date); //just to be extra sure

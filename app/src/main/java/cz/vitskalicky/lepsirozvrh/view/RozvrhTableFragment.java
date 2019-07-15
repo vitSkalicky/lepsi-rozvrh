@@ -53,6 +53,13 @@ public class RozvrhTableFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * must be called
+     */
+    public void init(RozvrhAPI rozvrhAPI){
+        this.rozvrhAPI = rozvrhAPI;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,34 +72,6 @@ public class RozvrhTableFragment extends Fragment {
         tableLayout = view.findViewById(R.id.tableLayout);
         captionRow = new TableRow(getContext());
         cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1, cellWidth);
-
-        //<debug>
-        Log.d(TAG, "start " + Utils.getDebugTime());
-        RozvrhAPI.getRozvrh(Utils.getWeekMonday(LocalDate.now()).minusWeeks(4), Volley.newRequestQueue(getContext()), getContext(),(code, rozvrh) -> {
-            //on cache
-            if (code == RozvrhAPI.SUCCESS){
-                Log.d(TAG, "cache loaded " + Utils.getDebugTime());
-                System.out.println("Cache: Zdarilo se");
-                populate(rozvrh);
-                Log.d(TAG, "cache displayed " + Utils.getDebugTime());
-            }else {
-                System.out.println("Cache: Nezdarilo se: " + code);
-            }
-        },(code, rozvrh) -> {
-            //on net
-            if (code == RozvrhAPI.SUCCESS){
-                System.out.println("Net: zdarilo se");
-                Log.d(TAG, "net loaded " + Utils.getDebugTime());
-                populate(rozvrh);
-                Log.d(TAG, "net displayed " + Utils.getDebugTime());
-            }else {
-                System.out.println("Net: Nezdarilo se: " + code);
-            }
-        });
-        Log.d(TAG, "start creating views " + Utils.getDebugTime());
-        createViews();
-        Log.d(TAG, "views created " + Utils.getDebugTime());
-        //</debug>
 
         return view;
     }
@@ -263,6 +242,51 @@ public class RozvrhTableFragment extends Fragment {
             }
             tableLayout.addView(tableRows[i]);
         }
+    }
+
+    private LocalDate week = LocalDate.now();
+    private boolean isLoading = false; //true if something is loading
+    private RozvrhAPI rozvrhAPI = null;
+
+    /**
+     *
+     * @param weekIndex index of week to display relative to now (0 = this week, 1 = next, -1 = previous) or {@code Integer.MAX_VALUE} for permanent
+     */
+    public void displayWeek(int weekIndex){
+        if (weekIndex == Integer.MAX_VALUE)
+            week = null;
+        else
+            week = Utils.getWeekMonday(LocalDate.now().plusWeeks(weekIndex));
+
+        final LocalDate finalWeek = week;
+
+        Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
+            //onCachLoaded
+            if (week != finalWeek){
+                Log.d(TAG, "Moved to different week");
+                return;
+            }
+            if (code == RozvrhAPI.SUCCESS){
+                populate(rozvrh);
+            }
+            //DEBUG
+            Log.d(TAG,"Cache " + code);
+        },(code, rozvrh) -> {
+            if (week != finalWeek){
+                Log.d(TAG, "Moved to different week");
+                return;
+            }
+            //onNetLoaded
+            if (code == RozvrhAPI.SUCCESS){
+                populate(rozvrh);
+            }
+            //DEBUG
+            Log.d(TAG,"Net " + code);
+        });
+        if (item != null)
+            populate(item);
+        else
+            Log.d(TAG, "Not in memory");
     }
 
 }

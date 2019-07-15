@@ -60,6 +60,7 @@ public class RozvrhHodina {
     public static final int NONE = 0;
     public static final int CHANGED = 1;
     public static final int NO_LESSON = 2;
+    public static final int EMPTY = 3;
 
     private int highlight = 0;
 
@@ -70,7 +71,10 @@ public class RozvrhHodina {
             highlight = CHANGED;
         }else if (typ.equals("A")){
             highlight = NO_LESSON;
-        }else {
+        }else if (typ.equals("X")){ //sometimes, there are just empty hours with X and no change
+            highlight = EMPTY;
+        }
+        else {
             highlight = NONE;
         }
     }

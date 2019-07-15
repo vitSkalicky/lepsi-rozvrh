@@ -206,7 +206,7 @@ public class RozvrhAPI {
     /**
      * Deletes Rozvrhs saved in 'cache' which are older than month. operation are run on background.
      */
-    public static void deleteOldCache(Context context){
+    public static void clearOldCache(Context context){
         AsyncTask.execute(() -> {
 
             File dir = context.getFilesDir();
@@ -233,6 +233,30 @@ public class RozvrhAPI {
                         }else {
                             return false;
                         }
+                    }
+                    return false;
+                }
+            };
+
+            String[] fileNames = dir.list(filter);
+
+            for (String item :fileNames) {
+                context.deleteFile(item);
+            }
+        });
+    }
+
+    public static void clearCache(Context context){
+        AsyncTask.execute(() -> {
+
+            File dir = context.getFilesDir();
+
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File fileDir, String name) {
+                    if (fileDir == dir){
+                        if (name.equals("rozvrh-perm.xml")) return true;
+                        else return name.matches("rozvrh-[0-9]{8}\\.xml");
                     }
                     return false;
                 }
@@ -387,7 +411,15 @@ public class RozvrhAPI {
     /**
      * Clears object's Rozvrh storage - all rozvrhs will have to load from cache and server again.
      */
-    public void refresh(){
+    public void refreshMemory(){
         saved.clear();
+    }
+
+    /**
+     * Clears object's Rozvrh storage and cache - all rozvrhs will have to load from server again.
+     */
+    public void refreshCache(){
+        refreshMemory();
+
     }
 }

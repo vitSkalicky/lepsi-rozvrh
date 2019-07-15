@@ -63,6 +63,8 @@ public class HodinaCell {
                 view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhA)));
             } else if (hodina.getHighlight() == RozvrhHodina.NONE) {
                 view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhH)));
+            } else if (hodina.getHighlight() == RozvrhHodina.EMPTY) {
+                view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhEmpty)));
             }
         }else {
             twzkrpr.setText("");

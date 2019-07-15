@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -138,6 +139,17 @@ public class RozvrhTableFragment extends Fragment {
             }
             for (; j < columns; j++) {
                 hodinaCells.get(i).get(j).update(null,spread);
+            }
+            //Remove cells that are left over from a multiple-cells-in-caption timetable
+            final int lastIndex = j;
+            final int size =  hodinaCells.get(i).size();
+            for (; j < size; j++){
+                HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
+                hodinaCells.get(i).remove(toRemove);
+                ViewGroup parent = (ViewGroup) toRemove.view.getParent();
+                if (parent != null) {
+                    parent.removeView(toRemove.view);
+                }
             }
         }
     }

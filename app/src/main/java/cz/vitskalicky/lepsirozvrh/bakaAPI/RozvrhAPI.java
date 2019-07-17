@@ -161,6 +161,13 @@ public class RozvrhAPI {
         });
     }
 
+    /**
+     * Loads Rozvrh from cache.
+     * @param monday Monday identifying week or null for permanent
+     * @param listener listener for returnening data. Codes:
+     *                 {@link #NO_CACHE} - Not found in cache - {@code rozvrh) is null
+     *                 {@link #SUCCESS} - Loading succeeded - requested rozvrh is in {@code rozvrh)
+     */
     private static void loadRozvrh(LocalDate monday, RozvrhListener listener, Context context) {
         AsyncTask.execute(() -> {
             LocalDate sureMonday = null;
@@ -376,18 +383,18 @@ public class RozvrhAPI {
      * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
      */
     public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded){
-        final LocalDate monaday = Utils.getWeekMonday(date); //just to be extra sure
-        Rozvrh memory = saved.get(monaday);
+        final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
+        Rozvrh memory = saved.get(monday);
 
         if (memory == null) {
-            loadRozvrh(monaday, (code, rozvrh) -> {
-                if (code == SUCCESS && saved.get(monaday) == null) {
-                    saved.put(monaday, rozvrh);
+            loadRozvrh(monday, (code, rozvrh) -> {
+                if (code == SUCCESS && saved.get(monday) == null) {
+                    saved.put(monday, rozvrh);
                 }
                 onCacheLoaded.method(code, rozvrh);
             }, context);
 
-            fetchXml(monaday, (code, response) -> {
+            fetchXml(monday, (code, response) -> {
                 if (code == SUCCESS) {
                     RozvrhRoot root = parseRozvrh(response);
                     if (root == null || root.getRozvrh() == null) {
@@ -395,8 +402,8 @@ public class RozvrhAPI {
                         return;
                     }
 
-                    saved.put(monaday, root.getRozvrh());
-                    saveRawRozvrh(monaday, response, context);
+                    saved.put(monday, root.getRozvrh());
+                    saveRawRozvrh(monday, response, context);
 
                     onNetLoaded.method(SUCCESS, root.getRozvrh());
                     return;
@@ -411,15 +418,62 @@ public class RozvrhAPI {
     /**
      * Clears object's Rozvrh storage - all rozvrhs will have to load from cache and server again.
      */
-    public void refreshMemory(){
+    public void clearMemory(){
         saved.clear();
     }
 
     /**
-     * Clears object's Rozvrh storage and cache - all rozvrhs will have to load from server again.
+     * Clears memory and requests new timetable from net, if connection fails, it loads it from cache,
+     * if it doesn't it clears cache and saves the new one to cache and returns it using {@code onLoaded}
+     * listener. Codes:
+     * - {@link #SUCCESS} - successfully fetched new timetable from server and cleared cache. Refreshed timetable is in {@code rozvrh}.
+     * - {@link #UNREACHABLE} - fetching data from server failed (no net, login failed, weird response, ...), loaded timetable from cache and cache was not cleared. Cached timetable is in {@code rozvrh}
+     * - {@link #NO_CACHE} - Net failed, cache failed - cache not refreshed, {@code rovrh} is null.
+     *
+     * @param monday monday identifying week or {@code null} for permanent timetable.
      */
-    public void refreshCache(){
-        refreshMemory();
+    public void refresh(LocalDate monday, RozvrhListener onLoaded){
+        clearMemory();
+        fetchXml(monday, (code, xmlString) -> {
+            if (code == SUCCESS) {
+                Rozvrh ret;
+                try {
+                    Serializer serializer = new Persister();
+                    RozvrhRoot root = serializer.read(RozvrhRoot.class, xmlString);
+                    ret = root.getRozvrh();
+                } catch (Exception e) {
+                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
+                    e.printStackTrace();
+                    completeRefresh(monday, null, onLoaded);
+                    return;
+                }
+                clearCache(context);
+                saveRawRozvrh(monday, xmlString, context);
+                completeRefresh(monday, ret, onLoaded);
+            } else {
+                completeRefresh(monday, null, onLoaded);
+                return;
+            }
+        }, requestQueue, context);
+    }
 
+    /**
+     * Helper method for {@link #refresh(LocalDate, RozvrhListener)}
+     *
+     * @param rozvrh if null, fetching from net failed
+     */
+    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, RozvrhListener onLoaded){
+        if (rozvrh == null){
+            //no net
+            loadRozvrh(monday, (code, rozvrh1) -> {
+                if (code == SUCCESS){
+                    onLoaded.method(UNREACHABLE, rozvrh1);
+                }else {
+                    onLoaded.method(NO_CACHE, null);
+                }
+            }, context);
+        }else {
+            onLoaded.method(SUCCESS, rozvrh);
+        }
     }
 }

@@ -275,17 +275,13 @@ public class RozvrhTableFragment extends Fragment {
         Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
             //onCachLoaded
             if (week != finalWeek){
-                Log.d(TAG, "Moved to different week");
                 return;
             }
             if (code == RozvrhAPI.SUCCESS){
                 populate(rozvrh);
             }
-            //DEBUG
-            Log.d(TAG,"Cache " + code);
         },(code, rozvrh) -> {
             if (week != finalWeek){
-                Log.d(TAG, "Moved to different week");
                 return;
             }
             //onNetLoaded
@@ -293,12 +289,20 @@ public class RozvrhTableFragment extends Fragment {
                 populate(rozvrh);
             }
             //DEBUG
-            Log.d(TAG,"Net " + code);
         });
         if (item != null)
             populate(item);
-        else
-            Log.d(TAG, "Not in memory");
+    }
+
+    public void refresh(){
+        final LocalDate finalWeek = week;
+
+        rozvrhAPI.refresh(week, (code, rozvrh) -> {
+            if (code == RozvrhAPI.SUCCESS || code == RozvrhAPI.UNREACHABLE){
+                if (week == finalWeek)
+                    populate(rozvrh);
+            }
+        });
     }
 
 }

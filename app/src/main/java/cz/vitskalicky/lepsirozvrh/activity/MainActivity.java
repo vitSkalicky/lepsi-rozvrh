@@ -1,26 +1,18 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
-import android.support.design.bottomappbar.BottomAppBar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
 
-import org.joda.time.Duration;
-import org.joda.time.LocalDate;
-
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             ibPrev.setVisibility(View.GONE);
         });
         ibRefresh.setOnClickListener(v -> {
-            rozvrhAPI.refresh();
+            rtFragment.refresh();
             rtFragment.displayWeek(week);
         });
 

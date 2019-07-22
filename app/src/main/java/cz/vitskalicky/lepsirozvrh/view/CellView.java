@@ -49,7 +49,7 @@ public class CellView extends ConstraintLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int topHeight = top.getMeasuredHeight();
-        height = (int) Math.ceil(((double)topHeight / rows));
+        height = (int) Math.ceil(((double)topHeight / rows)) + 1; //the +1 is to prevent white lines appearing on the bottom
         //width = (int) (height * spread);
 
         int wMSpec = MeasureSpec.makeMeasureSpec((int) (width * spread), MeasureSpec.EXACTLY);

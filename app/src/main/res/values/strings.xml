@@ -12,14 +12,20 @@
     <string name="info_this_week">This week</string>
     <string name="info_next_week">Next week</string>
     <string name="info_permanent">Permanent schedule</string>
-    <string name="info_2_4_weeks_back">%d weeks back</string>
-    <string name="info_5_weeks_back">%d weeks back</string>
-    <string name="info_2_4_weeks_forward">%d weeks forward</string>
-    <string name="info_5_weeks_forward">%d weeks forward</string>
 
     <string name="info_offline">offline</string> <!-- Displayed as "This week (offline)" - it is cached -->
     <string name="info_unreachable">Error - server unreachable</string> <!-- Same as 'info_offline', but when user uses refresh button -->
     <string name="info_login_failed">Login failed</string>
     <string name="info_unexpected_response">Error - unexpected server response</string> <!-- Same as 'info_offline', but when user uses refresh button -->
     <!-- TODO: Remove or change this placeholder text -->
+
+    <plurals name="info_weeks_back">
+        <item quantity="one">%d week back</item>
+        <item quantity="other">%d weeks back</item>
+    </plurals>
+    <plurals name="info_weeks_forward">
+        <item quantity="one">%d week forward</item>
+        <item quantity="other">%d weeks forward</item>
+    </plurals>
+
 </resources>

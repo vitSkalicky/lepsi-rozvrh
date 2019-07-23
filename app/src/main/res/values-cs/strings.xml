@@ -12,13 +12,20 @@
     <string name="info_this_week">Tento týden</string>
     <string name="info_next_week">Příští týden</string>
     <string name="info_permanent">Stálý rozvrh</string>
-    <string name="info_2_4_weeks_back">Před %d týdny</string>
-    <string name="info_5_weeks_back">Před %d týdny</string>
-    <string name="info_2_4_weeks_forward">Za %d týdny</string>
-    <string name="info_5_weeks_forward">Za %d týdnů</string>
 
     <string name="info_offline">offline</string>
     <string name="info_unreachable">Chyba - server nedostupný</string>
     <string name="info_login_failed">Přihlášení selhalo</string>
     <string name="info_unexpected_response">Chyba - neočekávaná odpověď serveru</string>
+
+    <plurals name="info_weeks_back">
+        <item quantity="one">%d týden zpět</item>
+        <item quantity="few">%d týdny zpět</item>
+        <item quantity="other">%d týdnů zpět</item>
+    </plurals>
+    <plurals name="info_weeks_forward">
+        <item quantity="one">%d týden vpřed</item>
+        <item quantity="few">%d týdny vpřed</item>
+        <item quantity="other">%d týdnů vpřed</item>
+    </plurals>
 </resources>

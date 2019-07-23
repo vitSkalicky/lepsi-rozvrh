@@ -1,7 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -79,35 +78,28 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
 
         ibSettings.setOnClickListener(view -> {
-            Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show();
+            //DEBUG
+            Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show();
         });
         ibPrev.setOnClickListener(v -> {
             week--;
             rtFragment.displayWeek(week);
-            ibPermanent.setVisibility(View.GONE);
-            ibCurrent.setVisibility(View.VISIBLE);
+            showHideButtons();
         });
         ibNext.setOnClickListener(v -> {
             week++;
             rtFragment.displayWeek(week);
-            ibPermanent.setVisibility(View.GONE);
-            ibCurrent.setVisibility(View.VISIBLE);
+            showHideButtons();
         });
         ibCurrent.setOnClickListener(v -> {
             week = 0;
             rtFragment.displayWeek(week);
-            ibPermanent.setVisibility(View.VISIBLE);
-            ibCurrent.setVisibility(View.GONE);
-            ibNext.setVisibility(View.VISIBLE);
-            ibPrev.setVisibility(View.VISIBLE);
+            showHideButtons();
         });
         ibPermanent.setOnClickListener(v -> {
             week = Integer.MAX_VALUE;
             rtFragment.displayWeek(week);
-            ibPermanent.setVisibility(View.GONE);
-            ibCurrent.setVisibility(View.VISIBLE);
-            ibNext.setVisibility(View.GONE);
-            ibPrev.setVisibility(View.GONE);
+            showHideButtons();
         });
         ibRefresh.setOnClickListener(v -> {
             rtFragment.refresh();
@@ -131,6 +123,26 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
         week = 0;
         rtFragment.displayWeek(week);
+    }
+
+    /**
+     * shows/hides buttons accordingly to current state. My english is bad, but you got the point.
+     */
+    private void showHideButtons(){
+        if (week == 0){
+            ibPermanent.setVisibility(View.VISIBLE);
+            ibCurrent.setVisibility(View.GONE);
+        }else{
+            ibPermanent.setVisibility(View.GONE);
+            ibCurrent.setVisibility(View.VISIBLE);
+        }
+        if (week == Integer.MAX_VALUE){
+            ibNext.setVisibility(View.GONE);
+            ibPrev.setVisibility(View.GONE);
+        } else {
+            ibPrev.setVisibility(View.VISIBLE);
+            ibNext.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setInfoText(String text){

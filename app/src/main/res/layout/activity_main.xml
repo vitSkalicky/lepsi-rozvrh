@@ -22,7 +22,17 @@
         android:layout_height="5dp"
         android:background="@drawable/appbar_shadow"
         app:layout_constraintBottom_toBottomOf="@+id/fragment"
-        app:layout_constraintBottom_toTopOf="@id/toolbar" />
+        app:layout_constraintBottom_toTopOf="@id/infoLine" />
+
+    <TextView
+        android:id="@+id/infoLine"
+        style="@style/AppTheme.InfoLine"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -135,16 +145,6 @@
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.Toolbar>
-
-    <TextView
-        android:id="@+id/infoLine"
-        style="@style/AppTheme.InfoLine"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Current timetable"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

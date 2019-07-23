@@ -87,10 +87,9 @@ public class Utils {
             case -1: return context.getString(R.string.info_last_week);
             case Integer.MAX_VALUE: return context.getString(R.string.info_permanent);
         }
-        if (week > 1 && week < 5) return String.format(context.getString(R.string.info_2_4_weeks_forward), week);
-        if (week >= 5) return String.format(context.getString(R.string.info_5_weeks_forward), week);
-        if (week < -1 && week > -5) return String.format(context.getString(R.string.info_2_4_weeks_back), week * -1);
-        if (week <= -5) return String.format(context.getString(R.string.info_5_weeks_back), week * -1);
-        return "If you see this, something went wrong!";
+        if (week > 0)
+            return context.getResources().getQuantityString(R.plurals.info_weeks_forward, week, week);
+        else
+            return context.getResources().getQuantityString(R.plurals.info_weeks_back, -1 * week, -1 * week);
     }
 }

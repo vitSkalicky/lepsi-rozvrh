@@ -20,6 +20,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
@@ -50,6 +51,14 @@ public class RozvrhTableFragment extends Fragment {
     TableRow captionRow;
     TableRow[] tableRows = new TableRow[0];
 
+    DisplayInfo displayInfo;
+
+    private LocalDate week = LocalDate.now();
+    private int weekIndex = 0; //what week is it from now (0: this, 1: next, -1: last, Integer.MAX_VALUE: permanent)
+    private boolean cacheSuccessful = false;
+    private boolean offline = false;
+    private RozvrhAPI rozvrhAPI = null;
+
     public RozvrhTableFragment() {
         // Required empty public constructor
     }
@@ -57,8 +66,9 @@ public class RozvrhTableFragment extends Fragment {
     /**
      * must be called
      */
-    public void init(RozvrhAPI rozvrhAPI){
+    public void init(RozvrhAPI rozvrhAPI, DisplayInfo displayInfo){
         this.rozvrhAPI = rozvrhAPI;
+        this.displayInfo = displayInfo;
     }
 
 
@@ -256,15 +266,15 @@ public class RozvrhTableFragment extends Fragment {
         }
     }
 
-    private LocalDate week = LocalDate.now();
-    private boolean isLoading = false; //true if something is loading
-    private RozvrhAPI rozvrhAPI = null;
+
+    private int netCode = -1;
 
     /**
      *
      * @param weekIndex index of week to display relative to now (0 = this week, 1 = next, -1 = previous) or {@code Integer.MAX_VALUE} for permanent
      */
     public void displayWeek(int weekIndex){
+        this.weekIndex = weekIndex;
         if (weekIndex == Integer.MAX_VALUE)
             week = null;
         else
@@ -272,35 +282,90 @@ public class RozvrhTableFragment extends Fragment {
 
         final LocalDate finalWeek = week;
 
+        displayInfo.setLoadingState(DisplayInfo.LOADING);
+        cacheSuccessful = false;
+        displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
+        if (offline)
+            displayInfo.setMessage(displayInfo.getMessage() + " (" + getString(R.string.info_offline) + ")");
+
+        netCode = -1;
         Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
             //onCachLoaded
-            if (week != finalWeek){
-                return;
-            }
-            if (code == RozvrhAPI.SUCCESS){
-                populate(rozvrh);
+            // have to make sure that net was not faster
+            if (netCode != RozvrhAPI.SUCCESS)
+                onCacheResponse(code, rozvrh, finalWeek);
+            if (netCode != -1 && netCode != RozvrhAPI.SUCCESS){
+                onNetResponse(netCode, null, finalWeek);
             }
         },(code, rozvrh) -> {
-            if (week != finalWeek){
-                return;
-            }
-            //onNetLoaded
-            if (code == RozvrhAPI.SUCCESS){
-                populate(rozvrh);
-            }
-            //DEBUG
+            netCode = code;
+            onNetResponse(code, rozvrh, finalWeek);
         });
-        if (item != null)
+        if (item != null){
             populate(item);
+            displayInfo.setLoadingState(DisplayInfo.LOADED);
+        }
+    }
+
+    private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+        if (week != finalWeek){
+            return;
+        }
+        //onNetLoaded
+        if (code == RozvrhAPI.SUCCESS){
+            populate(rozvrh);
+            if (offline){
+                rozvrhAPI.clearMemory();
+            }
+            offline = false;
+            displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
+            displayInfo.setLoadingState(DisplayInfo.LOADED);
+        } else {
+            offline = true;
+            displayInfo.setLoadingState(DisplayInfo.ERROR);
+            if (cacheSuccessful){
+                displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()) + " (" + getString(R.string.info_offline) + ")");
+            }else if (code == RozvrhAPI.UNREACHABLE) {
+                displayInfo.setMessage(getString(R.string.info_unreachable));
+            } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE){
+                displayInfo.setMessage(getString(R.string.info_unexpected_response));
+            }else if (code == RozvrhAPI.LOGIN_FAILED){
+                displayInfo.setMessage(getString(R.string.info_login_failed));
+            }
+        }
+    }
+
+    private void onCacheResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+        if (week != finalWeek){
+            return;
+        }
+        if (code == RozvrhAPI.SUCCESS){
+            cacheSuccessful = true;
+            populate(rozvrh);
+        }
     }
 
     public void refresh(){
         final LocalDate finalWeek = week;
+        displayInfo.setLoadingState(DisplayInfo.LOADING);
 
         rozvrhAPI.refresh(week, (code, rozvrh) -> {
-            if (code == RozvrhAPI.SUCCESS || code == RozvrhAPI.UNREACHABLE){
-                if (week == finalWeek)
-                    populate(rozvrh);
+            if (week != finalWeek)
+                return;
+            if (rozvrh != null)
+                populate(rozvrh);
+            if (code == RozvrhAPI.SUCCESS){
+                displayInfo.setLoadingState(DisplayInfo.LOADED);
+                displayInfo.setMessage((Utils.getfl10nedWeekString(weekIndex, getContext())));
+            }else {
+                displayInfo.setLoadingState(DisplayInfo.ERROR);
+                if (code == RozvrhAPI.UNREACHABLE) {
+                    displayInfo.setMessage(getString(R.string.info_unreachable));
+                } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE){
+                    displayInfo.setMessage(getString(R.string.info_unexpected_response));
+                }else if (code == RozvrhAPI.LOGIN_FAILED){
+                    displayInfo.setMessage(getString(R.string.info_login_failed));
+                }
             }
         });
     }

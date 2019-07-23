@@ -4,6 +4,8 @@
 */
 package cz.vitskalicky.lepsirozvrh;
 
+import android.content.Context;
+
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -70,5 +72,25 @@ public class Utils {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("mm:ss.SSS");
         LocalTime time = LocalTime.now();
         return dtf.print(time);
+    }
+
+    /**
+     * Get fucking localized string for week info
+     * @param week week relative to now: 0 - current, 1 - next, -1 previous, {@code Integer.MAX_VALUE} permanent schedule
+     * @return Localize, human friendly string
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static String getfl10nedWeekString(int week, Context context){
+        switch (week){
+            case 0: return context.getString(R.string.info_this_week);
+            case 1: return context.getString(R.string.info_next_week);
+            case -1: return context.getString(R.string.info_last_week);
+            case Integer.MAX_VALUE: return context.getString(R.string.info_permanent);
+        }
+        if (week > 1 && week < 5) return String.format(context.getString(R.string.info_2_4_weeks_forward), week);
+        if (week >= 5) return String.format(context.getString(R.string.info_5_weeks_forward), week);
+        if (week < -1 && week > -5) return String.format(context.getString(R.string.info_2_4_weeks_back), week * -1);
+        if (week <= -5) return String.format(context.getString(R.string.info_5_weeks_back), week * -1);
+        return "If you see this, something went wrong!";
     }
 }

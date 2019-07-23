@@ -10,13 +10,14 @@
         android:name="cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/infoLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@drawable/appbar_shadow"
@@ -57,11 +58,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/refresh"
+                app:layout_constraintEnd_toStartOf="@+id/progressBar"
                 app:layout_constraintStart_toEndOf="@id/settings"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -82,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="0dp"
-                    android:contentDescription="@string/permanent_timetable"
+                    android:contentDescription="@string/permanent_shedule"
                     android:src="@drawable/ic_permanent_black_24"
                     android:visibility="gone" />
 
@@ -119,9 +122,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/refresh"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/infoLine"
+        style="@style/AppTheme.InfoLine"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Current timetable"
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

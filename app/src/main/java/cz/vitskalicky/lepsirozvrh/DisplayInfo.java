@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Information about displayed content for the user like loading status etc.
  */
-public class displayInfo {
+public class DisplayInfo {
     private int loading = 0;
 
     public static final int LOADED = 0;

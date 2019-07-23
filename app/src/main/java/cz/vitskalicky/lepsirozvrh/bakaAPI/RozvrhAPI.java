@@ -427,8 +427,9 @@ public class RozvrhAPI {
      * if it doesn't it clears cache and saves the new one to cache and returns it using {@code onLoaded}
      * listener. Codes:
      * - {@link #SUCCESS} - successfully fetched new timetable from server and cleared cache. Refreshed timetable is in {@code rozvrh}.
-     * - {@link #UNREACHABLE} - fetching data from server failed (no net, login failed, weird response, ...), loaded timetable from cache and cache was not cleared. Cached timetable is in {@code rozvrh}
-     * - {@link #NO_CACHE} - Net failed, cache failed - cache not refreshed, {@code rovrh} is null.
+     * - {@link #UNREACHABLE} - could not get response from server, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * - {@link #UNEXPECTED_RESPONSE} - error in parsing fetched data, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * - {@link #LOGIN_FAILED} - Response contaned message indicating faile login, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
      *
      * @param monday monday identifying week or {@code null} for permanent timetable.
      */
@@ -444,14 +445,14 @@ public class RozvrhAPI {
                 } catch (Exception e) {
                     Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
                     e.printStackTrace();
-                    completeRefresh(monday, null, onLoaded);
+                    completeRefresh(monday, null, UNEXPECTED_RESPONSE, onLoaded);
                     return;
                 }
                 clearCache(context);
                 saveRawRozvrh(monday, xmlString, context);
-                completeRefresh(monday, ret, onLoaded);
+                completeRefresh(monday, ret, code, onLoaded);
             } else {
-                completeRefresh(monday, null, onLoaded);
+                completeRefresh(monday, null, code, onLoaded);
                 return;
             }
         }, requestQueue, context);
@@ -462,14 +463,14 @@ public class RozvrhAPI {
      *
      * @param rozvrh if null, fetching from net failed
      */
-    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, RozvrhListener onLoaded){
+    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, int netResponseCode, RozvrhListener onLoaded){
         if (rozvrh == null){
             //no net
             loadRozvrh(monday, (code, rozvrh1) -> {
                 if (code == SUCCESS){
-                    onLoaded.method(UNREACHABLE, rozvrh1);
+                    onLoaded.method(netResponseCode, rozvrh1);
                 }else {
-                    onLoaded.method(NO_CACHE, null);
+                    onLoaded.method(netResponseCode, null);
                 }
             }, context);
         }else {

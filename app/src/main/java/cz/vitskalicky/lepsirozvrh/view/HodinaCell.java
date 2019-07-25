@@ -81,6 +81,10 @@ public class HodinaCell {
         view.setSpread(weight);
     }
 
+    public void empty(){
+        update(null, 1);
+    }
+
     public View getView() {
         return view;
     }

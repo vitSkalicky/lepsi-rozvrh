@@ -42,6 +42,12 @@ public class DenCell {
         twdatum.setText(Utils.dateToLoacalizedString(Utils.parseDate(den.getDatum())));
     }
 
+    public void empty(){
+        this.den = null;
+        twdatum.setText("");
+        twdatum.setText("");
+    }
+
     public View getView() {
         return view;
     }

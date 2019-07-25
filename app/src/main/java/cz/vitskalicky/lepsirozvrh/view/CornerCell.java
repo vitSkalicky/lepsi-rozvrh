@@ -35,6 +35,10 @@ public class CornerCell {
         nazevcyklu = rozvrh.getNazevcyklu();
         twnazevcyklu.setText(nazevcyklu);
     }
+    public void empty(){
+        nazevcyklu = "";
+        twnazevcyklu.setText("");
+    }
 
     public View getView() {
         return view;

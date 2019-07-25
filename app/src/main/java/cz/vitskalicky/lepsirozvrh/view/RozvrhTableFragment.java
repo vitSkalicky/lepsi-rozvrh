@@ -266,6 +266,52 @@ public class RozvrhTableFragment extends Fragment {
         }
     }
 
+    /**
+     * Empty the table when loading to prevent confusion
+     */
+    private void empty(){
+        final int oldRows = rows;
+        final int oldColumns = columns;
+        rows = RozvrhAPI.getRememberedRows(getContext());
+        columns = RozvrhAPI.getRememberedColumns(getContext());
+        spread = 1;
+
+        cornerCell.view.setRows(rows + 1);
+
+        if (oldRows != rows || oldColumns != columns){
+            createViews();
+        }
+
+        //populate
+        cornerCell.empty();
+        for (int i = 0; i < columns; i++) {
+            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
+            captionCells[i].empty();
+            captionCells[i].view.setSpread(spread);
+        }
+
+        for (int i = 0; i < rows; i++) {
+            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
+            denCells[i].empty();
+
+            int j = 0;
+            for (; j < columns; j++) {
+                hodinaCells.get(i).get(j).empty();
+            }
+            //Remove cells that are left over from a multiple-cells-in-caption timetable
+            final int lastIndex = j;
+            final int size =  hodinaCells.get(i).size();
+            for (; j < size; j++){
+                HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
+                hodinaCells.get(i).remove(toRemove);
+                ViewGroup parent = (ViewGroup) toRemove.view.getParent();
+                if (parent != null) {
+                    parent.removeView(toRemove.view);
+                }
+            }
+        }
+    }
+
 
     private int netCode = -1;
 
@@ -304,6 +350,8 @@ public class RozvrhTableFragment extends Fragment {
         if (item != null){
             populate(item);
             displayInfo.setLoadingState(DisplayInfo.LOADED);
+        }else {
+            empty();
         }
     }
 

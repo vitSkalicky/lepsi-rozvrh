@@ -42,6 +42,12 @@ public class CaptionCell {
         twbegin.setText(caption.getBegintime());
         twend.setText(caption.getEndtime());
     }
+    public void empty(){
+        caption = null;
+        twcaption.setText("");
+        twbegin.setText("");
+        twend.setText("");
+    }
 
     public View getView() {
         return view;

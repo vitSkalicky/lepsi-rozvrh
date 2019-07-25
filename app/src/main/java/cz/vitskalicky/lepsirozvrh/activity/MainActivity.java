@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
         week = 0;
         rtFragment.displayWeek(week);
+        showHideButtons();
     }
 
     /**

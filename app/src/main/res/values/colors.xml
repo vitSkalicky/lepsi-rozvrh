@@ -9,4 +9,5 @@
     <color name="rozvrhH">#eceff1</color>
     <color name="rozvrhEmpty">#00FFFFFF</color>
     <color name="rozvrhDivider">#000000</color>
+    <color name="colorError">#B00020</color>
 </resources>

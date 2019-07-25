@@ -8,6 +8,18 @@
     <string name="settings">Nastavení</string>
     <string name="refresh">Obnovit</string>
 
+    <string name="username">Přihlašovací jméno</string>
+    <string name="password">Heslo</string>
+    <string name="bakalari_server_adress">Adresa vašeho serveru Bakaláři</string>
+    <string name="choose_school">Vybrat školu</string>
+    <string name="login_button">Přihlásit se</string>
+    <string name="login_message">Přihlaste se do systému Bakláři</string>
+    <string name="invalid_username">Neplatné uživatelské jméno</string>
+    <string name="invalid_password">Špatné heslo</string>
+    <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
+    <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
+    <string name="unreachable">Server nedostupný (zkotrolujte internetové připojení a adresu serveru)</string>
+
     <string name="info_last_week">Minulý týden</string>
     <string name="info_this_week">Tento týden</string>
     <string name="info_next_week">Příští týden</string>

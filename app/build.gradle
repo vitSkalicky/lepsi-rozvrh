@@ -34,4 +34,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'org.simpleframework:simple-xml:2.7.1'
     implementation 'joda-time:joda-time:2.10.2'
+    implementation 'com.googlecode.cqengine:cqengine:3.4.0'
 }

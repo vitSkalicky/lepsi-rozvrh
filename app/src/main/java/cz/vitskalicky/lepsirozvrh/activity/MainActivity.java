@@ -1,6 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
@@ -46,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (Login.getToken(context).equals("")){
+            //not logged in
+            Intent intent = new Intent(context, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         rozvrhAPI = new RozvrhAPI(Volley.newRequestQueue(context), context);
 
@@ -78,8 +87,13 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
 
         ibSettings.setOnClickListener(view -> {
-            //DEBUG
-            Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show();
+            //<DEBUG>
+            //Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra(LoginActivity.LOGOUT, true);
+            startActivity(intent);
+            finish();
+            //</DEBUG>
         });
         ibPrev.setOnClickListener(v -> {
             week--;

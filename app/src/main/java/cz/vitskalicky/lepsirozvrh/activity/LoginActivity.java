@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.GONE);
         twMessage.setText("");
+        //tmp
+        bChooseSchool.setVisibility(View.GONE);
 
         etUsername.setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
         etURL.setText(SharedPrefs.getString(this, SharedPrefs.URL));

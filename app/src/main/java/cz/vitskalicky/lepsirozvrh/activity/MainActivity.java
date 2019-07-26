@@ -16,8 +16,10 @@ import com.android.volley.toolbox.Volley;
 
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -87,14 +89,8 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
 
         ibSettings.setOnClickListener(view -> {
-            //<DEBUG>
-            //Toast.makeText(context, "Not yet", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra(LoginActivity.LOGOUT, true);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-            finish();
-            return;
-            //</DEBUG>
         });
         ibPrev.setOnClickListener(v -> {
             week--;
@@ -139,6 +135,18 @@ public class MainActivity extends AppCompatActivity {
         week = 0;
         rtFragment.displayWeek(week);
         showHideButtons();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleamPreference(context, R.string.PREFS_SHOW_INFO_LINE)){
+            infoLine.setVisibility(View.VISIBLE);
+        }else {
+            infoLine.setVisibility(View.GONE);
+        }
     }
 
     /**

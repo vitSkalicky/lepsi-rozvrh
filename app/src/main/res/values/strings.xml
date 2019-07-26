@@ -34,6 +34,15 @@
     <string name="info_login_failed">Login failed</string>
     <string name="info_unexpected_response">Error - unexpected server response</string> <!-- Same as 'info_offline', but when user uses refresh button -->
 
+    <string name="user">User</string>
+    <string name="student">Strudent</string>
+    <string name="teacher">Teacher</string>
+    <string name="parent">Parent</string>
+    <string name="logout">Logout</string>
+    <string name="look">App look</string>
+    <string name="info_line">Info-line</string>
+    <string name="info_line_desc">Show information line</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>
         <item quantity="other">%d weeks back</item>

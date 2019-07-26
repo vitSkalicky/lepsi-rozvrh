@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.android.volley.toolbox.StringRequest;
+
 /**
  * Utilities for shared preferences
  */
@@ -14,6 +16,7 @@ public class SharedPrefs {
     public static final String USERNAME = "username";
     public static final String PASSWORD_HASH = "passwordHash";
     public static final String NAME = "name";
+    public static final String TYPE = "type";
 
     public static final String REMEMBERED_ROWS = "remembered_rows";
     public static final String REMEMBERED_COLUMNS = "remembered_columns";
@@ -27,6 +30,18 @@ public class SharedPrefs {
     public static void setString(Context context, String key, String value) {
         SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
         preferenceManager.putString(key, value);
+        preferenceManager.apply();
+    }
+
+    public static boolean getBoolean(Context context, String key) {
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(key, false);
+    }
+
+    public static void setBoolean(Context context, String key, boolean value) {
+        SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        preferenceManager.putBoolean(key, value);
         preferenceManager.apply();
     }
 
@@ -52,5 +67,26 @@ public class SharedPrefs {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .contains(key);
+    }
+
+
+    public static boolean containsPreference(Context context, int stringId){
+        return contains(context, context.getString(stringId));
+    }
+
+    public static String getStringPreference(Context context, int stringId){
+        if (!containsPreference(context, stringId)) return "";
+        return getString(context, context.getString(stringId));
+    }
+
+    public static boolean getBooleamPreference(Context context, int stringId){
+        if (!containsPreference(context, stringId)) return false;
+
+        return getBoolean(context, context.getString(stringId));
+    }
+
+    public static int getIntPreference(Context context, int stringId){
+        if (!containsPreference(context, stringId)) return 0;
+        return getInt(context, context.getString(stringId));
     }
 }

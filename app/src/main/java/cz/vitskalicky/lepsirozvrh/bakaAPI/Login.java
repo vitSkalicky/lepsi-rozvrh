@@ -140,8 +140,10 @@ public class Login {
                             }
 
                             String name = "";
+                            String type = "";
                             try {
                                 name = doc1.getElementsByTagName("jmeno").item(0).getTextContent();
+                                type = doc1.getElementsByTagName("typ").item(0).getTextContent();
                             }catch (Exception e){
                                 Log.e(TAG, "Login failed: user's name not found, setting to \"\". response:\n" + response1);
                             }
@@ -151,6 +153,7 @@ public class Login {
                             SharedPrefs.setString(context, SharedPrefs.PASSWORD_HASH, passwordHash);
                             SharedPrefs.setString(context, SharedPrefs.URL, uniUrl);
                             SharedPrefs.setString(context,SharedPrefs.NAME, name);
+                            SharedPrefs.setString(context, SharedPrefs.TYPE, type);
 
                             listener.onResponse(SUCCESS,token);
                             return;

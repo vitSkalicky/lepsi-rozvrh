@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/user">
+        <Preference
+            android:selectable="false"
+            android:title="Jakub Novák"
+            android:summary="Žák"
+            android:key="@string/PREFS_USER"/>
+        <Preference
+            android:title="@string/logout"
+            android:icon="@drawable/ic_logout_black_24"
+            android:key="@string/PREFS_LOGOUT"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/look">
+        <SwitchPreference
+            android:title="@string/info_line"
+            android:summary="@string/info_line_desc"
+            android:defaultValue="true"
+            android:key="@string/PREFS_SHOW_INFO_LINE"/>
+    </PreferenceCategory>
+</PreferenceScreen>

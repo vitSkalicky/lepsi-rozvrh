@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Place only constant that need to be accessible in xml here -->
+    <string name="PREFS_SHOW_INFO_LINE" translatable="false">prefs-show-info-line</string>
+    <string name="PREFS_LOGOUT" translatable="false">prefs-logout</string>
+    <string name="PREFS_USER" translatable="false">prefs-user</string>
+
+</resources>

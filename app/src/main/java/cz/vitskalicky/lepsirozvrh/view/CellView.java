@@ -2,8 +2,8 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.view.menu.MenuWrapperFactory;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.view.menu.MenuWrapperFactory;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +22,7 @@ public class CellView extends ConstraintLayout {
     public CellView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-    public CellView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    
     //</editor-fold>
 
     private float spread = 1;

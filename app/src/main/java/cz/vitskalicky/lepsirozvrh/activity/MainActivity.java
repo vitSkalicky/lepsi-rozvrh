@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(context, LoginActivity.class);
             startActivity(intent);
             finish();
+            return;
         }
 
         rozvrhAPI = new RozvrhAPI(Volley.newRequestQueue(context), context);
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(LoginActivity.LOGOUT, true);
             startActivity(intent);
             finish();
+            return;
             //</DEBUG>
         });
         ibPrev.setOnClickListener(v -> {

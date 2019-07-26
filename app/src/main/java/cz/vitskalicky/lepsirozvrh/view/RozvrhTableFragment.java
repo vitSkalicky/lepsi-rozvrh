@@ -88,6 +88,11 @@ public class RozvrhTableFragment extends Fragment {
     }
 
     public void populate(Rozvrh rozvrh){
+        //check if not detached
+        if (getContext() == null){
+            return;
+        }
+
         int oldRows = rows;
         int oldColumns = columns;
         rows = rozvrh.getDny().size();
@@ -270,6 +275,10 @@ public class RozvrhTableFragment extends Fragment {
      * Empty the table when loading to prevent confusion
      */
     private void empty(){
+        //check if fragment was not removed while loading
+        if (getContext() == null){
+            return;
+        }
         final int oldRows = rows;
         final int oldColumns = columns;
         rows = RozvrhAPI.getRememberedRows(getContext());
@@ -356,6 +365,10 @@ public class RozvrhTableFragment extends Fragment {
     }
 
     private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+        //check if fragment was not removed while loading
+        if (getContext() == null){
+            return;
+        }
         if (week != finalWeek){
             return;
         }
@@ -384,6 +397,10 @@ public class RozvrhTableFragment extends Fragment {
     }
 
     private void onCacheResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+        //check if fragment was not removed while loading
+        if (getContext() == null){
+            return;
+        }
         if (week != finalWeek){
             return;
         }
@@ -398,6 +415,10 @@ public class RozvrhTableFragment extends Fragment {
         displayInfo.setLoadingState(DisplayInfo.LOADING);
 
         rozvrhAPI.refresh(week, (code, rozvrh) -> {
+            //check if fragment was not removed while loading
+            if (getContext() == null){
+                return;
+            }
             if (week != finalWeek)
                 return;
             if (rozvrh != null)

@@ -45,8 +45,6 @@ public class LoginActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.GONE);
         twMessage.setText("");
-        //tmp
-        bChooseSchool.setVisibility(View.GONE);
 
         etUsername.setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
         etURL.setText(SharedPrefs.getString(this, SharedPrefs.URL));
@@ -65,6 +63,12 @@ public class LoginActivity extends AppCompatActivity {
             etURL.getBackground().setColorFilter(null);
 
             Login.login(etURL.getText().toString(), etUsername.getText().toString(), etPassword.getText().toString(), (code, data) -> {
+                if (code == Login.SUCCESS){
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
                 bLogin.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
                 if (code == Login.WRONG_USERNAME){
@@ -86,11 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (code == Login.ROZVRH_DISABLED){
                     twMessage.setText(R.string.schedule_disabled);
                 }
-                if (code == Login.SUCCESS){
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+
             }, this);
         });
     }

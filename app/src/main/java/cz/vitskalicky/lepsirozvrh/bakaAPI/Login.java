@@ -32,6 +32,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 
 public class Login {
     private static String TAG = Login.class.getSimpleName();
@@ -174,6 +175,7 @@ public class Login {
         SharedPrefs.remove(context, SharedPrefs.PASSWORD_HASH);
         SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
+        RozvrhAPI.clearCache(context);
     }
 
     /**

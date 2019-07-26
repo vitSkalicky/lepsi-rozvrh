@@ -22,6 +22,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,10 +68,24 @@ public class Login {
     public static void login(String url, String username, String password, Listener listener, Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
 
+        if (username.equals("")){
+            listener.onResponse(WRONG_USERNAME, null);
+            return;
+        }
+
+        //URL encode username
+        String s = username;
+        try {
+            s = URLEncoder.encode(username, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String enUsername = s;
+
         String uniUrl = unifyUrl(url);
 
         //get salts, etc.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, uniUrl + "?gethx=" + username, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, uniUrl + "?gethx=" + enUsername, response -> {
 
             //request successful
             try {
@@ -82,7 +98,7 @@ public class Login {
                 int res = Integer.parseInt(doc.getElementsByTagName("res").item(0).getTextContent());
 
                 if (res == 2){ //wrong username
-                    Log.i(TAG, "Login failed: wrong username - username: " + username + " url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
+                    Log.i(TAG, "Login failed: wrong username - username: " + username + " url: " + uniUrl + "?gethx=" + enUsername + " response:\n" + response);
                     listener.onResponse(WRONG_USERNAME, response);
                     return;
                 }
@@ -154,12 +170,12 @@ public class Login {
                 queue.add(passwordCheck);
 
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?gethx=" + username + " response:\n" + response);
+                Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?gethx=" + enUsername + " response:\n" + response);
                 e.printStackTrace();
                 listener.onResponse(UNEXPECTER_RESPONSE, response);
             }
         }, error -> {
-            Log.i(TAG,"Login failed: connection error: url: " + uniUrl + "?gethx=" + username + " error message: " + error.getMessage());
+            Log.i(TAG,"Login failed: connection error: url: " + uniUrl + "?gethx=" + enUsername + " error message: " + error.getMessage());
             error.printStackTrace();
             listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
         });

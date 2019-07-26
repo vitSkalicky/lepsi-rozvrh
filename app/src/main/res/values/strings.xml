@@ -17,8 +17,11 @@
     <string name="invalid_password">Wrong password</string>
     <string name="schedule_disabled">Schedule is disabled on this server</string>
     <string name="unexpected_response">Unexpected response from server (check address)</string>
-    <string name="unreachable">Server unreachable (check your connection and address)</string>
+    <string name="unreachable">Server unreachable (check your internet connection and address)</string>
+    <string name="enter_username">Enter your username</string>
+    <string name="enter_url">Enter url of your Bakaláři server or tap \'choose school\'</string>
     <string name="search">Search…</string>
+    <string name="connection_failed">Could not connect to server</string>
 
     <!-- Info messages -->
     <string name="info_last_week">Last week</string>

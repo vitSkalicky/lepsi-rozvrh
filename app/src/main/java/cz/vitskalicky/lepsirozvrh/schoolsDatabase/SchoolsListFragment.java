@@ -14,8 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import cz.vitskalicky.lepsirozvrh.R;
@@ -30,8 +34,12 @@ public class SchoolsListFragment extends Fragment {
 
     ProgressBar progressBar;
     EditText etSearch;
+    TextView twError;
+    ImageView ivError;
 
     OnItemClickListener listener = url -> {};
+
+    RequestQueue requestQueue = null;
 
 
     public SchoolsListFragment() {
@@ -51,8 +59,13 @@ public class SchoolsListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         progressBar = view.findViewById(R.id.progressBar);
         etSearch = view.findViewById(R.id.editTextSearch);
+        twError = view.findViewById(R.id.textViewError);
+        ivError = view.findViewById(R.id.imageViewError);
 
         recyclerView.setVisibility(View.GONE);
+        twError.setVisibility(View.GONE);
+        ivError.setVisibility(View.GONE);
+
 
         etSearch.addTextChangedListener(new TextWatcher() {//<editor-fold desc="unused methods">
             @Override
@@ -73,18 +86,25 @@ public class SchoolsListFragment extends Fragment {
             }
         });
 
-        SchoolsDatabaseAPI.getAllSchools(Volley.newRequestQueue(getContext()), getContext(), collection -> {
-            layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
 
-            adapter = new SchoolsAdapter(getContext(), collection, listener);
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+        requestQueue = SchoolsDatabaseAPI.getAllSchools(getContext(), collection -> {
+            if (collection != null) {
+                layoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(layoutManager);
 
-            adapter.onSearchChange(etSearch.getText().toString());
+                adapter = new SchoolsAdapter(getContext(), collection, listener);
 
+                recyclerView.setAdapter(adapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+
+                adapter.onSearchChange(etSearch.getText().toString());
+            }else {
+                progressBar.setVisibility(View.GONE);
+                twError.setVisibility(View.VISIBLE);
+                ivError.setVisibility(View.VISIBLE);
+            }
         });
 
         //automatically show keyboard
@@ -95,7 +115,13 @@ public class SchoolsListFragment extends Fragment {
         return view;
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (requestQueue != null){
+            requestQueue.cancelAll(request -> true/*all requests*/);
+        }
+    }
 
     public static interface OnItemClickListener{
         public void onClick(String url);

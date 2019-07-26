@@ -19,7 +19,10 @@
     <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
     <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
     <string name="unreachable">Server nedostupný (zkotrolujte internetové připojení a adresu serveru)</string>
+    <string name="enter_username">Zadejte vaše přihlašovací jméno</string>
+    <string name="enter_url">Zadejte adresu vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
+    <string name="connection_failed">Připojení k serveru selhalo</string>
 
     <string name="info_last_week">Minulý týden</string>
     <string name="info_this_week">Tento týden</string>

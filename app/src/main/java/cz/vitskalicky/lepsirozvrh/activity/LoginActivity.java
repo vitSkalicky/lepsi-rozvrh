@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,9 +28,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final int REQUEST_PICK_SCHOOL = 64585; //random number
 
-    EditText etUsername;
-    EditText etPassword;
-    EditText etURL;
+    TextInputLayout tilUsername;
+    TextInputLayout tilPassword;
+    TextInputLayout tilURL;
     Button bChooseSchool;
     Button bLogin;
     ProgressBar progressBar;
@@ -40,19 +41,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etUsername = findViewById(R.id.editTextName);
-        etPassword = findViewById(R.id.editTextPassword);
-        etURL = findViewById(R.id.editTextURL);
+        tilUsername = findViewById(R.id.textInputLayoutName);
+        tilPassword = findViewById(R.id.textInputLayoutPassword);
+        tilURL = findViewById(R.id.textInputLayoutURL);
         bChooseSchool = findViewById(R.id.buttonSchoolList);
         bLogin = findViewById(R.id.buttonLogin);
         progressBar = findViewById(R.id.progressBar);
         twMessage = findViewById(R.id.textViewMessage);
 
+        tilUsername.setErrorEnabled(true);
+        tilPassword.setErrorEnabled(true);
+        tilURL.setErrorEnabled(true);
+
         progressBar.setVisibility(View.GONE);
         twMessage.setText("");
 
-        etUsername.setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
-        etURL.setText(SharedPrefs.getString(this, SharedPrefs.URL));
+        tilUsername.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
+        tilURL.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.URL));
 
         if (getIntent().getBooleanExtra(LOGOUT, false)){
             Login.logout(this);
@@ -68,11 +73,27 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             twMessage.setText("");
 
-            etUsername.getBackground().setColorFilter(null);
-            etPassword.getBackground().setColorFilter(null);
-            etURL.getBackground().setColorFilter(null);
+            /*tilUsername.setError(null);
+            tilPassword.setError(null);
+            tilURL.setError(null);*/
+            tilUsername.setErrorEnabled(false);
+            tilPassword.setErrorEnabled(false);
+            tilURL.setErrorEnabled(false);
 
-            Login.login(etURL.getText().toString(), etUsername.getText().toString(), etPassword.getText().toString(), (code, data) -> {
+            if (tilURL.getEditText().getText().toString().trim().equals("")){
+                tilURL.setError(getText(R.string.enter_url));
+                bLogin.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+            if (tilUsername.getEditText().getText().toString().trim().equals("")){
+                tilUsername.setError(getText(R.string.enter_username));
+                bLogin.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+
+            Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code, data) -> {
                 if (code == Login.SUCCESS){
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
@@ -82,22 +103,20 @@ public class LoginActivity extends AppCompatActivity {
                 bLogin.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
                 if (code == Login.WRONG_USERNAME){
-                    twMessage.setText(R.string.invalid_username);
-                    etUsername.getBackground().setColorFilter(getResources().getColor(R.color.colorError), PorterDuff.Mode.SRC_ATOP);
+                    tilUsername.setError(getText(R.string.invalid_username));
                 }
                 if (code == Login.WRONG_PASSWORD){
-                    twMessage.setText(R.string.invalid_password);
-                    etPassword.getBackground().setColorFilter(getResources().getColor(R.color.colorError), PorterDuff.Mode.SRC_ATOP);
+                    tilPassword.setError(getText(R.string.invalid_password));
                 }
                 if (code == Login.SERVER_UNREACHABLE){
                     twMessage.setText(R.string.unreachable);
-                    etURL.getBackground().setColorFilter(getResources().getColor(R.color.colorError), PorterDuff.Mode.SRC_ATOP);
+                    tilURL.setError(" ");
                 }
                 if (code == Login.UNEXPECTER_RESPONSE){
-                    twMessage.setText(R.string.unexpected_response);
-                    etURL.getBackground().setColorFilter(getResources().getColor(R.color.colorError), PorterDuff.Mode.SRC_ATOP);
+                    tilURL.setError(getText(R.string.unexpected_response));
                 }
                 if (code == Login.ROZVRH_DISABLED){
+                    tilURL.setError(" ");
                     twMessage.setText(R.string.schedule_disabled);
                 }
 
@@ -112,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_PICK_SCHOOL && resultCode == SchoolsListActivity.RESULT_OK && data != null){
             String url = data.getStringExtra(SchoolsListActivity.EXTRA_URL);
             if (url != null){
-                etURL.setText(url);
+                tilURL.getEditText().setText(url);
             }else {
                 Log.e(TAG, "No extra containing url (extra key: " + SchoolsListActivity.EXTRA_URL + ")");
             }

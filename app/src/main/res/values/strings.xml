@@ -18,6 +18,7 @@
     <string name="schedule_disabled">Schedule is disabled on this server</string>
     <string name="unexpected_response">Unexpected response from server (check address)</string>
     <string name="unreachable">Server unreachable (check your connection and address)</string>
+    <string name="search">Search…</string>
 
     <!-- Info messages -->
     <string name="info_last_week">Last week</string>
@@ -29,7 +30,6 @@
     <string name="info_unreachable">Error - server unreachable</string> <!-- Same as 'info_offline', but when user uses refresh button -->
     <string name="info_login_failed">Login failed</string>
     <string name="info_unexpected_response">Error - unexpected server response</string> <!-- Same as 'info_offline', but when user uses refresh button -->
-    <!-- TODO: Remove or change this placeholder text -->
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>
@@ -39,5 +39,6 @@
         <item quantity="one">%d week forward</item>
         <item quantity="other">%d weeks forward</item>
     </plurals>
+
 
 </resources>

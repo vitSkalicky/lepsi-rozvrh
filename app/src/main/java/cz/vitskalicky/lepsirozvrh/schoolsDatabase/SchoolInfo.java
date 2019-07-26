@@ -18,13 +18,17 @@ public class SchoolInfo {
      * Only lowercased letters and digits are copied to {@link #stripedName}.
      */
     public void createStripedName(String name){
+        stripedName = stripName(name);
+    }
+
+    public static String stripName(String text){
         StringBuilder sb = new StringBuilder();
-        for (char c :name.toCharArray()) {
+        for (char c :text.toCharArray()) {
             c = Character.toLowerCase(c);
             if (Character.isLetterOrDigit(c))
                 sb.append(c);
         }
-        stripedName = sb.toString();
+        return sb.toString();
     }
 
     @Override

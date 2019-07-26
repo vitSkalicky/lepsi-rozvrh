@@ -1,0 +1,103 @@
+package cz.vitskalicky.lepsirozvrh.schoolsDatabase;
+
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+
+import com.android.volley.toolbox.Volley;
+
+import cz.vitskalicky.lepsirozvrh.R;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class SchoolsListFragment extends Fragment {
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
+    SchoolsAdapter adapter = null;
+
+    ProgressBar progressBar;
+    EditText etSearch;
+
+    OnItemClickListener listener = url -> {};
+
+
+    public SchoolsListFragment() {
+        // Required empty public constructor
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_schools_list, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
+        etSearch = view.findViewById(R.id.editTextSearch);
+
+        recyclerView.setVisibility(View.GONE);
+
+        etSearch.addTextChangedListener(new TextWatcher() {//<editor-fold desc="unused methods">
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            //</editor-fold>
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (adapter != null){
+                    adapter.onSearchChange(s.toString());
+                }
+            }
+        });
+
+        SchoolsDatabaseAPI.getAllSchools(Volley.newRequestQueue(getContext()), getContext(), collection -> {
+            layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+
+            adapter = new SchoolsAdapter(getContext(), collection, listener);
+
+            recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+
+            adapter.onSearchChange(etSearch.getText().toString());
+
+        });
+
+        //automatically show keyboard
+        etSearch.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
+        return view;
+    }
+
+
+
+    public static interface OnItemClickListener{
+        public void onClick(String url);
+    }
+}

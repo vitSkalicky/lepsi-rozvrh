@@ -19,15 +19,18 @@ public class HodinaCell {
     CellView view;
     RozvrhHodina hodina;
     float weight;
+    boolean perm;
 
     TextView twzkrpr;
     TextView twzkrmist;
     TextView twzkrskup;
     TextView twzkruc;
+    TextView twzkruc2;
+    TextView twcycle;
 
-    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width) {
+    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width, boolean perm) {
         this(context, parent, top, rows, width);
-        update(hodina, weight);
+        update(hodina, weight, perm);
     }
 
     public HodinaCell(Context context, ViewGroup parent, View top, int rows, int width){
@@ -40,11 +43,15 @@ public class HodinaCell {
         twzkrmist = view.findViewById(R.id.textViewZkrmist);
         twzkrskup = view.findViewById(R.id.textViewZkrskup);
         twzkruc = view.findViewById(R.id.textViewZkruc);
+        twzkruc2 = view.findViewById(R.id.textViewZkruc2);
+        twcycle = view.findViewById(R.id.textViewCycle);
 
         twzkrpr.setText("");
         twzkrmist.setText("");
         twzkrskup.setText("");
         twzkruc.setText("");
+        twzkruc2.setText("");
+        twcycle.setText("");
 
         view.setOnClickListener(v -> {
             if (hodina == null)
@@ -69,6 +76,7 @@ public class HodinaCell {
             addField(sb,R.string.group, hodina.getSkup());
             addField(sb,R.string.change, hodina.getChng());
             addField(sb,R.string.notice, hodina.getNotice());
+            addField(sb,R.string.cycle, hodina.getCycle());
 
             builder.setMessage(sb.toString());
             builder.setPositiveButton(context.getString(R.string.close), (dialog, which) -> {});
@@ -84,8 +92,9 @@ public class HodinaCell {
         }
     }
 
-    public void update(RozvrhHodina hodina, float weight) {
+    public void update(RozvrhHodina hodina, float weight, boolean perm) {
         this.hodina = hodina;
+        this.perm = perm;
         updateWeight(weight);
 
         if (hodina != null) {
@@ -94,7 +103,17 @@ public class HodinaCell {
                 twzkrpr.setText(hodina.getZkratka());
             twzkrmist.setText(hodina.getZkrmist());
             twzkrskup.setText(hodina.getZkrskup());
-            twzkruc.setText(hodina.getZkruc());
+
+            if (perm && hodina.getCycle() != null && !hodina.getCycle().equals("")){
+                //show cycles on permanent schedule
+                twzkruc.setText("");
+                twzkruc2.setText(hodina.getZkruc());
+                twcycle.setText(hodina.getCycle());
+            }else {
+                twzkruc.setText(hodina.getZkruc());
+                twzkruc2.setText("");
+                twcycle.setText("");
+            }
 
             if (hodina.getHighlight() == RozvrhHodina.CHANGED) {
                 view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhChang)));
@@ -110,6 +129,8 @@ public class HodinaCell {
             twzkrmist.setText("");
             twzkrskup.setText("");
             twzkruc.setText("");
+            twzkruc2.setText("");
+            twcycle.setText("");
             view.setBackground(new ColorDrawable(ContextCompat.getColor(context, R.color.rozvrhEmpty)));
         }
     }
@@ -121,7 +142,7 @@ public class HodinaCell {
     }
 
     public void empty(){
-        update(null, 1);
+        update(null, 1, false);
     }
 
     public View getView() {

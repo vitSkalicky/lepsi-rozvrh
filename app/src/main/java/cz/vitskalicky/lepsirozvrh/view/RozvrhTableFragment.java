@@ -94,6 +94,7 @@ public class RozvrhTableFragment extends Fragment {
         rows = rozvrh.getDny().size();
         columns = rozvrh.getHodiny().size();
         spread = calcucateSpread(rozvrh);
+        boolean perm = rozvrh.getTyp().equals("perm");
 
         RozvrhAPI.rememberRows(getContext(), rows);
         RozvrhAPI.rememberColumns(getContext(), columns);
@@ -146,10 +147,10 @@ public class RozvrhTableFragment extends Fragment {
                     tableRows[i].addView(toAdd.view);
                 }
 
-                hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread);
+                hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread, perm);
             }
             for (; j < columns; j++) {
-                hodinaCells.get(i).get(j).update(null,spread);
+                hodinaCells.get(i).get(j).update(null,spread, perm);
             }
             //Remove cells that are left over from a multiple-cells-in-caption timetable
             final int lastIndex = j;
@@ -172,10 +173,10 @@ public class RozvrhTableFragment extends Fragment {
         RozvrhHodina hodina = new RozvrhHodina();
         hodina.setZkrpr("MMmM");
         hodina.setZkruc("Mmmm");
-        hodina.setZkruc("M. 00");
-        hodina.setZkrskup("MMMm 0");
+        hodina.setZkrmist("M. 00");
+        hodina.setZkrskup("MMMMm 0");
         hodina.setCycle("XXXX");
-        HodinaCell hodinaCell = new HodinaCell(getContext(), hodina, 1, parent, parent, 1, 1);
+        HodinaCell hodinaCell = new HodinaCell(getContext(), hodina, 1, parent, parent, 1, 1, true);
         CellView cellView = hodinaCell.view;
 
         int minWidth = cellView.getNaturalWidth();

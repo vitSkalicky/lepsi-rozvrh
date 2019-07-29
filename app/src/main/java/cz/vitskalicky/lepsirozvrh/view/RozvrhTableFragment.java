@@ -336,9 +336,9 @@ public class RozvrhTableFragment extends Fragment {
         displayInfo.setLoadingState(DisplayInfo.LOADING);
         cacheSuccessful = false;
         displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
-        if (offline)
+        if (offline) {
             displayInfo.setMessage(displayInfo.getMessage() + " (" + getString(R.string.info_offline) + ")");
-
+        }
         netCode = -1;
         Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
             //onCachLoaded
@@ -354,7 +354,11 @@ public class RozvrhTableFragment extends Fragment {
         });
         if (item != null){
             populate(item);
-            displayInfo.setLoadingState(DisplayInfo.LOADED);
+            if (offline) {
+                displayInfo.setLoadingState(DisplayInfo.ERROR);
+            }else{
+                displayInfo.setLoadingState(DisplayInfo.LOADED);
+            }
         }else {
             empty();
         }

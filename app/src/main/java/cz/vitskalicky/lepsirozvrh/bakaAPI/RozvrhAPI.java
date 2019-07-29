@@ -26,6 +26,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.channels.FileLock;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -99,7 +102,7 @@ public class RozvrhAPI {
         requestQueue.add(request);
     }
 
-    private static RozvrhRoot parseRozvrh(String string){
+    private static RozvrhRoot parseRozvrh(String string) {
         RozvrhRoot root;
         try {
             Serializer serializer = new Persister();
@@ -117,7 +120,7 @@ public class RozvrhAPI {
             if (code == SUCCESS) {
                 RozvrhRoot root = parseRozvrh(response);
 
-                if (root == null || root.getRozvrh() == null){
+                if (root == null || root.getRozvrh() == null) {
                     listener.method(UNEXPECTED_RESPONSE, null);
                     return;
                 }
@@ -163,7 +166,8 @@ public class RozvrhAPI {
 
     /**
      * Loads Rozvrh from cache.
-     * @param monday Monday identifying week or null for permanent
+     *
+     * @param monday   Monday identifying week or null for permanent
      * @param listener listener for returnening data. Codes:
      *                 {@link #NO_CACHE} - Not found in cache - {@code rozvrh) is null
      *                 {@link #SUCCESS} - Loading succeeded - requested rozvrh is in {@code rozvrh)
@@ -213,7 +217,7 @@ public class RozvrhAPI {
     /**
      * Deletes Rozvrhs saved in 'cache' which are older than month. operation are run on background.
      */
-    public static void clearOldCache(Context context){
+    public static void clearOldCache(Context context) {
         AsyncTask.execute(() -> {
 
             File dir = context.getFilesDir();
@@ -223,21 +227,21 @@ public class RozvrhAPI {
             FilenameFilter filter = new FilenameFilter() {
                 @Override
                 public boolean accept(File fileDir, String name) {
-                    if (fileDir == dir && name.length() > 11){
-                        String date = name.substring(7,name.length() - 4);
+                    if (fileDir == dir && name.length() > 11) {
+                        String date = name.substring(7, name.length() - 4);
 
                         if (date.equals("perm")) return false;
 
                         LocalDate fileDate;
                         try {
                             fileDate = Utils.parseDate(date);
-                        }catch (IllegalArgumentException e){
+                        } catch (IllegalArgumentException e) {
                             return false;
                         }
 
-                        if (fileDate.isBefore(deleteBefore)){
+                        if (fileDate.isBefore(deleteBefore)) {
                             return true;
-                        }else {
+                        } else {
                             return false;
                         }
                     }
@@ -247,13 +251,13 @@ public class RozvrhAPI {
 
             String[] fileNames = dir.list(filter);
 
-            for (String item :fileNames) {
+            for (String item : fileNames) {
                 context.deleteFile(item);
             }
         });
     }
 
-    public static void clearCache(Context context){
+    public static void clearCache(Context context) {
         AsyncTask.execute(() -> {
 
             File dir = context.getFilesDir();
@@ -261,7 +265,7 @@ public class RozvrhAPI {
             FilenameFilter filter = new FilenameFilter() {
                 @Override
                 public boolean accept(File fileDir, String name) {
-                    if (fileDir == dir){
+                    if (fileDir == dir) {
                         if (name.equals("rozvrh-perm.xml")) return true;
                         else return name.matches("rozvrh-[0-9]{8}\\.xml");
                     }
@@ -271,7 +275,7 @@ public class RozvrhAPI {
 
             String[] fileNames = dir.list(filter);
 
-            for (String item :fileNames) {
+            for (String item : fileNames) {
                 context.deleteFile(item);
             }
         });
@@ -322,32 +326,32 @@ public class RozvrhAPI {
     public static interface RozvrhListener {
         /**
          * The only method
-         * @param code status code identifying success or failure; is one of those:
-         *             {@link #SUCCESS}, {@link #LOGIN_FAILED}, {@link #UNEXPECTED_RESPONSE}, {@link #UNREACHABLE}, {@link #NO_CACHE},
+         *
+         * @param code   status code identifying success or failure; is one of those:
+         *               {@link #SUCCESS}, {@link #LOGIN_FAILED}, {@link #UNEXPECTED_RESPONSE}, {@link #UNREACHABLE}, {@link #NO_CACHE},
          * @param rozvrh
          */
         public void method(int code, Rozvrh rozvrh);
     }
 
 
-
-    public static int getRememberedRows(Context context){
-        if(!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_ROWS))
+    public static int getRememberedRows(Context context) {
+        if (!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_ROWS))
             return 0;
         return SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_ROWS);
     }
 
-    public static int getRememberedColumns(Context context){
-        if(!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_COLUMNS))
+    public static int getRememberedColumns(Context context) {
+        if (!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_COLUMNS))
             return 0;
         return SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_COLUMNS);
     }
 
-    public static void rememberRows(Context context, int rows){
+    public static void rememberRows(Context context, int rows) {
         SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_ROWS, rows);
     }
 
-    public static void rememberColumns(Context context, int columns){
+    public static void rememberColumns(Context context, int columns) {
         SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_COLUMNS, columns);
     }
 
@@ -358,6 +362,8 @@ public class RozvrhAPI {
     private HashMap<LocalDate, Rozvrh> saved = new HashMap<>();
     private RequestQueue requestQueue;
     private Context context;
+    private Map<LocalDate, RozvrhListener> activeListeners = new HashMap<>();
+    private Set<LocalDate> active = new HashSet<>();
 
     public RozvrhAPI(RequestQueue requestQueue, Context context) {
         this.requestQueue = requestQueue;
@@ -366,23 +372,119 @@ public class RozvrhAPI {
 
     /**
      * Gets Rozvrh from:
-     *  - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
-     *  - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
-     *  - Network (school Bakaláři server) - only available if connected to internet - slow
+     * - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
+     * - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
+     * - Network (school Bakaláři server) - only available if connected to internet - slow
      * Neither file storage nor network will be used if requested rozvrh is found in memory.
      * It is not guaranteed that <code>onCacheLoaded</code> will be called before <code>onNetLoaded</code>!
-     * @param date Monday date identifying week or <code>null</code> for permanent timetable.
+     *
+     * @param date          Monday date identifying week or <code>null</code> for permanent timetable.
      * @param onCacheLoaded returns Rozvrh object loaded from 'cache'. Will not be called if rozvrh was found in memory.
      *                      {@code code} = {@link #SUCCESS} -> loading successful, object is in {@code rozvrh}.
      *                      {@code code} = {@link #NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
-     * @param onNetLoaded returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
-     *                    {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
-     *                    {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
-     *                    {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
-     *                    {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
+     * @param onNetLoaded   returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
+     *                      {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
+     *                      {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
      * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
      */
-    public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded){
+    public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded) {
+        final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
+        Rozvrh ret = null;
+        if (!active.contains(monday)) {
+            ret = getOne(monday, onCacheLoaded, onNetLoaded);
+        } else {
+            ret = null;
+            Rozvrh memory = saved.get(monday);
+            if (memory == null) {
+                loadRozvrh(monday, (code, rozvrh) -> {
+                    if (code == SUCCESS && saved.get(monday) == null) {
+                        saved.put(monday, rozvrh);
+                    }
+                    onCacheLoaded.method(code, rozvrh);
+                }, context);
+            } else {
+                onCacheLoaded.method(SUCCESS, memory);
+            }
+            activeListeners.put(monday, onNetLoaded);
+        }
+
+        //cache permanent, current
+        cacheCNPP();
+
+        //cache next and prev
+        cacheNP(monday);
+
+        return ret;
+    }
+
+    /**
+     * Caches week to memory (and file cache) and fetches a fresh one from network. (Only if it is not in memory already)
+     *
+     * @param date monday identifying week.
+     */
+    public void cacheWeek(LocalDate date) {
+        final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
+        if (!saved.containsKey(monday)) {
+            getOne(monday, (code, rozvrh) -> {
+            }, (code, rozvrh) -> {
+                RozvrhListener listener = activeListeners.get(monday);
+                if (listener != null) {
+                    listener.method(code, rozvrh);
+                }
+                activeListeners.remove(monday);
+                active.remove(monday);
+            });
+            active.add(monday);
+        }
+    }
+
+    /**
+     * Cache Current, Next, Previous, Permanent.
+     */
+    private void cacheCNPP() {
+        cacheWeek(null);
+        cacheWeek(Utils.getCurrentMonday());
+        cacheWeek(Utils.getCurrentMonday().plusWeeks(1));
+        cacheWeek(Utils.getCurrentMonday().minusWeeks(1));
+    }
+
+    /**
+     * Cache netx abd previous relative to given week.
+     */
+    private void cacheNP(LocalDate date) {
+        final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
+        if (monday == null)
+            return;
+        LocalDate nextMonday = monday.plusWeeks(1);
+        cacheWeek(nextMonday);
+
+        LocalDate prevMonday = monday.minusWeeks(1);
+        cacheWeek(prevMonday);
+    }
+
+    /**
+     * Gets Rozvrh from:
+     * - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
+     * - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
+     * - Network (school Bakaláři server) - only available if connected to internet - slow
+     * Neither file storage nor network will be used if requested rozvrh is found in memory.
+     * It is not guaranteed that <code>onCacheLoaded</code> will be called before <code>onNetLoaded</code>!
+     * <b>Use {@link #get(LocalDate, RozvrhListener, RozvrhListener)} because it caches Rozvrhs in a smarter way.</b>
+     *
+     * @param date          Monday date identifying week or <code>null</code> for permanent timetable.
+     * @param onCacheLoaded returns Rozvrh object loaded from 'cache'. Will not be called if rozvrh was found in memory.
+     *                      {@code code} = {@link #SUCCESS} -> loading successful, object is in {@code rozvrh}.
+     *                      {@code code} = {@link #NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
+     * @param onNetLoaded   returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
+     *                      {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
+     *                      {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
+     * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
+     */
+    private Rozvrh getOne(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
         Rozvrh memory = saved.get(monday);
 
@@ -418,7 +520,7 @@ public class RozvrhAPI {
     /**
      * Clears object's Rozvrh storage - all rozvrhs will have to load from cache and server again.
      */
-    public void clearMemory(){
+    public void clearMemory() {
         saved.clear();
     }
 
@@ -433,7 +535,7 @@ public class RozvrhAPI {
      *
      * @param monday monday identifying week or {@code null} for permanent timetable.
      */
-    public void refresh(LocalDate monday, RozvrhListener onLoaded){
+    public void refresh(LocalDate monday, RozvrhListener onLoaded) {
         clearMemory();
         fetchXml(monday, (code, xmlString) -> {
             if (code == SUCCESS) {
@@ -451,6 +553,8 @@ public class RozvrhAPI {
                 clearCache(context);
                 saveRawRozvrh(monday, xmlString, context);
                 completeRefresh(monday, ret, code, onLoaded);
+                cacheCNPP();
+                cacheNP(monday);
             } else {
                 completeRefresh(monday, null, code, onLoaded);
                 return;
@@ -463,17 +567,17 @@ public class RozvrhAPI {
      *
      * @param rozvrh if null, fetching from net failed
      */
-    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, int netResponseCode, RozvrhListener onLoaded){
-        if (rozvrh == null){
+    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, int netResponseCode, RozvrhListener onLoaded) {
+        if (rozvrh == null) {
             //no net
             loadRozvrh(monday, (code, rozvrh1) -> {
-                if (code == SUCCESS){
+                if (code == SUCCESS) {
                     onLoaded.method(netResponseCode, rozvrh1);
-                }else {
+                } else {
                     onLoaded.method(netResponseCode, null);
                 }
             }, context);
-        }else {
+        } else {
             onLoaded.method(SUCCESS, rozvrh);
         }
     }

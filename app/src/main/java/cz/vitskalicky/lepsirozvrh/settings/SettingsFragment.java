@@ -15,6 +15,7 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
+
     private LogoutListener logoutListener = () -> {};
 
     @Override

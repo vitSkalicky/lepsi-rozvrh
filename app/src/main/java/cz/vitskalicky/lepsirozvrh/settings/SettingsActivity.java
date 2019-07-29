@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
 public class SettingsActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -26,9 +28,10 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fragment.setLogoutListener(() -> {
-            Intent intent = new Intent(this, LoginActivity.class);
+            SharedPrefs.remove(this, SharedPrefs.PASSWORD_HASH);
+            /*Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra(LoginActivity.LOGOUT, true);
-            startActivity(intent);
+            startActivity(intent);*/
             finish();
             return;
         });

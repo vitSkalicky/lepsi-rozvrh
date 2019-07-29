@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Better timetable</string>
+    <string name="app_name">Better schedule</string>
     <string name="prev_week">Previous week</string>
     <string name="next_week">Next week</string>
     <string name="current_week">Current week</string>
@@ -35,7 +35,7 @@
     <string name="info_unexpected_response">Error - unexpected server response</string> <!-- Same as 'info_offline', but when user uses refresh button -->
 
     <string name="user">User</string>
-    <string name="student">Strudent</string>
+    <string name="student">Student</string>
     <string name="teacher">Teacher</string>
     <string name="parent">Parent</string>
     <string name="logout">Logout</string>

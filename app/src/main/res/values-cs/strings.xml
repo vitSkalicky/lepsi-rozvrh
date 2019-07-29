@@ -34,6 +34,15 @@
     <string name="info_login_failed">Přihlášení selhalo</string>
     <string name="info_unexpected_response">Chyba - neočekávaná odpověď serveru</string>
 
+    <string name="user">Uživatel</string>
+    <string name="student">Student</string>
+    <string name="teacher">Učitel</string>
+    <string name="parent">Rodič</string>
+    <string name="logout">Odhlásit se</string>
+    <string name="look">Vzhled</string>
+    <string name="info_line">Informační řádek</string>
+    <string name="info_line_desc">Zobrazovat informační řádek</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>
         <item quantity="few">%d týdny zpět</item>

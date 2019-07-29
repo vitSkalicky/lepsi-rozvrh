@@ -50,13 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Login.getToken(context).equals("")){
-            //not logged in
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
+        checkLogin();
 
         rozvrhAPI = new RozvrhAPI(Volley.newRequestQueue(context), context);
 
@@ -142,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        checkLogin();
+
         if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleamPreference(context, R.string.PREFS_SHOW_INFO_LINE)){
             infoLine.setVisibility(View.VISIBLE);
         }else {
@@ -171,5 +167,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setInfoText(String text){
         infoLine.setText(text);
+    }
+
+    public void checkLogin(){
+        if (Login.getToken(context).equals("")){
+            //not logged in
+            Intent intent = new Intent(context, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
     }
 }

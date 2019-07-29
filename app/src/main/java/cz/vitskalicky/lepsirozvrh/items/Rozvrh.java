@@ -68,7 +68,7 @@ public class Rozvrh {
             ListIterator<RozvrhHodina> i = denHodiny.listIterator(hodiny.size());
             while (i.hasPrevious()) {
                 RozvrhHodina hodina = i.previous();
-                if(!hodina.getTyp().equals("X"))
+                if(!(hodina.getHighlight() == RozvrhHodina.EMPTY))
                     break;
 
                 i.remove();

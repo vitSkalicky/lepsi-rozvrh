@@ -43,6 +43,18 @@
     <string name="info_line">Info-line</string>
     <string name="info_line_desc">Show information line</string>
 
+    <string name="lesson_teacher">Teacher</string>
+    <string name="subject_name">Subject name</string>
+    <string name="room">Room</string>
+    <string name="absence">Absence</string>
+    <string name="topic">Topic</string>
+    <string name="group">Group</string>
+    <string name="change">Change</string>
+    <string name="lesson_name">Name</string>
+    <string name="notice">Notice</string>
+
+    <string name="close">Close</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>
         <item quantity="other">%d weeks back</item>

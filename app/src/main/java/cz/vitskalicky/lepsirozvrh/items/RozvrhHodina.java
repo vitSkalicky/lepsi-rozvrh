@@ -57,6 +57,18 @@ public class RozvrhHodina {
     @Element(required = false)
     private String cycle;
 
+    @Element(required = false)
+    private String mist;
+
+    @Element(required = false)
+    private String abs;
+
+    @Element(required = false)
+    private String skup;
+
+    @Element(required = false)
+    private String notice;
+
     public static final int NONE = 0;
     public static final int CHANGED = 1;
     public static final int NO_LESSON = 2;
@@ -143,6 +155,38 @@ public class RozvrhHodina {
 
     public String getChng() {
         return chng;
+    }
+
+    public String getMist() {
+        return mist;
+    }
+
+    public String getAbs() {
+        return abs;
+    }
+
+    public String getSkup() {
+        return skup;
+    }
+
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
+
+    public void setSkup(String skup) {
+        this.skup = skup;
+    }
+
+    public void setAbs(String abs) {
+        this.abs = abs;
+    }
+
+    public void setMist(String mist) {
+        this.mist = mist;
     }
 
     public void setChng(String chng) {

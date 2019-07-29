@@ -10,6 +10,7 @@ Aplikace si vypůjčila trochu kódu z projektu [Bakalab](https://www.bakalab.or
 
 - 15.7. 2019 - Aktuálně je aplikace v těžce rozpracované fázi - Ani přihlašování nemá UI.
 - 25.7. 2019 - Přidána přihlašovací obrazovka, aplikace je vlastně použitelná. Pokud máte zájem, APK najdete [zde](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview1)
+- 30.7. 2019 - Přidáno nastavení, výběr školy při přihlašování a opravena spousta chyb. Stále je však na čem pracovat. APK opět najdete [zde](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview2).
 
 # Better timetable
 

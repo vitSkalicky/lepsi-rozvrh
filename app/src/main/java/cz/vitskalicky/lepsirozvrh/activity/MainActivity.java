@@ -2,6 +2,8 @@ package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -126,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         rtFragment.createViews();
-        week = 0;
+        if (savedInstanceState == null)
+            week = 0;
+        else
+            week = savedInstanceState.getInt(STATE_WEEK, 0);
         rtFragment.displayWeek(week);
         showHideButtons();
 
@@ -177,5 +182,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
+    }
+
+    private static final String STATE_WEEK = "week";
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_WEEK, week);
     }
 }

@@ -375,7 +375,7 @@ public class RozvrhAPI {
      * - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
      * - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
      * - Network (school Bakaláři server) - only available if connected to internet - slow
-     * Neither file storage nor network will be used if requested rozvrh is found in memory.
+     * Network won't be used, but cache (file storage) might, if requested rozvrh is found in memory.
      * It is not guaranteed that <code>onCacheLoaded</code> will be called before <code>onNetLoaded</code>!
      *
      * @param date          Monday date identifying week or <code>null</code> for permanent timetable.
@@ -405,7 +405,7 @@ public class RozvrhAPI {
                     onCacheLoaded.method(code, rozvrh);
                 }, context);
             } else {
-                onCacheLoaded.method(SUCCESS, memory);
+                ret = memory;
             }
             activeListeners.put(monday, onNetLoaded);
         }

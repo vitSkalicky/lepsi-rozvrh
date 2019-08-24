@@ -25,6 +25,9 @@ import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = RozvrhTableFragment.class.getSimpleName();
+    public static final String TAG_TIMER = TAG + "-timer";
+
 
     Context context = this;
 
@@ -190,5 +193,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_WEEK, week);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

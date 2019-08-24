@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,14 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import javassist.bytecode.analysis.Util;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RozvrhTableFragment extends Fragment {
     public static final String TAG = RozvrhTableFragment.class.getSimpleName();
+    public static final String TAG_TIMER = TAG + "-timer";
 
     View view;
     TableLayout tableLayout;
@@ -71,6 +74,7 @@ public class RozvrhTableFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //debug timing: Log.d(TAG_TIMER, "onCreateView start " + Utils.getDebugTime());
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_rozvrh_table, container, false);
 
@@ -80,10 +84,13 @@ public class RozvrhTableFragment extends Fragment {
         captionRow = new TableRow(getContext());
         cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1, cellWidth);
 
+        //debug timing: Log.d(TAG_TIMER, "onCreateView end " + Utils.getDebugTime());
         return view;
     }
 
     public void populate(Rozvrh rozvrh){
+        //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
+
         //check if not detached
         if (getContext() == null){
             return;
@@ -164,6 +171,7 @@ public class RozvrhTableFragment extends Fragment {
                 }
             }
         }
+        //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
     }
 
     /**
@@ -184,10 +192,18 @@ public class RozvrhTableFragment extends Fragment {
     }
 
     public void createViews(){
+        //debug timing: Log.d(TAG_TIMER, "createViews start " + Utils.getDebugTime());
         if (rows == 0 && columns == 0){
             rows = RozvrhAPI.getRememberedRows(getContext());
             columns = RozvrhAPI.getRememberedColumns(getContext());
         }
+
+        if (denCells.length == rows && captionCells.length == columns && hodinaCells.size() == rows && tableRows.length == rows){
+            //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
+            fillViews();
+            return;
+        }
+
 
         denCells = new DenCell[rows];
         captionCells = new CaptionCell[columns];
@@ -218,11 +234,14 @@ public class RozvrhTableFragment extends Fragment {
             hodinaCells.add(newList);
         }
 
+        //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
+        //don't forget about the skipping condition
         fillViews();
     }
 
 
     private int calcucateSpread(Rozvrh rozvrh){
+        //debug timing: Log.d(TAG_TIMER, "calculateSpread start " + Utils.getDebugTime());
         int mostSpread = 1;
         for (int i = 0; i < rozvrh.getDny().size(); i++) {
             RozvrhDen item = rozvrh.getDny().get(i);
@@ -243,10 +262,12 @@ public class RozvrhTableFragment extends Fragment {
                 lastCaption = item2.getCaption();
             }
         }
+        //debug timing: Log.d(TAG_TIMER, "calculateSpread end " + Utils.getDebugTime());
         return mostSpread;
     }
 
     private void fillViews(){
+        //debug timing: Log.d(TAG_TIMER, "fillViews start " + Utils.getDebugTime());
         captionRow.removeAllViews();
         for (int i = 0; i < tableRows.length; i++) {
             tableRows[i].removeAllViews();
@@ -266,6 +287,7 @@ public class RozvrhTableFragment extends Fragment {
             }
             tableLayout.addView(tableRows[i]);
         }
+        //debug timing: Log.d(TAG_TIMER, "fillViews end " + Utils.getDebugTime());
     }
 
     /**
@@ -326,6 +348,8 @@ public class RozvrhTableFragment extends Fragment {
      * @param weekIndex index of week to display relative to now (0 = this week, 1 = next, -1 = previous) or {@code Integer.MAX_VALUE} for permanent
      */
     public void displayWeek(int weekIndex){
+        //debug timing: Log.d(TAG_TIMER, "displayWeek start " + Utils.getDebugTime());
+
         this.weekIndex = weekIndex;
         if (weekIndex == Integer.MAX_VALUE)
             week = null;
@@ -363,6 +387,7 @@ public class RozvrhTableFragment extends Fragment {
         }else {
             empty();
         }
+        //debug timing: Log.d(TAG_TIMER, "displayWeek end " + Utils.getDebugTime());
     }
 
     private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){

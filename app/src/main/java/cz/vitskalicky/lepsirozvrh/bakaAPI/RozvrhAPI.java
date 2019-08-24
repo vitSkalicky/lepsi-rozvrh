@@ -47,6 +47,7 @@ public class RozvrhAPI {
     public static final int NO_CACHE = 4;
 
     private static String TAG = RozvrhAPI.class.getSimpleName();
+    public static final String TAG_TIMER = TAG + "-timer";
 
     /**
      * Gets raw xml document from the server.
@@ -173,7 +174,9 @@ public class RozvrhAPI {
      *                 {@link #SUCCESS} - Loading succeeded - requested rozvrh is in {@code rozvrh)
      */
     private static void loadRozvrh(LocalDate monday, RozvrhListener listener, Context context) {
-        AsyncTask.execute(() -> {
+        //debug timing: Log.d(TAG_TIMER, "file load main start " + Utils.getDebugTime());
+        new Thread(() -> {
+            //debug timing: Log.d(TAG_TIMER, "file load async start " + Utils.getDebugTime());
             LocalDate sureMonday = null;
             if (monday != null)
                 sureMonday = Utils.getWeekMonday(monday); //just to be extra sure
@@ -211,7 +214,10 @@ public class RozvrhAPI {
             }
             new Handler(Looper.getMainLooper()).post(() ->
                     listener.method(SUCCESS, root.getRozvrh()));
-        });
+            //debug timing: Log.d(TAG_TIMER, "file load async end " + Utils.getDebugTime());
+        }).start();
+
+        //debug timing: Log.d(TAG_TIMER, "file load main end " + Utils.getDebugTime());
     }
 
     /**
@@ -427,15 +433,31 @@ public class RozvrhAPI {
     public void cacheWeek(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
         if (!saved.containsKey(monday)) {
-            getOne(monday, (code, rozvrh) -> {
-            }, (code, rozvrh) -> {
+            fetchXml(monday, (code, response) -> {
                 RozvrhListener listener = activeListeners.get(monday);
-                if (listener != null) {
-                    listener.method(code, rozvrh);
+
+                if (code == SUCCESS) {
+                    RozvrhRoot root = parseRozvrh(response);
+                    if (root == null || root.getRozvrh() == null) {
+                        if (listener != null)
+                            listener.method(UNEXPECTED_RESPONSE, null);
+                        return;
+                    }
+
+                    saved.put(monday, root.getRozvrh());
+                    saveRawRozvrh(monday, response, context);
+
+                    if (listener != null)
+                        listener.method(SUCCESS, root.getRozvrh());
+                    return;
                 }
+                if (listener != null)
+                    listener.method(code, null);
+
                 activeListeners.remove(monday);
                 active.remove(monday);
-            });
+
+            }, requestQueue, context);
             active.add(monday);
         }
     }
@@ -451,7 +473,7 @@ public class RozvrhAPI {
     }
 
     /**
-     * Cache netx abd previous relative to given week.
+     * Cache next abd previous relative to given week.
      */
     private void cacheNP(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
@@ -500,7 +522,7 @@ public class RozvrhAPI {
                 if (code == SUCCESS) {
                     RozvrhRoot root = parseRozvrh(response);
                     if (root == null || root.getRozvrh() == null) {
-                        onCacheLoaded.method(UNEXPECTED_RESPONSE, null);
+                        onNetLoaded.method(UNEXPECTED_RESPONSE, null);
                         return;
                     }
 

@@ -119,7 +119,7 @@ public class SchoolsDatabaseAPI {
                     String[] split = item.split("\\.");
                     /*if (split.length > 0)*/
                     item = split[0];
-                    String wrongurl = SCHOOLS_DATABASE_URL + URLEncoder.encode(item, StandardCharsets.UTF_8.toString());
+                    String wrongurl = SCHOOLS_DATABASE_URL + URLEncoder.encode(item, "utf-8");
                     String url = wrongurl.replace("+", "%20");
 
                     StringRequest request = new StringRequest(Request.Method.GET, url, response -> {

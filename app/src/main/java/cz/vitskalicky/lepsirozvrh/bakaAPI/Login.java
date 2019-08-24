@@ -76,7 +76,7 @@ public class Login {
         //URL encode username
         String s = username;
         try {
-            s = URLEncoder.encode(username, StandardCharsets.UTF_8.toString());
+            s = URLEncoder.encode(username, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

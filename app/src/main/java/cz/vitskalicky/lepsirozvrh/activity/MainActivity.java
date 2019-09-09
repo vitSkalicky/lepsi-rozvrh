@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
         ibRefresh.setOnClickListener(v -> {
             rtFragment.refresh();
-            rtFragment.displayWeek(week);
+            //rtFragment.displayWeek(week);
         });
         displayInfo.addOnLoadingStateChangeListener((oldState, newState) -> {
             if (newState == DisplayInfo.LOADED){

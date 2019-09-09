@@ -398,9 +398,11 @@ public class RozvrhTableFragment extends Fragment {
         if (week != finalWeek){
             return;
         }
+        if (rozvrh != null){
+            populate(rozvrh);
+        }
         //onNetLoaded
         if (code == RozvrhAPI.SUCCESS){
-            populate(rozvrh);
             if (offline){
                 rozvrhAPI.clearMemory();
             }
@@ -439,29 +441,10 @@ public class RozvrhTableFragment extends Fragment {
     public void refresh(){
         final LocalDate finalWeek = week;
         displayInfo.setLoadingState(DisplayInfo.LOADING);
+        cacheSuccessful = false;
 
         rozvrhAPI.refresh(week, (code, rozvrh) -> {
-            //check if fragment was not removed while loading
-            if (getContext() == null){
-                return;
-            }
-            if (week != finalWeek)
-                return;
-            if (rozvrh != null)
-                populate(rozvrh);
-            if (code == RozvrhAPI.SUCCESS){
-                displayInfo.setLoadingState(DisplayInfo.LOADED);
-                displayInfo.setMessage((Utils.getfl10nedWeekString(weekIndex, getContext())));
-            }else {
-                displayInfo.setLoadingState(DisplayInfo.ERROR);
-                if (code == RozvrhAPI.UNREACHABLE) {
-                    displayInfo.setMessage(getString(R.string.info_unreachable));
-                } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE){
-                    displayInfo.setMessage(getString(R.string.info_unexpected_response));
-                }else if (code == RozvrhAPI.LOGIN_FAILED){
-                    displayInfo.setMessage(getString(R.string.info_login_failed));
-                }
-            }
+            onNetResponse(code, rozvrh, finalWeek);
         });
     }
 

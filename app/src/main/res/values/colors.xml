@@ -3,11 +3,14 @@
     <color name="colorPrimary">#f9a825</color>
     <color name="colorPrimaryDark">#c17900</color>
     <color name="colorAccent">#455a64</color>
-    <color name="rozvrhHeader">#c1d5e0</color>
+    <color name="rozvrhHeader">#CFD8DC</color>
     <color name="rozvrhChang">#ffd95a</color>
     <color name="rozvrhA">#ffd95a</color>
     <color name="rozvrhH">#eceff1</color>
     <color name="rozvrhEmpty">#00FFFFFF</color>
-    <color name="rozvrhDivider">#000000</color>
+    <color name="rozvrhDivider">#607D8B</color>
+    <color name="rozvrhSecondaryText">#607D8B</color>
+    <color name="rozvrhPrimaryText">#000000</color>
+    <color name="rozvrhHighlightText">#000000</color>
     <color name="colorError">#B00020</color>
 </resources>

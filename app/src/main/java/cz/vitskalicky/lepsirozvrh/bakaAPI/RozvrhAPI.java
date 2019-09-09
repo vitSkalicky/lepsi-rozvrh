@@ -39,6 +39,20 @@ import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
+/**
+ * This class is responsible for fetching, parsing and caching schedule (CZ: rozvrh).
+ *
+ * All downloaded schedules are immediately cached (a.k.a. File storage). This cached date is then loaded
+ * when internet connection is not available and also while loading the 'live' data to show schedule
+ * to user as soon as possible.
+ *
+ * When data is loaded from cache or network, it is stored in a private field in object's memory
+ * (a.k.a. Memory). From now on, when showing these data again (user switched to different week and
+ * then returns) loading is instant.
+ *
+ * Cache data older than month should be deleted every time the app exits. This has to be handled
+ * by an activity or something else by calling {@link #clearOldCache(Context)} on exit.
+ */
 public class RozvrhAPI {
     public static final int SUCCESS = 0;
     public static final int LOGIN_FAILED = 1;
@@ -94,6 +108,7 @@ public class RozvrhAPI {
                 listener.onResponse(UNEXPECTED_RESPONSE, response);
                 return;
             }
+
             listener.onResponse(retCode, retResponse);
         }, error -> {
             Log.i(TAG, "Getting timetable failed: network error: " + error.getMessage());
@@ -103,6 +118,11 @@ public class RozvrhAPI {
         requestQueue.add(request);
     }
 
+    /**
+     * Parses rozvrh xml given as string argument
+     * @param string rozvrh xml
+     * @return parsed rozvrh or null if failed
+     */
     private static RozvrhRoot parseRozvrh(String string) {
         RozvrhRoot root;
         try {
@@ -116,6 +136,9 @@ public class RozvrhAPI {
         return root;
     }
 
+    /**
+     * Same as as calling {@link #fetchXml(LocalDate, ResponseListener, RequestQueue, Context)} and {@link #parseRozvrh(String)}
+     */
     private static void fetchRozvrh(LocalDate mondayDate, RozvrhListener listener, RequestQueue requestQueue, Context context) {
         fetchXml(mondayDate, (code, response) -> {
             if (code == SUCCESS) {
@@ -133,7 +156,7 @@ public class RozvrhAPI {
     }
 
     /**
-     * Saved timetable for later faster loading. Saving is performed on background thread and file
+     * Saved rozvrh for later faster loading. Saving is performed on background thread and file
      * writing is thread-safe.
      *
      * @param monday monday for week identification, leave null for permanent timetable
@@ -166,7 +189,7 @@ public class RozvrhAPI {
     }
 
     /**
-     * Loads Rozvrh from cache.
+     * Loads Rozvrh from cache on background thread.
      *
      * @param monday   Monday identifying week or null for permanent
      * @param listener listener for returnening data. Codes:
@@ -221,7 +244,8 @@ public class RozvrhAPI {
     }
 
     /**
-     * Deletes Rozvrhs saved in 'cache' which are older than month. operation are run on background.
+     * Deletes Rozvrhs saved in 'cache' which are older than month. Operations are run on background.
+     * Should be called on every app exit (or just time by time).
      */
     public static void clearOldCache(Context context) {
         AsyncTask.execute(() -> {
@@ -263,6 +287,9 @@ public class RozvrhAPI {
         });
     }
 
+    /**
+     * Deletes all rovrhs save din cache. Operations are run on background.
+     */
     public static void clearCache(Context context) {
         AsyncTask.execute(() -> {
 
@@ -288,9 +315,10 @@ public class RozvrhAPI {
     }
 
     /**
-     * Loads timetable for given week from cache (if there is none, code {@link #NO_CACHE} is returned),
-     * which is returned using {@code onCacheLoaded} listener. Meanwhile timetable is fetched from server
-     * and returned using {@code onLoaded} listener.
+     * Loads rozvrh for given week from cache (if there is none, code {@link #NO_CACHE} is returned),
+     * which is returned using {@code onCacheLoaded} listener. Meanwhile rozvrh is fetched from server
+     * and returned using {@code onLoaded} listener. {@code onLoaded} might be called before
+     * {@code onCacheLoaded}, especially when network is not available.
      *
      * @param mondayDate    Date of monday of requested week or {@code null} for permanent timetable
      * @param requestQueue  Request queue to be used for network requests
@@ -518,21 +546,25 @@ public class RozvrhAPI {
                 onCacheLoaded.method(code, rozvrh);
             }, context);
 
-            fetchXml(monday, (code, response) -> {
-                if (code == SUCCESS) {
-                    RozvrhRoot root = parseRozvrh(response);
-                    if (root == null || root.getRozvrh() == null) {
-                        onNetLoaded.method(UNEXPECTED_RESPONSE, null);
+            fetchXml(monday, new ResponseListener() {
+                @Override
+                public void onResponse(int code, String response) {
+                    if (code == SUCCESS) {
+                        RozvrhRoot root = parseRozvrh(response);
+                        if (root == null || root.getRozvrh() == null) {
+                            onNetLoaded.method(UNEXPECTED_RESPONSE, null);
+                            return;
+                        }
+
+                        saved.put(monday, root.getRozvrh());
+                        saveRawRozvrh(monday, response, context);
+
+                        onNetLoaded.method(SUCCESS, root.getRozvrh());
                         return;
                     }
-
-                    saved.put(monday, root.getRozvrh());
-                    saveRawRozvrh(monday, response, context);
-
-                    onNetLoaded.method(SUCCESS, root.getRozvrh());
-                    return;
+                    if (code == LOGIN_FAILED)
+                    onNetLoaded.method(code, null);
                 }
-                onNetLoaded.method(code, null);
             }, requestQueue, context);
         }
 

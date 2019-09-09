@@ -55,12 +55,6 @@ public class Utils {
         return dtf.parseLocalDate(date);
     }
 
-    public static String dateToLoacalizedString(LocalDate date){
-        if (date == null) return "";
-        DateTimeFormatter dtf = DateTimeFormat.shortDate();
-        return dtf.print(date);
-    }
-
     public static LocalDate getCurrentMonday(){
         return getWeekMonday(LocalDate.now());
     }

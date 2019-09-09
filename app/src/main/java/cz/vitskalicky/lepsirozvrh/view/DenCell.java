@@ -6,6 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
@@ -38,7 +42,16 @@ public class DenCell {
         this.den = den;
 
         twzkratka.setText(den.getZkratka());
-        twdatum.setText(Utils.dateToLoacalizedString(Utils.parseDate(den.getDatum())));
+        LocalDate date = Utils.parseDate(den.getDatum());
+        String dateText;
+        if (den.getDatum() == null){
+            dateText = "";
+        }else{
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");
+            dateText = dtf.print(date);
+        }
+
+        twdatum.setText(dateText);
     }
 
     public void empty(){

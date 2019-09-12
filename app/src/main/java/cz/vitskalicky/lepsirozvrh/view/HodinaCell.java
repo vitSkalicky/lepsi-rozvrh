@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,9 @@ public class HodinaCell {
     TextView twzkruc2;
     TextView twcycle;
 
+    View viewDividerTop; //divider
+    View viewDividerLeft; //divider
+    View viewDividerCorner; //divider
     public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width, boolean perm) {
         this(context, parent, top, rows, width);
         update(hodina, weight, perm);
@@ -45,6 +49,9 @@ public class HodinaCell {
         twzkruc = view.findViewById(R.id.textViewZkruc);
         twzkruc2 = view.findViewById(R.id.textViewZkruc2);
         twcycle = view.findViewById(R.id.textViewCycle);
+        viewDividerTop = view.findViewById(R.id.viewDividerTop);
+        viewDividerLeft = view.findViewById(R.id.viewDividerLeft);
+        viewDividerCorner = view.findViewById(R.id.viewDividerCorner);
 
         twzkrpr.setText("");
         twzkrmist.setText("");
@@ -96,6 +103,7 @@ public class HodinaCell {
         this.hodina = hodina;
         this.perm = perm;
         updateWeight(weight);
+        hightlightEdges(false, false, false);
 
         if (hodina != null) {
             twzkrpr.setText(hodina.getZkrpr());
@@ -147,6 +155,24 @@ public class HodinaCell {
 
     public View getView() {
         return view;
+    }
+
+    public void hightlightEdges(boolean top, boolean left, boolean corner){
+        if (top)
+            viewDividerTop.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDividerHighlight));
+        else
+            viewDividerTop.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDivider));
+
+        if (left)
+            viewDividerLeft.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDividerHighlight));
+        else
+            viewDividerLeft.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDivider));
+
+        if (corner)
+            viewDividerCorner.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDividerHighlight));
+        else
+            viewDividerCorner.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDivider));
+
     }
 
 }

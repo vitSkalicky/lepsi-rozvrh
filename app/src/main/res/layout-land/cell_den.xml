@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewZkratka"
         app:layout_constraintVertical_bias="0.100000024" />
     <View
-        android:id="@+id/viewDivider"
+        android:id="@+id/viewDividerTop"
         android:layout_width="0dp"
         android:layout_height="@dimen/divider_width"
         android:background="@color/rozvrhDivider"

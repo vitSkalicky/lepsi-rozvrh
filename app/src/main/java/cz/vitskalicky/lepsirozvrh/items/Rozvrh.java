@@ -4,6 +4,9 @@
 */
 package cz.vitskalicky.lepsirozvrh.items;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -74,6 +77,58 @@ public class Rozvrh {
                 i.remove();
             }
         }
+    }
+
+    /**
+     * returns the lesson, which should be highlighted to the user as next or current lesson or null
+     * if the school is over or this is not the current week.
+     */
+    public GetNLreturnValues getNextLesson(){
+        LocalDate nowDate = LocalDate.now();
+        LocalTime nowTime = LocalTime.now().withHourOfDay(13).withMinuteOfHour(30);//debug
+
+        RozvrhDen dneska = null;
+        int denIndex = 0;
+        for (RozvrhDen item :dny) {
+            if (item.getParsedDatum().isEqual(nowDate)){
+                dneska = item;
+                break;
+            }
+            denIndex++;
+        }
+
+        if (dneska == null)
+            return null;
+
+        RozvrhHodina dalsi = null;
+        int hodinaIndex = 0;
+        for (int i = 0; i < dneska.getHodiny().size(); i++) {
+            RozvrhHodina item = dneska.getHodiny().get(i);
+            if (nowTime.isBefore(item.getParsedEndtime()) && !item.getTyp().equals("X")){
+                dalsi = item;
+                break;
+            }
+            hodinaIndex++;
+        }
+
+        if (dalsi == null) {
+            denIndex = -1;
+            hodinaIndex = -1;
+        }
+
+        GetNLreturnValues ret = new GetNLreturnValues();
+        ret.rozvrhHodina = dalsi;
+        ret.dayIndex = denIndex;
+        ret.lessonIndex = hodinaIndex;
+
+
+        return ret;
+    }
+
+    public static class GetNLreturnValues{
+        public RozvrhHodina rozvrhHodina;
+        public int dayIndex;
+        public int lessonIndex;
     }
 
     public List<RozvrhHodinaCaption> getHodiny() {

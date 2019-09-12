@@ -33,30 +33,37 @@ public class RozvrhTableFragment extends Fragment {
     public static final String TAG = RozvrhTableFragment.class.getSimpleName();
     public static final String TAG_TIMER = TAG + "-timer";
 
-    View view;
-    TableLayout tableLayout;
+    private View view;
+    private TableLayout tableLayout;
 
-    int rows = 0;
-    int columns = 0;
-    int spread = 1; //how many places should occupy default cell - there may be 2 lessons in one caption
+    private int rows = 0;
+    private int columns = 0;
+    private int spread = 1; //how many places should occupy default cell - there may be 2 lessons in one caption
 
-    int cellWidth;
+    private int cellWidth;
 
-    CornerCell cornerCell;
-    DenCell[] denCells = new DenCell[0];
-    CaptionCell[] captionCells = new CaptionCell[0];
-    List<List<HodinaCell>> hodinaCells = new ArrayList<>();
+    private Rozvrh rozvrh = null;
+    private CornerCell cornerCell;
+    private DenCell[] denCells = new DenCell[0];
+    private CaptionCell[] captionCells = new CaptionCell[0];
+    private List<List<HodinaCell>> hodinaCells = new ArrayList<>();
 
-    TableRow captionRow;
-    TableRow[] tableRows = new TableRow[0];
+    private TableRow captionRow;
+    private TableRow[] tableRows = new TableRow[0];
 
-    DisplayInfo displayInfo;
+    private DisplayInfo displayInfo;
 
     private LocalDate week = LocalDate.now();
     private int weekIndex = 0; //what week is it from now (0: this, 1: next, -1: last, Integer.MAX_VALUE: permanent)
     private boolean cacheSuccessful = false;
     private boolean offline = false;
     private RozvrhAPI rozvrhAPI = null;
+
+    private HodinaCell nextHodinaCell = null; //the highlighted one
+    private HodinaCell nextHodinaCellRight = null; //the right one from the highlighted one (it has its left highlighted)
+    private HodinaCell nextHodinaCellBottom = null; //the bottom one from the highlighted one (it has its top highlighted)
+    private HodinaCell nextHodinaCellCorner = null; //the corner one from the highlighted one (it has its corner highlighted)
+
 
     public RozvrhTableFragment() {
         // Required empty public constructor
@@ -96,6 +103,7 @@ public class RozvrhTableFragment extends Fragment {
             return;
         }
 
+        this.rozvrh = rozvrh;
         int oldRows = rows;
         int oldColumns = columns;
         rows = rozvrh.getDny().size();
@@ -171,7 +179,53 @@ public class RozvrhTableFragment extends Fragment {
                 }
             }
         }
+
+        highlightCurrentLesson();
+
         //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
+    }
+
+    public void highlightCurrentLesson(){
+        if (rozvrh == null)
+            return;
+        Rozvrh.GetNLreturnValues values = rozvrh.getNextLesson();
+        RozvrhHodina hodina = values.rozvrhHodina;
+        int denIndex = values.dayIndex;
+        int hodinaIndex = values.lessonIndex;
+
+        //unhighlight
+        if (nextHodinaCell != null){
+            nextHodinaCell.hightlightEdges(false, false, false);
+        }
+        if (nextHodinaCellRight != null){
+            nextHodinaCellRight.hightlightEdges(false, false, false);
+        }
+        if (nextHodinaCellBottom != null){
+            nextHodinaCellBottom.hightlightEdges(false, false, false);
+        }
+        if (nextHodinaCellCorner != null){
+            nextHodinaCellCorner.hightlightEdges(false, false, false);
+        }
+
+        if (hodina == null){
+            return;
+        }
+
+        nextHodinaCell = hodinaCells.get(denIndex).get(hodinaIndex);
+        nextHodinaCell.hightlightEdges(true, true, true);
+
+        if (denIndex + 1 < hodinaCells.size()){
+            nextHodinaCellBottom = hodinaCells.get(denIndex + 1).get(hodinaIndex);
+            nextHodinaCellBottom.hightlightEdges(true, false, true);
+        }
+        if (hodinaIndex + 1 < hodinaCells.get(0).size()){
+            nextHodinaCellRight = hodinaCells.get(denIndex).get(hodinaIndex + 1);
+            nextHodinaCellRight.hightlightEdges(false, true, true);
+        }
+        if (denIndex + 1 < hodinaCells.size() && hodinaIndex + 1 < hodinaCells.get(0).size()){
+            nextHodinaCellCorner = hodinaCells.get(denIndex + 1).get(hodinaIndex + 1);
+            nextHodinaCellCorner.hightlightEdges(false, false, true);
+        }
     }
 
     /**
@@ -298,6 +352,7 @@ public class RozvrhTableFragment extends Fragment {
         if (getContext() == null){
             return;
         }
+        this.rozvrh = null;
         final int oldRows = rows;
         final int oldColumns = columns;
         rows = RozvrhAPI.getRememberedRows(getContext());

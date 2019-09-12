@@ -4,6 +4,9 @@
 */
 package cz.vitskalicky.lepsirozvrh.items;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -38,6 +41,17 @@ public class RozvrhDen {
 
     public String getDatum() {
         return datum;
+    }
+
+    public LocalDate getParsedDatum(){
+        if (datum == null || datum.isEmpty())
+            return null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+        try{
+            return formatter.parseLocalDate(datum);
+        }catch (IllegalArgumentException e){
+            return null;
+        }
     }
 
     public String getDay() { return Utils.parseDate(datum, "yyyyMMdd", "d"); }

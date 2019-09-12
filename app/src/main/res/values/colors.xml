@@ -9,6 +9,7 @@
     <color name="rozvrhH">#eceff1</color>
     <color name="rozvrhEmpty">#00FFFFFF</color>
     <color name="rozvrhDivider">#607D8B</color>
+    <color name="rozvrhDividerHighlight">#B00020</color>
     <color name="rozvrhSecondaryText">#607D8B</color>
     <color name="rozvrhPrimaryText">#000000</color>
     <color name="rozvrhHighlightText">#000000</color>

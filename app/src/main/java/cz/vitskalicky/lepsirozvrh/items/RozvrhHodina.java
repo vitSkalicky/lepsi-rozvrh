@@ -4,6 +4,9 @@
 */
 package cz.vitskalicky.lepsirozvrh.items;
 
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Commit;
@@ -97,12 +100,34 @@ public class RozvrhHodina {
         return begintime;
     }
 
+    public LocalTime getParsedBegintime(){
+        if (begintime == null || begintime.isEmpty())
+            return null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
+        try{
+            return formatter.parseLocalTime(begintime);
+        }catch (IllegalArgumentException e){
+            return null;
+        }
+    }
+
     public void setBegintime(String begintime) {
         this.begintime = begintime;
     }
 
     public String getEndtime() {
         return endtime;
+    }
+
+    public LocalTime getParsedEndtime(){
+        if (endtime == null || endtime.isEmpty())
+            return null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
+        try{
+            return formatter.parseLocalTime(endtime);
+        }catch (IllegalArgumentException e){
+            return null;
+        }
     }
 
     public void setEndtime(String endtime) {

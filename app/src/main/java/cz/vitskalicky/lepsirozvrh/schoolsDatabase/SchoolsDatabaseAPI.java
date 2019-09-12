@@ -34,6 +34,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cz.vitskalicky.lepsirozvrh.AppSingleton;
+
 public class SchoolsDatabaseAPI {
     public static final String TAG = SchoolsDatabaseAPI.class.getSimpleName();
 
@@ -93,11 +95,8 @@ public class SchoolsDatabaseAPI {
     }*/
 
     public static RequestQueue getAllSchools(Context context, IndexedCollectionListener<SchoolInfo> collectionListener) {
-        //construct a queue
-        BasicNetwork network = new BasicNetwork(new HurlStack());
-        File cacheDir = new File(context.getCacheDir(), /*Cache dir*/"volley");
-        RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(cacheDir), network, 8);
-        requestQueue.start();
+
+        RequestQueue requestQueue = AppSingleton.getInstance(context).getRequestQueue();
 
         IndexedCollection<SchoolInfo> collection = new ObjectLockingIndexedCollection<>();
         collection.addIndex(SuffixTreeIndex.onAttribute(SchoolInfo.STRIPED_NAME));

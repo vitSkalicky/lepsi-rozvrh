@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.Volley;
 
+import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkLogin();
 
-        rozvrhAPI = new RozvrhAPI(Volley.newRequestQueue(context), context);
+        rozvrhAPI = AppSingleton.getInstance(context).getRozvrhAPI();
 
         bottomAppBar = findViewById(R.id.toolbar);
         setSupportActionBar(bottomAppBar);

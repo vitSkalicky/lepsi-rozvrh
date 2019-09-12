@@ -25,13 +25,13 @@ public class CellView extends ConstraintLayout {
     //</editor-fold>
 
     private float spread = 1;
-    private View top = null;
+    private View parent = null;
     private int height;
     private int width;
     private int rows;
 
-    public void init(View top, int rows, int width){
-        this.top = top;
+    public void init(View parent, int rows, int width){
+        this.parent = parent;
         this.rows = rows;
         this.width = width;
     }
@@ -43,9 +43,12 @@ public class CellView extends ConstraintLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int topHeight = top.getMeasuredHeight();
-        height = (int) Math.ceil(((double)topHeight / rows)) + 1; //the +1 is to prevent white lines appearing on the bottom
+        if (isInEditMode()) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
+        int parentHeight = parent.getMeasuredHeight();
+        height = (int) Math.ceil(((double)parentHeight / rows)) + 1; //the +1 is to prevent white lines appearing on the bottom
         //width = (int) (height * spread);
 
         int wMSpec = MeasureSpec.makeMeasureSpec((int) (width * spread), MeasureSpec.EXACTLY);
@@ -74,7 +77,7 @@ public class CellView extends ConstraintLayout {
     }
 
     public View getTopView() {
-        return top;
+        return parent;
     }
 
     public int getCalculatedHeight() {

@@ -189,13 +189,12 @@ public class RozvrhTableFragment extends Fragment {
         if (rozvrh == null)
             return;
         Rozvrh.GetNLreturnValues values = rozvrh.getNextLesson();
-        RozvrhHodina hodina = values.rozvrhHodina;
-        int denIndex = values.dayIndex;
-        int hodinaIndex = values.lessonIndex;
+
 
         //unhighlight
         if (nextHodinaCell != null){
             nextHodinaCell.hightlightEdges(false, false, false);
+            nextHodinaCell.highlightItself(false);
         }
         if (nextHodinaCellRight != null){
             nextHodinaCellRight.hightlightEdges(false, false, false);
@@ -207,12 +206,18 @@ public class RozvrhTableFragment extends Fragment {
             nextHodinaCellCorner.hightlightEdges(false, false, false);
         }
 
-        if (hodina == null){
+
+        if (values == null || values.rozvrhHodina == null){
             return;
         }
 
+        RozvrhHodina hodina = values.rozvrhHodina;
+        int denIndex = values.dayIndex;
+        int hodinaIndex = values.lessonIndex;
+
         nextHodinaCell = hodinaCells.get(denIndex).get(hodinaIndex);
         nextHodinaCell.hightlightEdges(true, true, true);
+        nextHodinaCell.highlightItself(true);
 
         if (denIndex + 1 < hodinaCells.size()){
             nextHodinaCellBottom = hodinaCells.get(denIndex + 1).get(hodinaIndex);

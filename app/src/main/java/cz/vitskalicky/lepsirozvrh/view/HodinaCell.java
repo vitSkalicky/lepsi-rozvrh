@@ -14,6 +14,14 @@ import android.widget.TextView;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 
+/**
+ * Class wrapping a {@code cell_hodina.xml} view.
+ *
+ * Every cell has a line (a.k.a. divider) on top and left (start) to create table dividers. When a cell is highlighted,
+ * its right, bottom and corner neighbours change its line/corner color. The highlighted cell also
+ * changes its line color, but also makes them thicker and show some 'thickness adding' lines on bottom
+ * and right.
+ */
 public class HodinaCell {
 
     Context context;
@@ -32,6 +40,11 @@ public class HodinaCell {
     View viewDividerTop; //divider
     View viewDividerLeft; //divider
     View viewDividerCorner; //divider
+    View viewHighlighterTop; //adds thickness when highlighted
+    View viewHighlighterRight; //adds thickness when highlighted
+    View viewHighlighterBottom; //adds thickness when highlighted
+    View viewHighlighterLeft; //adds thickness when highlighted
+
     public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width, boolean perm) {
         this(context, parent, top, rows, width);
         update(hodina, weight, perm);
@@ -52,6 +65,10 @@ public class HodinaCell {
         viewDividerTop = view.findViewById(R.id.viewDividerTop);
         viewDividerLeft = view.findViewById(R.id.viewDividerLeft);
         viewDividerCorner = view.findViewById(R.id.viewDividerCorner);
+        viewHighlighterTop = view.findViewById(R.id.viewHighlighterTop);
+        viewHighlighterRight = view.findViewById(R.id.viewHighlighterRight);
+        viewHighlighterBottom = view.findViewById(R.id.viewHighlighterBottom);
+        viewHighlighterLeft = view.findViewById(R.id.viewHighlighterLeft);
 
         twzkrpr.setText("");
         twzkrmist.setText("");
@@ -104,6 +121,7 @@ public class HodinaCell {
         this.perm = perm;
         updateWeight(weight);
         hightlightEdges(false, false, false);
+        highlightItself(false);
 
         if (hodina != null) {
             twzkrpr.setText(hodina.getZkrpr());
@@ -173,6 +191,20 @@ public class HodinaCell {
         else
             viewDividerCorner.setBackgroundColor(ContextCompat.getColor(context, R.color.rozvrhDivider));
 
+    }
+
+    public void highlightItself(boolean highlight){
+        if (highlight){
+            viewHighlighterTop.setVisibility(View.VISIBLE);
+            viewHighlighterRight.setVisibility(View.VISIBLE);
+            viewHighlighterBottom.setVisibility(View.VISIBLE);
+            viewHighlighterLeft.setVisibility(View.VISIBLE);
+        }else{
+            viewHighlighterTop.setVisibility(View.GONE);
+            viewHighlighterRight.setVisibility(View.GONE);
+            viewHighlighterBottom.setVisibility(View.GONE);
+            viewHighlighterLeft.setVisibility(View.GONE);
+        }
     }
 
 }

@@ -85,11 +85,13 @@ public class Rozvrh {
      */
     public GetNLreturnValues getNextLesson(){
         LocalDate nowDate = LocalDate.now();
-        LocalTime nowTime = LocalTime.now().withHourOfDay(13).withMinuteOfHour(30);//debug
+        LocalTime nowTime = LocalTime.now();
 
         RozvrhDen dneska = null;
         int denIndex = 0;
         for (RozvrhDen item :dny) {
+            if  (item.getParsedDatum() == null) //permanent timetable check
+                return null;
             if (item.getParsedDatum().isEqual(nowDate)){
                 dneska = item;
                 break;
@@ -97,7 +99,7 @@ public class Rozvrh {
             denIndex++;
         }
 
-        if (dneska == null)
+        if (dneska == null) //current timetable check
             return null;
 
         RozvrhHodina dalsi = null;

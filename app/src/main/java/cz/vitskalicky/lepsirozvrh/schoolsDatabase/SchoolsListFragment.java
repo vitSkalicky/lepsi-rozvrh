@@ -102,7 +102,7 @@ public class SchoolsListFragment extends Fragment {
                 twError.setVisibility(View.VISIBLE);
                 ivError.setVisibility(View.VISIBLE);
             }
-        });
+        }, progressBar);
 
         //automatically show keyboard
         etSearch.requestFocus();

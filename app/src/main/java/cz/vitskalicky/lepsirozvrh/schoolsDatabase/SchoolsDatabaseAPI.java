@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.schoolsDatabase;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -94,93 +95,51 @@ public class SchoolsDatabaseAPI {
         fetcher.getAllSchools(requestQueue, context, collectionListener);
     }*/
 
-    public static RequestQueue getAllSchools(Context context, IndexedCollectionListener<SchoolInfo> collectionListener) {
+    public static RequestQueue getAllSchools(Context context, IndexedCollectionListener<SchoolInfo> collectionListener, ProgressBar progressBar) {
 
         RequestQueue requestQueue = AppSingleton.getInstance(context).getRequestQueue();
 
         IndexedCollection<SchoolInfo> collection = new ObjectLockingIndexedCollection<>();
         collection.addIndex(SuffixTreeIndex.onAttribute(SchoolInfo.STRIPED_NAME));
 
-        AtomicInteger requestsCounter = new AtomicInteger(0);
+        String[] CZchars = {"a","á","b","c","č","d","ď","e","é","ě","f","g","h","ch","i","í","j","k","l","m","n","ň","o","ó","p","q","r","ř","s","š","t","ť","u","ú","ů","v","w","x","y","ý","z","ž"};
 
-        getCities(requestQueue, context, list -> {
-            if (list == null) {
-                Log.e(TAG, "Fetching cities list failed");
-                collectionListener.method(null);
-                return;
+        int start = CZchars.length;
+        AtomicInteger requestsCounter = new AtomicInteger(start);
+
+        if (progressBar != null){
+            progressBar.setMax(start);
+            progressBar.setProgress(0);
+        }
+
+        for (final String s :CZchars) {
+            String url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s);
+            try {
+                url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                Log.e(TAG, "utf-8 encoding not supported!");
             }
 
-            requestsCounter.set(list.size());
+            final String furl = url;
 
-            for (String item : list) {
-                try {
-                    //the API is weird - "." cause problems, you must stop before it
-                    String[] split = item.split("\\.");
-                    /*if (split.length > 0)*/
-                    item = split[0];
-                    String wrongurl = SCHOOLS_DATABASE_URL + URLEncoder.encode(item, "utf-8");
-                    String url = wrongurl.replace("+", "%20");
+            SchoolRequest request = new SchoolRequest(furl, response -> {
+                collection.addAll(response);
 
-                    StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
-                        try {
-                            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                            DocumentBuilder db = dbf.newDocumentBuilder();
-                            Document document = db.parse(new ByteArrayInputStream(response.getBytes()));
-
-                            Element root = document.getDocumentElement();
-                            root.normalize();
-
-                            NodeList nodeList = root.getElementsByTagName("schoolInfo");
-                            for (int i = 0; i < nodeList.getLength(); i++) {
-                                Node nodeItem = nodeList.item(i);
-                                SchoolInfo schoolInfo = new SchoolInfo();
-
-                                NodeList childNodes = nodeItem.getChildNodes();
-                                for (int j = 0; j < childNodes.getLength(); j++) {
-                                    Node nodeItem2 = childNodes.item(j);
-                                    switch (nodeItem2.getNodeName()) {
-                                        case "id":
-                                            schoolInfo.id = nodeItem2.getTextContent();
-                                            break;
-                                        case "name":
-                                            schoolInfo.name = nodeItem2.getTextContent();
-                                            schoolInfo.createStripedName(schoolInfo.name);
-                                            break;
-                                        case "schoolUrl":
-                                            schoolInfo.url = nodeItem2.getTextContent();
-                                            break;
-                                    }
-                                }
-                                collection.add(schoolInfo);
-                            }
-                        } catch (ParserConfigurationException | IOException | SAXException e) {
-                            Log.e(TAG, "Parsing city school list failed: url: " + url + "response:\n" + response + "\n\n----------\nstack trace");
-                            e.printStackTrace();
-                        }
-                    }, error -> {
-                        Log.d(TAG, "Fetching city school list failed: url:" + url + " error message: " + error.getMessage());
-                    });
-                    requestQueue.add(request);
-                } catch (UnsupportedEncodingException e) {
-                    Log.e(TAG, "Unsupported URLEncoder encoding: " + StandardCharsets.UTF_8.toString() + "\nstack trace:");
-                    e.printStackTrace();
-
-                    requestsCounter.decrementAndGet();
-                    if (requestsCounter.get() == 0){
-                        collectionListener.method(collection);
-                    }
+                decrement(requestsCounter,collectionListener,collection,start,progressBar);
+                Log.d(TAG, s);
+            },error -> {
+                if (error != null && (error.networkResponse == null || error.networkResponse.statusCode != 404)){
+                    Log.e(TAG, "Error while getting schools list: url: " + furl + "\n\n----------\nstack trace");
+                    error.printStackTrace();
                 }
-            }
+                Log.d(TAG, s);
+                decrement(requestsCounter,collectionListener,collection,start,progressBar);
 
-            requestQueue.addRequestFinishedListener(request -> {
-                requestsCounter.decrementAndGet();
-                if (requestsCounter.get() == 0){
-                    collectionListener.method(collection);
-                }
             });
-            Log.d("Choreographer", "requests ready");
 
-        });
+            requestQueue.add(request);
+
+        }
         return requestQueue;
     }
 
@@ -190,5 +149,16 @@ public class SchoolsDatabaseAPI {
 
     public static interface IndexedCollectionListener<T> {
         public void method(IndexedCollection<T> collection);
+    }
+
+    private static void decrement(AtomicInteger i, IndexedCollectionListener<SchoolInfo> collectionListener, IndexedCollection<SchoolInfo> collection, int start,  ProgressBar progressBar){
+        int got = i.decrementAndGet();
+        if (progressBar != null){
+            progressBar.setProgress(start - got);
+        }
+        if (got == 0){
+            collectionListener.method(collection);
+        }
+
     }
 }

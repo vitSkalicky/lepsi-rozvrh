@@ -8,6 +8,7 @@
     <string name="settings">Nastavení</string>
     <string name="refresh">Obnovit</string>
 
+    <string name="bakalari_logo">Logo Bakalářů</string>
     <string name="username">Přihlašovací jméno</string>
     <string name="password">Heslo</string>
     <string name="bakalari_server_adress">Adresa vašeho serveru Bakaláři</string>

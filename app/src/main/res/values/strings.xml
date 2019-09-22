@@ -7,6 +7,7 @@
     <string name="settings">Settings</string>
     <string name="refresh">Refresh</string>
 
+    <string name="bakalari_logo">Logo of Bakaláři</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="bakalari_server_adress">Address of your Bakaláři server</string>

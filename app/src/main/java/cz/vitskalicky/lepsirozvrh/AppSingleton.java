@@ -20,7 +20,7 @@ public class AppSingleton {
 
     public static synchronized AppSingleton getInstance(Context context) {
         if (instance == null) {
-            instance = new AppSingleton(context);
+            instance = new AppSingleton(context.getApplicationContext());
         }
         return instance;
     }
@@ -29,7 +29,7 @@ public class AppSingleton {
         if (requestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
-            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(ctx);
         }
         return requestQueue;
     }

@@ -1,51 +1,28 @@
 package cz.vitskalicky.lepsirozvrh.schoolsDatabase;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.googlecode.cqengine.IndexedCollection;
-import com.googlecode.cqengine.resultset.ResultSet;
-import static com.googlecode.cqengine.query.QueryFactory.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import cz.vitskalicky.lepsirozvrh.R;
 
-public class SchoolsAdapter extends RecyclerView.Adapter<SchoolsAdapter.ViewHolder> {
+public class SchoolsAdapter extends PagedListAdapter<SchoolInfo, SchoolsAdapter.ViewHolder> {
 
-    Context context;
-    IndexedCollection<SchoolInfo> collection;
-    SchoolsListFragment.OnItemClickListener listener;
-    String searchText = "";
+    private Context context;
+    private SchoolsListFragment.OnItemClickListener listener;
 
-    List<SchoolInfo> itemList = new ArrayList<>();
 
-    public SchoolsAdapter(Context context, IndexedCollection<SchoolInfo> collection, SchoolsListFragment.OnItemClickListener listener) {
+    public SchoolsAdapter(Context context, SchoolsListFragment.OnItemClickListener listener) {
+        super(DIFF_CALLBACK);
         this.context = context;
-        this.collection = collection;
         this.listener = listener;
-
-        refreshList();
-    }
-
-    public void refreshList(){
-        ResultSet<SchoolInfo> results = collection.retrieve(contains(SchoolInfo.STRIPED_NAME, searchText), queryOptions(orderBy(ascending(SchoolInfo.NAME))));
-        itemList = new ArrayList<>(results.size());
-        for (SchoolInfo item:results) {
-            itemList.add(item);
-        }
-        notifyDataSetChanged();
-    }
-
-    public void onSearchChange(String searchText){
-        this.searchText = SchoolInfo.stripName(searchText);
-        refreshList();
     }
 
     @NonNull
@@ -56,14 +33,28 @@ public class SchoolsAdapter extends RecyclerView.Adapter<SchoolsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.bind(itemList.get(i));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        SchoolInfo item = getItem(position);
+        holder.bind(item);
     }
 
-    @Override
-    public int getItemCount() {
-        return itemList.size();
-    }
+    private static DiffUtil.ItemCallback<SchoolInfo> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<SchoolInfo>() {
+
+                @Override
+                public boolean areItemsTheSame(SchoolInfo oldItem, SchoolInfo newItem) {
+                    // The ID property identifies when items are the same.
+                    return oldItem.id.equals(newItem.id);
+                }
+
+                @Override
+                public boolean areContentsTheSame(SchoolInfo oldItem, SchoolInfo newItem) {
+                    // Don't use the "==" operator here. Either implement and use .equals(),
+                    // or write custom data comparison logic here.
+                    return oldItem.url.equals(newItem.url) && oldItem.search_text.equals(newItem.search_text) && oldItem.name.equals(newItem.name) && oldItem.id.equals(newItem.id);
+                }
+            };
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -81,22 +72,23 @@ public class SchoolsAdapter extends RecyclerView.Adapter<SchoolsAdapter.ViewHold
             this.listener = listener;
         }
 
-        public void bind(SchoolInfo item){
+        public void bind(SchoolInfo item) {
             this.item = item;
-            if (item == null){
+            if (item == null) {
                 clear();
-            }else {
+            } else {
                 twName.setText(item.name);
                 twURL.setText(item.url);
                 view.setOnClickListener(v -> listener.onClick(item.url));
             }
         }
 
-        public void clear(){
+        public void clear() {
             item = null;
             twName.setText("");
             twURL.setText("");
-            view.setOnClickListener(v -> {});
+            view.setOnClickListener(v -> {
+            });
         }
     }
 }

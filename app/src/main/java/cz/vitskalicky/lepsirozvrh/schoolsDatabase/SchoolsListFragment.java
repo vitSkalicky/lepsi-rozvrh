@@ -2,8 +2,12 @@ package cz.vitskalicky.lepsirozvrh.schoolsDatabase;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelStore;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -28,8 +32,10 @@ public class SchoolsListFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SchoolsAdapter adapter = null;
+    SchoolsViewModel viewModel = null;
 
     ProgressBar progressBar;
+    TextView twInfo;
     EditText etSearch;
     TextView twError;
     ImageView ivError;
@@ -37,6 +43,8 @@ public class SchoolsListFragment extends Fragment {
     OnItemClickListener listener = url -> {};
 
     RequestQueue requestQueue = null;
+    SchoolsDatabse database = null;
+    SchoolDAO dao = null;
 
 
     public SchoolsListFragment() {
@@ -55,6 +63,7 @@ public class SchoolsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_schools_list, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         progressBar = view.findViewById(R.id.progressBar);
+        twInfo = view.findViewById(R.id.textViewInfo);
         etSearch = view.findViewById(R.id.editTextSearch);
         twError = view.findViewById(R.id.textViewError);
         ivError = view.findViewById(R.id.imageViewError);
@@ -63,6 +72,8 @@ public class SchoolsListFragment extends Fragment {
         twError.setVisibility(View.GONE);
         ivError.setVisibility(View.GONE);
 
+        viewModel = ViewModelProviders.of(this).get(SchoolsViewModel.class);
+        database = viewModel.init(getContext());
 
         etSearch.addTextChangedListener(new TextWatcher() {//<editor-fold desc="unused methods">
             @Override
@@ -77,32 +88,34 @@ public class SchoolsListFragment extends Fragment {
             //</editor-fold>
             @Override
             public void afterTextChanged(Editable s) {
-                if (adapter != null){
-                    adapter.onSearchChange(s.toString());
+                if (viewModel != null){
+                    viewModel.setQuery(s.toString());
                 }
             }
         });
 
-
-
-        requestQueue = SchoolsDatabaseAPI.getAllSchools(getContext(), collection -> {
-            if (collection != null) {
+        requestQueue = SchoolsDatabaseAPI.getAllSchools(getContext(), successful -> {
+            if (successful) {
                 layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
 
-                adapter = new SchoolsAdapter(getContext(), collection, listener);
+                adapter = new SchoolsAdapter(getContext(), listener);
+
+                viewModel.getQueriedSchools().observe(this, adapter::submitList);
 
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+                twInfo.setVisibility(View.GONE);
 
-                adapter.onSearchChange(etSearch.getText().toString());
+                viewModel.setQuery(etSearch.getText().toString());
             }else {
                 progressBar.setVisibility(View.GONE);
+                twInfo.setVisibility(View.GONE);
                 twError.setVisibility(View.VISIBLE);
                 ivError.setVisibility(View.VISIBLE);
             }
-        }, progressBar);
+        },database, progressBar);
 
         //automatically show keyboard
         etSearch.requestFocus();

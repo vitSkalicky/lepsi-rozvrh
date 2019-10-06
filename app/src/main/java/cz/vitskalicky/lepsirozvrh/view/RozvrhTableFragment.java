@@ -2,15 +2,13 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
+import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
 
@@ -24,7 +22,6 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
-import javassist.bytecode.analysis.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +69,7 @@ public class RozvrhTableFragment extends Fragment {
     /**
      * must be called
      */
-    public void init(RozvrhAPI rozvrhAPI, DisplayInfo displayInfo){
+    public void init(RozvrhAPI rozvrhAPI, DisplayInfo displayInfo) {
         this.rozvrhAPI = rozvrhAPI;
         this.displayInfo = displayInfo;
     }
@@ -89,17 +86,17 @@ public class RozvrhTableFragment extends Fragment {
 
         tableLayout = view.findViewById(R.id.tableLayout);
         captionRow = new TableRow(getContext());
-        cornerCell = new CornerCell(getContext(),captionRow, tableLayout, rows + 1, cellWidth);
+        cornerCell = new CornerCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
 
         //debug timing: Log.d(TAG_TIMER, "onCreateView end " + Utils.getDebugTime());
         return view;
     }
 
-    public void populate(Rozvrh rozvrh){
+    public void populate(Rozvrh rozvrh) {
         //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
 
         //check if not detached
-        if (getContext() == null){
+        if (getContext() == null) {
             return;
         }
 
@@ -116,21 +113,23 @@ public class RozvrhTableFragment extends Fragment {
 
         cornerCell.view.setRows(rows + 1);
 
-        if (oldRows != rows || oldColumns != columns){
+        if (oldRows != rows || oldColumns != columns) {
             createViews();
         }
 
         //populate
         cornerCell.update(rozvrh);
         for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
+            if (captionCells[i] == null)
+                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
             captionCells[i].update(rozvrh.getHodiny().get(i));
             captionCells[i].view.setSpread(spread);
         }
 
         for (int i = 0; i < rows; i++) {
             RozvrhDen den = rozvrh.getDny().get(i);
-            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
+            if (denCells[i] == null)
+                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
             denCells[i].update(den);
 
             String prevCaption = "";
@@ -141,11 +140,11 @@ public class RozvrhTableFragment extends Fragment {
 
                 //handling more lessons in same time (permanent timetable - different weeks)
                 if (item.getCaption() != null && !item.getCaption().equals("") &&
-                        item.getCaption().equals(prevCaption)){
+                        item.getCaption().equals(prevCaption)) {
                     // if there are more lessons in same time
                     captionsInRow++;
-                }else {
-                    if (captionsInRow > 1){ //if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
+                } else {
+                    if (captionsInRow > 1) { //if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
                         for (int k = 0; k < captionsInRow; k++) {
                             hodinaCells.get(i).get(j - (k + 1)).updateWeight(spread / (float) captionsInRow);
                         }
@@ -156,21 +155,21 @@ public class RozvrhTableFragment extends Fragment {
 
                 prevCaption = item.getCaption();
 
-                if (hodinaCells.get(i).size() <= j){
+                if (hodinaCells.get(i).size() <= j) {
                     HodinaCell toAdd = new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
                     hodinaCells.get(i).add(toAdd);
                     tableRows[i].addView(toAdd.view);
                 }
 
-                hodinaCells.get(i).get(j).update(den.getHodiny().get(j),spread, perm);
+                hodinaCells.get(i).get(j).update(den.getHodiny().get(j), spread, perm);
             }
             for (; j < columns; j++) {
-                hodinaCells.get(i).get(j).update(null,spread, perm);
+                hodinaCells.get(i).get(j).update(null, spread, perm);
             }
             //Remove cells that are left over from a multiple-cells-in-caption timetable
             final int lastIndex = j;
-            final int size =  hodinaCells.get(i).size();
-            for (; j < size; j++){
+            final int size = hodinaCells.get(i).size();
+            for (; j < size; j++) {
                 HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
                 hodinaCells.get(i).remove(toRemove);
                 ViewGroup parent = (ViewGroup) toRemove.view.getParent();
@@ -185,29 +184,29 @@ public class RozvrhTableFragment extends Fragment {
         //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
     }
 
-    public void highlightCurrentLesson(){
+    public void highlightCurrentLesson() {
         if (rozvrh == null)
             return;
         Rozvrh.GetNLreturnValues values = rozvrh.getNextLesson();
 
 
         //unhighlight
-        if (nextHodinaCell != null){
+        if (nextHodinaCell != null) {
             nextHodinaCell.hightlightEdges(false, false, false);
             nextHodinaCell.highlightItself(false);
         }
-        if (nextHodinaCellRight != null){
+        if (nextHodinaCellRight != null) {
             nextHodinaCellRight.hightlightEdges(false, false, false);
         }
-        if (nextHodinaCellBottom != null){
+        if (nextHodinaCellBottom != null) {
             nextHodinaCellBottom.hightlightEdges(false, false, false);
         }
-        if (nextHodinaCellCorner != null){
+        if (nextHodinaCellCorner != null) {
             nextHodinaCellCorner.hightlightEdges(false, false, false);
         }
 
 
-        if (values == null || values.rozvrhHodina == null){
+        if (values == null || values.rozvrhHodina == null) {
             return;
         }
 
@@ -219,15 +218,15 @@ public class RozvrhTableFragment extends Fragment {
         nextHodinaCell.hightlightEdges(true, true, true);
         nextHodinaCell.highlightItself(true);
 
-        if (denIndex + 1 < hodinaCells.size()){
+        if (denIndex + 1 < hodinaCells.size()) {
             nextHodinaCellBottom = hodinaCells.get(denIndex + 1).get(hodinaIndex);
             nextHodinaCellBottom.hightlightEdges(true, false, true);
         }
-        if (hodinaIndex + 1 < hodinaCells.get(0).size()){
+        if (hodinaIndex + 1 < hodinaCells.get(0).size()) {
             nextHodinaCellRight = hodinaCells.get(denIndex).get(hodinaIndex + 1);
             nextHodinaCellRight.hightlightEdges(false, true, true);
         }
-        if (denIndex + 1 < hodinaCells.size() && hodinaIndex + 1 < hodinaCells.get(0).size()){
+        if (denIndex + 1 < hodinaCells.size() && hodinaIndex + 1 < hodinaCells.get(0).size()) {
             nextHodinaCellCorner = hodinaCells.get(denIndex + 1).get(hodinaIndex + 1);
             nextHodinaCellCorner.hightlightEdges(false, false, true);
         }
@@ -236,7 +235,7 @@ public class RozvrhTableFragment extends Fragment {
     /**
      * Creates a cell with reasonably long data and calculates its minimum width
      */
-    private int calculateCellWidth(ViewGroup parent){
+    private int calculateCellWidth(ViewGroup parent) {
         RozvrhHodina hodina = new RozvrhHodina();
         hodina.setZkrpr("MMmM");
         hodina.setZkruc("Mmmm");
@@ -250,14 +249,14 @@ public class RozvrhTableFragment extends Fragment {
         return minWidth;
     }
 
-    public void createViews(){
+    public void createViews() {
         //debug timing: Log.d(TAG_TIMER, "createViews start " + Utils.getDebugTime());
-        if (rows == 0 && columns == 0){
+        if (rows == 0 && columns == 0) {
             rows = RozvrhAPI.getRememberedRows(getContext());
             columns = RozvrhAPI.getRememberedColumns(getContext());
         }
 
-        if (denCells.length == rows && captionCells.length == columns && hodinaCells.size() == rows && tableRows.length == rows){
+        if (denCells.length == rows && captionCells.length == columns && hodinaCells.size() == rows && tableRows.length == rows) {
             //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
             fillViews();
             return;
@@ -299,7 +298,7 @@ public class RozvrhTableFragment extends Fragment {
     }
 
 
-    private int calcucateSpread(Rozvrh rozvrh){
+    private int calcucateSpread(Rozvrh rozvrh) {
         //debug timing: Log.d(TAG_TIMER, "calculateSpread start " + Utils.getDebugTime());
         int mostSpread = 1;
         for (int i = 0; i < rozvrh.getDny().size(); i++) {
@@ -312,10 +311,10 @@ public class RozvrhTableFragment extends Fragment {
 
                 if (item2.getCaption() == null || item2.getCaption().equals("")) {
                     captionsInRow = 1;
-                } else if (item2.getCaption().equals(lastCaption)){
+                } else if (item2.getCaption().equals(lastCaption)) {
                     captionsInRow++;
                     mostSpread = Math.max(mostSpread, captionsInRow);
-                }else {
+                } else {
                     captionsInRow = 1;
                 }
                 lastCaption = item2.getCaption();
@@ -325,7 +324,7 @@ public class RozvrhTableFragment extends Fragment {
         return mostSpread;
     }
 
-    private void fillViews(){
+    private void fillViews() {
         //debug timing: Log.d(TAG_TIMER, "fillViews start " + Utils.getDebugTime());
         captionRow.removeAllViews();
         for (int i = 0; i < tableRows.length; i++) {
@@ -352,9 +351,9 @@ public class RozvrhTableFragment extends Fragment {
     /**
      * Empty the table when loading to prevent confusion
      */
-    private void empty(){
+    private void empty() {
         //check if fragment was not removed while loading
-        if (getContext() == null){
+        if (getContext() == null) {
             return;
         }
         this.rozvrh = null;
@@ -366,20 +365,22 @@ public class RozvrhTableFragment extends Fragment {
 
         cornerCell.view.setRows(rows + 1);
 
-        if (oldRows != rows || oldColumns != columns){
+        if (oldRows != rows || oldColumns != columns) {
             createViews();
         }
 
         //populate
         cornerCell.empty();
         for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null) captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
+            if (captionCells[i] == null)
+                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
             captionCells[i].empty();
             captionCells[i].view.setSpread(spread);
         }
 
         for (int i = 0; i < rows; i++) {
-            if (denCells[i] == null) denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
+            if (denCells[i] == null)
+                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
             denCells[i].empty();
 
             int j = 0;
@@ -388,8 +389,8 @@ public class RozvrhTableFragment extends Fragment {
             }
             //Remove cells that are left over from a multiple-cells-in-caption timetable
             final int lastIndex = j;
-            final int size =  hodinaCells.get(i).size();
-            for (; j < size; j++){
+            final int size = hodinaCells.get(i).size();
+            for (; j < size; j++) {
                 HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
                 hodinaCells.get(i).remove(toRemove);
                 ViewGroup parent = (ViewGroup) toRemove.view.getParent();
@@ -404,10 +405,9 @@ public class RozvrhTableFragment extends Fragment {
     private int netCode = -1;
 
     /**
-     *
      * @param weekIndex index of week to display relative to now (0 = this week, 1 = next, -1 = previous) or {@code Integer.MAX_VALUE} for permanent
      */
-    public void displayWeek(int weekIndex){
+    public void displayWeek(int weekIndex) {
         //debug timing: Log.d(TAG_TIMER, "displayWeek start " + Utils.getDebugTime());
 
         this.weekIndex = weekIndex;
@@ -430,40 +430,40 @@ public class RozvrhTableFragment extends Fragment {
             // have to make sure that net was not faster
             if (netCode != RozvrhAPI.SUCCESS)
                 onCacheResponse(code, rozvrh, finalWeek);
-            if (netCode != -1 && netCode != RozvrhAPI.SUCCESS){
+            if (netCode != -1 && netCode != RozvrhAPI.SUCCESS) {
                 onNetResponse(netCode, null, finalWeek);
             }
-        },(code, rozvrh) -> {
+        }, (code, rozvrh) -> {
             netCode = code;
             onNetResponse(code, rozvrh, finalWeek);
         });
-        if (item != null){
+        if (item != null) {
             populate(item);
             if (offline) {
                 displayInfo.setLoadingState(DisplayInfo.ERROR);
-            }else{
+            } else {
                 displayInfo.setLoadingState(DisplayInfo.LOADED);
             }
-        }else {
+        } else {
             empty();
         }
         //debug timing: Log.d(TAG_TIMER, "displayWeek end " + Utils.getDebugTime());
     }
 
-    private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+    private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek) {
         //check if fragment was not removed while loading
-        if (getContext() == null){
+        if (getContext() == null) {
             return;
         }
-        if (week != finalWeek){
+        if (week != finalWeek) {
             return;
         }
-        if (rozvrh != null){
+        if (rozvrh != null) {
             populate(rozvrh);
         }
         //onNetLoaded
-        if (code == RozvrhAPI.SUCCESS){
-            if (offline){
+        if (code == RozvrhAPI.SUCCESS) {
+            if (offline) {
                 rozvrhAPI.clearMemory();
             }
             offline = false;
@@ -472,33 +472,33 @@ public class RozvrhTableFragment extends Fragment {
         } else {
             offline = true;
             displayInfo.setLoadingState(DisplayInfo.ERROR);
-            if (cacheSuccessful){
+            if (cacheSuccessful) {
                 displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()) + " (" + getString(R.string.info_offline) + ")");
-            }else if (code == RozvrhAPI.UNREACHABLE) {
+            } else if (code == RozvrhAPI.UNREACHABLE) {
                 displayInfo.setMessage(getString(R.string.info_unreachable));
-            } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE){
+            } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE) {
                 displayInfo.setMessage(getString(R.string.info_unexpected_response));
-            }else if (code == RozvrhAPI.LOGIN_FAILED){
+            } else if (code == RozvrhAPI.LOGIN_FAILED) {
                 displayInfo.setMessage(getString(R.string.info_login_failed));
             }
         }
     }
 
-    private void onCacheResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek){
+    private void onCacheResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek) {
         //check if fragment was not removed while loading
-        if (getContext() == null){
+        if (getContext() == null) {
             return;
         }
-        if (week != finalWeek){
+        if (week != finalWeek) {
             return;
         }
-        if (code == RozvrhAPI.SUCCESS){
+        if (code == RozvrhAPI.SUCCESS) {
             cacheSuccessful = true;
             populate(rozvrh);
         }
     }
 
-    public void refresh(){
+    public void refresh() {
         final LocalDate finalWeek = week;
         displayInfo.setLoadingState(DisplayInfo.LOADING);
         cacheSuccessful = false;

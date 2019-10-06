@@ -6,7 +6,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.w3c.dom.Document;
@@ -17,36 +16,33 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class SchoolRequest extends Request<List<SchoolInfo>> {
+public class SchoolRequest extends Request<Void> {
     public static final String TAG = SchoolRequest.class.getSimpleName();
 
-    private final Response.Listener<List<SchoolInfo>> listener;
+    private final Response.Listener<Void> listener;
     private final String url;
+    private final SchoolDAO dao;
 
-    public SchoolRequest(String url, Response.Listener<List<SchoolInfo>> listener, Response.ErrorListener errorListener) {
+    public SchoolRequest(String url, SchoolDAO dao, Response.Listener<Void> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         this.listener = listener;
+        this.dao = dao;
         this.url = url;
     }
 
     @Override
-    protected void deliverResponse(List<SchoolInfo> response) {
+    protected void deliverResponse(Void response) {
         listener.onResponse(response);
     }
 
     @Override
-    protected Response<List<SchoolInfo>> parseNetworkResponse(NetworkResponse response) {
+    protected Response<Void> parseNetworkResponse(NetworkResponse response) {
         try {
-            List<SchoolInfo> ret = new LinkedList<>();
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document document = db.parse(new ByteArrayInputStream(response.data));
@@ -68,16 +64,16 @@ public class SchoolRequest extends Request<List<SchoolInfo>> {
                             break;
                         case "name":
                             schoolInfo.name = nodeItem2.getTextContent();
-                            schoolInfo.createStripedName(schoolInfo.name);
                             break;
                         case "schoolUrl":
                             schoolInfo.url = nodeItem2.getTextContent();
                             break;
                     }
                 }
-                ret.add(schoolInfo);
+                schoolInfo.setSearchText(schoolInfo.name, schoolInfo.url);
+                dao.insertSchool(schoolInfo);
             }
-            return Response.success(ret, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Log.e(TAG, "Parsing city school list failed: url: " + url + "response:\n" + response + "\n\n----------\nstack trace");
             e.printStackTrace();

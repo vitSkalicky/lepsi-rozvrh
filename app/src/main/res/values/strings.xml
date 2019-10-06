@@ -23,6 +23,7 @@
     <string name="enter_url">Enter url of your Bakaláři server or tap \'choose school\'</string>
     <string name="search">Search…</string>
     <string name="connection_failed">Could not connect to server</string>
+    <string name="intensive_operation_in_process">Intensive operation in process…</string>
 
     <!-- Info messages -->
     <string name="info_last_week">Last week</string>

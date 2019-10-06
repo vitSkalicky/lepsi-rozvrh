@@ -1,32 +1,26 @@
 package cz.vitskalicky.lepsirozvrh.schoolsDatabase;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.googlecode.cqengine.IndexedCollection;
-import com.googlecode.cqengine.ObjectLockingIndexedCollection;
-import com.googlecode.cqengine.index.suffix.SuffixTreeIndex;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +40,7 @@ public class SchoolsDatabaseAPI {
     /**
      * Fetches list ao all places (cities/towns/anything listed on their api) and returns their names
      * using the listener. If action fails, null is returned.
+     *
      * @param listListener listener using which data is returned. If action fails, null is returned.
      */
     public static void getCities(RequestQueue requestQueue, Context context, ListListener<String> listListener) {
@@ -85,61 +80,67 @@ public class SchoolsDatabaseAPI {
     }
 
     /**
-     * Fetches list of all schools from Bakaláři api by fetching list of all cities and then list of
-     * schools for each one. Might take some time. Returns null if fetching fails.
-     * @param collectionListener listener using which data is returned. Returns null if fetching fails.
+     * Fetches list of all schools from Bakaláři api by fetching schools for each letter of Czech alphabet. Might take some time. Returns false if fetching fails.
+     *
+     * @param database SchoolInfo data will be saved into this database.
+     * @param progressBar progress is displayed onto this progressbar unless it is {@code null}.
      * @return RequestQueue used for requests.
      */
-    /*public static void getAllSchools(RequestQueue requestQueue, Context context, IndexedCollectionListener<SchoolInfo> collectionListener){
-        SchoolsFetcher fetcher = new SchoolsFetcher();
-        fetcher.getAllSchools(requestQueue, context, collectionListener);
-    }*/
+    public static RequestQueue getAllSchools(Context context, Listener listener, SchoolsDatabse database, ProgressBar progressBar) {
+        final RequestQueue requestQueue = AppSingleton.getInstance(context).getRequestQueue();
 
-    public static RequestQueue getAllSchools(Context context, IndexedCollectionListener<SchoolInfo> collectionListener, ProgressBar progressBar) {
+        AsyncTask.execute(() -> {
+            SchoolDAO dao = database.schoolDAO();
 
-        RequestQueue requestQueue = AppSingleton.getInstance(context).getRequestQueue();
-
-        IndexedCollection<SchoolInfo> collection = new ObjectLockingIndexedCollection<>();
-        collection.addIndex(SuffixTreeIndex.onAttribute(SchoolInfo.STRIPED_NAME));
-
-        String[] CZchars = {"a","á","b","c","č","d","ď","e","é","ě","f","g","h","ch","i","í","j","k","l","m","n","ň","o","ó","p","q","r","ř","s","š","t","ť","u","ú","ů","v","w","x","y","ý","z","ž"};
-
-        int start = CZchars.length;
-        AtomicInteger requestsCounter = new AtomicInteger(start);
-
-        if (progressBar != null){
-            progressBar.setMax(start);
-            progressBar.setProgress(0);
-        }
-
-        for (final String s :CZchars) {
-            String url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s);
-            try {
-                url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                Log.e(TAG, "utf-8 encoding not supported!");
+            int schoolsInDatabase = dao.countAllSchools();
+            if (schoolsInDatabase > 0) {
+                //data already queried before (is wiped on exit)
+                new Handler(Looper.getMainLooper()).post(() ->
+                listener.onFinished(true));
+                return;
             }
 
-            final String furl = url;
+            String[] CZchars = {"a", "á", "b", "c", "č", "d", "ď", "e", "é", "ě", "f", "g", "h", "ch", "i", "í", "j", "k", "l", "m", "n", "ň", "o", "ó", "p", "q", "r", "ř", "s", "š", "t", "ť", "u", "ú", "ů", "v", "w", "x", "y", "ý", "z", "ž"};
 
-            SchoolRequest request = new SchoolRequest(furl, response -> {
-                collection.addAll(response);
+            int start = CZchars.length;
+            AtomicInteger requestsCounter = new AtomicInteger(start);
 
-                decrement(requestsCounter,collectionListener,collection,start,progressBar);
-                Log.d(TAG, s);
-            },error -> {
-                if (error != null && (error.networkResponse == null || error.networkResponse.statusCode != 404)){
-                    Log.e(TAG, "Error while getting schools list: url: " + furl + "\n\n----------\nstack trace");
-                    error.printStackTrace();
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (progressBar != null) {
+                    progressBar.setMax(start);
+                    progressBar.setProgress(0);
                 }
-                Log.d(TAG, s);
-                decrement(requestsCounter,collectionListener,collection,start,progressBar);
-
             });
 
-            requestQueue.add(request);
+            for (final String s : CZchars) {
+                String url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s);
+                try {
+                    url = SCHOOLS_DATABASE_URL + URLEncoder.encode(s, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    Log.e(TAG, "utf-8 encoding not supported!");
+                }
 
-        }
+                final String furl = url;
+
+                SchoolRequest request = new SchoolRequest(furl, dao, response -> {
+
+                    decrement(requestsCounter, listener, dao, start, progressBar);
+                    Log.d(TAG, s);
+                }, error -> {
+                    if (error != null && (error.networkResponse == null || error.networkResponse.statusCode != 404)) {
+                        Log.e(TAG, "Error while getting schools list: url: " + furl + "\n\n----------\nstack trace");
+                        error.printStackTrace();
+                    }
+                    Log.d(TAG, s);
+                    decrement(requestsCounter, listener, dao, start, progressBar);
+
+                });
+
+                requestQueue.add(request);
+
+            }
+        });
+
         return requestQueue;
     }
 
@@ -147,17 +148,32 @@ public class SchoolsDatabaseAPI {
         public void method(List<T> list);
     }
 
-    public static interface IndexedCollectionListener<T> {
-        public void method(IndexedCollection<T> collection);
+    public static interface Listener {
+        public void onFinished(boolean success);
     }
 
-    private static void decrement(AtomicInteger i, IndexedCollectionListener<SchoolInfo> collectionListener, IndexedCollection<SchoolInfo> collection, int start,  ProgressBar progressBar){
+    private static void decrement(AtomicInteger i, Listener listener, SchoolDAO dao, int start, ProgressBar progressBar) {
         int got = i.decrementAndGet();
-        if (progressBar != null){
-            progressBar.setProgress(start - got);
+        if (progressBar != null) {
+            new Handler(Looper.getMainLooper()).post(() ->{
+                if (Build.VERSION.SDK_INT >= 24) {
+                    progressBar.setProgress(start - got, true);
+                }else {
+                    progressBar.setProgress(start - got);
+                }
+            });
+
         }
-        if (got == 0){
-            collectionListener.method(collection);
+        if (got == 0) {
+            AsyncTask.execute(() -> {
+                if (dao.countAllSchools() > 0){
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            listener.onFinished(true));
+                }else {
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            listener.onFinished(false));
+                }
+            });
         }
 
     }

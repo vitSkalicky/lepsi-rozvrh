@@ -561,9 +561,9 @@ public class RozvrhAPI {
 
                         onNetLoaded.method(SUCCESS, root.getRozvrh());
                         return;
+                    }else{
+                        onNetLoaded.method(code, null);
                     }
-                    if (code == LOGIN_FAILED)
-                    onNetLoaded.method(code, null);
                 }
             }, requestQueue, context);
         }

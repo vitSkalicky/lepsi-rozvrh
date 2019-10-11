@@ -18,10 +18,11 @@ import java.util.List;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -428,9 +429,9 @@ public class RozvrhTableFragment extends Fragment {
         Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
             //onCachLoaded
             // have to make sure that net was not faster
-            if (netCode != RozvrhAPI.SUCCESS)
+            if (netCode != SUCCESS)
                 onCacheResponse(code, rozvrh, finalWeek);
-            if (netCode != -1 && netCode != RozvrhAPI.SUCCESS) {
+            if (netCode != -1 && netCode != SUCCESS) {
                 onNetResponse(netCode, null, finalWeek);
             }
         }, (code, rozvrh) -> {
@@ -462,7 +463,7 @@ public class RozvrhTableFragment extends Fragment {
             populate(rozvrh);
         }
         //onNetLoaded
-        if (code == RozvrhAPI.SUCCESS) {
+        if (code == SUCCESS) {
             if (offline) {
                 rozvrhAPI.clearMemory();
             }
@@ -474,11 +475,11 @@ public class RozvrhTableFragment extends Fragment {
             displayInfo.setLoadingState(DisplayInfo.ERROR);
             if (cacheSuccessful) {
                 displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()) + " (" + getString(R.string.info_offline) + ")");
-            } else if (code == RozvrhAPI.UNREACHABLE) {
+            } else if (code == UNREACHABLE) {
                 displayInfo.setMessage(getString(R.string.info_unreachable));
-            } else if (code == RozvrhAPI.UNEXPECTED_RESPONSE) {
+            } else if (code == UNEXPECTED_RESPONSE) {
                 displayInfo.setMessage(getString(R.string.info_unexpected_response));
-            } else if (code == RozvrhAPI.LOGIN_FAILED) {
+            } else if (code == LOGIN_FAILED) {
                 displayInfo.setMessage(getString(R.string.info_login_failed));
             }
         }
@@ -492,7 +493,7 @@ public class RozvrhTableFragment extends Fragment {
         if (week != finalWeek) {
             return;
         }
-        if (code == RozvrhAPI.SUCCESS) {
+        if (code == SUCCESS) {
             cacheSuccessful = true;
             populate(rozvrh);
         }

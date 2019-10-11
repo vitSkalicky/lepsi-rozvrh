@@ -5,7 +5,7 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import cz.vitskalicky.lepsirozvrh.bakaAPI.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 
 public class AppSingleton {
     private static AppSingleton instance;

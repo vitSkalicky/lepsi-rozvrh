@@ -1,4 +1,4 @@
-package cz.vitskalicky.lepsirozvrh.bakaAPI;
+package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,8 +6,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import org.joda.time.LocalDate;
@@ -25,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.channels.FileLock;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,8 +39,11 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
+
+import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 
 /**
  * This class is responsible for fetching, parsing and caching schedule (CZ: rozvrh).
@@ -54,106 +60,8 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
  * by an activity or something else by calling {@link #clearOldCache(Context)} on exit.
  */
 public class RozvrhAPI {
-    public static final int SUCCESS = 0;
-    public static final int LOGIN_FAILED = 1;
-    public static final int UNEXPECTED_RESPONSE = 2;
-    public static final int UNREACHABLE = 3;
-    public static final int NO_CACHE = 4;
-
     private static String TAG = RozvrhAPI.class.getSimpleName();
     public static final String TAG_TIMER = TAG + "-timer";
-
-    /**
-     * Gets raw xml document from the server.
-     *
-     * @param mondayDate Date of monday of the requested week. If {@code null}, permanent timetable is returned.
-     * @param listener   ResponseListener for returning data
-     */
-    private static void fetchXml(LocalDate mondayDate, ResponseListener listener, RequestQueue requestQueue, Context context) {
-        String strDate;
-        if (mondayDate == null) {
-            strDate = "perm";
-        } else {
-            strDate = Utils.dateToString(mondayDate);
-        }
-
-        String url = SharedPrefs.getString(context, SharedPrefs.URL);
-        String token = Login.getToken(context);
-        String fullUrl = url + "?hx=" + token + "&pm=rozvrh&pmd=" + strDate;
-
-        StringRequest request = new StringRequest(Request.Method.GET, fullUrl, response -> {
-            int retCode;
-            String retResponse;
-            try {
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document document = db.parse(new ByteArrayInputStream(response.getBytes()));
-
-                Element root = document.getDocumentElement();
-                root.normalize();
-
-                int result = Integer.parseInt(root.getElementsByTagName("result").item(0).getTextContent());
-
-                if (result == -1) {// Login incorrect
-                    Log.i(TAG, "Getting timetable failed: login incorrect: url: " + url + " Date: " + strDate + " response:\n" + response);
-                    retCode = LOGIN_FAILED;
-                    retResponse = response;
-                } else {
-                    retCode = SUCCESS;
-                    retResponse = response;
-                }
-            } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                Log.e(TAG, "Getting timetable failed: unexpected response: url: " + url + " Date: " + strDate + " error message: " + e.getMessage() + " response:\n" + response);
-                e.printStackTrace();
-                listener.onResponse(UNEXPECTED_RESPONSE, response);
-                return;
-            }
-
-            listener.onResponse(retCode, retResponse);
-        }, error -> {
-            Log.i(TAG, "Getting timetable failed: network error: " + error.getMessage());
-            listener.onResponse(UNREACHABLE, "");
-            return;
-        });
-        requestQueue.add(request);
-    }
-
-    /**
-     * Parses rozvrh xml given as string argument
-     * @param string rozvrh xml
-     * @return parsed rozvrh or null if failed
-     */
-    private static RozvrhRoot parseRozvrh(String string) {
-        RozvrhRoot root;
-        try {
-            Serializer serializer = new Persister();
-            root = serializer.read(RozvrhRoot.class, string);
-        } catch (Exception e) {
-            Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + string);
-            e.printStackTrace();
-            return null;
-        }
-        return root;
-    }
-
-    /**
-     * Same as as calling {@link #fetchXml(LocalDate, ResponseListener, RequestQueue, Context)} and {@link #parseRozvrh(String)}
-     */
-    private static void fetchRozvrh(LocalDate mondayDate, RozvrhListener listener, RequestQueue requestQueue, Context context) {
-        fetchXml(mondayDate, (code, response) -> {
-            if (code == SUCCESS) {
-                RozvrhRoot root = parseRozvrh(response);
-
-                if (root == null || root.getRozvrh() == null) {
-                    listener.method(UNEXPECTED_RESPONSE, null);
-                    return;
-                }
-                listener.method(SUCCESS, root.getRozvrh());
-            } else {
-                listener.method(code, null);
-            }
-        }, requestQueue, context);
-    }
 
     /**
      * Saved rozvrh for later faster loading. Saving is performed on background thread and file
@@ -193,8 +101,8 @@ public class RozvrhAPI {
      *
      * @param monday   Monday identifying week or null for permanent
      * @param listener listener for returnening data. Codes:
-     *                 {@link #NO_CACHE} - Not found in cache - {@code rozvrh) is null
-     *                 {@link #SUCCESS} - Loading succeeded - requested rozvrh is in {@code rozvrh)
+     *                 {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#NO_CACHE} - Not found in cache - {@code rozvrh) is null
+     *                 {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} - Loading succeeded - requested rozvrh is in {@code rozvrh)
      */
     private static void loadRozvrh(LocalDate monday, RozvrhListener listener, Context context) {
         //debug timing: Log.d(TAG_TIMER, "file load main start " + Utils.getDebugTime());
@@ -315,7 +223,7 @@ public class RozvrhAPI {
     }
 
     /**
-     * Loads rozvrh for given week from cache (if there is none, code {@link #NO_CACHE} is returned),
+     * Loads rozvrh for given week from cache (if there is none, code {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#NO_CACHE} is returned),
      * which is returned using {@code onCacheLoaded} listener. Meanwhile rozvrh is fetched from server
      * and returned using {@code onLoaded} listener. {@code onLoaded} might be called before
      * {@code onCacheLoaded}, especially when network is not available.
@@ -326,26 +234,13 @@ public class RozvrhAPI {
      * @param onLoaded      Listener using which fetched timetable is returned
      */
     public static void getRozvrh(LocalDate mondayDate, RequestQueue requestQueue, Context context, RozvrhListener onCacheLoaded, RozvrhListener onLoaded) {
-        fetchXml(mondayDate, (code, xmlString) -> {
-            if (code == SUCCESS) {
-                Rozvrh ret;
-                try {
-                    Serializer serializer = new Persister();
-                    RozvrhRoot root = serializer.read(RozvrhRoot.class, xmlString);
-                    ret = root.getRozvrh();
-                } catch (Exception e) {
-                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
-                    e.printStackTrace();
-                    onLoaded.method(UNEXPECTED_RESPONSE, null);
-                    return;
-                }
-                saveRawRozvrh(mondayDate, xmlString, context);
-                onLoaded.method(SUCCESS, ret);
-            } else {
-                onLoaded.method(code, null);
-                return;
-            }
-        }, requestQueue, context);
+        RozvrhRequest request = new RozvrhRequest(mondayDate, successResult -> {
+            saveRawRozvrh(mondayDate, successResult.raw, context);
+            onLoaded.method(SUCCESS, successResult.rozvrh);
+        }, errorResult -> {
+            onLoaded.method(errorResult.code, null);
+        }, context);
+        requestQueue.add(request);
 
         loadRozvrh(mondayDate, onCacheLoaded, context);
     }
@@ -362,7 +257,7 @@ public class RozvrhAPI {
          * The only method
          *
          * @param code   status code identifying success or failure; is one of those:
-         *               {@link #SUCCESS}, {@link #LOGIN_FAILED}, {@link #UNEXPECTED_RESPONSE}, {@link #UNREACHABLE}, {@link #NO_CACHE},
+         *               {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS}, {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#LOGIN_FAILED}, {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNEXPECTED_RESPONSE}, {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNREACHABLE}, {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#NO_CACHE},
          * @param rozvrh
          */
         public void method(int code, Rozvrh rozvrh);
@@ -414,13 +309,13 @@ public class RozvrhAPI {
      *
      * @param date          Monday date identifying week or <code>null</code> for permanent timetable.
      * @param onCacheLoaded returns Rozvrh object loaded from 'cache'. Will not be called if rozvrh was found in memory.
-     *                      {@code code} = {@link #SUCCESS} -> loading successful, object is in {@code rozvrh}.
-     *                      {@code code} = {@link #NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} -> loading successful, object is in {@code rozvrh}.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
      * @param onNetLoaded   returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
-     *                      {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
-     *                      {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
-     *                      {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
-     *                      {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
      * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
      */
     public Rozvrh get(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded) {
@@ -461,31 +356,25 @@ public class RozvrhAPI {
     public void cacheWeek(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
         if (!saved.containsKey(monday)) {
-            fetchXml(monday, (code, response) -> {
+            RozvrhRequest request = new RozvrhRequest(monday, result -> {
                 RozvrhListener listener = activeListeners.get(monday);
-
-                if (code == SUCCESS) {
-                    RozvrhRoot root = parseRozvrh(response);
-                    if (root == null || root.getRozvrh() == null) {
-                        if (listener != null)
-                            listener.method(UNEXPECTED_RESPONSE, null);
-                        return;
-                    }
-
-                    saved.put(monday, root.getRozvrh());
-                    saveRawRozvrh(monday, response, context);
+                if (result.code == SUCCESS) {
+                    saved.put(monday, result.rozvrh);
+                    saveRawRozvrh(monday, result.raw, context);
 
                     if (listener != null)
-                        listener.method(SUCCESS, root.getRozvrh());
+                        listener.method(SUCCESS, result.rozvrh);
                     return;
                 }
                 if (listener != null)
-                    listener.method(code, null);
+                    listener.method(result.code, null);
 
                 activeListeners.remove(monday);
                 active.remove(monday);
+            }, context);
 
-            }, requestQueue, context);
+            requestQueue.add(request);
+
             active.add(monday);
         }
     }
@@ -525,13 +414,13 @@ public class RozvrhAPI {
      *
      * @param date          Monday date identifying week or <code>null</code> for permanent timetable.
      * @param onCacheLoaded returns Rozvrh object loaded from 'cache'. Will not be called if rozvrh was found in memory.
-     *                      {@code code} = {@link #SUCCESS} -> loading successful, object is in {@code rozvrh}.
-     *                      {@code code} = {@link #NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} -> loading successful, object is in {@code rozvrh}.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#NO_CACHE} -> Not found in cache or error while loading. {@code rozvrh} is <code>null</code>.
      * @param onNetLoaded   returns Rozvrh object fetched from server. Will not be called if rozvrh was found in memory.
-     *                      {@code code} = {@link #SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
-     *                      {@code code} = {@link #LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
-     *                      {@code code} = {@link #UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
-     *                      {@code code} = {@link #UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} -> Loading successful, object is in <code>rozvrh</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#LOGIN_FAILED} -> Logging in failed (user's password has changed?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNEXPECTED_RESPONSE} -> Unexpected response from server (bad login? API has changed? Rozvrh module is not supported?). <code>rozvrh</code> is <code>null</code>.
+     *                      {@code code} = {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNREACHABLE} -> Server unreachable or other network error (no connection probably).  <code>rozvrh</code> is <code>null</code>.
      * @return Rozvrh object loaded from memory or null if Rozvrh is not in memory
      */
     private Rozvrh getOne(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded) {
@@ -546,26 +435,16 @@ public class RozvrhAPI {
                 onCacheLoaded.method(code, rozvrh);
             }, context);
 
-            fetchXml(monday, new ResponseListener() {
-                @Override
-                public void onResponse(int code, String response) {
-                    if (code == SUCCESS) {
-                        RozvrhRoot root = parseRozvrh(response);
-                        if (root == null || root.getRozvrh() == null) {
-                            onNetLoaded.method(UNEXPECTED_RESPONSE, null);
-                            return;
-                        }
+            RozvrhRequest request = new RozvrhRequest(monday, successResult -> {
+                saved.put(monday, successResult.rozvrh);
+                saveRawRozvrh(monday, successResult.raw, context);
 
-                        saved.put(monday, root.getRozvrh());
-                        saveRawRozvrh(monday, response, context);
+                onNetLoaded.method(SUCCESS, successResult.rozvrh);
+            }, errorResult -> {
+                onNetLoaded.method(errorResult.code, null);
+            }, context);
 
-                        onNetLoaded.method(SUCCESS, root.getRozvrh());
-                        return;
-                    }else{
-                        onNetLoaded.method(code, null);
-                    }
-                }
-            }, requestQueue, context);
+            requestQueue.add(request);
         }
 
         return memory;
@@ -582,57 +461,34 @@ public class RozvrhAPI {
      * Clears memory and requests new timetable from net, if connection fails, it loads it from cache,
      * if it doesn't it clears cache and saves the new one to cache and returns it using {@code onLoaded}
      * listener. Codes:
-     * - {@link #SUCCESS} - successfully fetched new timetable from server and cleared cache. Refreshed timetable is in {@code rozvrh}.
-     * - {@link #UNREACHABLE} - could not get response from server, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
-     * - {@link #UNEXPECTED_RESPONSE} - error in parsing fetched data, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
-     * - {@link #LOGIN_FAILED} - Response contaned message indicating faile login, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} - successfully fetched new timetable from server and cleared cache. Refreshed timetable is in {@code rozvrh}.
+     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNREACHABLE} - could not get response from server, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNEXPECTED_RESPONSE} - error in parsing fetched data, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#LOGIN_FAILED} - Response contaned message indicating faile login, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
      *
      * @param monday monday identifying week or {@code null} for permanent timetable.
      */
     public void refresh(LocalDate monday, RozvrhListener onLoaded) {
         clearMemory();
-        fetchXml(monday, (code, xmlString) -> {
-            if (code == SUCCESS) {
-                Rozvrh ret;
-                try {
-                    Serializer serializer = new Persister();
-                    RozvrhRoot root = serializer.read(RozvrhRoot.class, xmlString);
-                    ret = root.getRozvrh();
-                } catch (Exception e) {
-                    Log.e(TAG, "Timetable deserialization failed. error message: " + e.getMessage() + " raw xml:\n" + xmlString);
-                    e.printStackTrace();
-                    completeRefresh(monday, null, UNEXPECTED_RESPONSE, onLoaded);
-                    return;
-                }
+        RozvrhRequest request = new RozvrhRequest(monday, result -> {
+            if (result.code == SUCCESS) {
                 clearCache(context);
-                saveRawRozvrh(monday, xmlString, context);
-                completeRefresh(monday, ret, code, onLoaded);
+                saveRawRozvrh(monday, result.raw, context);
                 cacheCNPP();
                 cacheNP(monday);
-            } else {
-                completeRefresh(monday, null, code, onLoaded);
-                return;
-            }
-        }, requestQueue, context);
-    }
 
-    /**
-     * Helper method for {@link #refresh(LocalDate, RozvrhListener)}
-     *
-     * @param rozvrh if null, fetching from net failed
-     */
-    private void completeRefresh(LocalDate monday, Rozvrh rozvrh, int netResponseCode, RozvrhListener onLoaded) {
-        if (rozvrh == null) {
-            //no net
-            loadRozvrh(monday, (code, rozvrh1) -> {
-                if (code == SUCCESS) {
-                    onLoaded.method(netResponseCode, rozvrh1);
-                } else {
-                    onLoaded.method(netResponseCode, null);
-                }
-            }, context);
-        } else {
-            onLoaded.method(SUCCESS, rozvrh);
-        }
+                onLoaded.method(SUCCESS, result.rozvrh);
+            } else {
+                loadRozvrh(monday, (code, rozvrh1) -> {
+                    if (code == SUCCESS) {
+                        onLoaded.method(result.code, rozvrh1);
+                        saved.put(monday,rozvrh1);
+                    } else {
+                        onLoaded.method(result.code, null);
+                    }
+                }, context);
+            }
+        }, context);
+        requestQueue.add(request);
     }
 }

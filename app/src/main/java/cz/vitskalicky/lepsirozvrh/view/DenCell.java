@@ -17,22 +17,21 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 public class DenCell {
 
     Context context;
-    CellView view;
+    View view;
     RozvrhDen den;
 
     TextView twzkratka;
     TextView twdatum;
 
-    public DenCell(Context context, RozvrhDen den, ViewGroup parent, View top, int rows, int width) {
-        this(context, parent, top, rows, width);
+    public DenCell(Context context, RozvrhDen den, ViewGroup parent) {
+        this(context, parent);
         update(den);
     }
 
-    public DenCell(Context context, ViewGroup parent, View top, int rows, int width){
+    public DenCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (CellView) inflater.inflate(R.layout.cell_den, parent, false);
-        view.init(top, rows, width);
+        view = inflater.inflate(R.layout.cell_den, parent, false);
 
         twzkratka = view.findViewById(R.id.textViewZkratka);
         twdatum = view.findViewById(R.id.textViewDatum);

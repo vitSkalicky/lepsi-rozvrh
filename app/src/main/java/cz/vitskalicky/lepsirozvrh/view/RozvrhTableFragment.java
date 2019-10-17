@@ -32,23 +32,8 @@ public class RozvrhTableFragment extends Fragment {
     public static final String TAG_TIMER = TAG + "-timer";
 
     private View view;
-    private TableLayout tableLayout;
-
-    private int rows = 0;
-    private int columns = 0;
-    private int spread = 1; //how many places should occupy default cell - there may be 2 lessons in one caption
-
-    private int cellWidth;
-
-    private Rozvrh rozvrh = null;
-    private CornerCell cornerCell;
-    private DenCell[] denCells = new DenCell[0];
-    private CaptionCell[] captionCells = new CaptionCell[0];
-    private List<List<HodinaCell>> hodinaCells = new ArrayList<>();
-
-    private TableRow captionRow;
-    private TableRow[] tableRows = new TableRow[0];
-
+    private RozvrhLayout rozvrhLayout;
+    
     private DisplayInfo displayInfo;
 
     private LocalDate week = LocalDate.now();
@@ -56,11 +41,6 @@ public class RozvrhTableFragment extends Fragment {
     private boolean cacheSuccessful = false;
     private boolean offline = false;
     private RozvrhAPI rozvrhAPI = null;
-
-    private HodinaCell nextHodinaCell = null; //the highlighted one
-    private HodinaCell nextHodinaCellRight = null; //the right one from the highlighted one (it has its left highlighted)
-    private HodinaCell nextHodinaCellBottom = null; //the bottom one from the highlighted one (it has its top highlighted)
-    private HodinaCell nextHodinaCellCorner = null; //the corner one from the highlighted one (it has its corner highlighted)
 
 
     public RozvrhTableFragment() {
@@ -83,323 +63,10 @@ public class RozvrhTableFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_rozvrh_table, container, false);
 
-        cellWidth = calculateCellWidth(container);
-
-        tableLayout = view.findViewById(R.id.tableLayout);
-        captionRow = new TableRow(getContext());
-        cornerCell = new CornerCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
+        rozvrhLayout = view.findViewById(R.id.rozvrhLayout);
 
         //debug timing: Log.d(TAG_TIMER, "onCreateView end " + Utils.getDebugTime());
         return view;
-    }
-
-    public void populate(Rozvrh rozvrh) {
-        //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
-
-        //check if not detached
-        if (getContext() == null) {
-            return;
-        }
-
-        this.rozvrh = rozvrh;
-        int oldRows = rows;
-        int oldColumns = columns;
-        rows = rozvrh.getDny().size();
-        columns = rozvrh.getHodiny().size();
-        spread = calcucateSpread(rozvrh);
-        boolean perm = rozvrh.getTyp().equals("perm");
-
-        RozvrhAPI.rememberRows(getContext(), rows);
-        RozvrhAPI.rememberColumns(getContext(), columns);
-
-        cornerCell.view.setRows(rows + 1);
-
-        if (oldRows != rows || oldColumns != columns) {
-            createViews();
-        }
-
-        //populate
-        cornerCell.update(rozvrh);
-        for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null)
-                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
-            captionCells[i].update(rozvrh.getHodiny().get(i));
-            captionCells[i].view.setSpread(spread);
-        }
-
-        for (int i = 0; i < rows; i++) {
-            RozvrhDen den = rozvrh.getDny().get(i);
-            if (denCells[i] == null)
-                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
-            denCells[i].update(den);
-
-            String prevCaption = "";
-            int captionsInRow = 1;
-            int j = 0;
-            for (; j < den.getHodiny().size(); j++) {
-                RozvrhHodina item = den.getHodiny().get(j);
-
-                //handling more lessons in same time (permanent timetable - different weeks)
-                if (item.getCaption() != null && !item.getCaption().equals("") &&
-                        item.getCaption().equals(prevCaption)) {
-                    // if there are more lessons in same time
-                    captionsInRow++;
-                } else {
-                    if (captionsInRow > 1) { //if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
-                        for (int k = 0; k < captionsInRow; k++) {
-                            hodinaCells.get(i).get(j - (k + 1)).updateWeight(spread / (float) captionsInRow);
-                        }
-                    }
-                    // reset captions in row
-                    captionsInRow = 1;
-                }
-
-                prevCaption = item.getCaption();
-
-                if (hodinaCells.get(i).size() <= j) {
-                    HodinaCell toAdd = new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
-                    hodinaCells.get(i).add(toAdd);
-                    tableRows[i].addView(toAdd.view);
-                }
-
-                hodinaCells.get(i).get(j).update(den.getHodiny().get(j), spread, perm);
-            }
-            for (; j < columns; j++) {
-                hodinaCells.get(i).get(j).update(null, spread, perm);
-            }
-            //Remove cells that are left over from a multiple-cells-in-caption timetable
-            final int lastIndex = j;
-            final int size = hodinaCells.get(i).size();
-            for (; j < size; j++) {
-                HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
-                hodinaCells.get(i).remove(toRemove);
-                ViewGroup parent = (ViewGroup) toRemove.view.getParent();
-                if (parent != null) {
-                    parent.removeView(toRemove.view);
-                }
-            }
-        }
-
-        highlightCurrentLesson();
-
-        //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
-    }
-
-    public void highlightCurrentLesson() {
-        if (rozvrh == null)
-            return;
-        Rozvrh.GetNLreturnValues values = rozvrh.getNextLesson();
-
-
-        //unhighlight
-        if (nextHodinaCell != null) {
-            nextHodinaCell.hightlightEdges(false, false, false);
-            nextHodinaCell.highlightItself(false);
-        }
-        if (nextHodinaCellRight != null) {
-            nextHodinaCellRight.hightlightEdges(false, false, false);
-        }
-        if (nextHodinaCellBottom != null) {
-            nextHodinaCellBottom.hightlightEdges(false, false, false);
-        }
-        if (nextHodinaCellCorner != null) {
-            nextHodinaCellCorner.hightlightEdges(false, false, false);
-        }
-
-
-        if (values == null || values.rozvrhHodina == null) {
-            return;
-        }
-
-        RozvrhHodina hodina = values.rozvrhHodina;
-        int denIndex = values.dayIndex;
-        int hodinaIndex = values.lessonIndex;
-
-        nextHodinaCell = hodinaCells.get(denIndex).get(hodinaIndex);
-        nextHodinaCell.hightlightEdges(true, true, true);
-        nextHodinaCell.highlightItself(true);
-
-        if (denIndex + 1 < hodinaCells.size()) {
-            nextHodinaCellBottom = hodinaCells.get(denIndex + 1).get(hodinaIndex);
-            nextHodinaCellBottom.hightlightEdges(true, false, true);
-        }
-        if (hodinaIndex + 1 < hodinaCells.get(0).size()) {
-            nextHodinaCellRight = hodinaCells.get(denIndex).get(hodinaIndex + 1);
-            nextHodinaCellRight.hightlightEdges(false, true, true);
-        }
-        if (denIndex + 1 < hodinaCells.size() && hodinaIndex + 1 < hodinaCells.get(0).size()) {
-            nextHodinaCellCorner = hodinaCells.get(denIndex + 1).get(hodinaIndex + 1);
-            nextHodinaCellCorner.hightlightEdges(false, false, true);
-        }
-    }
-
-    /**
-     * Creates a cell with reasonably long data and calculates its minimum width
-     */
-    private int calculateCellWidth(ViewGroup parent) {
-        RozvrhHodina hodina = new RozvrhHodina();
-        hodina.setZkrpr("MMmM");
-        hodina.setZkruc("Mmmm");
-        hodina.setZkrmist("M. 00");
-        hodina.setZkrskup("MMMMm 0");
-        hodina.setCycle("XXXX");
-        HodinaCell hodinaCell = new HodinaCell(getContext(), hodina, 1, parent, parent, 1, 1, true);
-        CellView cellView = hodinaCell.view;
-
-        int minWidth = cellView.getNaturalWidth();
-        return minWidth;
-    }
-
-    public void createViews() {
-        //debug timing: Log.d(TAG_TIMER, "createViews start " + Utils.getDebugTime());
-        if (rows == 0 && columns == 0) {
-            rows = RozvrhAPI.getRememberedRows(getContext());
-            columns = RozvrhAPI.getRememberedColumns(getContext());
-        }
-
-        if (denCells.length == rows && captionCells.length == columns && hodinaCells.size() == rows && tableRows.length == rows) {
-            //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
-            fillViews();
-            return;
-        }
-
-
-        denCells = new DenCell[rows];
-        captionCells = new CaptionCell[columns];
-        hodinaCells = new ArrayList<>();
-        tableRows = new TableRow[rows];
-
-        for (int i = 0; i < rows; i++) {
-            TableRow item = new TableRow(getContext());
-            item.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    1));
-            tableRows[i] = item;
-        }
-
-        for (int i = 0; i < columns; i++) {
-            captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
-        }
-
-        for (int i = 0; i < rows; i++) {
-            denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
-
-            List<HodinaCell> newList = new ArrayList<>();
-
-            for (int j = 0; j < columns; j++) {
-                newList.add(new HodinaCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth));
-            }
-
-            hodinaCells.add(newList);
-        }
-
-        //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
-        //don't forget about the skipping condition
-        fillViews();
-    }
-
-
-    private int calcucateSpread(Rozvrh rozvrh) {
-        //debug timing: Log.d(TAG_TIMER, "calculateSpread start " + Utils.getDebugTime());
-        int mostSpread = 1;
-        for (int i = 0; i < rozvrh.getDny().size(); i++) {
-            RozvrhDen item = rozvrh.getDny().get(i);
-
-            String lastCaption = "";
-            int captionsInRow = 1;
-            for (int j = 0; j < item.getHodiny().size(); j++) {
-                RozvrhHodina item2 = item.getHodiny().get(j);
-
-                if (item2.getCaption() == null || item2.getCaption().equals("")) {
-                    captionsInRow = 1;
-                } else if (item2.getCaption().equals(lastCaption)) {
-                    captionsInRow++;
-                    mostSpread = Math.max(mostSpread, captionsInRow);
-                } else {
-                    captionsInRow = 1;
-                }
-                lastCaption = item2.getCaption();
-            }
-        }
-        //debug timing: Log.d(TAG_TIMER, "calculateSpread end " + Utils.getDebugTime());
-        return mostSpread;
-    }
-
-    private void fillViews() {
-        //debug timing: Log.d(TAG_TIMER, "fillViews start " + Utils.getDebugTime());
-        captionRow.removeAllViews();
-        for (int i = 0; i < tableRows.length; i++) {
-            tableRows[i].removeAllViews();
-        }
-        tableLayout.removeAllViews();
-
-        captionRow.addView(cornerCell.getView());
-        for (int i = 0; i < columns; i++) {
-            captionRow.addView(captionCells[i].getView());
-        }
-        tableLayout.addView(captionRow);
-        for (int i = 0; i < rows; i++) {
-            TableRow tr = tableRows[i];
-            tr.addView(denCells[i].getView());
-            for (int j = 0; j < hodinaCells.get(i).size(); j++) {
-                tr.addView(hodinaCells.get(i).get(j).view);
-            }
-            tableLayout.addView(tableRows[i]);
-        }
-        //debug timing: Log.d(TAG_TIMER, "fillViews end " + Utils.getDebugTime());
-    }
-
-    /**
-     * Empty the table when loading to prevent confusion
-     */
-    private void empty() {
-        //check if fragment was not removed while loading
-        if (getContext() == null) {
-            return;
-        }
-        this.rozvrh = null;
-        final int oldRows = rows;
-        final int oldColumns = columns;
-        rows = RozvrhAPI.getRememberedRows(getContext());
-        columns = RozvrhAPI.getRememberedColumns(getContext());
-        spread = 1;
-
-        cornerCell.view.setRows(rows + 1);
-
-        if (oldRows != rows || oldColumns != columns) {
-            createViews();
-        }
-
-        //populate
-        cornerCell.empty();
-        for (int i = 0; i < columns; i++) {
-            if (captionCells[i] == null)
-                captionCells[i] = new CaptionCell(getContext(), captionRow, tableLayout, rows + 1, cellWidth);
-            captionCells[i].empty();
-            captionCells[i].view.setSpread(spread);
-        }
-
-        for (int i = 0; i < rows; i++) {
-            if (denCells[i] == null)
-                denCells[i] = new DenCell(getContext(), tableRows[i], tableLayout, rows + 1, cellWidth);
-            denCells[i].empty();
-
-            int j = 0;
-            for (; j < columns; j++) {
-                hodinaCells.get(i).get(j).empty();
-            }
-            //Remove cells that are left over from a multiple-cells-in-caption timetable
-            final int lastIndex = j;
-            final int size = hodinaCells.get(i).size();
-            for (; j < size; j++) {
-                HodinaCell toRemove = hodinaCells.get(i).get(lastIndex);
-                hodinaCells.get(i).remove(toRemove);
-                ViewGroup parent = (ViewGroup) toRemove.view.getParent();
-                if (parent != null) {
-                    parent.removeView(toRemove.view);
-                }
-            }
-        }
     }
 
 
@@ -439,14 +106,14 @@ public class RozvrhTableFragment extends Fragment {
             onNetResponse(code, rozvrh, finalWeek);
         });
         if (item != null) {
-            populate(item);
+            rozvrhLayout.setRozvrh(item);
             if (offline) {
                 displayInfo.setLoadingState(DisplayInfo.ERROR);
             } else {
                 displayInfo.setLoadingState(DisplayInfo.LOADED);
             }
         } else {
-            empty();
+            rozvrhLayout.empty();
         }
         //debug timing: Log.d(TAG_TIMER, "displayWeek end " + Utils.getDebugTime());
     }
@@ -460,7 +127,7 @@ public class RozvrhTableFragment extends Fragment {
             return;
         }
         if (rozvrh != null) {
-            populate(rozvrh);
+            rozvrhLayout.setRozvrh(rozvrh);
         }
         //onNetLoaded
         if (code == SUCCESS) {
@@ -495,7 +162,7 @@ public class RozvrhTableFragment extends Fragment {
         }
         if (code == SUCCESS) {
             cacheSuccessful = true;
-            populate(rozvrh);
+            rozvrhLayout.setRozvrh(rozvrh);
         }
     }
 
@@ -509,4 +176,13 @@ public class RozvrhTableFragment extends Fragment {
         });
     }
 
+    public void createViews(){
+        rozvrhLayout.createViews();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        rozvrhLayout.highlightCurrentLesson();
+    }
 }

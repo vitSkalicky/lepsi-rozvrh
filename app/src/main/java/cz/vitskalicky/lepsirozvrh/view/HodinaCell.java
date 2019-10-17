@@ -25,10 +25,10 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 public class HodinaCell {
 
     Context context;
-    CellView view;
+    View view;
     RozvrhHodina hodina;
-    float weight;
     boolean perm;
+    float spread = 1;
 
     TextView twzkrpr;
     TextView twzkrmist;
@@ -45,16 +45,15 @@ public class HodinaCell {
     View viewHighlighterBottom; //adds thickness when highlighted
     View viewHighlighterLeft; //adds thickness when highlighted
 
-    public HodinaCell(Context context, RozvrhHodina hodina, float weight, ViewGroup parent, View top, int rows, int width, boolean perm) {
-        this(context, parent, top, rows, width);
-        update(hodina, weight, perm);
+    public HodinaCell(Context context, RozvrhHodina hodina, ViewGroup parent, boolean perm) {
+        this(context, parent);
+        update(hodina, perm);
     }
 
-    public HodinaCell(Context context, ViewGroup parent, View top, int rows, int width){
+    public HodinaCell(Context context, ViewGroup parent){
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = (CellView) inflater.inflate(R.layout.cell_hodina, parent, false);
-        view.init(top, rows, width);
+        view = inflater.inflate(R.layout.cell_hodina, parent, false);
 
         twzkrpr = view.findViewById(R.id.textViewZkrpr);
         twzkrmist = view.findViewById(R.id.textViewZkrmist);
@@ -116,10 +115,9 @@ public class HodinaCell {
         }
     }
 
-    public void update(RozvrhHodina hodina, float weight, boolean perm) {
+    public void update(RozvrhHodina hodina, boolean perm) {
         this.hodina = hodina;
         this.perm = perm;
-        updateWeight(weight);
         hightlightEdges(false, false, false);
         highlightItself(false);
 
@@ -161,14 +159,10 @@ public class HodinaCell {
         }
     }
 
-    public void updateWeight(float weight){
-        this.weight = weight;
-
-        view.setSpread(weight);
-    }
 
     public void empty(){
-        update(null, 1, false);
+        update(null,  false);
+        updateSpread(1);
     }
 
     public View getView() {
@@ -205,6 +199,10 @@ public class HodinaCell {
             viewHighlighterBottom.setVisibility(View.GONE);
             viewHighlighterLeft.setVisibility(View.GONE);
         }
+    }
+
+    public void updateSpread(float spread){
+        this.spread = spread;
     }
 
 }

@@ -150,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
         }else {
             infoLine.setVisibility(View.GONE);
         }
-
-        rtFragment.highlightCurrentLesson();
     }
 
     /**

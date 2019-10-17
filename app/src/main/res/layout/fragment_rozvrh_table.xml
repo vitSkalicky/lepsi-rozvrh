@@ -9,12 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TableLayout
-            android:id="@+id/tableLayout"
+        <cz.vitskalicky.lepsirozvrh.view.RozvrhLayout
+            android:id="@+id/rozvrhLayout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:divider="@drawable/divider"
-            android:showDividers="middle">
-        </TableLayout>
+            android:layout_height="match_parent">
+        </cz.vitskalicky.lepsirozvrh.view.RozvrhLayout>
     </HorizontalScrollView>
 </FrameLayout>

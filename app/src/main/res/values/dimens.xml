@@ -6,6 +6,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="divider_width">1dp</dimen>
-    <dimen name="divider_highlighted_added_width">2dp</dimen>
+    <dimen name="dividerWidth">1dp</dimen>
+    <dimen name="dividerHighlightWidth">2dp</dimen>
+
 </resources>

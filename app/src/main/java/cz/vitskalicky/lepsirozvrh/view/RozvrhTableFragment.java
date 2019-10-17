@@ -33,7 +33,7 @@ public class RozvrhTableFragment extends Fragment {
 
     private View view;
     private RozvrhLayout rozvrhLayout;
-    
+
     private DisplayInfo displayInfo;
 
     private LocalDate week = LocalDate.now();

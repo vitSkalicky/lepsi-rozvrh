@@ -9,6 +9,29 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorError">@color/colorError</item>
+
+        <item name="backgroundChng">#ffd95a</item>
+        <item name="backgroundA">#ffd95a</item>
+        <item name="backgroundH">#eceff1</item>
+        <item name="backgroundEmpty">#00FFFFFF</item>
+        <item name="backgroundHeader">#CFD8DC</item>
+
+        <item name="dividerColor">@color/dividerColorDefault</item>
+        <item name="dividerWidth">@dimen/dividerWidth</item>
+        <item name="dividerHighlightColor">#f9a825</item>
+        <item name="dividerHighlightWidth">@dimen/dividerHighlightWidth</item>
+
+        <item name="textPrimaryColor">#000000</item>
+        <item name="textStandOutColor">#000000</item>
+        <item name="textSecondaryColor">#607D8B</item>
+        <item name="textPrimarySize">18sp</item>
+        <item name="textStandOutSize">12sp</item>
+        <item name="textSecondarySize">12sp</item>
+
+        <item name="paddingLeft">2dp</item>
+        <item name="paddingTop">2dp</item>
+        <item name="paddingRight">2dp</item>
+        <item name="paddingBottom">4dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,5 +49,14 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.secondaryText" parent="TextAppearance.AppCompat.Small">
+        <!--<item name="android:textColor">?attr/textSecondaryColor</item>-->
+        <!--<item name="android:textSize">?attr/textSecondarySize</item>-->
+    </style>
+    <style name="AppTheme.primaryText" parent="TextAppearance.AppCompat.Large">
+        <!--<item name="android:textColor">?attr/textPrimaryColor</item>-->
+        <!--<item name="android:textSize">?attr/textPrimarySize</item>-->
+    </style>
 
 </resources>

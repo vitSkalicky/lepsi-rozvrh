@@ -15,8 +15,7 @@
         android:gravity="bottom"
         android:maxLines="1"
         android:text="dsfdsf"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/rozvrhSecondaryText"
+        android:textAppearance="@style/AppTheme.secondaryText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -27,8 +26,7 @@
         android:layout_marginBottom="4dp"
         android:gravity="bottom"
         android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/rozvrhSecondaryText"
+        android:textAppearance="@style/AppTheme.secondaryText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -40,8 +38,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/rozvrhPrimaryText"
+        android:textAppearance="@style/AppTheme.primaryText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,9 +46,9 @@
 
     <View
         android:id="@+id/viewDividerTop"
-        android:layout_width="@dimen/divider_width"
+        android:layout_width="@dimen/dividerWidth"
         android:layout_height="0dp"
-        android:background="@color/rozvrhDivider"
+        android:background="@drawable/divider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

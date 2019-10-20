@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
@@ -97,6 +98,7 @@ public class HodinaView extends View {
         paddingRight = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingRight, 2);
         paddingBottom = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingBottom, 1);
 
+        setOnClickListener(v -> showDetailDialog());
     }
 
     @Override
@@ -243,5 +245,43 @@ public class HodinaView extends View {
         }
 
 
+    }
+
+    private void addField(StringBuilder sb, int resId, String fieldText){
+        if (fieldText != null && !fieldText.trim().equals("")){
+            sb.append(getContext().getString(resId)).append(": ").append(fieldText).append("\n");
+        }
+    }
+
+    public void showDetailDialog(){
+        if (hodina == null)
+            return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        if (hodina.getNazev() != null && !hodina.getNazev().trim().equals("")){
+            builder.setTitle(hodina.getNazev());
+        }else if (hodina.getPr() != null && !hodina.getPr().trim().equals("")){
+            builder.setTitle(hodina.getPr());
+        }else if (hodina.getZkrpr() != null && !hodina.getZkrpr().trim().equals("")){
+            builder.setTitle(hodina.getZkrpr());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        addField(sb,R.string.lesson_teacher, hodina.getUc());
+        addField(sb,R.string.subject_name, hodina.getPr());
+        addField(sb,R.string.lesson_name, hodina.getNazev());
+        addField(sb,R.string.room, hodina.getMist());
+        addField(sb,R.string.absence, hodina.getAbs());
+        addField(sb,R.string.topic, hodina.getTema());
+        addField(sb,R.string.room, hodina.getMist());
+        addField(sb,R.string.group, hodina.getSkup());
+        addField(sb,R.string.change, hodina.getChng());
+        addField(sb,R.string.notice, hodina.getNotice());
+        addField(sb,R.string.cycle, hodina.getCycle());
+
+        builder.setMessage(sb.toString());
+        builder.setPositiveButton(R.string.close, (dialog, which) -> {});
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

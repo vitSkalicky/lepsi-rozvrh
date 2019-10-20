@@ -53,12 +53,12 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         twMessage.setText("");
 
-        tilUsername.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
-        tilURL.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.URL));
+        if (tilUsername.getEditText().getText().toString().isEmpty())
+            tilUsername.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));
+        if (tilURL.getEditText().getText().toString().isEmpty())
+            tilURL.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.URL));
 
-        if (getIntent().getBooleanExtra(LOGOUT, false)){
-            Login.logout(this);
-        }
+        Login.logout(this);
 
         bChooseSchool.setOnClickListener(v -> {
             Intent intent = new Intent(this, SchoolsListActivity.class);

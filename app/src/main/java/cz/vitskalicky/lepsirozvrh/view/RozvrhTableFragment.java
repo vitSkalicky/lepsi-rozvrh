@@ -88,10 +88,15 @@ public class RozvrhTableFragment extends Fragment {
 
         displayInfo.setLoadingState(DisplayInfo.LOADING);
         cacheSuccessful = false;
-        displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
+        String infoMessage = Utils.getfl10nedWeekString(weekIndex, getContext());
         if (offline) {
-            displayInfo.setMessage(displayInfo.getMessage() + " (" + getString(R.string.info_offline) + ")");
+            infoMessage += " (" + getString(R.string.info_offline) + ")";
+        } else {
+            displayInfo.setErrorMessage(null);
         }
+
+        displayInfo.setMessage(infoMessage);
+
         netCode = -1;
         Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
             //onCachLoaded
@@ -135,19 +140,28 @@ public class RozvrhTableFragment extends Fragment {
                 rozvrhAPI.clearMemory();
             }
             offline = false;
+            displayInfo.setErrorMessage(null);
             displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
             displayInfo.setLoadingState(DisplayInfo.LOADED);
         } else {
             offline = true;
             displayInfo.setLoadingState(DisplayInfo.ERROR);
+
+            String errorMessage = null;
+            if (code == UNREACHABLE) {
+                errorMessage = getString(R.string.info_unreachable);
+            } else if (code == UNEXPECTED_RESPONSE) {
+                errorMessage = getString(R.string.info_unexpected_response);
+            } else if (code == LOGIN_FAILED) {
+                errorMessage = getString(R.string.info_login_failed);
+            }
+
+            displayInfo.setErrorMessage(errorMessage);
+
             if (cacheSuccessful) {
                 displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()) + " (" + getString(R.string.info_offline) + ")");
-            } else if (code == UNREACHABLE) {
-                displayInfo.setMessage(getString(R.string.info_unreachable));
-            } else if (code == UNEXPECTED_RESPONSE) {
-                displayInfo.setMessage(getString(R.string.info_unexpected_response));
-            } else if (code == LOGIN_FAILED) {
-                displayInfo.setMessage(getString(R.string.info_login_failed));
+            } else {
+                displayInfo.setMessage(errorMessage);
             }
         }
     }

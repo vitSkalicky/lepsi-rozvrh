@@ -1,5 +1,7 @@
 package cz.vitskalicky.lepsirozvrh;
 
+import androidx.annotation.Nullable;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +28,15 @@ public class DisplayInfo {
     }
 
 
-
-
+    /**
+     * Message to be displayed on the info line
+     */
     private String message;
+    /**
+     * Massege to be displayed when holding down refresh. may be same as {@link #message} and can be {@code null} for no error
+     */
+    @Nullable
+    private String errorMessage;
 
     public static interface LoadingListener{
         public void onChange(int oldState, int newState);
@@ -46,7 +54,13 @@ public class DisplayInfo {
         }
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public static interface MessageListener{
         public void onChange(String oldMessage, String newMessage);

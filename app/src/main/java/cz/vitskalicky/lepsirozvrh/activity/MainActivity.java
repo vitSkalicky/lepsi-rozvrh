@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
         infoLine = findViewById(R.id.infoLine);
         displayInfo.addOnMessageChangeListener((oldMessage, newMessage) -> {
             setInfoText(newMessage);
-            if (displayInfo.getLoadingState() == DisplayInfo.ERROR){
-                TooltipCompat.setTooltipText(ibRefresh, newMessage);
+            if (displayInfo.getErrorMessage() != null){
+                TooltipCompat.setTooltipText(ibRefresh, displayInfo.getErrorMessage());
             }else {
                 TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh));
             }

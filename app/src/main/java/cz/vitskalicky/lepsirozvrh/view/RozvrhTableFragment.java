@@ -36,7 +36,7 @@ public class RozvrhTableFragment extends Fragment {
 
     private DisplayInfo displayInfo;
 
-    private LocalDate week = LocalDate.now();
+    private LocalDate week = null;
     private int weekIndex = 0; //what week is it from now (0: this, 1: next, -1: last, Integer.MAX_VALUE: permanent)
     private boolean cacheSuccessful = false;
     private boolean offline = false;
@@ -82,7 +82,7 @@ public class RozvrhTableFragment extends Fragment {
         if (weekIndex == Integer.MAX_VALUE)
             week = null;
         else
-            week = Utils.getWeekMonday(LocalDate.now().plusWeeks(weekIndex));
+            week = Utils.getDisplayWeekMonday(getContext()).plusWeeks(weekIndex);
 
         final LocalDate finalWeek = week;
 

@@ -5,6 +5,7 @@
 package cz.vitskalicky.lepsirozvrh;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -18,6 +19,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Utils {
+    public static final String TAG = Utils.class.getSimpleName();
+
     public static String parseDate(String rawDate, String inputFormat, String outputFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat(inputFormat, Locale.US);
         SimpleDateFormat readable = new SimpleDateFormat(outputFormat, Locale.US);
@@ -35,34 +38,47 @@ public class Utils {
         String time[] = t.split(":");
         int hours = Integer.valueOf(time[0]);
         int minutes = Integer.valueOf(time[1]);
-        return minutes+hours*60;
+        return minutes + hours * 60;
     }
 
-    public static LocalDate getWeekMonday(LocalDate date){
+    public static LocalDate getWeekMonday(LocalDate date) {
         if (date == null) return null;
         return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
 
     }
 
-    public static String dateToString(LocalDate date){
+    public static String dateToString(LocalDate date) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
         return dtf.print(date);
     }
 
-    public static LocalDate parseDate(String date){
+    public static LocalDate parseDate(String date) {
         if (date == null || date.equals("")) return null;
         DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
         return dtf.parseLocalDate(date);
     }
 
-    public static LocalDate getCurrentMonday(){
+    public static LocalDate getCurrentMonday() {
         return getWeekMonday(LocalDate.now());
+    }
+
+    public static LocalDate getDisplayWeekMonday(Context context) {
+        int offset = 0;
+        if (SharedPrefs.containsPreference(context, R.string.PREFS_SWITCH_TO_NEXT_WEEK)) {
+            try {
+                offset = Integer.parseInt(SharedPrefs.getString(context, context.getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK)));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "Failed to cast 'Switch to the next week' setting value. Value: " + SharedPrefs.getString(context, context.getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK)));
+            }
+        }
+
+        return getWeekMonday(LocalDate.now().plusDays(offset));
     }
 
     /**
      * For debugging purposes
      */
-    public static String getDebugTime(){
+    public static String getDebugTime() {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("mm:ss.SSS");
         LocalTime time = LocalTime.now();
         return dtf.print(time);
@@ -70,16 +86,21 @@ public class Utils {
 
     /**
      * Get fucking localized string for week info
+     *
      * @param week week relative to now: 0 - current, 1 - next, -1 previous, {@code Integer.MAX_VALUE} permanent schedule
      * @return Localize, human friendly string
      */
     @SuppressWarnings("ConstantConditions")
-    public static String getfl10nedWeekString(int week, Context context){
-        switch (week){
-            case 0: return context.getString(R.string.info_this_week);
-            case 1: return context.getString(R.string.info_next_week);
-            case -1: return context.getString(R.string.info_last_week);
-            case Integer.MAX_VALUE: return context.getString(R.string.info_permanent);
+    public static String getfl10nedWeekString(int week, Context context) {
+        switch (week) {
+            case 0:
+                return context.getString(R.string.info_this_week);
+            case 1:
+                return context.getString(R.string.info_next_week);
+            case -1:
+                return context.getString(R.string.info_last_week);
+            case Integer.MAX_VALUE:
+                return context.getString(R.string.info_permanent);
         }
         if (week > 0)
             return context.getResources().getQuantityString(R.plurals.info_weeks_forward, week, week);

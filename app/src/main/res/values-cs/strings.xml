@@ -44,6 +44,7 @@
     <string name="look">Vzhled</string>
     <string name="info_line">Informační řádek</string>
     <string name="info_line_desc">Zobrazovat informační řádek</string>
+    <string name="switch_to_next_week">Přepnout na další týden</string>
 
     <string name="lesson_teacher">Vyučující</string>
     <string name="subject_name">Předmět</string>

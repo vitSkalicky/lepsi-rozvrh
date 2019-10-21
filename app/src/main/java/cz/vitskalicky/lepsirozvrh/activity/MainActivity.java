@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             week = 0;
         else
             week = savedInstanceState.getInt(STATE_WEEK, 0);
-        rtFragment.displayWeek(week);
+
         showHideButtons();
 
     }
@@ -150,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
         }else {
             infoLine.setVisibility(View.GONE);
         }
+
+        rtFragment.displayWeek(week);
     }
 
     /**

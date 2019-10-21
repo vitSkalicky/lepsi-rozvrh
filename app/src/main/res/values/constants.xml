@@ -4,5 +4,6 @@
     <string name="PREFS_SHOW_INFO_LINE" translatable="false">prefs-show-info-line</string>
     <string name="PREFS_LOGOUT" translatable="false">prefs-logout</string>
     <string name="PREFS_USER" translatable="false">prefs-user</string>
+    <string name="PREFS_SWITCH_TO_NEXT_WEEK" translatable="false">prefs-switch-to-next-week</string>
 
 </resources>

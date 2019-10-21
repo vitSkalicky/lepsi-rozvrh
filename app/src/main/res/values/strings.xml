@@ -44,6 +44,7 @@
     <string name="look">App look</string>
     <string name="info_line">Info-line</string>
     <string name="info_line_desc">Show information line</string>
+    <string name="switch_to_next_week">Switch to the next week</string>
 
     <string name="lesson_teacher">Teacher</string>
     <string name="subject_name">Subject name</string>

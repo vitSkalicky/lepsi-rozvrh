@@ -383,10 +383,11 @@ public class RozvrhAPI {
      * Cache Current, Next, Previous, Permanent.
      */
     private void cacheCNPP() {
+        LocalDate monday = Utils.getDisplayWeekMonday(context);
         cacheWeek(null);
-        cacheWeek(Utils.getCurrentMonday());
-        cacheWeek(Utils.getCurrentMonday().plusWeeks(1));
-        cacheWeek(Utils.getCurrentMonday().minusWeeks(1));
+        cacheWeek(monday);
+        cacheWeek(monday.plusWeeks(1));
+        cacheWeek(monday.minusWeeks(1));
     }
 
     /**

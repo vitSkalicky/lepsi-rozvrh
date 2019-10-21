@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="switch_to_next_week_entries">
+        <item>V pondělí</item>
+        <item>V neděli</item>
+        <item>V sobotu</item>
+    </string-array>
+</resources>

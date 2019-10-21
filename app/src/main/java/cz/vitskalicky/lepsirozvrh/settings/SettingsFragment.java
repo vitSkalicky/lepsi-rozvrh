@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -46,6 +47,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 userInfo.setSummary(R.string.teacher);
                 break;
         }
+
+        ListPreference switchToNextWeek = findPreference(getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK));
+        switchToNextWeek.setSummaryProvider(ListPreference.SimpleSummaryProvider.getInstance());
 
     }
 

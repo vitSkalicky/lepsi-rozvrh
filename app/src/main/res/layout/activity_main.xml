@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="0dp"
-                    android:contentDescription="@string/permanent_shedule"
+                    android:contentDescription="@string/permanent_schedule"
                     android:src="@drawable/ic_permanent_black_24"
                     android:visibility="gone" />
 

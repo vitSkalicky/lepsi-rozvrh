@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         infoLine = findViewById(R.id.infoLine);
         displayInfo.addOnMessageChangeListener((oldMessage, newMessage) -> {
             setInfoText(newMessage);
+            if (displayInfo.getLoadingState() == DisplayInfo.ERROR){
+                TooltipCompat.setTooltipText(ibRefresh, newMessage);
+            }else {
+                TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh));
+            }
         });
 
         rtFragment = (RozvrhTableFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
@@ -90,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
+        TooltipCompat.setTooltipText(ibSettings, getText(R.string.settings));
+        TooltipCompat.setTooltipText(ibPrev, getText(R.string.prev_week));
+        TooltipCompat.setTooltipText(ibCurrent, getText(R.string.current_week));
+        TooltipCompat.setTooltipText(ibPermanent, getText(R.string.permanent_schedule));
+        TooltipCompat.setTooltipText(ibNext, getText(R.string.next_week));
+        TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh));
         ibPrev.setOnClickListener(v -> {
             week--;
             rtFragment.displayWeek(week);

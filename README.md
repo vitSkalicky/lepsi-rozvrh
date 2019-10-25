@@ -13,7 +13,7 @@ Aplikace si vypůjčila trochu kódu z projektu [Bakalab](https://www.bakalab.or
 - 30.7. 2019 - Přidáno nastavení, výběr školy při přihlašování a opravena spousta chyb. Stále je však na čem pracovat. APK opět najdete [zde](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview2).
 - 12.9. 2019 - Opraveno velké množství chyb, zrychleno načítání a přidáno zvýrazňování další hodiny. APK je [tady](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview3)
 
-# Better timetable
+# Better schedule
 
 This is faster and less confusing schedule client for Bakaláři. I created this app,
 because I am annoyed by the slowness of the the official app.

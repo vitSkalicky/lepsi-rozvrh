@@ -1,23 +1,45 @@
+![icon](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+
 # Lepší rozvrh
 
 Rychlejší a přehlednější klient pro rozvrh systému Bakláři. Aplikaci jsem vytvořil,
 protože mi docházela trpělivost s nepřehledností a hlavně pomalostí oficiální
 aplikace.
 
-Aplikace si vypůjčila trochu kódu z projektu [Bakalab](https://www.bakalab.org/).
+## Hlavní funkce
 
-## Stav
+- Velmi rychlé zobrazení rozvrhu — Kombinuje offline a online data, aby se rozvrh zobrazil do vteřiny.
+- Plynulý offline režim — Lepší rozvrh si všechna načítaná data na pozadí uloží pro použití bez internetu.
+- Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny
+- Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
 
-- 15.7. 2019 - Aktuálně je aplikace v těžce rozpracované fázi - Ani přihlašování nemá UI.
-- 25.7. 2019 - Přidána přihlašovací obrazovka, aplikace je vlastně použitelná. Pokud máte zájem, APK najdete [zde](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview1)
-- 30.7. 2019 - Přidáno nastavení, výběr školy při přihlašování a opravena spousta chyb. Stále je však na čem pracovat. APK opět najdete [zde](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview2).
-- 12.9. 2019 - Opraveno velké množství chyb, zrychleno načítání a přidáno zvýrazňování další hodiny. APK je [tady](https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/preview3)
+## Připravované funkce
+
+- Widget
+-Trvalé upozornění, hlásící příští hodinu
+- Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
+- Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
 # Better schedule
 
 This is faster and less confusing schedule client for Bakaláři. I created this app,
 because I am annoyed by the slowness of the the official app.
 
-This application uses some code from [Bakalab](https://www.bakalab.org/).
+## Main features
 
-App is currently under development.
+- Very fast schedule loading — Combines offline and online data to display schedule within a second.
+- Seamless offline mode — Everything is cached in the background so that schedule can be shown even when you are offline.
+- Simple interface — Easy switching between weeks.
+- Free and open source software — No ads, no spying, free, forever.
+
+## Coming soon
+
+- Widget
+- Permanent notification, displaying the next lesson
+- More themes (dark, black & white, ...)
+- Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues
+
+# Screenshots
+
+<img src="fastlane/metadata/en/images/phoneScreenshots/screenshot%201.png" width="500px">
+<img src="fastlane/metadata/en/images/phoneScreenshots/screenshot%202.png" width="500px">

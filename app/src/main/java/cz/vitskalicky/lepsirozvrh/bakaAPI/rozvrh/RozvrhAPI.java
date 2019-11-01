@@ -418,7 +418,7 @@ public class RozvrhAPI {
      */
     protected Rozvrh getFromMemory(LocalDate date){
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now()./*minusHours(1)*/minusSeconds(10))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(1))){
             return saved.get(date);
         }else {
             lastUpdated.remove(date);
@@ -429,7 +429,7 @@ public class RozvrhAPI {
 
     protected boolean isInMemory(LocalDate date){
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now()./*minusHours(1)*/minusSeconds(10))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(1))){
             return saved.containsKey(date);
         }else {
             lastUpdated.remove(date);

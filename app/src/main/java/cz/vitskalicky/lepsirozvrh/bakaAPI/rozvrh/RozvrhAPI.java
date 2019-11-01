@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.w3c.dom.Document;
@@ -293,6 +294,7 @@ public class RozvrhAPI {
     private Context context;
     private Map<LocalDate, RozvrhListener> activeListeners = new HashMap<>();
     private Set<LocalDate> active = new HashSet<>();
+    private Map<LocalDate, LocalTime> lastUpdated = new HashMap<>();
 
     public RozvrhAPI(RequestQueue requestQueue, Context context) {
         this.requestQueue = requestQueue;
@@ -324,12 +326,11 @@ public class RozvrhAPI {
         if (!active.contains(monday)) {
             ret = getOne(monday, onCacheLoaded, onNetLoaded);
         } else {
-            ret = null;
-            Rozvrh memory = saved.get(monday);
+            Rozvrh memory = getFromMemory(monday);
             if (memory == null) {
                 loadRozvrh(monday, (code, rozvrh) -> {
-                    if (code == SUCCESS && saved.get(monday) == null) {
-                        saved.put(monday, rozvrh);
+                    if (code == SUCCESS && getFromMemory(monday) == null) {
+                        putToMemory(monday, rozvrh);
                     }
                     onCacheLoaded.method(code, rozvrh);
                 }, context);
@@ -355,11 +356,11 @@ public class RozvrhAPI {
      */
     public void cacheWeek(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
-        if (!saved.containsKey(monday)) {
+        if (!isInMemory(monday)) {
             RozvrhRequest request = new RozvrhRequest(monday, result -> {
                 RozvrhListener listener = activeListeners.get(monday);
                 if (result.code == SUCCESS) {
-                    saved.put(monday, result.rozvrh);
+                    putToMemory(monday, result.rozvrh);
                     saveRawRozvrh(monday, result.raw, context);
 
                     if (listener != null)
@@ -405,6 +406,39 @@ public class RozvrhAPI {
     }
 
     /**
+     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after an hour
+     */
+    protected Rozvrh putToMemory(LocalDate date, Rozvrh item){
+        lastUpdated.put(date, LocalTime.now());
+        return saved.put(date, item);
+    }
+
+    /**
+     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after an hour
+     */
+    protected Rozvrh getFromMemory(LocalDate date){
+        LocalTime updateTime = lastUpdated.get(date);
+        if (updateTime == null || updateTime.isAfter(LocalTime.now()./*minusHours(1)*/minusSeconds(10))){
+            return saved.get(date);
+        }else {
+            lastUpdated.remove(date);
+            saved.remove(date);
+            return null;
+        }
+    }
+
+    protected boolean isInMemory(LocalDate date){
+        LocalTime updateTime = lastUpdated.get(date);
+        if (updateTime == null || updateTime.isAfter(LocalTime.now()./*minusHours(1)*/minusSeconds(10))){
+            return saved.containsKey(date);
+        }else {
+            lastUpdated.remove(date);
+            saved.remove(date);
+            return false;
+        }
+    }
+
+    /**
      * Gets Rozvrh from:
      * - Memory (this objects's private field) - only Rozvrhs requested on this object ore available there - instant
      * - File storage ('cache') - only Rozvrhs requested on this device are available - under 1 second
@@ -426,18 +460,18 @@ public class RozvrhAPI {
      */
     private Rozvrh getOne(LocalDate date, RozvrhListener onCacheLoaded, RozvrhListener onNetLoaded) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
-        Rozvrh memory = saved.get(monday);
+        Rozvrh memory = getFromMemory(monday);
 
         if (memory == null) {
             loadRozvrh(monday, (code, rozvrh) -> {
-                if (code == SUCCESS && saved.get(monday) == null) {
-                    saved.put(monday, rozvrh);
+                if (code == SUCCESS && getFromMemory(monday) == null) {
+                    putToMemory(monday, rozvrh);
                 }
                 onCacheLoaded.method(code, rozvrh);
             }, context);
 
             RozvrhRequest request = new RozvrhRequest(monday, successResult -> {
-                saved.put(monday, successResult.rozvrh);
+                putToMemory(monday, successResult.rozvrh);
                 saveRawRozvrh(monday, successResult.raw, context);
 
                 onNetLoaded.method(SUCCESS, successResult.rozvrh);
@@ -455,6 +489,7 @@ public class RozvrhAPI {
      * Clears object's Rozvrh storage - all rozvrhs will have to load from cache and server again.
      */
     public void clearMemory() {
+        lastUpdated.clear();
         saved.clear();
     }
 
@@ -483,7 +518,7 @@ public class RozvrhAPI {
                 loadRozvrh(monday, (code, rozvrh1) -> {
                     if (code == SUCCESS) {
                         onLoaded.method(result.code, rozvrh1);
-                        saved.put(monday,rozvrh1);
+                        putToMemory(monday,rozvrh1);
                     } else {
                         onLoaded.method(result.code, null);
                     }

@@ -58,6 +58,21 @@
     <string name="cycle">Cycle</string>
 
     <string name="close">Close</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="about">About</string>
+    <string name="source_code">Source code</string>
+    <string name="source_code_desc">Visit GitHub page</string>
+    <string name="feedback">Send feedback</string>
+    <string name="feedback_desc">Report a bug, ask a question, etc.</string>
+    <string name="email_message">These are information about installation of this app. Please don\'t remove them - they are essential for troubleshooting your problem.</string>
+    <string name="send_email">Send email…</string>
+    <string name="no_email_client">There are no email clients installed.</string>
+    <string name="copy_address">Copy address</string>
+    <string name="copied">Copied</string>
+    <string name="include_schedule">Include schedule?</string>
+    <string name="include_schedule_desc">Include your schedule in the message?\n\nDefinitely choose \'yes\' if reporting a visual bug.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

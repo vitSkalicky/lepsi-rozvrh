@@ -58,6 +58,21 @@
     <string name="cycle">Cyklus</string>
 
     <string name="close">Zavřít</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+
+    <string name="about">O aplikaci</string>
+    <string name="source_code">Zdrojový kód</string>
+    <string name="source_code_desc">Navštivte stránku aplikace na GitHubu</string>
+    <string name="feedback">Napsat autorovi</string>
+    <string name="feedback_desc">Nahlašte chybu, zeptejte se na něco, atd.</string>
+    <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
+    <string name="send_email">Odeslat email…</string>
+    <string name="no_email_client">Není nainstalován žádný emailový klient.</string>
+    <string name="copy_address">Zkopírovat adresu</string>
+    <string name="copied">Zkopírováno</string>
+    <string name="include_schedule">Přiložit rozvrh?</string>
+    <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

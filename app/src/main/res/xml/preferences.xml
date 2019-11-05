@@ -26,4 +26,19 @@
             android:key="@string/PREFS_SWITCH_TO_NEXT_WEEK"
             android:title="@string/switch_to_next_week"/>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about">
+        <Preference android:title="@string/source_code"
+            android:summary="@string/source_code_desc"
+            android:icon="@drawable/ic_web_black_24dp">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/GITHUB_LINK" />
+        </Preference>
+        <Preference
+            android:key="@string/PREFS_SEND_FEEDBACK"
+            android:title="@string/feedback"
+            android:summary="@string/feedback_desc"
+            android:icon="@drawable/ic_feedback_black_24dp">
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

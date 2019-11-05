@@ -5,5 +5,8 @@
     <string name="PREFS_LOGOUT" translatable="false">prefs-logout</string>
     <string name="PREFS_USER" translatable="false">prefs-user</string>
     <string name="PREFS_SWITCH_TO_NEXT_WEEK" translatable="false">prefs-switch-to-next-week</string>
+    <string name="PREFS_SEND_FEEDBACK" translatable="false">prefs-send-feedback</string>
+    <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>
+    <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
 
 </resources>

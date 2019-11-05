@@ -1,4 +1,5 @@
 ![icon](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+<a href='https://play.google.com/store/apps/details?id=cz.vitskalicky.lepsirozvrh&utm_source=github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Nyní na Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/cs_badge_web_generic.png'/></a>
 
 # Lepší rozvrh
 

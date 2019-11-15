@@ -28,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fragment.setLogoutListener(() -> {
-            SharedPrefs.remove(this, SharedPrefs.PASSWORD_HASH);
+            Login.logout(this);
             /*Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra(LoginActivity.LOGOUT, true);
             startActivity(intent);*/

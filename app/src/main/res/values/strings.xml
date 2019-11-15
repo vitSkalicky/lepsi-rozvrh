@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Better schedule</string>
+    <string name="app_moto">A faster schedule for Bakaláři. For students, by students.</string>
+    <string name="start">Start</string>
     <string name="prev_week">Previous week</string>
     <string name="next_week">Next week</string>
     <string name="current_week">Current week</string>
@@ -60,6 +62,10 @@
     <string name="close">Close</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <!-- Send Crash Reports -->
+    <string name="scr_dialog">Send crash reports?</string>
+    <string name="scr_body">Without automatic crash reports we won\'t be able to fix any issues you may have because we won\'t even know about them! Do you wish to send automatic crash reports?</string>
 
     <string name="about">About</string>
     <string name="source_code">Source code</string>

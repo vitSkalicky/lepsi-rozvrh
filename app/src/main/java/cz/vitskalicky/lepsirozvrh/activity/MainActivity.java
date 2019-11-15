@@ -191,16 +191,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkLogin(){
-        if (Login.getToken(context).equals("")){
-            //not logged in
+        if (Login.checkLogin(this) != null){
             if (rozvrhAPI != null){
                 rozvrhAPI.clearMemory();
-                RozvrhAPI.clearCache(context);
             }
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivity(intent);
             finish();
-            return;
         }
     }
 

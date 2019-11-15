@@ -1,6 +1,8 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 
@@ -28,7 +30,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
+import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
+import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 
 public class Login {
@@ -191,6 +197,38 @@ public class Login {
         SharedPrefs.remove(context, SharedPrefs.NAME);
         RozvrhAPI.clearCache(context);
         AppSingleton.getInstance(context).getRozvrhAPI().clearMemory();
+    }
+
+    /**
+     * Checks if user is logged in or has seen the welcome screen (where crash reports are
+     * enabled/disabled), the starts the corresponding activity (if it isn't already started).
+     * <code>finish()</code> <b>won't</b> be called on the current activity.
+     *
+     * @return An activity which is being started or <code>null</code> if no activity will be started.
+     */
+    public static Class<? extends Activity> checkLogin(Activity currentActivity){
+        Context ctx = currentActivity;
+        boolean isLoggedIn = !getToken(ctx).isEmpty();
+        boolean seenWelcome = SharedPrefs.containsPreference(ctx, R.string.PREFS_SEND_CRASH_REPORTS);
+
+        if (!seenWelcome && !(currentActivity instanceof WelcomeActivity)){
+            Intent intent = new Intent(ctx, WelcomeActivity.class);
+            ctx.startActivity(intent);
+            return WelcomeActivity.class;
+        }
+        if (!isLoggedIn && !(currentActivity instanceof LoginActivity)){
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            ctx.startActivity(intent);
+            currentActivity.finish();
+            return LoginActivity.class;
+        }
+        if (!(currentActivity instanceof MainActivity)){
+            Intent intent = new Intent(ctx, MainActivity.class);
+            ctx.startActivity(intent);
+            currentActivity.finish();
+            return MainActivity.class;
+        }
+        return null;
     }
 
     /**

@@ -1,5 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         Button buttonStart = findViewById(R.id.buttonStart);
         CheckBox checkBox = findViewById(R.id.checkBoxSendCrashReports);
+        Button buttonPrivacyPolicy = findViewById(R.id.buttonPrivacyPolicy);
 
         buttonStart.setOnClickListener(v -> {
             boolean sendReports = checkBox.isChecked();
@@ -35,6 +38,11 @@ public class WelcomeActivity extends AppCompatActivity {
             } else {
                 onButtonPressed(true);
             }
+        });
+
+        buttonPrivacyPolicy.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PRIVACY_POLICY_LINK)));
+            startActivity(browserIntent);
         });
     }
 

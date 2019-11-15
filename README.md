@@ -42,5 +42,5 @@ because I am annoyed by the slowness of the the official app.
 
 # Screenshots
 
-<img src="fastlane/metadata/en/images/phoneScreenshots/screenshot%201.png" width="500px">
-<img src="fastlane/metadata/en/images/phoneScreenshots/screenshot%202.png" width="500px">
+<img src="fastlane/metadata/android/en/images/phoneScreenshots/screenshot%201.png" width="500px">
+<img src="fastlane/metadata/android/en/images/phoneScreenshots/screenshot%202.png" width="500px">

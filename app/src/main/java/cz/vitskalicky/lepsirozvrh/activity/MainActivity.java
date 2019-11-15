@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkLogin();
 
-        if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleamPreference(context, R.string.PREFS_SHOW_INFO_LINE)){
+        if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleanPreference(context, R.string.PREFS_SHOW_INFO_LINE)){
             infoLine.setVisibility(View.VISIBLE);
         }else {
             infoLine.setVisibility(View.GONE);

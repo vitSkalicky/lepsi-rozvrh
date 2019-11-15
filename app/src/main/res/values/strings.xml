@@ -66,6 +66,8 @@
     <string name="source_code_desc">Visit GitHub page</string>
     <string name="feedback">Send feedback</string>
     <string name="feedback_desc">Report a bug, ask a question, etc.</string>
+    <string name="send_crash">Send crash reports</string>
+    <string name="send_crash_desc">Automatically report crashes to the developers so that they can be fixed</string>
     <string name="email_message">These are information about installation of this app. Please don\'t remove them - they are essential for troubleshooting your problem.</string>
     <string name="send_email">Send email…</string>
     <string name="no_email_client">There are no email clients installed.</string>

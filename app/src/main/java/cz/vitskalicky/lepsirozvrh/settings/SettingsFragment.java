@@ -24,11 +24,14 @@ import org.simpleframework.xml.core.Persister;
 import java.io.ByteArrayOutputStream;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +52,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         findPreference(getString(R.string.PREFS_LOGOUT)).setOnPreferenceClickListener(preference -> {
             logoutListener.onLogout();
+            return true;
+        });
+
+        findPreference(getString(R.string.PREFS_SEND_CRASH_REPORTS)).setOnPreferenceChangeListener((preference, newValue) -> {
+            if (newValue instanceof Boolean && getActivity() != null){
+                boolean value = (boolean) newValue;
+                if (value){
+                    ((MainApplication)getActivity().getApplication()).enableSentry();
+                }else {
+                    ((MainApplication)getActivity().getApplication()).diableSentry();
+                }
+            }
             return true;
         });
 

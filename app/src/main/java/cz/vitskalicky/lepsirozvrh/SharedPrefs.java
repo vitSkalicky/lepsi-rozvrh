@@ -79,7 +79,7 @@ public class SharedPrefs {
         return getString(context, context.getString(stringId));
     }
 
-    public static boolean getBooleamPreference(Context context, int stringId){
+    public static boolean getBooleanPreference(Context context, int stringId){
         if (!containsPreference(context, stringId)) return false;
 
         return getBoolean(context, context.getString(stringId));

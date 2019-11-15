@@ -66,6 +66,8 @@
     <string name="source_code_desc">Navštivte stránku aplikace na GitHubu</string>
     <string name="feedback">Napsat autorovi</string>
     <string name="feedback_desc">Nahlašte chybu, zeptejte se na něco, atd.</string>
+    <string name="send_crash">Odesílat zprávy o chybách</string>
+    <string name="send_crash_desc">Automaticky odesílat zprávy o chybách vývojářům, aby mohly být opraveny</string>
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
     <string name="no_email_client">Není nainstalován žádný emailový klient.</string>

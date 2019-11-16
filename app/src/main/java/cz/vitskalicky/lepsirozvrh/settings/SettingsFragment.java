@@ -16,6 +16,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.simpleframework.xml.Serializer;
@@ -78,6 +79,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             ad.show();
             return true;
         });
+        findPreference(getString(R.string.PREFS_OSS_LICENCES)).setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(getContext(), OssLicensesMenuActivity.class);
+            startActivity(intent);
+            return true;
+        });
+
 
         Preference userInfo = findPreference(getString(R.string.PREFS_USER));
         userInfo.setTitle(SharedPrefs.getString(getContext(), SharedPrefs.NAME));

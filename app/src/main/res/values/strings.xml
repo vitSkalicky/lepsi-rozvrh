@@ -75,6 +75,8 @@
     <string name="send_crash">Send crash reports</string>
     <string name="send_crash_desc">Automatically report crashes to the developers so that they can be fixed</string>
     <string name="privacy_policy">Privacy policy</string>
+    <string name="oss_licences">Open source licences</string>
+    <string name="oss_licences_desc">Show licences of free/libre and open source libraries</string>
     <string name="email_message">These are information about installation of this app. Please don\'t remove them - they are essential for troubleshooting your problem.</string>
     <string name="send_email">Send email…</string>
     <string name="no_email_client">There are no email clients installed.</string>

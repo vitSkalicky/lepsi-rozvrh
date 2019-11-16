@@ -53,5 +53,9 @@
                 android:action="android.intent.action.VIEW"
                 android:data="@string/PRIVACY_POLICY_LINK" />
         </Preference>
+        <Preference
+            android:title="@string/oss_licences"
+            android:summary="@string/oss_licences_desc"
+            android:key="@string/PREFS_OSS_LICENCES"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
 
 android {
     compileSdkVersion 28
@@ -42,10 +43,11 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.2'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    implementation 'io.sentry:sentry-android:1.7.27'
-    implementation 'org.slf4j:slf4j-nop:1.7.25'
+    implementation 'io.sentry:sentry-android:1.7.28'
+    implementation 'org.slf4j:slf4j-nop:1.7.29'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
-    def room_version = "2.2.0"
+    def room_version = "2.2.1"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"

@@ -63,7 +63,7 @@ public class RozvrhDen {
         RozvrhHodinaCaption mRozvrhHodinaCaption = null;
         for(RozvrhHodina hodina : hodiny){
             // V jednom caption může být víc hodin (ve stálém rozvrhu - něco sudý týden, něco jiného lichý)
-            if (mRozvrhHodinaCaption == null || !mRozvrhHodinaCaption.getCaption().equals(hodina.getCaption())){
+            if (mRozvrhHodinaCaption == null || hodina.getCaption() == null || hodina.getCaption().isEmpty() || !mRozvrhHodinaCaption.getCaption().equals(hodina.getCaption())){
                 mRozvrhHodinaCaption = captionsList.get(position);
                 position++;
             }

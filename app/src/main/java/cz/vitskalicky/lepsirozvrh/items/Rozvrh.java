@@ -4,8 +4,9 @@
 */
 package cz.vitskalicky.lepsirozvrh.items;
 
+import android.util.Log;
+
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -17,6 +18,7 @@ import java.util.ListIterator;
 
 @Root(name = "rozvrh", strict = false)
 public class Rozvrh {
+    public static final String TAG = Rozvrh.class.getSimpleName();
 
     public Rozvrh() {
         super();
@@ -38,40 +40,40 @@ public class Rozvrh {
     private String zkratkacyklu;
 
     @Commit
-    private void onCommit(){
+    private void onCommit() {
         deleteNullDays();
         deleteNullCaptions();
         deleteRedundantLessons();
     }
 
-    private void deleteNullDays(){
+    private void deleteNullDays() {
         ListIterator<RozvrhDen> iteratorDen = dny.listIterator(0);
         while (iteratorDen.hasNext()) {
             RozvrhDen den = iteratorDen.next();
-            if(den.getHodiny() == null)
+            if (den.getHodiny() == null)
                 iteratorDen.remove();
         }
     }
 
-    private void deleteNullCaptions(){
+    private void deleteNullCaptions() {
         ListIterator<RozvrhHodinaCaption> iteratorCaption = hodiny.listIterator(0);
         while (iteratorCaption.hasNext()) {
             RozvrhHodinaCaption caption = iteratorCaption.next();
-            if(caption.getBegintime() == null || caption.getEndtime() == null)
+            if (caption.getBegintime() == null || caption.getEndtime() == null)
                 iteratorCaption.remove();
         }
     }
 
-    private void deleteRedundantLessons(){
+    private void deleteRedundantLessons() {
         //we also call fixTimes here for each day to assign begintime and endtime
         //TODO: checking for free classes at the beginning of the day in a smart way
-        for(RozvrhDen den : dny){
+        for (RozvrhDen den : dny) {
             den.fixTimes(hodiny);
             List<RozvrhHodina> denHodiny = den.getHodiny();
-            ListIterator<RozvrhHodina> i = denHodiny.listIterator(hodiny.size());
+            ListIterator<RozvrhHodina> i = denHodiny.listIterator(denHodiny.size());
             while (i.hasPrevious()) {
                 RozvrhHodina hodina = i.previous();
-                if(!(hodina.getHighlight() == RozvrhHodina.EMPTY))
+                if (!(hodina.getHighlight() == RozvrhHodina.EMPTY))
                     break;
 
                 i.remove();
@@ -83,16 +85,16 @@ public class Rozvrh {
      * returns the lesson, which should be highlighted to the user as next or current lesson or null
      * if the school is over or this is not the current week.
      */
-    public GetNLreturnValues getNextLesson(){
+    public GetNLreturnValues getNextLesson() {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
 
         RozvrhDen dneska = null;
         int denIndex = 0;
-        for (RozvrhDen item :dny) {
-            if  (item.getParsedDatum() == null) //permanent timetable check
+        for (RozvrhDen item : dny) {
+            if (item.getParsedDatum() == null) //permanent timetable check
                 return null;
-            if (item.getParsedDatum().isEqual(nowDate)){
+            if (item.getParsedDatum().isEqual(nowDate)) {
                 dneska = item;
                 break;
             }
@@ -106,7 +108,7 @@ public class Rozvrh {
         int hodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
             RozvrhHodina item = dneska.getHodiny().get(i);
-            if (nowTime.isBefore(item.getParsedEndtime()) && !item.getTyp().equals("X")){
+            if (nowTime.isBefore(item.getParsedEndtime()) && !item.getTyp().equals("X")) {
                 dalsi = item;
                 break;
             }
@@ -127,7 +129,7 @@ public class Rozvrh {
         return ret;
     }
 
-    public static class GetNLreturnValues{
+    public static class GetNLreturnValues {
         public RozvrhHodina rozvrhHodina;
         public int dayIndex;
         public int lessonIndex;
@@ -151,5 +153,37 @@ public class Rozvrh {
 
     public String getZkratkacyklu() {
         return zkratkacyklu;
+    }
+
+    /**
+     * Return a description of of rozvrh's structure. Used for crash reports.
+     * <p>
+     * structure:
+     * typ; zkratkacyklu;
+     * captions count; first caption start time; last caption end time;
+     * //for each day one line
+     * zkratka; lesson count; first lesson caption; first lesson begin time; last caption; last end time;
+     */
+    public String getStructure() {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            sb.append(typ).append("; ")
+                    .append(nazevcyklu).append(";\n")
+                    .append(hodiny.size()).append("; ")
+                    .append(hodiny.get(0).getBegintime()).append("; ")
+                    .append(hodiny.get(hodiny.size() - 1).getEndtime()).append(";\n");
+            for (RozvrhDen item : dny) {
+                sb.append(item.getZkratka()).append("; ")
+                        .append(item.getHodiny().size()).append("; ")
+                        .append(item.getHodiny().get(0).getCaption()).append("; ")
+                        .append(item.getHodiny().get(0).getBegintime()).append("; ")
+                        .append(item.getHodiny().get(item.getHodiny().size() - 1).getCaption()).append("; ")
+                        .append(item.getHodiny().get(item.getHodiny().size() - 1).getEndtime()).append(";\n");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Creating rozvrh structure failed", e);
+        }
+        return sb.toString();
     }
 }

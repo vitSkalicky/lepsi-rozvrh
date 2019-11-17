@@ -2,7 +2,7 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -12,8 +12,11 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import io.sentry.Sentry;
 
 public class RozvrhLayout extends ViewGroup {
+    public static final String TAG = RozvrhLayout.class.getSimpleName();
+
     private int naturalCellWidth = -1;
 
     private Context context;
@@ -55,26 +58,26 @@ public class RozvrhLayout extends ViewGroup {
         int childState = 0;
 
 
-        if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED){
-            int naturalCellWidth =  getNaturalCellWidth();
+        if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+            int naturalCellWidth = getNaturalCellWidth();
             childWidth = naturalCellWidth;
             width = naturalCellWidth * spread * columns + naturalCellWidth;
-        }else {
+        } else {
             childWidth = width / ((columns * spread) + 1);
         }
-        if (rows == 0 || columns == 0){
+        if (rows == 0 || columns == 0) {
             setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec, childState),
                     resolveSizeAndState(height, heightMeasureSpec,
                             childState << MEASURED_HEIGHT_STATE_SHIFT));
             return;
         }
 
-        childHeight = (int)Math.ceil((double)height / (rows + 1));
+        childHeight = (int) Math.ceil((double) height / (rows + 1));
 
         int dayWidthMS = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
         int childHeightMS = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
 
-        if (cornerCell != null){
+        if (cornerCell != null) {
             measureChild(cornerCell.getView(), dayWidthMS, childHeightMS);
             childState = combineMeasuredStates(childState, cornerCell.view.getMeasuredState());
         }
@@ -87,9 +90,9 @@ public class RozvrhLayout extends ViewGroup {
             measureChild(item.getView(), hodinaWidthMS, childHeightMS);
             childState = combineMeasuredStates(childState, item.view.getMeasuredState());
         }
-        for (List<HodinaView> list: hodinaViews){
-            for (HodinaView item :list) {
-                int hodinaWidthMS = MeasureSpec.makeMeasureSpec((int)(childWidth * item.spread), MeasureSpec.EXACTLY);
+        for (List<HodinaView> list : hodinaViews) {
+            for (HodinaView item : list) {
+                int hodinaWidthMS = MeasureSpec.makeMeasureSpec((int) (childWidth * item.spread), MeasureSpec.EXACTLY);
                 measureChild(item, hodinaWidthMS, childHeightMS);
                 childState = combineMeasuredStates(childState, item.getMeasuredState());
             }
@@ -106,21 +109,21 @@ public class RozvrhLayout extends ViewGroup {
             return;
         }
 
-        if (cornerCell != null){
-            cornerCell.getView().layout(l, t,l + childWidth, t + childHeight);
+        if (cornerCell != null) {
+            cornerCell.getView().layout(l, t, l + childWidth, t + childHeight);
         }
         for (int i = 0; i < denCells.length; i++) {
-            denCells[i].getView().layout(l,t + ((i + 1)*childHeight), l + childWidth,t + ((i + 2)*childHeight));
+            denCells[i].getView().layout(l, t + ((i + 1) * childHeight), l + childWidth, t + ((i + 2) * childHeight));
         }
         for (int i = 0; i < captionCells.length; i++) {
-            captionCells[i].getView().layout(l + childWidth + (i * childWidth * spread),t, l + childWidth + ((i + 1) * childWidth * spread),t + childHeight);
+            captionCells[i].getView().layout(l + childWidth + (i * childWidth * spread), t, l + childWidth + ((i + 1) * childWidth * spread), t + childHeight);
         }
         for (int y = 0; y < hodinaViews.size(); y++) {
             float n = 0;
             for (int x = 0; x < hodinaViews.get(y).size(); x++) {
                 HodinaView item = hodinaViews.get(y).get(x);
                 float itemSpread = item.spread;
-                item.layout(l + (int)((n + 1) * childWidth), t + ((y + 1) * childHeight), l + (int)((n + 1 + itemSpread) * childWidth), t + ((y + 2) * childHeight));
+                item.layout(l + (int) ((n + 1) * childWidth), t + ((y + 1) * childHeight), l + (int) ((n + 1 + itemSpread) * childWidth), t + ((y + 2) * childHeight));
                 n += itemSpread;
             }
         }
@@ -130,7 +133,7 @@ public class RozvrhLayout extends ViewGroup {
      * Creates a cell with reasonably long data and calculates its minimum width
      */
     private int getNaturalCellWidth() {
-        if (naturalCellWidth != -1){
+        if (naturalCellWidth != -1) {
             return naturalCellWidth;
         }
         /*RozvrhHodina hodina = new RozvrhHodina();
@@ -172,14 +175,14 @@ public class RozvrhLayout extends ViewGroup {
         captionCells = new CaptionCell[columns];
         hodinaViews = new ArrayList<>();
 
-        if (cornerCell == null){
+        if (cornerCell == null) {
             cornerCell = new CornerCell(context, this);
         }
         addView(cornerCell.getView());
 
 
         for (int i = 0; i < columns; i++) {
-            CaptionCell item = new CaptionCell(context,this);
+            CaptionCell item = new CaptionCell(context, this);
             captionCells[i] = item;
             addView(item.getView());
         }
@@ -205,6 +208,13 @@ public class RozvrhLayout extends ViewGroup {
 
     public void setRozvrh(Rozvrh rozvrh) {
         //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
+        if (rozvrh != null) {
+            Sentry.getContext().addExtra("rozvrh", rozvrh.getStructure());
+            Log.d(TAG, "Rozvrh structure:\n" + rozvrh.getStructure());
+        } else {
+            Sentry.getContext().addExtra("rozvrh", "null");
+            Log.d(TAG, "Rozvrh structure:\n" + "null");
+        }
         this.rozvrh = rozvrh;
         int oldRows = rows;
         int oldColumns = columns;
@@ -224,18 +234,18 @@ public class RozvrhLayout extends ViewGroup {
         cornerCell.update(rozvrh);
         for (int i = 0; i < columns; i++) {
             CaptionCell item = captionCells[i];
-            if (item == null){
+            if (item == null) {
                 item = new CaptionCell(context, this);
                 captionCells[i] = item;
                 addView(item.getView());
-            }            
+            }
             item.update(rozvrh.getHodiny().get(i));
         }
 
         for (int i = 0; i < rows; i++) {
             RozvrhDen den = rozvrh.getDny().get(i);
             DenCell denCell = denCells[i];
-            if (denCell == null){
+            if (denCell == null) {
                 denCell = new DenCell(context, this);
                 denCells[i] = denCell;
                 addView(denCell.getView());
@@ -261,7 +271,8 @@ public class RozvrhLayout extends ViewGroup {
                     // if there are more lessons in same time
                     captionsInRow++;
                 } else {
-                    if (captionsInRow > 1){//if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
+                    // BEWARE: this block of code is also copied after the end of this while loop to handle situation where more lessons in one caption are on th end of the day
+                    if (captionsInRow > 1) {//if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
                         for (int k = 0; k < captionsInRow; k++) {
                             hodinaViews.get(i).get(j - (k + 1)).spread = spread / (float) captionsInRow;
                         }
@@ -276,6 +287,15 @@ public class RozvrhLayout extends ViewGroup {
                 hodinaViews.get(i).get(j).update(item, perm);
                 hodinaViews.get(i).get(j).spread = spread;
             }
+            //BEWARE: copied from a few lines above
+            if (captionsInRow > 1) {//if there were more lessons in the same time, update their weight with (default weight)/(number of lessons in the same time)
+                for (int k = 0; k < captionsInRow; k++) {
+                    hodinaViews.get(i).get(j - (k + 1)).spread = spread / (float) captionsInRow;
+                }
+            }
+            cellsOverBySpread += captionsInRow - 1;
+            //</BEWARE>
+
             for (; j < columns + cellsOverBySpread; j++) {
                 if (hodinaViews.get(i).size() <= j) {
                     HodinaView toAdd = new HodinaView(context);
@@ -373,9 +393,9 @@ public class RozvrhLayout extends ViewGroup {
         //debug timing: Log.d(TAG_TIMER, "calculateSpread end " + Utils.getDebugTime());
         return mostSpread;
     }
-    
+
     /**
-            * Empty the table when loading to prevent confusion
+     * Empty the table when loading to prevent confusion
      */
     public void empty() {
         //check if fragment was not removed while loading
@@ -386,7 +406,7 @@ public class RozvrhLayout extends ViewGroup {
         columns = RozvrhAPI.getRememberedColumns(getContext());
         perm = false;
         spread = 1;
-        
+
         if (oldRows != rows || oldColumns != columns || cornerCell == null) {
             createViews();
         }

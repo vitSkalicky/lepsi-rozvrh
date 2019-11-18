@@ -3,6 +3,8 @@ package cz.vitskalicky.lepsirozvrh.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import android.text.Layout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -45,7 +47,11 @@ public class VerticalTextView extends AppCompatTextView {
 
         canvas.translate(getCompoundPaddingLeft(), getExtendedPaddingTop());
 
-        getLayout().draw(canvas);
+        //the app once crashed because getLayout() returned null for some reason. Couldn't reproduce that.
+        Layout layout = getLayout();
+        if (layout == null)
+            return;
+        layout.draw(canvas);
         canvas.restore();
     }
 }

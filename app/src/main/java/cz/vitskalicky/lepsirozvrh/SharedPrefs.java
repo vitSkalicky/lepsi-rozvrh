@@ -74,19 +74,31 @@ public class SharedPrefs {
         return contains(context, context.getString(stringId));
     }
 
-    public static String getStringPreference(Context context, int stringId){
-        if (!containsPreference(context, stringId)) return "";
+    public static String getStringPreference(Context context, int stringId, String defaultValue){
+        if (!containsPreference(context, stringId)) return defaultValue;
         return getString(context, context.getString(stringId));
     }
 
-    public static boolean getBooleanPreference(Context context, int stringId){
-        if (!containsPreference(context, stringId)) return false;
+    public static boolean getBooleanPreference(Context context, int stringId, boolean defaultValue){
+        if (!containsPreference(context, stringId)) return defaultValue;
 
         return getBoolean(context, context.getString(stringId));
     }
 
-    public static int getIntPreference(Context context, int stringId){
-        if (!containsPreference(context, stringId)) return 0;
+    public static int getIntPreference(Context context, int stringId, int defaultValue){
+        if (!containsPreference(context, stringId)) return defaultValue;
         return getInt(context, context.getString(stringId));
+    }
+
+    public static String getStringPreference(Context context, int stringId){
+        return getStringPreference(context, stringId, "");
+    }
+
+    public static boolean getBooleanPreference(Context context, int stringId){
+        return getBooleanPreference(context, stringId, false);
+    }
+
+    public static int getIntPreference(Context context, int stringId){
+        return getIntPreference(context, stringId, 0);
     }
 }

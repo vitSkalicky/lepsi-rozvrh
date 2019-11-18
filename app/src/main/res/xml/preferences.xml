@@ -26,6 +26,11 @@
             android:entryValues="@array/switch_to_next_week_values"
             android:key="@string/PREFS_SWITCH_TO_NEXT_WEEK"
             android:title="@string/switch_to_next_week"/>
+        <SwitchPreference
+            android:title="@string/center_to_current_lesson"
+            android:defaultValue="true"
+            android:icon="@drawable/ic_center_focus_weak_black_24dp"
+            android:key="@string/PREFS_CENTER_TO_CURRENT_LESSON"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/about">
         <Preference android:title="@string/source_code"

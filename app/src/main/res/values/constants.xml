@@ -5,6 +5,7 @@
     <string name="PREFS_LOGOUT" translatable="false">prefs-logout</string>
     <string name="PREFS_USER" translatable="false">prefs-user</string>
     <string name="PREFS_SWITCH_TO_NEXT_WEEK" translatable="false">prefs-switch-to-next-week</string>
+    <string name="PREFS_CENTER_TO_CURRENT_LESSON" translatable="false">prefs-center-to-current-lesson</string>
     <string name="PREFS_SEND_FEEDBACK" translatable="false">prefs-send-feedback</string>
     <string name="PREFS_SEND_CRASH_REPORTS" translatable="false">prefs-send-crash-reports</string>
     <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>

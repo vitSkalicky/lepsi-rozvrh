@@ -104,22 +104,22 @@ public class MainActivity extends AppCompatActivity {
         TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh));
         ibPrev.setOnClickListener(v -> {
             week--;
-            rtFragment.displayWeek(week);
+            rtFragment.displayWeek(week, false);
             showHideButtons();
         });
         ibNext.setOnClickListener(v -> {
             week++;
-            rtFragment.displayWeek(week);
+            rtFragment.displayWeek(week, false);
             showHideButtons();
         });
         ibCurrent.setOnClickListener(v -> {
             week = 0;
-            rtFragment.displayWeek(week);
+            rtFragment.displayWeek(week, true);
             showHideButtons();
         });
         ibPermanent.setOnClickListener(v -> {
             week = Integer.MAX_VALUE;
-            rtFragment.displayWeek(week);
+            rtFragment.displayWeek(week, false);
             showHideButtons();
         });
         ibRefresh.setOnClickListener(v -> {
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             infoLine.setVisibility(View.GONE);
         }
 
-        rtFragment.displayWeek(week);
+        rtFragment.displayWeek(week, true);
     }
 
     /**

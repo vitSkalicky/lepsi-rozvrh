@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -33,6 +34,13 @@ public class RozvrhTableFragment extends Fragment {
 
     private View view;
     private RozvrhLayout rozvrhLayout;
+    private ScrollView scrollView;
+
+    /**<code>false</code> when rozvrh for a certain week is displayed for the first time (a.k.a. <code>true</code> when being re-displayed
+     * as fresh rozvrh is received from the internet)
+     */
+    private boolean redisplayed;
+    private boolean scrollToCurrentLesson;
 
     private DisplayInfo displayInfo;
 
@@ -64,6 +72,7 @@ public class RozvrhTableFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_rozvrh_table, container, false);
 
         rozvrhLayout = view.findViewById(R.id.rozvrhLayout);
+        //scrollView = view.findViewById(R.id.horizontalScrollView);
 
         //debug timing: Log.d(TAG_TIMER, "onCreateView end " + Utils.getDebugTime());
         return view;
@@ -75,7 +84,7 @@ public class RozvrhTableFragment extends Fragment {
     /**
      * @param weekIndex index of week to display relative to now (0 = this week, 1 = next, -1 = previous) or {@code Integer.MAX_VALUE} for permanent
      */
-    public void displayWeek(int weekIndex) {
+    public void displayWeek(int weekIndex, boolean scrollToCurrentLesson) {
         //debug timing: Log.d(TAG_TIMER, "displayWeek start " + Utils.getDebugTime());
 
         this.weekIndex = weekIndex;
@@ -85,6 +94,8 @@ public class RozvrhTableFragment extends Fragment {
             week = Utils.getDisplayWeekMonday(getContext()).plusWeeks(weekIndex);
 
         final LocalDate finalWeek = week;
+        redisplayed = false;
+        this.scrollToCurrentLesson = scrollToCurrentLesson;
 
         displayInfo.setLoadingState(DisplayInfo.LOADING);
         cacheSuccessful = false;
@@ -111,7 +122,8 @@ public class RozvrhTableFragment extends Fragment {
             onNetResponse(code, rozvrh, finalWeek);
         });
         if (item != null) {
-            rozvrhLayout.setRozvrh(item);
+            rozvrhLayout.setRozvrh(item, !redisplayed && scrollToCurrentLesson);
+            redisplayed = true;
             if (offline) {
                 displayInfo.setLoadingState(DisplayInfo.ERROR);
             } else {
@@ -132,7 +144,8 @@ public class RozvrhTableFragment extends Fragment {
             return;
         }
         if (rozvrh != null) {
-            rozvrhLayout.setRozvrh(rozvrh);
+            rozvrhLayout.setRozvrh(rozvrh, !redisplayed && scrollToCurrentLesson);
+            redisplayed = true;
         }
         //onNetLoaded
         if (code == SUCCESS) {
@@ -176,7 +189,8 @@ public class RozvrhTableFragment extends Fragment {
         }
         if (code == SUCCESS) {
             cacheSuccessful = true;
-            rozvrhLayout.setRozvrh(rozvrh);
+            rozvrhLayout.setRozvrh(rozvrh, !redisplayed && scrollToCurrentLesson);
+            redisplayed = true;
         }
     }
 

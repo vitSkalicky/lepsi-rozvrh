@@ -4,10 +4,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.ViewTreeObserver;
+import android.widget.HorizontalScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
@@ -206,7 +211,7 @@ public class RozvrhLayout extends ViewGroup {
         //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
     }
 
-    public void setRozvrh(Rozvrh rozvrh) {
+    public void setRozvrh(Rozvrh rozvrh, boolean centerToCurrentlesson) {
         //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
         if (rozvrh != null) {
             Sentry.getContext().addExtra("rozvrh", rozvrh.getStructure());
@@ -317,12 +322,20 @@ public class RozvrhLayout extends ViewGroup {
 
         highlightCurrentLesson();
 
+        if (centerToCurrentlesson)
+            centerToCurrentLesson();
+
         //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
     }
 
     public void highlightCurrentLesson() {
-        if (rozvrh == null)
+        if (rozvrh == null){
+            nextHodinaView = null;
+            nextHodinaViewRight = null;
+            nextHodinaViewBottom = null;
+            nextHodinaViewCorner = null;
             return;
+        }
         Rozvrh.GetNLreturnValues values = rozvrh.getNextLesson();
 
 
@@ -343,6 +356,10 @@ public class RozvrhLayout extends ViewGroup {
 
 
         if (values == null || values.rozvrhHodina == null) {
+            nextHodinaView = null;
+            nextHodinaViewRight = null;
+            nextHodinaViewBottom = null;
+            nextHodinaViewCorner = null;
             return;
         }
 
@@ -365,6 +382,28 @@ public class RozvrhLayout extends ViewGroup {
         if (denIndex + 1 < hodinaViews.size() && hodinaIndex + 1 < hodinaViews.get(0).size()) {
             nextHodinaViewCorner = hodinaViews.get(denIndex + 1).get(hodinaIndex + 1);
             nextHodinaViewCorner.hightlightEdges(false, false, true);
+        }
+    }
+
+    // we want to center when: the user opens the app, user taps current week
+    // we don't want to center when: a fresh schedule with minor changes loads, user switches to the schedule using arrows.
+    public void centerToCurrentLesson(){
+        if (!SharedPrefs.getBooleanPreference(context, R.string.PREFS_CENTER_TO_CURRENT_LESSON, true))
+            return;
+        ViewParent parent = getParent();
+        if (parent instanceof HorizontalScrollView){
+            HorizontalScrollView hsvParent = (HorizontalScrollView) parent;
+            ViewTreeObserver viewTreeObserver = hsvParent.getViewTreeObserver();
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    RozvrhLayout.this.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    if (nextHodinaView != null) {
+                        int parentWidth = hsvParent.getWidth();
+                        hsvParent.smoothScrollTo(((int) nextHodinaView.getX()) - parentWidth / 2 + childWidth / 2, 0);
+                    }
+                }
+            });
         }
     }
 

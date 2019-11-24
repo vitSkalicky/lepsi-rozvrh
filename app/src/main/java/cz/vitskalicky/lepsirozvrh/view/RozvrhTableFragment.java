@@ -207,10 +207,4 @@ public class RozvrhTableFragment extends Fragment {
     public void createViews(){
         rozvrhLayout.createViews();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        rozvrhLayout.highlightCurrentLesson();
-    }
 }

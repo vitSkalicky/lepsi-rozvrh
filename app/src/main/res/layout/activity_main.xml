@@ -107,7 +107,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="0dp"
                     android:contentDescription="@string/current_week"
-                    android:src="@drawable/ic_today_black_24" />
+                    android:src="@drawable/ic_home_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/next"

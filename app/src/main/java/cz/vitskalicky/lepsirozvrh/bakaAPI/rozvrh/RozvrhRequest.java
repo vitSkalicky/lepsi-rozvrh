@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -32,6 +33,8 @@ import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 
 public class RozvrhRequest extends Request<RozvrhRequest.Result> {
     private static String TAG = RozvrhRequest.class.getSimpleName();
+
+    public static final int TIMEOUT = 10000; //in milliseconds
 
     private LocalDate monday;
     private Listener successListener;
@@ -81,6 +84,8 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
         this.context = context;
         this.successListener = successListener;
         this.errorListener = errorListener;
+
+        setRetryPolicy(new DefaultRetryPolicy(TIMEOUT, 1 , 1f));
     }
 
     public RozvrhRequest(LocalDate monday, Listener allListener, Context context) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -36,10 +37,10 @@ import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRequest;
 
 public class Login {
     private static String TAG = Login.class.getSimpleName();
-
 
     /**
      * ResponseListener for returning login data.
@@ -171,6 +172,7 @@ public class Login {
                     listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
                 });
 
+                passwordCheck.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
                 queue.add(passwordCheck);
 
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
@@ -183,6 +185,7 @@ public class Login {
             error.printStackTrace();
             listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
         });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
 
         queue.add(stringRequest);
     }

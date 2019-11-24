@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,20 +21,15 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import java.io.ByteArrayOutputStream;
-
-import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import io.sentry.Sentry;
-import io.sentry.android.AndroidSentryClientFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,12 +54,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         findPreference(getString(R.string.PREFS_SEND_CRASH_REPORTS)).setOnPreferenceChangeListener((preference, newValue) -> {
-            if (newValue instanceof Boolean && getActivity() != null){
+            if (newValue instanceof Boolean && getActivity() != null) {
                 boolean value = (boolean) newValue;
-                if (value){
-                    ((MainApplication)getActivity().getApplication()).enableSentry();
-                }else {
-                    ((MainApplication)getActivity().getApplication()).diableSentry();
+                if (value) {
+                    ((MainApplication) getActivity().getApplication()).enableSentry();
+                } else {
+                    ((MainApplication) getActivity().getApplication()).diableSentry();
                 }
             }
             return true;
@@ -121,56 +118,85 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             body = "\n\n-----------------------------\n" + getContext().getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
                     Build.VERSION.RELEASE + "\n App Version: " + body + "\n Device Brand: " + Build.BRAND +
                     "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
+            final String finBody = body;
             if (includeRozvrh) {
+                new Thread(() -> {
+                    String fileCurrent = "rozvrh-" + Utils.dateToString(Utils.getDisplayWeekMonday(getContext())) + ".xml";
+                    String filePerm = "rozvrh-perm.xml";
+
+                    String current = "";
+                    String permanent = "";
+                    try (FileInputStream inputStream = getContext().openFileInput(fileCurrent)) {
+                        //converts inputStream to string
+                        java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+                        current = s.hasNext() ? s.next() : "";
+                    } catch (FileNotFoundException e) {
+                        current = "File not found: " + e.getMessage();
+                    } catch (IOException e) {
+                        current = "IOException: " + e.getMessage();
+                    }
+                    try (FileInputStream inputStream = getContext().openFileInput(filePerm)) {
+                        //converts inputStream to string
+                        java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+                        permanent = s.hasNext() ? s.next() : "";
+                    } catch (FileNotFoundException e) {
+                        permanent = "File not found: " + e.getMessage();
+                    } catch (IOException e) {
+                        permanent = "IOException: " + e.getMessage();
+                    }
+
+                    String finCurrent = current;
+                    String finPermanent = permanent;
+
+                    new Handler(Looper.getMainLooper()).post(() ->{
+                        String newBody = finBody;
+                        newBody += "\nCurrent schedule:\n\n" + finCurrent + "\n";
+                        newBody += "\nPermanent schedule:\n\n" + finPermanent + "\n";
+
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("message/rfc822");
+                        String address = getContext().getString(R.string.CONTACT_MAIL);
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                        intent.putExtra(Intent.EXTRA_TEXT, newBody);
+
+                        try {
+                            getContext().startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Snackbar snackbar = Snackbar.make(getView(), getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
+                            snackbar.setAction(R.string.copy_address, v -> {
+                                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText(address, address);
+                                clipboard.setPrimaryClip(clip);
+                                Snackbar.make(getView(), R.string.copied, Snackbar.LENGTH_SHORT).show();
+                            });
+                            snackbar.show();
+                        }
+                    });
+
+                }).run();
+            } else {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                String address = getContext().getString(R.string.CONTACT_MAIL);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+
                 try {
-                    RozvrhAPI rozvrhAPI = AppSingleton.getInstance(getContext()).getRozvrhAPI();
-                    Rozvrh current = rozvrhAPI.get(Utils.getDisplayWeekMonday(getContext()), (code, rozvrh1) -> {}, (code, rozvrh1) -> {});
-                    Rozvrh permanent = rozvrhAPI.get(null, (code, rozvrh1) -> {}, (code, rozvrh1) -> {});
-
-                    if (current == null) {
-                        body += "\nCurrent schedule is null";
-                    } else {
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        Serializer serializer = new Persister();
-                        serializer.write(current, baos);
-
-                        body += "\nCurrent schedule:\n\n" + baos.toString() + "\n";
-                    }
-
-                    if (permanent == null) {
-                        body += "\nPermanent schedule is null";
-                    } else {
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        Serializer serializer = new Persister();
-                        serializer.write(permanent, baos);
-
-                        body += "\nPermanent schedule:\n\n" + baos.toString() + "\n";
-                    }
-                } catch (Exception e) {
+                    getContext().startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Snackbar snackbar = Snackbar.make(getView(), getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.copy_address, v -> {
+                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText(address, address);
+                        clipboard.setPrimaryClip(clip);
+                        Snackbar.make(getView(), R.string.copied, Snackbar.LENGTH_SHORT).show();
+                    });
+                    snackbar.show();
                 }
             }
         } catch (PackageManager.NameNotFoundException | NullPointerException e) {
-        }
-
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("message/rfc822");
-        String address = getContext().getString(R.string.CONTACT_MAIL);
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(Intent.EXTRA_TEXT, body);
-
-        try {
-            getContext().startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Snackbar snackbar = Snackbar.make(getView(), getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.copy_address, v -> {
-                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(address, address);
-                clipboard.setPrimaryClip(clip);
-                Snackbar.make(getView(), R.string.copied, Snackbar.LENGTH_SHORT).show();
-            });
-            snackbar.show();
         }
     }
 }

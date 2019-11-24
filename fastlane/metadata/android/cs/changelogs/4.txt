@@ -1,0 +1,3 @@
+- Při spuštění skočí rozvrh na aktuální hodinu.
+- Změněna ikona pro zobrazení aktuálního týdne.
+- Vylepšena funkce "Napsat autorovi".

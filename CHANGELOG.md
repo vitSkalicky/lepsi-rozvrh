@@ -1,5 +1,17 @@
 # Seznam změn / Changelog
 
+## 1.3
+
+- Při spuštění skočí rozvrh na aktuální hodinu.
+- Změněna ikona pro zobrazení aktuálního týdne.
+- Vylepšena funkce "Napsat autorovi".
+
+---
+
+- Schedule now scrolls to current lesson on app start.
+- Changed icon for showing current week.
+- Improved feedback button.
+
 ## 1.2
 
 - Přidáno automatické hlášení pádů, pro zlepšení stability aplikace.

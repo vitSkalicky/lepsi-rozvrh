@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.ListPreference;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
@@ -31,6 +32,8 @@ import java.nio.channels.FileLock;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -292,8 +295,8 @@ public class RozvrhAPI {
     private HashMap<LocalDate, Rozvrh> saved = new HashMap<>();
     private RequestQueue requestQueue;
     private Context context;
-    private Map<LocalDate, RozvrhListener> activeListeners = new HashMap<>();
-    private Set<LocalDate> active = new HashSet<>();
+    private Map<LocalDate, List<RozvrhListener>> activeListeners = new HashMap<>(); //listeners for each week
+    private Set<LocalDate> active = new HashSet<>(); //which weeks have active listeners attached to them
     private Map<LocalDate, LocalTime> lastUpdated = new HashMap<>();
 
     public RozvrhAPI(RequestQueue requestQueue, Context context) {
@@ -337,7 +340,7 @@ public class RozvrhAPI {
             } else {
                 ret = memory;
             }
-            activeListeners.put(monday, onNetLoaded);
+            addWeekLoadListener(monday, onNetLoaded);
         }
 
         //cache permanent, current
@@ -356,22 +359,16 @@ public class RozvrhAPI {
      */
     public void cacheWeek(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
-        if (!isInMemory(monday)) {
+        if (!isInMemory(monday) && !active.contains(monday)) {
             RozvrhRequest request = new RozvrhRequest(monday, result -> {
-                RozvrhListener listener = activeListeners.get(monday);
                 if (result.code == SUCCESS) {
                     putToMemory(monday, result.rozvrh);
                     saveRawRozvrh(monday, result.raw, context);
 
-                    if (listener != null)
-                        listener.method(SUCCESS, result.rozvrh);
+                    triggerWeekLoadListeners(monday, result.code, result.rozvrh);
                     return;
                 }
-                if (listener != null)
-                    listener.method(result.code, null);
-
-                activeListeners.remove(monday);
-                active.remove(monday);
+                triggerWeekLoadListeners(monday, result.code, null);
             }, context);
 
             requestQueue.add(request);
@@ -406,19 +403,47 @@ public class RozvrhAPI {
     }
 
     /**
-     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after an hour
+     * Adds listener to active listeners ({@link #activeListeners}) and marks week as active
+     * ({@link #active}). Linsteners in {@link #activeListeners} will be triggered when the week
+     * finishes loading.
      */
-    protected Rozvrh putToMemory(LocalDate date, Rozvrh item){
+    private void addWeekLoadListener(LocalDate week, RozvrhListener onNetLoaded){
+        List<RozvrhListener> list = activeListeners.get(week);
+        if (list == null){
+            list = new LinkedList<>();
+            activeListeners.put(week, list);
+        }
+        list.add(onNetLoaded);
+        active.add(week);
+    }
+
+    private void triggerWeekLoadListeners(LocalDate week, int code, Rozvrh rozvrh){
+        List<RozvrhListener> list = activeListeners.get(week);
+        if (list != null){
+            for (RozvrhListener item :list) {
+                item.method(code, rozvrh);
+            }
+            list.clear();
+        }
+        active.remove(week);
+    }
+
+
+
+    /**
+     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
+     */
+    private Rozvrh putToMemory(LocalDate date, Rozvrh item){
         lastUpdated.put(date, LocalTime.now());
         return saved.put(date, item);
     }
 
     /**
-     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after an hour
+     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
-    protected Rozvrh getFromMemory(LocalDate date){
+    private Rozvrh getFromMemory(LocalDate date){
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(1))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))){
             return saved.get(date);
         }else {
             lastUpdated.remove(date);
@@ -427,9 +452,9 @@ public class RozvrhAPI {
         }
     }
 
-    protected boolean isInMemory(LocalDate date){
+    private boolean isInMemory(LocalDate date){
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(1))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))){
             return saved.containsKey(date);
         }else {
             lastUpdated.remove(date);
@@ -470,13 +495,15 @@ public class RozvrhAPI {
                 onCacheLoaded.method(code, rozvrh);
             }, context);
 
+            addWeekLoadListener(monday, onNetLoaded);
+
             RozvrhRequest request = new RozvrhRequest(monday, successResult -> {
                 putToMemory(monday, successResult.rozvrh);
                 saveRawRozvrh(monday, successResult.raw, context);
 
-                onNetLoaded.method(SUCCESS, successResult.rozvrh);
+                triggerWeekLoadListeners(monday,SUCCESS, successResult.rozvrh);
             }, errorResult -> {
-                onNetLoaded.method(errorResult.code, null);
+                triggerWeekLoadListeners(monday,errorResult.code, null);
             }, context);
 
             requestQueue.add(request);
@@ -510,6 +537,7 @@ public class RozvrhAPI {
             if (result.code == SUCCESS) {
                 clearCache(context);
                 saveRawRozvrh(monday, result.raw, context);
+                putToMemory(monday, result.rozvrh);
                 cacheCNPP();
                 cacheNP(monday);
 

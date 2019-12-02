@@ -420,10 +420,11 @@ public class RozvrhAPI {
     private void triggerWeekLoadListeners(LocalDate week, int code, Rozvrh rozvrh){
         List<RozvrhListener> list = activeListeners.get(week);
         if (list != null){
-            for (RozvrhListener item :list) {
+            List<RozvrhListener> copyList = new LinkedList<>(list);
+            list.clear();
+            for (RozvrhListener item :copyList) {
                 item.method(code, rozvrh);
             }
-            list.clear();
         }
         active.remove(week);
     }

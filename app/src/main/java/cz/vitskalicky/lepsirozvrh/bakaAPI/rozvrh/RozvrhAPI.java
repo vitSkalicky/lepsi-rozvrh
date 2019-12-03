@@ -41,6 +41,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cz.vitskalicky.lepsirozvrh.Mutable;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
@@ -350,6 +351,48 @@ public class RozvrhAPI {
         cacheNP(monday);
 
         return ret;
+    }
+
+    /**
+     * Simply get the rozvrh and calls the listener whet it has the best result. onFinishedListener may even
+     * be called immediately if requested rozvrh is in memory.
+     */
+    public void justGet(LocalDate date, RozvrhListener listener){
+        Mutable<Boolean> theOther = new Mutable<>(false);
+        Mutable<Integer> netCode = new Mutable<>(-1);
+        Mutable<Rozvrh> cacheResult = new Mutable<>(null);
+        //just to be sure
+        Mutable<Boolean> wasInMemory = new Mutable<>(false);
+        Rozvrh rozvrh = get(date, (code, rozvrh1) -> {
+            if (wasInMemory.getValue()){
+                return;
+            }
+            if (netCode.getValue() == SUCCESS){
+                return;
+            } else if (theOther.getValue()){
+                listener.method(code, rozvrh1);
+            }else{
+                cacheResult.setValue(rozvrh1);
+            }
+            theOther.setValue(true);
+        }, (code, rozvrh1) -> {
+            if (wasInMemory.getValue()){
+                return;
+            }
+            netCode.setValue(code);
+            if (code == SUCCESS){
+                listener.method(code, rozvrh1);
+            }else if (cacheResult.getValue() != null){
+                listener.method(SUCCESS, cacheResult.getValue());
+            }else if (theOther.getValue()){
+                listener.method(code, null);
+            }
+            theOther.setValue(true);
+        });
+        wasInMemory.setValue(rozvrh != null);
+        if (rozvrh != null){
+            listener.method(SUCCESS, rozvrh);
+        }
     }
 
     /**

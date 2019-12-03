@@ -25,9 +25,10 @@ import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = RozvrhTableFragment.class.getSimpleName();
-    public static final String TAG_TIMER = TAG + "-timer";
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG_TIMER = TAG + "-timer";
 
+    public static final String EXTRA_JUMP_TO_TODAY = MainActivity.class.getCanonicalName() + ".JUMP_TO_TODAY";
 
     Context context = this;
 
@@ -163,8 +164,14 @@ public class MainActivity extends AppCompatActivity {
             infoLine.setVisibility(View.GONE);
         }
 
-        rtFragment.displayWeek(week, true);
-    }
+        Intent intent = getIntent();
+        boolean jumpToToday = intent.getBooleanExtra(EXTRA_JUMP_TO_TODAY,false);
+        if (jumpToToday){
+            rtFragment.displayWeek(0, true);
+            intent.removeExtra(EXTRA_JUMP_TO_TODAY);
+        }else {
+            rtFragment.displayWeek(week, true);
+        }    }
 
     /**
      * shows/hides buttons accordingly to current state. My english is bad, but you got the point.

@@ -107,4 +107,8 @@ public class Utils {
         else
             return context.getResources().getQuantityString(R.plurals.info_weeks_back, -1 * week, -1 * week);
     }
+
+    public static interface Listener{
+        public void method();
+    }
 }

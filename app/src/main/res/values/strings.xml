@@ -55,6 +55,7 @@
     <string name="absence">Absence</string>
     <string name="topic">Topic</string>
     <string name="group">Group</string>
+    <string name="group_in_notification">group: </string>
     <string name="change">Change</string>
     <string name="lesson_name">Name</string>
     <string name="notice">Notice</string>
@@ -85,6 +86,9 @@
     <string name="copied">Copied</string>
     <string name="include_schedule">Include schedule?</string>
     <string name="include_schedule_desc">Include your schedule in the message?\n\nDefinitely choose \'yes\' if reporting a visual bug.</string>
+
+    <string name="notification_channel_name">Permanent notification</string>
+    <string name="notification_channel_desc">Shows the next lesson if enabled in the settings.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

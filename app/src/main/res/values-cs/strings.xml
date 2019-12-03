@@ -55,6 +55,7 @@
     <string name="absence">Absence</string>
     <string name="topic">Téma</string>
     <string name="group">Skupina</string>
+    <string name="group_in_notification">skupina: </string>
     <string name="change">Změna</string>
     <string name="lesson_name">Název</string>
     <string name="notice">Upozornění</string>
@@ -85,6 +86,9 @@
     <string name="copied">Zkopírováno</string>
     <string name="include_schedule">Přiložit rozvrh?</string>
     <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
+
+    <string name="notification_channel_name">Trvalé upozornění</string>
+    <string name="notification_channel_desc">Zobrazuje nadcházející hodinu, pokud zapnuto v nastavení.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

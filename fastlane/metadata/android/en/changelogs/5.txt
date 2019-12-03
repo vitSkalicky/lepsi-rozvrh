@@ -1,0 +1,2 @@
+- Optimized load on school server.
+- Increased request time-out (for very slow servers).

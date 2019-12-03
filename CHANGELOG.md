@@ -1,5 +1,15 @@
 # Seznam změn / Changelog
 
+### 1.3.1 (3. 12. 2019)
+
+- Snížena zátěž na školní server.
+- Zvýšena tolerance (hodně) pomalých severů.
+
+---
+
+- Optimized load on school server.
+- Increased request time-out (for very slow servers).
+
 ## 1.3
 
 - Při spuštění skočí rozvrh na aktuální hodinu.

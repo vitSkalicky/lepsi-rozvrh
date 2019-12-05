@@ -1,5 +1,13 @@
 # Seznam změn / Changelog
 
+### 1.3.2 (5. 12. 2019)
+
+- Opravena chyba, která způsobovala pád aplikace při zobrazování zvláštních rozvrhů.
+
+---
+
+- Fixed a bug which caused the app to crash when showing a weird schedule.
+
 ### 1.3.1 (3. 12. 2019)
 
 - Snížena zátěž na školní server.

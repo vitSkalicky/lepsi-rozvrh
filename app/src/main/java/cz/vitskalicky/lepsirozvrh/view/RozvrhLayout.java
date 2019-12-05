@@ -354,12 +354,12 @@ public class RozvrhLayout extends ViewGroup {
             nextHodinaViewCorner.hightlightEdges(false, false, false);
         }
 
-
+        
+        nextHodinaView = null;
+        nextHodinaViewRight = null;
+        nextHodinaViewBottom = null;
+        nextHodinaViewCorner = null;
         if (values == null || values.rozvrhHodina == null) {
-            nextHodinaView = null;
-            nextHodinaViewRight = null;
-            nextHodinaViewBottom = null;
-            nextHodinaViewCorner = null;
             return;
         }
 
@@ -371,15 +371,15 @@ public class RozvrhLayout extends ViewGroup {
         nextHodinaView.hightlightEdges(true, true, true);
         nextHodinaView.highlightEntire(true);
 
-        if (denIndex + 1 < hodinaViews.size()) {
+        if (denIndex + 1 < hodinaViews.size() && hodinaIndex < hodinaViews.get(denIndex + 1).size()) {
             nextHodinaViewBottom = hodinaViews.get(denIndex + 1).get(hodinaIndex);
             nextHodinaViewBottom.hightlightEdges(true, false, true);
         }
-        if (hodinaIndex + 1 < hodinaViews.get(0).size()) {
+        if (denIndex < hodinaViews.size() && hodinaIndex + 1 < hodinaViews.get(denIndex).size()) {
             nextHodinaViewRight = hodinaViews.get(denIndex).get(hodinaIndex + 1);
             nextHodinaViewRight.hightlightEdges(false, true, true);
         }
-        if (denIndex + 1 < hodinaViews.size() && hodinaIndex + 1 < hodinaViews.get(0).size()) {
+        if (denIndex + 1 < hodinaViews.size() && hodinaIndex + 1 < hodinaViews.get(denIndex + 1).size()) {
             nextHodinaViewCorner = hodinaViews.get(denIndex + 1).get(hodinaIndex + 1);
             nextHodinaViewCorner.hightlightEdges(false, false, true);
         }

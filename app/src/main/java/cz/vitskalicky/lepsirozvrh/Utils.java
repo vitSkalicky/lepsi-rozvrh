@@ -63,7 +63,7 @@ public class Utils {
     }
 
     public static LocalDate getDisplayWeekMonday(Context context) {
-        int offset = 0;
+        int offset = 2;
         if (SharedPrefs.containsPreference(context, R.string.PREFS_SWITCH_TO_NEXT_WEEK)) {
             try {
                 offset = Integer.parseInt(SharedPrefs.getString(context, context.getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK)));

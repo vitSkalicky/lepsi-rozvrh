@@ -20,7 +20,7 @@
             android:defaultValue="true"
             android:key="@string/PREFS_SHOW_INFO_LINE"/>
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="2"
             android:dialogTitle="@string/switch_to_next_week"
             android:entries="@array/switch_to_next_week_entries"
             android:entryValues="@array/switch_to_next_week_values"

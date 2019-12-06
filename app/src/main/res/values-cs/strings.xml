@@ -13,7 +13,7 @@
     <string name="bakalari_logo">Logo Bakalářů</string>
     <string name="username">Přihlašovací jméno</string>
     <string name="password">Heslo</string>
-    <string name="bakalari_server_adress">Adresa vašeho serveru Bakaláři</string>
+    <string name="bakalari_server_adress">Adresa Vašeho serveru Bakaláři</string>
     <string name="choose_school">Vybrat školu</string>
     <string name="login_button">Přihlásit se</string>
     <string name="login_message">Přihlaste se do systému Bakláři</string>
@@ -22,8 +22,8 @@
     <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
     <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
     <string name="unreachable">Server nedostupný (zkotrolujte internetové připojení a adresu serveru)</string>
-    <string name="enter_username">Zadejte vaše přihlašovací jméno</string>
-    <string name="enter_url">Zadejte adresu vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
+    <string name="enter_username">Zadejte Vaše přihlašovací jméno</string>
+    <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
     <string name="connection_failed">Připojení k serveru selhalo</string>
     <string name="intensive_operation_in_process">Probíhá náročná operace…</string>
@@ -43,11 +43,15 @@
     <string name="teacher">Učitel</string>
     <string name="parent">Rodič</string>
     <string name="logout">Odhlásit se</string>
-    <string name="look">Vzhled</string>
+    <string name="look_and_behaviour">Vzhled a chování</string>
     <string name="info_line">Informační řádek</string>
     <string name="info_line_desc">Zobrazovat informační řádek</string>
     <string name="switch_to_next_week">Přepnout na další týden</string>
     <string name="center_to_current_lesson">Skočit na aktuální hodinu</string>
+    <string name="notification">Stálé upozornění</string>
+    <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině.</string>
+    <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
+    <string name="dont_show_again">Znovu nezobrazovat</string>
 
     <string name="lesson_teacher">Vyučující</string>
     <string name="subject_name">Předmět</string>
@@ -88,7 +92,6 @@
     <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
 
     <string name="notification_channel_name">Trvalé upozornění</string>
-    <string name="notification_channel_desc">Zobrazuje nadcházející hodinu, pokud zapnuto v nastavení.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

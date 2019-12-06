@@ -43,11 +43,16 @@
     <string name="teacher">Teacher</string>
     <string name="parent">Parent</string>
     <string name="logout">Logout</string>
-    <string name="look">App look</string>
+    <string name="look_and_behaviour">App look &amp; behaviour</string>
     <string name="info_line">Info-line</string>
     <string name="info_line_desc">Show information line</string>
     <string name="switch_to_next_week">Switch to the next week</string>
     <string name="center_to_current_lesson">Center schedule to the current lesson</string>
+    <string name="notification">Persistent notification</string>
+    <string name="notification_desc">Shows a silent notification with your next lesson.</string>
+    <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
+    <string name="dont_show_again">Don\'t show again</string>
+
 
     <string name="lesson_teacher">Teacher</string>
     <string name="subject_name">Subject name</string>
@@ -88,7 +93,6 @@
     <string name="include_schedule_desc">Include your schedule in the message?\n\nDefinitely choose \'yes\' if reporting a visual bug.</string>
 
     <string name="notification_channel_name">Permanent notification</string>
-    <string name="notification_channel_desc">Shows the next lesson if enabled in the settings.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

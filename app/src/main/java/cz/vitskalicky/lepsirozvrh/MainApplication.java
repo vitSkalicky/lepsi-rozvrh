@@ -2,9 +2,11 @@ package cz.vitskalicky.lepsirozvrh;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.net.Uri;
@@ -37,21 +39,25 @@ public class MainApplication extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Register notification channel for the permanent notification
             CharSequence name = getString(R.string.notification_channel_name);
-            String description = getString(R.string.notification_channel_desc);
+            String description = getString(R.string.notification_detials);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(PermanentNotification.PERMANENT_CHANNEL_ID, name, importance);
             channel.setDescription(description);
             channel.setSound(Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.silence),new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).build());
             channel.setShowBadge(false);
             channel.setVibrationPattern(null);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
 
-        scheduleNotificationUpdate(LocalDateTime.now().plusMinutes(1));
-        PermanentNotification.update(this, AppSingleton.getInstance(this).getRozvrhAPI(), () -> {});
+        if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)){
+            enableNotification();
+        }else {
+            disableNotification();
+        }
     }
 
     /**
@@ -59,13 +65,18 @@ public class MainApplication extends Application {
      * @param triggerTime
      */
     public void scheduleNotificationUpdate(LocalDateTime triggerTime){
-        Intent intent = new Intent(this, NotiBroadcastReciever.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this.getApplicationContext(), NotiBroadcastReciever.REQUEST_CODE, intent, 0);
+        PendingIntent pendingIntent = getNotiPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),10 * 60000,  pendingIntent);
 
         Log.d(TAG, "Scheduled a notificatio upadate on " + triggerTime.toString("MM-dd HH:mm:ss"));
+    }
+
+    private static PendingIntent getNotiPendingIntent(Context context){
+        Intent intent = new Intent(context, NotiBroadcastReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), NotiBroadcastReciever.REQUEST_CODE, intent, 0);
+        return pendingIntent;
     }
 
     /**
@@ -100,6 +111,19 @@ public class MainApplication extends Application {
                 onFinished.onFinished(true);
             }
         });
+    }
+
+    public void enableNotification(){
+        SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), true);
+        RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
+        PermanentNotification.update(this, rozvrhAPI,() -> {});
+    }
+
+    public void disableNotification(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(getNotiPendingIntent(this));
+        SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), false);
+        PermanentNotification.update(null, this);
     }
 
     public static interface onFinishedListener {

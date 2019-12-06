@@ -1,11 +1,16 @@
 package cz.vitskalicky.lepsirozvrh.notification;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -14,6 +19,7 @@ import androidx.core.text.HtmlCompat;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
@@ -23,6 +29,8 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 public class PermanentNotification {
     public static final int PERMANENT_NOTIFICATION_ID = 7055713;
     public static final String PERMANENT_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".permanentNotificationChannel";
+    public static final String PREF_DONT_SHOW_INFO_DIALOG = "dont-show-notification-info-dialog-again";
+    public static final String EXTRA_NOTIFICATION = PermanentNotification.class.getCanonicalName() + "-extra-notification";
 
     /**
      * Same as {@link #update(RozvrhHodina, Context)}, but gets the RozvrhHodina for you.
@@ -30,6 +38,11 @@ public class PermanentNotification {
      */
     public static void update(MainApplication application, RozvrhAPI rozvrhAPI, Utils.Listener onFinished){
         Context context = application;
+        if (!SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)){
+            update(null, context);
+            onFinished.method();
+            return;
+        }
         rozvrhAPI.justGet(Utils.getDisplayWeekMonday(context), (code, rozvrh) -> {
             if (rozvrh != null){
                 Rozvrh.GetNLreturnValues nextLessonInfo = rozvrh.getHighlightLesson(true);
@@ -51,7 +64,7 @@ public class PermanentNotification {
     public static void update(RozvrhHodina hodina, Context context) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        if (hodina == null) {
+        if (hodina == null || !SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
             notificationManager.cancel(PERMANENT_NOTIFICATION_ID);
             return;
         }
@@ -102,6 +115,7 @@ public class PermanentNotification {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);
+        intent.putExtra(EXTRA_NOTIFICATION, true);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(intent);
 
@@ -114,6 +128,7 @@ public class PermanentNotification {
                 .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOngoing(true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent)
                 .setWhen(Long.MAX_VALUE)
                 .setShowWhen(false)
@@ -124,5 +139,21 @@ public class PermanentNotification {
 
         // notificationId is a unique int for each notification that you must
         notificationManager.notify(PERMANENT_NOTIFICATION_ID, ntf);
+    }
+
+    public static void showInfoDialog(Context context, boolean ignoreSetting){
+        if (!ignoreSetting && SharedPrefs.getBoolean(context, PREF_DONT_SHOW_INFO_DIALOG)){
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.notification);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.notification_dialog,null);
+        CheckBox checkBox = contentView.findViewById(R.id.checkBox);
+        builder.setView(contentView);
+        builder.setPositiveButton(android.R.string.yes,(dialog, which) -> {
+            SharedPrefs.setBoolean(context, PREF_DONT_SHOW_INFO_DIALOG, checkBox.isChecked());
+        });
+        builder.show();
     }
 }

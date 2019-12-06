@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -29,7 +30,7 @@ import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,6 +102,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ListPreference switchToNextWeek = findPreference(getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK));
         switchToNextWeek.setSummaryProvider(ListPreference.SimpleSummaryProvider.getInstance());
 
+        SwitchPreference notificationPreference = findPreference(getString(R.string.PREFS_NOTIFICATION));
+        notificationPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            if ((Boolean) newValue) {
+                PermanentNotification.showInfoDialog(getContext(), false);
+                ((MainApplication) getContext().getApplicationContext()).enableNotification();
+            } else {
+                ((MainApplication) getContext().getApplicationContext()).disableNotification();
+            }
+            return true;
+        });
     }
 
     public void setLogoutListener(LogoutListener listener) {
@@ -148,7 +159,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     String finCurrent = current;
                     String finPermanent = permanent;
 
-                    new Handler(Looper.getMainLooper()).post(() ->{
+                    new Handler(Looper.getMainLooper()).post(() -> {
                         String newBody = finBody;
                         newBody += "\nCurrent schedule:\n\n" + finCurrent + "\n";
                         newBody += "\nPermanent schedule:\n\n" + finPermanent + "\n";

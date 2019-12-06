@@ -21,6 +21,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 
@@ -171,7 +172,13 @@ public class MainActivity extends AppCompatActivity {
             intent.removeExtra(EXTRA_JUMP_TO_TODAY);
         }else {
             rtFragment.displayWeek(week, true);
-        }    }
+        }
+        boolean fromNotification = intent.getBooleanExtra(PermanentNotification.EXTRA_NOTIFICATION, false);
+        intent.removeExtra(PermanentNotification.EXTRA_NOTIFICATION);
+        if (fromNotification){
+            PermanentNotification.showInfoDialog(context, false);
+        }
+    }
 
     /**
      * shows/hides buttons accordingly to current state. My english is bad, but you got the point.

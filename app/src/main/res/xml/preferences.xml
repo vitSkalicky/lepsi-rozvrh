@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_logout_black_24"
             android:key="@string/PREFS_LOGOUT"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/look">
+    <PreferenceCategory android:title="@string/look_and_behaviour">
         <SwitchPreference
             android:title="@string/info_line"
             android:summary="@string/info_line_desc"
@@ -31,6 +31,12 @@
             android:defaultValue="true"
             android:icon="@drawable/ic_center_focus_weak_black_24dp"
             android:key="@string/PREFS_CENTER_TO_CURRENT_LESSON"/>
+        <SwitchPreference
+            android:title="@string/notification"
+            android:summary="@string/notification_desc"
+            android:defaultValue="true"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:key="@string/PREFS_NOTIFICATION"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/about">
         <Preference android:title="@string/source_code"

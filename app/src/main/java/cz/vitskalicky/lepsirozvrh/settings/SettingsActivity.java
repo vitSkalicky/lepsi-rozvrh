@@ -1,15 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.SharedPrefs;
-import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -39,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);

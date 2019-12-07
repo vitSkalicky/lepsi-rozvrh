@@ -14,7 +14,7 @@
             android:key="@string/PREFS_LOGOUT"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/look_and_behaviour">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:title="@string/info_line"
             android:summary="@string/info_line_desc"
             android:defaultValue="true"
@@ -26,12 +26,12 @@
             android:entryValues="@array/switch_to_next_week_values"
             android:key="@string/PREFS_SWITCH_TO_NEXT_WEEK"
             android:title="@string/switch_to_next_week"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:title="@string/center_to_current_lesson"
             android:defaultValue="true"
             android:icon="@drawable/ic_center_focus_weak_black_24dp"
             android:key="@string/PREFS_CENTER_TO_CURRENT_LESSON"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:title="@string/notification"
             android:summary="@string/notification_desc"
             android:defaultValue="true"
@@ -52,7 +52,7 @@
             android:summary="@string/feedback_desc"
             android:icon="@drawable/ic_feedback_black_24dp">
         </Preference>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="@string/PREFS_SEND_CRASH_REPORTS"
             app:title="@string/send_crash"
             android:summary="@string/send_crash_desc"

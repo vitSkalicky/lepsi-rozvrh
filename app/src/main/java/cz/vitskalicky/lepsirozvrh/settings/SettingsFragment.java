@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -102,7 +102,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ListPreference switchToNextWeek = findPreference(getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK));
         switchToNextWeek.setSummaryProvider(ListPreference.SimpleSummaryProvider.getInstance());
 
-        SwitchPreference notificationPreference = findPreference(getString(R.string.PREFS_NOTIFICATION));
+        SwitchPreferenceCompat notificationPreference = findPreference(getString(R.string.PREFS_NOTIFICATION));
         notificationPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             if ((Boolean) newValue) {
                 PermanentNotification.showInfoDialog(getContext(), false);

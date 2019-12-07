@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -41,6 +42,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.Mutable;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
@@ -470,12 +472,17 @@ public class RozvrhAPI {
             }
         }
         active.remove(week);
+
+        //if it is the current or next week, which may influence the notification update time
+        if (week != null && (week.equals(Utils.getCurrentMonday()) || week.equals(Utils.getCurrentMonday().plusWeeks(1)))){
+            addWeekLoadListener(week, notificationUpdateChecker);
+        }
     }
 
 
 
     /**
-     * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
+     * Puts a rozvrh into object's memory. Also prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
     private Rozvrh putToMemory(LocalDate date, Rozvrh item){
         lastUpdated.put(date, LocalTime.now());
@@ -598,5 +605,44 @@ public class RozvrhAPI {
             }
         }, context);
         requestQueue.add(request);
+    }
+
+    private RozvrhListener notificationUpdateChecker = new RozvrhListener() {
+        @Override
+        public void method(int code, Rozvrh rozvrh) {
+            MainApplication mainApplication = ((MainApplication)context.getApplicationContext());
+            final LocalDateTime current = mainApplication.getScheduledNotificationTime();
+            getNextNotificationUpdateTime(updateTime -> {
+                if (!current.equals(updateTime)){
+                    mainApplication.scheduleNotificationUpdate(updateTime);
+                }
+            });
+        }
+    };
+
+    public void getNextNotificationUpdateTime(TimeListener listener) {
+        justGet(Utils.getCurrentMonday(), (code, rozvrh) -> {
+            LocalDateTime updateTime = null;
+            int code1 = 0;
+            if (rozvrh != null){
+                Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
+                updateTime = values.localDateTime;
+                code1 = values.errCode;
+            }
+            if (updateTime != null){
+                listener.method(updateTime);
+            }else if (code1 == 2){
+                //old schedule -> try the next week
+                justGet(Utils.getCurrentMonday().plusWeeks(1), (code2, rozvrh1) -> {
+                    listener.method(rozvrh1 == null ? null : rozvrh1.getNextCurrentLessonChangeTime().localDateTime);
+                });
+            } else {
+                listener.method(null);
+            }
+        });
+    }
+
+    public static interface TimeListener{
+        public void method(LocalDateTime updateTime);
     }
 }

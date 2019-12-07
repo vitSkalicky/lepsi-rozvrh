@@ -12,7 +12,6 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.joda.time.LocalDateTime;
 
@@ -60,6 +59,12 @@ public class MainApplication extends Application {
         }
     }
 
+    private LocalDateTime scheduledNotificationTime = null;
+
+    public LocalDateTime getScheduledNotificationTime() {
+        return scheduledNotificationTime;
+    }
+
     /**
      * Schedules AlarmManager for notification update
      * @param triggerTime
@@ -67,9 +72,10 @@ public class MainApplication extends Application {
     public void scheduleNotificationUpdate(LocalDateTime triggerTime){
         PendingIntent pendingIntent = getNotiPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),10 * 60000,  pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),60 * 60000,  pendingIntent);
 
         Log.d(TAG, "Scheduled a notificatio upadate on " + triggerTime.toString("MM-dd HH:mm:ss"));
+        scheduledNotificationTime = triggerTime;
     }
 
     private static PendingIntent getNotiPendingIntent(Context context){
@@ -97,17 +103,16 @@ public class MainApplication extends Application {
     }
 
     /**
-     * Same as {@link #scheduleNotificationUpdate(Rozvrh)}, but gets the rozvrh fro you.
+     * Same as {@link #scheduleNotificationUpdate(Rozvrh)}, but gets the rozvrh for you.
      * @param onFinished
      */
     public void scheduleNotificationUpdate(onFinishedListener onFinished){
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
-        rozvrhAPI.justGet(Utils.getCurrentMonday(), (code, rozvrh) -> {
-            if (rozvrh == null || !scheduleNotificationUpdate(rozvrh)){
-                rozvrhAPI.justGet(Utils.getCurrentMonday().plusWeeks(1), (code1, rozvrh1) -> {
-                    onFinished.onFinished(rozvrh1 != null && scheduleNotificationUpdate(rozvrh1));
-                });
+        rozvrhAPI.getNextNotificationUpdateTime(updateTime -> {
+            if (updateTime == null){
+                onFinished.onFinished(false);
             }else {
+                scheduleNotificationUpdate(updateTime);
                 onFinished.onFinished(true);
             }
         });

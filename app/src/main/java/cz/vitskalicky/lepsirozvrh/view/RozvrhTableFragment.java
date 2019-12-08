@@ -12,11 +12,13 @@ import android.widget.TableRow;
 import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
@@ -156,6 +158,21 @@ public class RozvrhTableFragment extends Fragment {
             displayInfo.setErrorMessage(null);
             displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
             displayInfo.setLoadingState(DisplayInfo.LOADED);
+            //if it is the current or next week, which may influence the notification, update time
+            //this is very dirty, you must rewrite this when you finally get to rewrite RozvrhAPI
+            if (week != null && rozvrh != null && (week.equals(Utils.getCurrentMonday()) || week.equals(Utils.getCurrentMonday().plusWeeks(1)))){
+                MainApplication mainApplication = ((MainApplication)getContext().getApplicationContext());
+                final LocalDateTime current = mainApplication.getScheduledNotificationTime();
+                rozvrhAPI.getNextNotificationUpdateTime(updateTime -> {
+                    if (current == null){
+                        if (updateTime != null){
+                            mainApplication.scheduleNotificationUpdate(updateTime);
+                        }
+                    }else if (!current.equals(updateTime)){
+                        mainApplication.scheduleNotificationUpdate(updateTime);
+                    }
+                });
+            }
         } else {
             offline = true;
             displayInfo.setLoadingState(DisplayInfo.ERROR);

@@ -70,6 +70,9 @@ public class MainApplication extends Application {
      * @param triggerTime
      */
     public void scheduleNotificationUpdate(LocalDateTime triggerTime){
+        if (triggerTime == null){
+            triggerTime = LocalDateTime.now().plusDays(1);
+        }
         PendingIntent pendingIntent = getNotiPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),60 * 60000,  pendingIntent);

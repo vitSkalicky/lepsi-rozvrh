@@ -472,11 +472,6 @@ public class RozvrhAPI {
             }
         }
         active.remove(week);
-
-        //if it is the current or next week, which may influence the notification update time
-        if (week != null && (week.equals(Utils.getCurrentMonday()) || week.equals(Utils.getCurrentMonday().plusWeeks(1)))){
-            addWeekLoadListener(week, notificationUpdateChecker);
-        }
     }
 
 
@@ -606,19 +601,6 @@ public class RozvrhAPI {
         }, context);
         requestQueue.add(request);
     }
-
-    private RozvrhListener notificationUpdateChecker = new RozvrhListener() {
-        @Override
-        public void method(int code, Rozvrh rozvrh) {
-            MainApplication mainApplication = ((MainApplication)context.getApplicationContext());
-            final LocalDateTime current = mainApplication.getScheduledNotificationTime();
-            getNextNotificationUpdateTime(updateTime -> {
-                if (!current.equals(updateTime)){
-                    mainApplication.scheduleNotificationUpdate(updateTime);
-                }
-            });
-        }
-    };
 
     public void getNextNotificationUpdateTime(TimeListener listener) {
         justGet(Utils.getCurrentMonday(), (code, rozvrh) -> {

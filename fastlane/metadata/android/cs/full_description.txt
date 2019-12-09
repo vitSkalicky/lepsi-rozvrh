@@ -7,11 +7,11 @@ Celá aplikace je svobodný software s otevřeným zdrojovým kódem. Pokud chce
 Hlavní funkce:
 • Velmi rychlé zobrazení rozvrhu — Kombinuje offline a online data, aby se rozvrh zobrazil do vteřiny.
 • Plynulý offline režim — Lepší rozvrh si všechna načítaná data na pozadí uloží pro použití bez internetu.
+• Trvalé upozornění — Kvůli další hodině už aplikaci ani nemusíte otevírat.
 • Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny
 • Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
 
 Připravované funkce:
 • Widget
-• Trvalé upozornění, hlásící příští hodinu
 • Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
 • Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues

@@ -1,5 +1,15 @@
 # Seznam změn / Changelog
 
+### 1.4 (9.12. 2019)
+
+- Přidána funkce trvalého upozornění, díky které máte Vaši příští hodinu vždy na očích.
+- Drobné zkrášlení nastavení na starších zařízeních.
+
+---
+
+- Added a persistent notification feature, thanks to which you don't have to open the any more!
+- Slight improvement of the look of settings on older devices.
+
 ### 1.3.2 (5. 12. 2019)
 
 - Opravena chyba, která způsobovala pád aplikace při zobrazování zvláštních rozvrhů.

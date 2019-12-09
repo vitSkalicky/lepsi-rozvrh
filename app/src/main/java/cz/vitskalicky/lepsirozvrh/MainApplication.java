@@ -18,6 +18,7 @@ import org.joda.time.LocalDateTime;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
+import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
@@ -59,10 +60,14 @@ public class MainApplication extends Application {
         }
     }
 
-    private LocalDateTime scheduledNotificationTime = null;
+    private NotificationState notificationState = new NotificationState();
 
     public LocalDateTime getScheduledNotificationTime() {
-        return scheduledNotificationTime;
+        return notificationState.scheduledNotificationTime;
+    }
+
+    public NotificationState getNotificationState() {
+        return notificationState;
     }
 
     /**
@@ -78,7 +83,7 @@ public class MainApplication extends Application {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),60 * 60000,  pendingIntent);
 
         Log.d(TAG, "Scheduled a notificatio upadate on " + triggerTime.toString("MM-dd HH:mm:ss"));
-        scheduledNotificationTime = triggerTime;
+        notificationState.scheduledNotificationTime = triggerTime;
     }
 
     private static PendingIntent getNotiPendingIntent(Context context){
@@ -131,7 +136,7 @@ public class MainApplication extends Application {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(getNotiPendingIntent(this));
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), false);
-        PermanentNotification.update(null, this);
+        PermanentNotification.update(null,0, this);
     }
 
     public static interface onFinishedListener {

@@ -61,6 +61,7 @@
     <string name="topic">Topic</string>
     <string name="group">Group</string>
     <string name="group_in_notification">group: </string>
+    <string name="nothing">nothing</string>
     <string name="change">Change</string>
     <string name="lesson_name">Name</string>
     <string name="notice">Notice</string>

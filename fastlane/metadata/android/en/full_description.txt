@@ -1,13 +1,13 @@
 Better Schedule is a faster app for the Bakaláři schedule. For students, by students.
 
-I am a student who tired of waiting for the official Bakaláři app to load my schedule on our slow school wifi, so I created this app. Better schedule remembers your schedule even without internet connection therefore it can be show instantly. Simple interface makes it easy to switch between weeks and thank to widget, which is coming soon, you won't even need to open the app!
+I am a student who got tired of waiting for the official Bakaláři app to load my schedule on our slow school wifi, so I created this app. Better schedule remembers your schedule even without internet connection therefore it can be shown instantly. Simple interface makes it easy to switch between weeks and thanks to persistent notification you don't even need to open the app!
 
-The entire app is a free/libre and open source software. If you want to suggest an enhancement, have a look how it works or you can code and want to improve the app, head over to GitHub https://github.com/vitSkalicky/lepsi-rozvrh
+The entire app is a free/libre and open source software. If you want to suggest an enhancement, have a look on how it works or you can code and want to improve the app, head over to GitHub https://github.com/vitSkalicky/lepsi-rozvrh
 
 Main features:
 • Very fast schedule loading — Combines offline and online data to display schedule within a second.
 • Seamless offline mode — Everything is cached in the background so that schedule can be shown even when you are offline.
-• Persistent notification — You don't have to open the app to see the next lesson anymore.
+• Persistent notification — You don't have to open the app to see next lesson any more.
 • Simple interface — Easy switching between weeks.
 • Free and open source software — No ads, no spying, free, forever.
 

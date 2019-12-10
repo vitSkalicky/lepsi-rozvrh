@@ -46,7 +46,7 @@ because I am annoyed by the slowness of the the official app.
 
 - Very fast schedule loading — Combines offline and online data to display schedule within a second.
 - Seamless offline mode — Everything is cached in the background so that schedule can be shown even when you are offline.
-- Persistent notification — You don't have to open the app to see the next lesson anymore.
+- Persistent notification — You don't have to open the app to see next lesson any more.
 - Simple interface — Easy switching between weeks.
 - Free and open source software — No ads, no spying, free, forever.
 

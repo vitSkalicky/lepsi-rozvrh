@@ -99,6 +99,18 @@ public class PermanentNotification {
         else //skupina is not empty
             skupina = context.getString(R.string.group_in_notification) + " " + skupina;
 
+        String zacatek = hodina.getBegintime();
+        if (zacatek == null || zacatek.isEmpty())
+            zacatek = "";
+
+        String konec = hodina.getEndtime();
+        if (konec == null || konec.isEmpty())
+            konec = "";
+
+        String rozsah = zacatek + " - " + konec;
+        if (zacatek.isEmpty() || konec.isEmpty())
+            rozsah = "";
+
         CharSequence title = "";
         if (!predmet.isEmpty() && !mistnost.isEmpty()) {
             title = HtmlCompat.fromHtml(predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
@@ -107,10 +119,14 @@ public class PermanentNotification {
         }
 
         CharSequence content = "";
-        if (!ucitel.isEmpty() && !skupina.isEmpty()) {
+        if (!ucitel.isEmpty() && !skupina.isEmpty() && !rozsah.isEmpty()) {
+            content = ucitel + ", " + skupina + ", " + rozsah;
+        } else if (!ucitel.isEmpty() && !skupina.isEmpty()) {
             content = ucitel + ", " + skupina;
-        } else {
-            content = ucitel + skupina;
+        } else if (!ucitel.isEmpty() && !rozsah.isEmpty()) {
+            content = ucitel + ", " + rozsah;
+        }  else {
+            content = rozsah + ucitel + skupina;
         }
 
         Intent intent = new Intent(context, MainActivity.class);

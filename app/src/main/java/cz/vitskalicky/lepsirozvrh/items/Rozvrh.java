@@ -67,7 +67,6 @@ public class Rozvrh {
 
     private void deleteRedundantLessons() {
         //we also call fixTimes here for each day to assign begintime and endtime
-        //TODO: checking for free classes at the beginning of the day in a smart way
         for (RozvrhDen den : dny) {
             den.fixTimes(hodiny);
             List<RozvrhHodina> denHodiny = den.getHodiny();

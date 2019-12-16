@@ -36,7 +36,7 @@ public class PermanentNotification {
     public static final String EXTRA_NOTIFICATION = PermanentNotification.class.getCanonicalName() + "-extra-notification";
 
     /**
-     * Same as {@link #update(RozvrhHodina, Context)}, but gets the RozvrhHodina for you.
+     * Same as {@link #update(RozvrhHodina, int, Context)}, but gets the RozvrhHodina for you.
      * @param onFinished called when finished (Rozvrh may be fetched from the internet).
      */
     public static void update(MainApplication application, RozvrhAPI rozvrhAPI, Utils.Listener onFinished){
@@ -124,17 +124,20 @@ public class PermanentNotification {
         }
         if (offset != 0){
             offsetText = offset + ": ";
+            if (offset > 0){
+                offsetText = "+" + offsetText;
+            }
         }
 
         CharSequence title = "";
         if (!predmet.isEmpty() && !mistnost.isEmpty()) {
-            title = HtmlCompat.fromHtml(predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
+            title = HtmlCompat.fromHtml(offsetText + predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         } else {
-            title = HtmlCompat.fromHtml(predmet + "<b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
+            title = HtmlCompat.fromHtml(offsetText + predmet + "<b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         }
-        if (!offsetText.isEmpty()){
+        /*if (!offsetText.isEmpty()){
             title = offsetText + title;
-        }
+        }*/
 
         CharSequence content = "";
         if (!ucitel.isEmpty() && !skupina.isEmpty()) {
@@ -144,14 +147,16 @@ public class PermanentNotification {
         }
 
         Intent nextIntent = new Intent(context, NotiBroadcastReciever.class);
+        nextIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);
         nextIntent.putExtra(NotiBroadcastReciever.EXTRA_NEXT_PREV, 1);
         PendingIntent nextPendingIntent =
-                PendingIntent.getBroadcast(context, 0, nextIntent, 0);
+                PendingIntent.getBroadcast(context, 458631, nextIntent, 0);
 
         Intent prevIntent = new Intent(context, NotiBroadcastReciever.class);
+        prevIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);
         prevIntent.putExtra(NotiBroadcastReciever.EXTRA_NEXT_PREV, -1);
         PendingIntent prevPendingIntent =
-                PendingIntent.getBroadcast(context, 0, prevIntent, 0);
+                PendingIntent.getBroadcast(context, 4586, prevIntent,0);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);
@@ -175,8 +180,9 @@ public class PermanentNotification {
                 .setSound(Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.silence))
                 .setVibrate(new long[]{})
                 .setOnlyAlertOnce(true)
-                .addAction(R.drawable.pre,"dalsimore", nextPendingIntent)
-                .addAction(0, "predchozi more", prevPendingIntent);
+                .addAction(R.drawable.ic_navigate_before_black_24dp, context.getString(R.string.prev_lesson), prevPendingIntent)
+                .addAction(R.drawable.ic_navigate_next_black_24dp,context.getString(R.string.next_lesson), nextPendingIntent)
+                ;
         Notification ntf = builder.build();
 
         // notificationId is a unique int for each notification that you must

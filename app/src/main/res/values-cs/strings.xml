@@ -66,6 +66,9 @@
     <string name="notice">Upozornění</string>
     <string name="cycle">Cyklus</string>
 
+    <string name="next_lesson">Další hodina</string>
+    <string name="prev_lesson">Předchozí hodina</string>
+
     <string name="close">Zavřít</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>

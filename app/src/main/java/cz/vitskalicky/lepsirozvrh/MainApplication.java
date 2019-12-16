@@ -78,6 +78,9 @@ public class MainApplication extends Application {
         if (triggerTime == null){
             triggerTime = LocalDateTime.now().plusDays(1);
         }
+        if (notificationState.getOffsetResetTime() != null && triggerTime.isAfter(notificationState.getOffsetResetTime())){
+            triggerTime = notificationState.getOffsetResetTime();
+        }
         PendingIntent pendingIntent = getNotiPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),60 * 60000,  pendingIntent);

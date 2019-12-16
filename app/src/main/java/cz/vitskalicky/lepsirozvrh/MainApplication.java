@@ -53,6 +53,7 @@ public class MainApplication extends Application {
             notificationManager.createNotificationChannel(channel);
         }
 
+        notificationState = new NotificationState(this);
         if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)){
             enableNotification();
         }else {
@@ -60,7 +61,7 @@ public class MainApplication extends Application {
         }
     }
 
-    private NotificationState notificationState = new NotificationState();
+    private NotificationState notificationState = null;
 
     public LocalDateTime getScheduledNotificationTime() {
         return notificationState.scheduledNotificationTime;

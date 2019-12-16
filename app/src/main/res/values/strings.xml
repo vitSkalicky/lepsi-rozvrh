@@ -61,7 +61,6 @@
     <string name="topic">Topic</string>
     <string name="group">Group</string>
     <string name="group_in_notification">group: </string>
-    <string name="nothing">nothing</string>
     <string name="change">Change</string>
     <string name="lesson_name">Name</string>
     <string name="notice">Notice</string>
@@ -69,6 +68,8 @@
 
     <string name="next_lesson">Next lesson</string>
     <string name="prev_lesson">Previous lesson</string>
+    <string name="lesson_cancelled">Cancelled</string>
+    <string name="nothing">No lesson</string>
 
     <string name="close">Close</string>
     <string name="yes">Yes</string>

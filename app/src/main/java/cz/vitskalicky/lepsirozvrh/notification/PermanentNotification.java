@@ -92,35 +92,39 @@ public class PermanentNotification {
         if (hodina == null){
             predmet = context.getString(R.string.nothing);
         }else {
-        predmet = hodina.getPr();
-        if (predmet == null || predmet.isEmpty())
-            predmet = hodina.getZkrpr();
-        if (predmet == null || predmet.isEmpty())
-            predmet = hodina.getZkratka();
-        if (predmet == null || predmet.isEmpty())
-            predmet = hodina.getNazev();
-        if (predmet == null || predmet.isEmpty())
-            predmet = "";
+            predmet = hodina.getPr();
+            if (predmet == null || predmet.isEmpty())
+                predmet = hodina.getZkrpr();
+            if (predmet == null || predmet.isEmpty())
+                predmet = hodina.getZkratka();
+            if (predmet == null || predmet.isEmpty())
+                predmet = hodina.getNazev();
+            if (predmet == null || predmet.isEmpty())
+                predmet = "";
 
-        mistnost = hodina.getMist();
-        if (mistnost == null || mistnost.isEmpty())
-            mistnost = hodina.getZkrmist();
-        if (mistnost == null || mistnost.isEmpty())
-            mistnost = "";
+            if (predmet.isEmpty() && !hodina.getTyp().equals("H")){
+                predmet = context.getString(R.string.lesson_cancelled);
+            }
 
-        ucitel = hodina.getUc();
-        if (ucitel == null || ucitel.isEmpty())
-            ucitel = hodina.getZkruc();
-        if (ucitel == null || ucitel.isEmpty())
-            ucitel = "";
+            mistnost = hodina.getMist();
+            if (mistnost == null || mistnost.isEmpty())
+                mistnost = hodina.getZkrmist();
+            if (mistnost == null || mistnost.isEmpty())
+                mistnost = "";
 
-        skupina = hodina.getSkup();
-        if (skupina == null || skupina.isEmpty())
-            skupina = hodina.getZkrskup();
-        if (skupina == null || skupina.isEmpty())
-            skupina = "";
-        else //skupina is not empty
-            skupina = context.getString(R.string.group_in_notification) + " " + skupina;
+            ucitel = hodina.getUc();
+            if (ucitel == null || ucitel.isEmpty())
+                ucitel = hodina.getZkruc();
+            if (ucitel == null || ucitel.isEmpty())
+                ucitel = "";
+
+            skupina = hodina.getSkup();
+            if (skupina == null || skupina.isEmpty())
+                skupina = hodina.getZkrskup();
+            if (skupina == null || skupina.isEmpty())
+                skupina = "";
+            else //skupina is not empty
+                skupina = context.getString(R.string.group_in_notification) + " " + skupina;
         }
         if (offset != 0){
             offsetText = offset + ": ";
@@ -132,6 +136,8 @@ public class PermanentNotification {
         CharSequence title = "";
         if (!predmet.isEmpty() && !mistnost.isEmpty()) {
             title = HtmlCompat.fromHtml(offsetText + predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
+        } else if (predmet.isEmpty() && mistnost.isEmpty()){
+
         } else {
             title = HtmlCompat.fromHtml(offsetText + predmet + "<b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         }

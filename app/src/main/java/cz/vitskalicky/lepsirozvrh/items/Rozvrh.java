@@ -117,7 +117,7 @@ public class Rozvrh {
         int hodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
             RozvrhHodina item = dneska.getHodiny().get(i);
-            if (item.getTyp().equals("H")){
+            if (item.getTyp().equals("H") || (forNotification && !prvni)){
                 if (forNotification && prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))){//do not highlight
                     return null;
                 }

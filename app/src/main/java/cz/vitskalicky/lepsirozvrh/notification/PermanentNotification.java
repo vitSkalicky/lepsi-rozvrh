@@ -17,7 +17,10 @@ import androidx.core.app.RemoteInput;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.text.HtmlCompat;
 
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.List;
+import java.util.Locale;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
@@ -89,6 +92,7 @@ public class PermanentNotification {
         String mistnost = "";
         String ucitel = "";
         String skupina = "";
+        String cas = "";
         if (hodina == null){
             predmet = context.getString(R.string.nothing);
         }else {
@@ -102,8 +106,12 @@ public class PermanentNotification {
             if (predmet == null || predmet.isEmpty())
                 predmet = "";
 
-            if (predmet.isEmpty() && !hodina.getTyp().equals("H")){
-                predmet = context.getString(R.string.lesson_cancelled);
+            if (predmet.isEmpty()){
+                if(hodina.getHighlight() == RozvrhHodina.CHANGED){
+                    predmet = context.getString(R.string.lesson_cancelled);
+                }else if (hodina.getHighlight() != RozvrhHodina.NONE){
+                    predmet = context.getString(R.string.nothing);
+                }
             }
 
             mistnost = hodina.getMist();
@@ -125,6 +133,12 @@ public class PermanentNotification {
                 skupina = "";
             else //skupina is not empty
                 skupina = context.getString(R.string.group_in_notification) + " " + skupina;
+
+            String beginTime = hodina.getParsedBegintime() == null ? "" : hodina.getParsedBegintime().toString(DateTimeFormat.shortTime());
+            String endTime = hodina.getEndtime() == null ? "" : hodina.getParsedEndtime().toString(DateTimeFormat.shortTime());
+            if (!beginTime.isEmpty() && !endTime.isEmpty()){
+                cas = beginTime + " - " + endTime;
+            }
         }
         if (offset != 0){
             offsetText = offset + ": ";
@@ -136,9 +150,7 @@ public class PermanentNotification {
         CharSequence title = "";
         if (!predmet.isEmpty() && !mistnost.isEmpty()) {
             title = HtmlCompat.fromHtml(offsetText + predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
-        } else if (predmet.isEmpty() && mistnost.isEmpty()){
-
-        } else {
+        } else{
             title = HtmlCompat.fromHtml(offsetText + predmet + "<b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         }
         /*if (!offsetText.isEmpty()){
@@ -146,11 +158,18 @@ public class PermanentNotification {
         }*/
 
         CharSequence content = "";
+        String contentString = "";
         if (!ucitel.isEmpty() && !skupina.isEmpty()) {
-            content = ucitel + ", " + skupina;
+            contentString = ucitel + ", " + skupina;
         } else {
-            content = ucitel + skupina;
+            contentString = ucitel + skupina;
         }
+        if (!contentString.isEmpty() && !cas.isEmpty()){
+            contentString = contentString + ", " + cas;
+        }else {
+            contentString = contentString + cas;
+        }
+        content = contentString;
 
         Intent nextIntent = new Intent(context, NotiBroadcastReciever.class);
         nextIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);

@@ -80,16 +80,15 @@ public class RozvrhHodina {
     private int highlight = 0;
 
     @Commit
-    public void commit(){
+    public void commit() {
         if (chng == null) chng = "";
-        if (!chng.equals("")){
+        if (!chng.equals("")) {
             highlight = CHANGED;
-        }else if (typ.equals("A")){
+        } else if (typ.equals("A")) {
             highlight = NO_LESSON;
-        }else if (typ.equals("X")){ //sometimes, there are just empty hours with X and no change
+        } else if (typ.equals("X")) { //sometimes, there are just empty hours with X and no change
             highlight = EMPTY;
-        }
-        else {
+        } else {
             highlight = NONE;
         }
     }
@@ -100,13 +99,13 @@ public class RozvrhHodina {
         return begintime;
     }
 
-    public LocalTime getParsedBegintime(){
+    public LocalTime getParsedBegintime() {
         if (begintime == null || begintime.isEmpty())
             return null;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
-        try{
+        try {
             return formatter.parseLocalTime(begintime);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -119,13 +118,13 @@ public class RozvrhHodina {
         return endtime;
     }
 
-    public LocalTime getParsedEndtime(){
+    public LocalTime getParsedEndtime() {
         if (endtime == null || endtime.isEmpty())
             return null;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm");
-        try{
+        try {
             return formatter.parseLocalTime(endtime);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -280,5 +279,27 @@ public class RozvrhHodina {
 
     public int getHighlight() {
         return highlight;
+    }
+
+    /**
+     * {@code true} is {@code typ == "X"} and all the other fields (excluding time and caption related ones) are empty.
+     * Usually {@code true} for the empty lessons on the end of each day, if case they weren't removed already.
+     */
+    public boolean isEmpty() {
+        return typ.equals("X") &&
+                (zkrpr == null || zkrpr.isEmpty()) &&
+                (pr == null || pr.isEmpty()) &&
+                (zkruc == null || zkruc.isEmpty()) &&
+                (uc == null || uc.isEmpty()) &&
+                (zkrmist == null || zkrmist.isEmpty()) &&
+                (tema == null || tema.isEmpty()) &&
+                (zkratka == null || zkratka.isEmpty()) &&
+                (nazev == null || nazev.isEmpty()) &&
+                (zkrskup == null || zkrskup.isEmpty()) &&
+                (chng == null || chng.isEmpty()) &&
+                (mist == null || mist.isEmpty()) &&
+                (abs == null || abs.isEmpty()) &&
+                (skup == null || skup.isEmpty()) &&
+                (notice == null || notice.isEmpty());
     }
 }

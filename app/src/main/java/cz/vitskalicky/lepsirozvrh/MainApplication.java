@@ -12,8 +12,11 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.joda.time.LocalDateTime;
+
+import java.util.Random;
 
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
@@ -21,10 +24,12 @@ import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.User;
 
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -138,8 +143,26 @@ public class MainApplication extends Application {
         public void onFinished(boolean successful);
     }
 
+    /**
+     * Starts up sentry crash reporting, but only if it is an official build and crash reporting is
+     * allowed (see build.gradle).
+     */
     public void enableSentry(){
-        Sentry.init("https://d13d732d380444f5bed7487cfea65814@sentry.io/1820627", new AndroidSentryClientFactory(this));
+        /*
+         * Only enable sentry on the official release build
+         */
+        if (BuildConfig.ALLOW_SENTRY) {
+            Sentry.init("https://d13d732d380444f5bed7487cfea65814@sentry.io/1820627", new AndroidSentryClientFactory(this));
+            Sentry.getContext().addExtra("commit hash",BuildConfig.GitHash);
+
+            if (!SharedPrefs.contains(this, SharedPrefs.SENTRY_ID) || SharedPrefs.getString(this, SharedPrefs.SENTRY_ID).isEmpty()){
+                SharedPrefs.setString(this, SharedPrefs.SENTRY_ID, "android:" + Long.toHexString(new Random().nextLong()));
+            }
+            Sentry.getContext().setUser(new User(SharedPrefs.getString(this, SharedPrefs.SENTRY_ID),null, null, null));
+        }else {
+            diableSentry();
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_SEND_CRASH_REPORTS, false);
+        }
     }
 
     public void diableSentry(){

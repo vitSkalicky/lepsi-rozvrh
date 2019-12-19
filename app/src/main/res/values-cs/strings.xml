@@ -83,15 +83,18 @@
     <string name="privacy_policy">Zásady ochrany soukromí</string>
     <string name="oss_licences">Open source linence</string>
     <string name="oss_licences_desc">Zobrzit licence svobodných a open source knihoven</string>
+    <string name="app_version">Verze aplikace</string>
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
     <string name="no_email_client">Není nainstalován žádný emailový klient.</string>
     <string name="copy_address">Zkopírovat adresu</string>
-    <string name="copied">Zkopírováno</string>
+    <string name="copied_to_clipboard">Zkopírováno do schránky</string>
     <string name="include_schedule">Přiložit rozvrh?</string>
     <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
 
     <string name="notification_channel_name">Trvalé upozornění</string>
+
+    <string name="crash_reports_not_allowed">Automatické hlášení pádů je dovoleno pouze u oficiálních vydání.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

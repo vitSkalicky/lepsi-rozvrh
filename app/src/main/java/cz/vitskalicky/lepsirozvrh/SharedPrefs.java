@@ -17,6 +17,7 @@ public class SharedPrefs {
     public static final String PASSWORD_HASH = "passwordHash";
     public static final String NAME = "name";
     public static final String TYPE = "type";
+    public static final String SENTRY_ID = "sentry_id";
 
     public static final String REMEMBERED_ROWS = "remembered_rows";
     public static final String REMEMBERED_COLUMNS = "remembered_columns";
@@ -100,5 +101,17 @@ public class SharedPrefs {
 
     public static int getIntPreference(Context context, int stringId){
         return getIntPreference(context, stringId, 0);
+    }
+
+    public static void setStringPreference(Context context, int stringId, String value){
+        setString(context, context.getString(stringId), value);
+    }
+
+    public static void setIntPreference(Context context, int stringId, int value){
+        setInt(context, context.getString(stringId), value);
+    }
+
+    public static void setBooleanPreference(Context context, int stringId, boolean value){
+        setBoolean(context, context.getString(stringId), value);
     }
 }

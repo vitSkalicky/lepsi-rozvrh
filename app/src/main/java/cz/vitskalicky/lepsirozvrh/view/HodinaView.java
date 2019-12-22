@@ -7,10 +7,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.HtmlCompat;
+import androidx.core.view.LayoutInflaterCompat;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
@@ -247,9 +255,20 @@ public class HodinaView extends View {
 
     }
 
-    private void addField(StringBuilder sb, int resId, String fieldText){
+    private boolean addField(TableLayout layout, int resId, String fieldText){
         if (fieldText != null && !fieldText.trim().equals("")){
-            sb.append(getContext().getString(resId)).append(": ").append(fieldText).append("\n");
+            TableRow tr = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.lesson_details_dialog_row,null);
+            TextView tw1 = tr.findViewById(R.id.textViewKey);
+            TextView tw2 = tr.findViewById(R.id.textViewValue);
+            tw1.setText(getContext().getString(resId));
+            tw2.setText(fieldText);
+            //tw2.setMaxLines(8000);
+            //tr.addView(tw1);
+            //tr.addView(tw2,new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            layout.addView(tr, new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return true;
+        }else {
+            return false;
         }
     }
 
@@ -265,20 +284,25 @@ public class HodinaView extends View {
             builder.setTitle(hodina.getZkrpr());
         }
 
-        StringBuilder sb = new StringBuilder();
-        addField(sb,R.string.lesson_teacher, hodina.getUc());
-        addField(sb,R.string.subject_name, hodina.getPr());
-        addField(sb,R.string.lesson_name, hodina.getNazev());
-        addField(sb,R.string.room, hodina.getMist());
-        addField(sb,R.string.absence, hodina.getAbs());
-        addField(sb,R.string.topic, hodina.getTema());
-        addField(sb,R.string.room, hodina.getMist());
-        addField(sb,R.string.group, hodina.getSkup());
-        addField(sb,R.string.change, hodina.getChng());
-        addField(sb,R.string.notice, hodina.getNotice());
-        addField(sb,R.string.cycle, hodina.getCycle());
+        TableLayout tableLayout = new TableLayout(getContext());
+        tableLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        int density = (int) getContext().getResources().getDisplayMetrics().density;
+        tableLayout.setPadding(24 * density, 16* density, 24 * density, 0*density);
 
-        builder.setMessage(sb.toString());
+        addField(tableLayout,R.string.notice, hodina.getNotice());
+        addField(tableLayout,R.string.group, hodina.getSkup()); //you don't see group on the simplified tile anymore, therefore it is one of the main reasons you may want to see this dialog
+        addField(tableLayout,R.string.lesson_teacher, hodina.getUc());
+        if (!addField(tableLayout,R.string.room, hodina.getMist())){
+            addField(tableLayout, R.string.room, hodina.getZkrmist());
+        }
+        addField(tableLayout,R.string.cycle, hodina.getCycle());
+        addField(tableLayout,R.string.subject_name, hodina.getPr());
+        addField(tableLayout,R.string.lesson_name, hodina.getNazev());
+        addField(tableLayout,R.string.absence, hodina.getAbs());
+        addField(tableLayout,R.string.topic, hodina.getTema());
+        addField(tableLayout,R.string.change, hodina.getChng());
+
+        builder.setView(tableLayout);
         builder.setPositiveButton(R.string.close, (dialog, which) -> {});
 
         AlertDialog dialog = builder.create();

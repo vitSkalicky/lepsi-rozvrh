@@ -295,7 +295,9 @@ public class HodinaView extends View {
         if (!addField(tableLayout,R.string.room, hodina.getMist())){
             addField(tableLayout, R.string.room, hodina.getZkrmist());
         }
-        addField(tableLayout,R.string.cycle, hodina.getCycle());
+        if (perm){
+            addField(tableLayout,R.string.cycle, hodina.getCycle());
+        }
         addField(tableLayout,R.string.subject_name, hodina.getPr());
         addField(tableLayout,R.string.lesson_name, hodina.getNazev());
         addField(tableLayout,R.string.absence, hodina.getAbs());

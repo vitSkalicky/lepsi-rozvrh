@@ -53,18 +53,19 @@
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
 
+    <!--These are shown in the lesson details dialog-->
+    <string name="lesson_teacher">Teacher:</string>
+    <string name="subject_name">Subject name:</string>
+    <string name="room">Room:</string>
+    <string name="absence">Absence:</string>
+    <string name="topic">Topic:</string>
+    <string name="group">Group:</string>
+    <string name="change">Change:</string>
+    <string name="lesson_name">Name:</string>
+    <string name="notice">Notice:</string>
+    <string name="cycle">Cycle:</string>
 
-    <string name="lesson_teacher">Teacher</string>
-    <string name="subject_name">Subject name</string>
-    <string name="room">Room</string>
-    <string name="absence">Absence</string>
-    <string name="topic">Topic</string>
-    <string name="group">Group</string>
     <string name="group_in_notification">group: </string>
-    <string name="change">Change</string>
-    <string name="lesson_name">Name</string>
-    <string name="notice">Notice</string>
-    <string name="cycle">Cycle</string>
 
     <string name="close">Close</string>
     <string name="yes">Yes</string>

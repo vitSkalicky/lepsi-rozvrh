@@ -14,18 +14,18 @@
 
         <!-- Primary text is a lesson or day acronym or caption number (MA, Bio, Mon, 3) -->
         <attr name="textPrimaryColor"/>
-        <!-- stand-out text is a room label (no. 20, F) -->
-        <attr name="textStandOutColor"/>
+        <!-- room label (no. 20, F) -->
+        <attr name="textRoomColor"/>
         <!-- secondary text is a date, teacher, or begin time (14. 10., 8:00) -->
         <attr name="textSecondaryColor"/>
         <attr name="textPrimarySize"/>
-        <attr name="textStandOutSize" />
         <attr name="textSecondarySize" />
 
         <attr name="paddingLeft"/>
         <attr name="paddingTop" />
         <attr name="paddingRight" />
         <attr name="paddingBottom" />
+        <attr name="textPadding"/>
 
     </declare-styleable>
 
@@ -42,16 +42,16 @@
 
     <!-- Primary text is a lesson or day acronym or caption number (MA, Bio, Mon, 3) -->
     <attr name="textPrimaryColor" format="color"/>
-    <!-- stand-out text is a room label (no. 20, F) -->
-    <attr name="textStandOutColor" format="color"/>
+    <!-- room label (no. 20, F) -->
+    <attr name="textRoomColor" format="color"/>
     <!-- secondary text is a date, teacher, or begin time (14. 10., 8:00) -->
     <attr name="textSecondaryColor" format="color"/>
     <attr name="textPrimarySize"  format="dimension"/>
-    <attr name="textStandOutSize"  format="dimension"/>
     <attr name="textSecondarySize"  format="dimension"/>
 
     <attr name="paddingLeft" format="dimension"/>
     <attr name="paddingTop" format="dimension"/>
     <attr name="paddingRight" format="dimension"/>
     <attr name="paddingBottom" format="dimension"/>
+    <attr name="textPadding" format="dimension"/>
 </resources>

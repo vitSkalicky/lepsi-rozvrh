@@ -53,17 +53,19 @@
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="dont_show_again">Znovu nezobrazovat</string>
 
-    <string name="lesson_teacher">Vyučující</string>
-    <string name="subject_name">Předmět</string>
-    <string name="room">Místnost</string>
-    <string name="absence">Absence</string>
-    <string name="topic">Téma</string>
-    <string name="group">Skupina</string>
+    <!--These are shown in the lesson details dialog-->
+    <string name="lesson_teacher">Vyučující: </string>
+    <string name="subject_name">Předmět: </string>
+    <string name="room">Místnost: </string>
+    <string name="absence">Absence: </string>
+    <string name="topic">Téma: </string>
+    <string name="group">Skupina: </string>
+    <string name="change">Změna: </string>
+    <string name="lesson_name">Název: </string>
+    <string name="notice">Upozornění: </string>
+    <string name="cycle">Cyklus: </string>
+
     <string name="group_in_notification">skupina: </string>
-    <string name="change">Změna</string>
-    <string name="lesson_name">Název</string>
-    <string name="notice">Upozornění</string>
-    <string name="cycle">Cyklus</string>
 
     <string name="close">Zavřít</string>
     <string name="yes">Ano</string>

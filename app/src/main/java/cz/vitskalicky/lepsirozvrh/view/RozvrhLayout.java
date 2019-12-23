@@ -62,6 +62,7 @@ public class RozvrhLayout extends ViewGroup {
         int height = Math.max(MeasureSpec.getSize(heightMeasureSpec), getSuggestedMinimumHeight());
         int childState = 0;
 
+        childHeight = (int) Math.ceil((double) height / (rows + 1));
 
         if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
             int naturalCellWidth = getNaturalCellWidth();
@@ -76,8 +77,6 @@ public class RozvrhLayout extends ViewGroup {
                             childState << MEASURED_HEIGHT_STATE_SHIFT));
             return;
         }
-
-        childHeight = (int) Math.ceil((double) height / (rows + 1));
 
         int dayWidthMS = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
         int childHeightMS = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
@@ -157,7 +156,7 @@ public class RozvrhLayout extends ViewGroup {
 
         HodinaView view = new HodinaView(context);
 
-        int minWidth = view.measureMinWidth();
+        int minWidth = view.measurePrefferedWidth(childHeight);
         naturalCellWidth = minWidth;
         return minWidth;
     }
@@ -221,6 +220,9 @@ public class RozvrhLayout extends ViewGroup {
             Log.d(TAG, "Rozvrh structure:\n" + "null");
         }
         this.rozvrh = rozvrh;
+        if (rozvrh == null){
+            empty();
+        }
         int oldRows = rows;
         int oldColumns = columns;
         rows = rozvrh.getDny().size();

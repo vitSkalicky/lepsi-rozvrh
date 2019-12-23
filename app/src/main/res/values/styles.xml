@@ -28,9 +28,9 @@
         <item name="textSecondarySize">12sp</item>
 
         <item name="paddingLeft">2dp</item>
-        <item name="paddingTop">2dp</item>
+        <item name="paddingTop">3dp</item>
         <item name="paddingRight">2dp</item>
-        <item name="paddingBottom">2dp</item>
+        <item name="paddingBottom">3dp</item>
         <item name="textPadding">2dp</item>
     </style>
 

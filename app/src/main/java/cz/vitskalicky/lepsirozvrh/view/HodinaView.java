@@ -34,7 +34,6 @@ public class HodinaView extends View {
     private Paint backgroundPaint;
 
     private int zkrprTextHeight;
-    private int mistTextHeight;
     private int secondaryTextHeight;
     private int dividerWidth;
     private int highlightWidth;
@@ -70,8 +69,7 @@ public class HodinaView extends View {
 
         mistPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mistPaint.setColor(a.getColor(R.styleable.Rozvrh_textRoomColor, Color.BLACK));
-        mistTextHeight = a.getDimensionPixelSize(R.styleable.Rozvrh_textSecondarySize, 10);
-        mistPaint.setTextSize(mistTextHeight);
+        mistPaint.setTextSize(secondaryTextHeight);
         mistPaint.setTypeface(Typeface.DEFAULT);
         mistPaint.setTextAlign(Paint.Align.LEFT);
 
@@ -243,11 +241,23 @@ public class HodinaView extends View {
                 zkruc = "";
 
             float actualSecondaryTextHeight = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextHeight;
+            float actualZkrprTextHeight = zkrprTextHeight;
 
-            float zkrprBaseline = ((h - paddingTop - paddingBottom - dividerWidth) / 2f) + paddingTop + dividerWidth + (zkrprTextHeight / 2f);
+            if (h < measureMinHeight()){
+                float overflow = (dividerWidth + paddingTop + actualZkrprTextHeight + textPadding + actualSecondaryTextHeight + paddingBottom) - h;
+                actualZkrprTextHeight = (int) (actualZkrprTextHeight - overflow / ((actualZkrprTextHeight + actualSecondaryTextHeight) / actualZkrprTextHeight));
+                if (actualSecondaryTextHeight > 0){
+                    actualSecondaryTextHeight = (int) (actualSecondaryTextHeight - overflow / ((zkrprTextHeight + actualSecondaryTextHeight) / actualSecondaryTextHeight));
+                }
+            }
+            zkrprPaint.setTextSize(actualZkrprTextHeight);
+            secondaryPaint.setTextSize(actualSecondaryTextHeight);
+            mistPaint.setTextSize(actualSecondaryTextHeight);
+
+            float zkrprBaseline = ((h - paddingTop - paddingBottom - dividerWidth) / 2f) + paddingTop + dividerWidth + (actualZkrprTextHeight / 2f);
             float middle = ((w - dividerWidth - paddingLeft - paddingRight) / 2f) + paddingLeft + dividerWidth;
 
-            float secondaryBaseline = zkrprBaseline + textPadding + secondaryTextHeight;
+            float secondaryBaseline = zkrprBaseline + textPadding + actualSecondaryTextHeight;
             float secondaryTextWidth = secondaryPaint.measureText(zkruc + " " + zkrmist);
             float zkrucStart = middle - (secondaryTextWidth / 2f);
             float zkrmistStart = zkrucStart + secondaryPaint.measureText(zkruc + " ");
@@ -256,10 +266,10 @@ public class HodinaView extends View {
                 //do not align zkrpr to center (vertically)
                 //secondary text will be aligned to the bottom and zkrpr to the center of the remaining space
                 secondaryBaseline = h - paddingBottom;
-                zkrprBaseline = (secondaryBaseline - secondaryTextHeight - dividerWidth - paddingTop) / 2 + dividerWidth + paddingTop + (zkrprTextHeight/2f);
-                if (h < measureMinHeight()){
-                }
+                zkrprBaseline = (secondaryBaseline - actualSecondaryTextHeight - dividerWidth - paddingTop) / 2 + dividerWidth + paddingTop + (actualZkrprTextHeight/2f);
+
             }
+
 
             // zkrpr
             // align is center

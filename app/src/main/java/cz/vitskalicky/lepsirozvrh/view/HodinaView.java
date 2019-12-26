@@ -112,7 +112,7 @@ public class HodinaView extends View {
         int specHS = MeasureSpec.getSize(heightMeasureSpec);
         int specHM = MeasureSpec.getMode(heightMeasureSpec);
 
-        //todo solve the case when the specs would't be EXACTLY (currently, this will never happen)
+        //TODO: solve the case when the specs would't be EXACTLY (currently, this will never happen)
 
         int w = resolveSizeAndState(measurePrefferedWidth(specHS), widthMeasureSpec, 1);
         int h = resolveSizeAndState(measureMinHeight(), heightMeasureSpec, 1);

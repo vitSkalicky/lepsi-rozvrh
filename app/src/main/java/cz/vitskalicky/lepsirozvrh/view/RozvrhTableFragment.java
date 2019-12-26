@@ -20,11 +20,14 @@ import java.util.List;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 
 /**
@@ -51,6 +54,7 @@ public class RozvrhTableFragment extends Fragment {
     private boolean cacheSuccessful = false;
     private boolean offline = false;
     private RozvrhAPI rozvrhAPI = null;
+    private MainApplication mainApplication = null;
 
 
     public RozvrhTableFragment() {
@@ -63,6 +67,7 @@ public class RozvrhTableFragment extends Fragment {
     public void init(RozvrhAPI rozvrhAPI, DisplayInfo displayInfo) {
         this.rozvrhAPI = rozvrhAPI;
         this.displayInfo = displayInfo;
+        mainApplication = (MainApplication) getContext().getApplicationContext();
     }
 
 
@@ -158,10 +163,10 @@ public class RozvrhTableFragment extends Fragment {
             displayInfo.setErrorMessage(null);
             displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
             displayInfo.setLoadingState(DisplayInfo.LOADED);
+
             //if it is the current or next week, which may influence the notification, update time
-            //this is very dirty, you must rewrite this when you finally get to rewrite RozvrhAPI
+            //TODO: this is very dirty, you must rewrite this when you finally get to rewrite RozvrhAPI
             if (week != null && rozvrh != null && (week.equals(Utils.getCurrentMonday()) || week.equals(Utils.getCurrentMonday().plusWeeks(1)))){
-                MainApplication mainApplication = ((MainApplication)getContext().getApplicationContext());
                 final LocalDateTime current = mainApplication.getScheduledNotificationTime();
                 rozvrhAPI.getNextNotificationUpdateTime(updateTime -> {
                     if (current == null){
@@ -172,6 +177,11 @@ public class RozvrhTableFragment extends Fragment {
                         mainApplication.scheduleNotificationUpdate(updateTime);
                     }
                 });
+            }
+            //this should update the notification when the rozvrh changes
+            //TODO: and it is dirty as well.
+            if (week != null && rozvrh != null && week.equals(Utils.getDisplayWeekMonday(getContext()))){
+                PermanentNotification.update(mainApplication, rozvrhAPI, () -> {});
             }
         } else {
             offline = true;

@@ -28,6 +28,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
@@ -81,6 +82,7 @@ public class PermanentNotification {
      */
     public static void update(RozvrhHodina hodina,int offset, Context context) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        boolean isTeacher = Login.isTeacher(context);
 
         if ((hodina == null && offset == 0) || !SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
             notificationManager.cancel(PERMANENT_NOTIFICATION_ID);
@@ -131,8 +133,18 @@ public class PermanentNotification {
                 skupina = hodina.getZkrskup();
             if (skupina == null || skupina.isEmpty())
                 skupina = "";
-            else //skupina is not empty
+
+            if (isTeacher){
+                // in teacher's schedule the class name is saved in skup and zkrskup
+                // and we want to display it in the place where the teacher's name would usually be.
+                ucitel = skupina;
+                skupina = "";
+            }
+
+            if (!skupina.isEmpty()) {
                 skupina = context.getString(R.string.group_in_notification) + " " + skupina;
+            }
+
 
             String beginTime = hodina.getParsedBegintime() == null ? "" : hodina.getParsedBegintime().toString(DateTimeFormat.shortTime());
             String endTime = hodina.getEndtime() == null ? "" : hodina.getParsedEndtime().toString(DateTimeFormat.shortTime());

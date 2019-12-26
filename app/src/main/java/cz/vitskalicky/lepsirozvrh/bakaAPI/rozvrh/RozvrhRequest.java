@@ -103,7 +103,8 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
 
         String url = SharedPrefs.getString(context, SharedPrefs.URL);
         String token = Login.getToken(context);
-        String fullUrl = url + "?hx=" + token + "&pm=rozvrh&pmd=" + strDate;
+        String pm = Login.isTeacher(context) ? "ucitelrozvrh" : "rozvrh"; //to fetch teacher schedule for teachers
+        String fullUrl = url + "?hx=" + token + "&pm=" + pm + "&pmd=" + strDate;
         return fullUrl;
     }
 

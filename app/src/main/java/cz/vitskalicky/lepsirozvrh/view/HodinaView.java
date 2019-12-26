@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 
 public class HodinaView extends View {
@@ -239,6 +240,17 @@ public class HodinaView extends View {
             String zkruc = hodina.getZkruc();
             if (zkruc == null)
                 zkruc = "";
+            if (Login.isTeacher(getContext())){
+                // to teacher's we want to show the class, not the teacher
+                // the class name is saved in zkrskup and skup
+                zkruc = hodina.getZkrskup();
+                if (zkruc == null || zkruc.isEmpty()){
+                    zkruc = hodina.getSkup();
+                }
+                if (zkruc == null){
+                    zkruc = "";
+                }
+            }
 
             float actualSecondaryTextHeight = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextHeight;
             float actualZkrprTextHeight = zkrprTextHeight;

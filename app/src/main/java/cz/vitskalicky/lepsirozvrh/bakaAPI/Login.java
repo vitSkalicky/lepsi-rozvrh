@@ -267,6 +267,19 @@ public class Login {
     }
 
     /**
+     * Whether to show teacher's or students rozvrh (each is fetched and displayed slightly differently)
+     * @return {@code true} if the user logged in is a teacher or {@code false} if not (then it is a student or a parent)
+     */
+    public static boolean isTeacher(Context context){
+        String type = SharedPrefs.getString(context, SharedPrefs.TYPE);
+        if (type.equals("U")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    /**
      * Unifies school url to http(s)://xxx.school.cz/yyy/login.aspx
      *
      * https://bakalari.school.cz -> https://bakalari.school.cz/login.aspx

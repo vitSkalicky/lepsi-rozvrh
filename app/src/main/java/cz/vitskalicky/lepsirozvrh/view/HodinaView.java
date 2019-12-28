@@ -20,32 +20,19 @@ import androidx.appcompat.app.AlertDialog;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 
-public class HodinaView extends View {
+public class HodinaView extends CellView {
 
     private RozvrhHodina hodina;
     private boolean perm;
 
-    private Paint zkrprPaint;
     private Paint mistPaint;
-    private Paint secondaryPaint;
-    private Paint dividerPaint;
     private Paint highlightPaint;
     private Paint highlightedDividerPaint;
-    private Paint backgroundPaint;
 
-    private int zkrprTextHeight;
-    private int secondaryTextHeight;
-    private int dividerWidth;
     private int highlightWidth;
 
     private boolean topHighlighted, leftHighlighted, cornerHighlighted;
-    private boolean entireHighlighted; //the highlightening is thecker
-
-    private TypedArray a;
-
-    private int paddingLeft, paddingTop, paddingRight, paddingBottom, textPadding;
-
-    public float spread = 1;
+    private boolean entireHighlighted; //the highlighting is thicker
 
     public HodinaView(Context context) {
         this(context, null);
@@ -54,35 +41,11 @@ public class HodinaView extends View {
     public HodinaView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        a = context.getTheme().obtainStyledAttributes(
-                attrs,
-                R.styleable.Rozvrh,
-                0, R.style.AppTheme);
-
-
-        zkrprPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        zkrprPaint.setColor(a.getColor(R.styleable.Rozvrh_textPrimaryColor, Color.BLACK));
-        zkrprTextHeight = a.getDimensionPixelSize(R.styleable.Rozvrh_textPrimarySize, 10);
-        zkrprPaint.setTextSize(zkrprTextHeight);
-        zkrprPaint.setTypeface(Typeface.DEFAULT);
-        zkrprPaint.setTextAlign(Paint.Align.CENTER);
-
         mistPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mistPaint.setColor(a.getColor(R.styleable.Rozvrh_textRoomColor, Color.BLACK));
-        mistPaint.setTextSize(secondaryTextHeight);
+        mistPaint.setTextSize(secondaryTextSize);
         mistPaint.setTypeface(Typeface.DEFAULT);
         mistPaint.setTextAlign(Paint.Align.LEFT);
-
-        secondaryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secondaryPaint.setColor(a.getColor(R.styleable.Rozvrh_textSecondaryColor, Color.BLACK));
-        secondaryTextHeight = a.getDimensionPixelSize(R.styleable.Rozvrh_textSecondarySize, 10);
-        secondaryPaint.setTextSize(secondaryTextHeight);
-        secondaryPaint.setTypeface(Typeface.DEFAULT);
-
-        dividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        dividerPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerColor, Color.BLACK));
-        dividerWidth = a.getDimensionPixelSize(R.styleable.Rozvrh_dividerWidth, 1);
-        dividerPaint.setStrokeWidth(dividerWidth);
 
         highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         highlightPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
@@ -93,62 +56,43 @@ public class HodinaView extends View {
         highlightedDividerPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
         highlightedDividerPaint.setStrokeWidth(dividerWidth);
 
-        backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
-
-        paddingLeft = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingLeft, 2);
-        paddingTop = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingTop, 1);
-        paddingRight = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingRight, 2);
-        paddingBottom = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingBottom, 1);
-        textPadding = a.getDimensionPixelSize(R.styleable.Rozvrh_textPadding,1);
-
         setOnClickListener(v -> showDetailDialog());
+        setDrawDividers(true, true, true);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int specWS = MeasureSpec.getSize(widthMeasureSpec);
-        int specWM = MeasureSpec.getMode(widthMeasureSpec);
-        int specHS = MeasureSpec.getSize(heightMeasureSpec);
-        int specHM = MeasureSpec.getMode(heightMeasureSpec);
-
-        //TODO: solve the case when the specs would't be EXACTLY (currently, this will never happen)
-
-        int w = resolveSizeAndState(measurePrefferedWidth(specHS), widthMeasureSpec, 1);
-        int h = resolveSizeAndState(measureMinHeight(), heightMeasureSpec, 1);
-
-        setMeasuredDimension(w, h);
-    }
-
-    public int measurePrefferedWidth(int height){
-        double goldenRatio = (1 + Math.sqrt(5))/2d;
-
-        double width = Math.max(measureMinWidth(), height / goldenRatio);
-        return (int) width;
-    }
-
-    public int measureMinWidth() {
-        int zkrprText = (int) (dividerWidth + paddingLeft + zkrprPaint.measureText("MATH") + paddingRight) + 1;
-        int secondaryText = (int) (dividerWidth + paddingLeft + secondaryPaint.measureText("Tchr" + " ") + mistPaint.measureText("room 1") + paddingRight) + 1;
-        return Math.max(Math.max(zkrprText, secondaryText), getSuggestedMinimumWidth());
+    public int getMinimumWidth() {
+        return super.getMinimumWidth();
     }
 
     /**
-     * When the subject text is aligned to the center
+     * Measures what the minimal width would be for an example cell with reasonably long texts.
      */
-    public int measureMinPreferredHeight(){
-        return ((zkrprTextHeight / 2) + textPadding + secondaryTextHeight) * 2 + dividerWidth + paddingTop + paddingBottom;
+    public int measureExampleWidth(){
+        int padding = super.getMinimumWidth();
+        int primaryText = (int) primaryTextPaint.measureText("MATH") + 1;
+        int secondaryText = (int) (secondaryTextPaint.measureText("Tchr" + " ") + mistPaint.measureText("VIII.B")) + 1;
+        return padding + Math.max(primaryText, secondaryText);
     }
-
+    
     /**
      * When the texts are packed tightly together
      */
-    public int measureMinHeight() {
-        return dividerWidth + paddingTop + zkrprTextHeight + textPadding + secondaryTextHeight + paddingBottom;
+    @Override
+    public int getMinimumHeight() {
+        return super.getMinimumHeight() + primaryTextSize + textPadding + secondaryTextSize;
+    }
+    
+    /**
+     * When the subject text is aligned to the center
+     */
+    public int getMinimalComfortableHeight(){
+        return ((primaryTextSize / 2) + textPadding + secondaryTextSize) * 2 + super.getMinimumHeight();
     }
 
-
-
+    /**
+     * Updates the content
+     */
     public void update(RozvrhHodina hodina, boolean perm) {
         this.hodina = hodina;
         this.perm = perm;
@@ -182,39 +126,28 @@ public class HodinaView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        setDrawDividers(!topHighlighted, !cornerHighlighted, !leftHighlighted);
+        super.onDraw(canvas);
 
-        Paint paint;
         int w = getWidth();
         int h = getHeight();
 
-        //draw background
-        canvas.drawRect(0, 0, w, h, backgroundPaint);
-
-        //# draw dividers
+        //# draw highlighted dividers
         //left
         if (leftHighlighted || entireHighlighted) {
-            paint = highlightedDividerPaint;
-        } else {
-            paint = dividerPaint;
+            //noinspection SuspiciousNameCombination
+            canvas.drawLine((float) dividerWidth / 2, dividerWidth, (float) dividerWidth / 2, h, highlightedDividerPaint);
         }
-        //noinspection SuspiciousNameCombination
-        canvas.drawLine((float) dividerWidth / 2, dividerWidth, (float) dividerWidth / 2, h, paint);
 
         //top
         if (topHighlighted || entireHighlighted) {
-            paint = highlightedDividerPaint;
-        } else {
-            paint = dividerPaint;
+            canvas.drawLine(dividerWidth, (float) dividerWidth / 2, w, (float) dividerWidth / 2, highlightedDividerPaint);
         }
-        canvas.drawLine(dividerWidth, (float) dividerWidth / 2, w, (float) dividerWidth / 2, paint);
 
         //corner
         if (cornerHighlighted || entireHighlighted) {
-            paint = highlightedDividerPaint;
-        } else {
-            paint = dividerPaint;
+            canvas.drawPoint(dividerWidth/2f,dividerWidth/2f, highlightedDividerPaint);
         }
-        canvas.drawPoint(dividerWidth/2f,dividerWidth/2f, paint);
 
         //highlight
         if (entireHighlighted){
@@ -224,8 +157,15 @@ public class HodinaView extends View {
             canvas.drawLine(dividerWidth + (highlightWidth / 2f),h - (highlightWidth / 2f),dividerWidth + (highlightWidth / 2f), dividerWidth + (highlightWidth / 2f), highlightPaint);
         }
 
-        //# draw texts
+        
+    }
 
+    @Override
+    protected void onDrawContent(Canvas canvas, int xStart, int yStart, int xEnd, int yEnd) {
+        int h = yEnd - yStart;
+        int w = xEnd - xStart;
+        
+        //# draw texts
         if (hodina != null){
 
             String zkrpr = hodina.getZkrpr();
@@ -240,57 +180,56 @@ public class HodinaView extends View {
             if (zkruc == null)
                 zkruc = "";
 
-            float actualSecondaryTextHeight = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextHeight;
-            float actualZkrprTextHeight = zkrprTextHeight;
+            float actualSecondaryTextSize = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextSize;
+            float actualPrimaryTextSize = primaryTextSize;
 
-            if (h < measureMinHeight()){
-                float overflow = (dividerWidth + paddingTop + actualZkrprTextHeight + textPadding + actualSecondaryTextHeight + paddingBottom) - h;
-                actualZkrprTextHeight = (int) (actualZkrprTextHeight - overflow / ((actualZkrprTextHeight + actualSecondaryTextHeight) / actualZkrprTextHeight));
-                if (actualSecondaryTextHeight > 0){
-                    actualSecondaryTextHeight = (int) (actualSecondaryTextHeight - overflow / ((zkrprTextHeight + actualSecondaryTextHeight) / actualSecondaryTextHeight));
+            if (h < getMinimumHeight()){
+                float overflow = (actualPrimaryTextSize + textPadding + actualSecondaryTextSize) - h;
+                if (overflow < 0){
+                    overflow = 0;
+                }
+                actualPrimaryTextSize = actualPrimaryTextSize - overflow / ((actualPrimaryTextSize + actualSecondaryTextSize) / actualPrimaryTextSize);
+                if (actualSecondaryTextSize > 0){
+                    actualSecondaryTextSize = actualSecondaryTextSize - overflow / ((primaryTextSize + actualSecondaryTextSize) / actualSecondaryTextSize);
                 }
             }
-            zkrprPaint.setTextSize(actualZkrprTextHeight);
-            secondaryPaint.setTextSize(actualSecondaryTextHeight);
-            mistPaint.setTextSize(actualSecondaryTextHeight);
+            primaryTextPaint.setTextSize(actualPrimaryTextSize);
+            secondaryTextPaint.setTextSize(actualSecondaryTextSize);
+            mistPaint.setTextSize(actualSecondaryTextSize);
 
-            float zkrprBaseline = ((h - paddingTop - paddingBottom - dividerWidth) / 2f) + paddingTop + dividerWidth + (actualZkrprTextHeight / 2f);
-            float middle = ((w - dividerWidth - paddingLeft - paddingRight) / 2f) + paddingLeft + dividerWidth;
+            float zkrprBaseline = (h / 2f) + (actualPrimaryTextSize / 2f);
+            float middle = (w / 2f);
 
-            float secondaryBaseline = zkrprBaseline + textPadding + actualSecondaryTextHeight;
-            float secondaryTextWidth = secondaryPaint.measureText(zkruc + " " + zkrmist);
+            float secondaryBaseline = zkrprBaseline + textPadding + actualSecondaryTextSize;
+            float secondaryTextWidth = secondaryTextPaint.measureText(zkruc + " " + zkrmist);
             float zkrucStart = middle - (secondaryTextWidth / 2f);
-            float zkrmistStart = zkrucStart + secondaryPaint.measureText(zkruc + " ");
+            float zkrmistStart = zkrucStart + secondaryTextPaint.measureText(zkruc + " ");
 
-            if (h < (measureMinPreferredHeight() - (secondaryTextHeight - actualSecondaryTextHeight))){
+            if (h < (getMinimalComfortableHeight() - (secondaryTextSize - actualSecondaryTextSize))){
                 //do not align zkrpr to center (vertically)
                 //secondary text will be aligned to the bottom and zkrpr to the center of the remaining space
-                secondaryBaseline = h - paddingBottom;
-                zkrprBaseline = (secondaryBaseline - actualSecondaryTextHeight - dividerWidth - paddingTop) / 2 + dividerWidth + paddingTop + (actualZkrprTextHeight/2f);
-
+                secondaryBaseline = h;
+                zkrprBaseline = (secondaryBaseline - actualSecondaryTextSize) / 2 + (actualPrimaryTextSize/2f);
             }
 
-
             // zkrpr
-            // align is center
-            canvas.drawText(zkrpr, middle, zkrprBaseline , zkrprPaint);
+            primaryTextPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(zkrpr, middle + xStart, zkrprBaseline + yStart, primaryTextPaint);
 
             //draw secondary = teacher and room
             mistPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText(zkrmist, zkrmistStart, secondaryBaseline, mistPaint);
+            canvas.drawText(zkrmist, zkrmistStart + xStart, secondaryBaseline + yStart, mistPaint);
 
-            secondaryPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText(zkruc, zkrucStart, secondaryBaseline, secondaryPaint);
+            secondaryTextPaint.setTextAlign(Paint.Align.LEFT);
+            canvas.drawText(zkruc, zkrucStart + xStart, secondaryBaseline + yStart, secondaryTextPaint);
 
             /*// draw cycle
             if (perm && hodina.getCycle() != null && !hodina.getCycle().isEmpty()){
-                float cycleBaseline = zkrprBaseline - zkrprTextHeight - textPadding;
-                secondaryPaint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(hodina.getCycle(), middle, cycleBaseline, secondaryPaint);
+                float cycleBaseline = zkrprBaseline - primaryTextSize - textPadding;
+                secondaryTextPaint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(hodina.getCycle(), middle, cycleBaseline, secondaryTextPaint);
             }*/
         }
-
-
     }
 
     private boolean addField(TableLayout layout, int resId, String fieldText){

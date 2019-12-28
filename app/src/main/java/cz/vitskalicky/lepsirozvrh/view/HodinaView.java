@@ -34,10 +34,6 @@ public class HodinaView extends CellView {
     private boolean topHighlighted, leftHighlighted, cornerHighlighted;
     private boolean entireHighlighted; //the highlighting is thicker
 
-    public HodinaView(Context context) {
-        this(context, null);
-    }
-
     public HodinaView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -183,7 +179,7 @@ public class HodinaView extends CellView {
             float actualSecondaryTextSize = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextSize;
             float actualPrimaryTextSize = primaryTextSize;
 
-            if (h < getMinimumHeight()){
+            if (canvas.getHeight() < getMinimumHeight()){
                 float overflow = (actualPrimaryTextSize + textPadding + actualSecondaryTextSize) - h;
                 if (overflow < 0){
                     overflow = 0;
@@ -205,7 +201,7 @@ public class HodinaView extends CellView {
             float zkrucStart = middle - (secondaryTextWidth / 2f);
             float zkrmistStart = zkrucStart + secondaryTextPaint.measureText(zkruc + " ");
 
-            if (h < (getMinimalComfortableHeight() - (secondaryTextSize - actualSecondaryTextSize))){
+            if (canvas.getHeight() < (getMinimalComfortableHeight() - (secondaryTextSize - actualSecondaryTextSize))){
                 //do not align zkrpr to center (vertically)
                 //secondary text will be aligned to the bottom and zkrpr to the center of the remaining space
                 secondaryBaseline = h;

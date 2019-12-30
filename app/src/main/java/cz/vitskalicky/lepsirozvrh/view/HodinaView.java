@@ -1,14 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -58,19 +56,37 @@ public class HodinaView extends CellView {
 
     @Override
     public int getMinimumWidth() {
-        return super.getMinimumWidth();
+        if (hodina != null) {
+            String zkrpr = hodina.getZkrpr();
+            if (zkrpr == null || zkrpr.isEmpty())
+                zkrpr = hodina.getZkratka();
+            if (zkrpr == null)
+                zkrpr = "";
+            String zkrmist = hodina.getZkrmist();
+            if (zkrmist == null)
+                zkrmist = "";
+            String zkruc = hodina.getZkruc();
+            if (zkruc == null)
+                zkruc = "";
+            int padding = super.getMinimumWidth();
+            int primaryText = (int) primaryTextPaint.measureText(zkrpr) + 1;
+            int secondaryText = (int) (secondaryTextPaint.measureText(zkruc + " ") + mistPaint.measureText(zkrmist)) + 1;
+            return padding + Math.max(primaryText, secondaryText);
+        } else {
+            return super.getMinimumWidth();
+        }
     }
 
     /**
      * Measures what the minimal width would be for an example cell with reasonably long texts.
      */
-    public int measureExampleWidth(){
+    public int measureExampleWidth() {
         int padding = super.getMinimumWidth();
         int primaryText = (int) primaryTextPaint.measureText("MATH") + 1;
         int secondaryText = (int) (secondaryTextPaint.measureText("Tchr" + " ") + mistPaint.measureText("VIII.B")) + 1;
         return padding + Math.max(primaryText, secondaryText);
     }
-    
+
     /**
      * When the texts are packed tightly together
      */
@@ -78,18 +94,18 @@ public class HodinaView extends CellView {
     public int getMinimumHeight() {
         return super.getMinimumHeight() + primaryTextSize + textPadding + secondaryTextSize;
     }
-    
+
     /**
      * When the subject text is aligned to the center
      */
-    public int getMinimalComfortableHeight(){
+    public int getMinimalComfortableHeight() {
         return ((primaryTextSize / 2) + textPadding + secondaryTextSize) * 2 + super.getMinimumHeight();
     }
 
     /**
      * Updates the content
      */
-    public void update(RozvrhHodina hodina, boolean perm) {
+    public void setHodina(RozvrhHodina hodina, boolean perm) {
         this.hodina = hodina;
         this.perm = perm;
 
@@ -107,6 +123,10 @@ public class HodinaView extends CellView {
 
         invalidate();
         requestLayout();
+    }
+
+    public RozvrhHodina getHodina() {
+        return hodina;
     }
 
     public void hightlightEdges(boolean top, boolean left, boolean corner) {
@@ -142,27 +162,27 @@ public class HodinaView extends CellView {
 
         //corner
         if (cornerHighlighted || entireHighlighted) {
-            canvas.drawPoint(dividerWidth/2f,dividerWidth/2f, highlightedDividerPaint);
+            canvas.drawPoint(dividerWidth / 2f, dividerWidth / 2f, highlightedDividerPaint);
         }
 
         //highlight
-        if (entireHighlighted){
-            canvas.drawLine(dividerWidth, dividerWidth + (highlightWidth / 2f), w,dividerWidth + (highlightWidth / 2f), highlightPaint);
-            canvas.drawLine(w - (highlightWidth / 2f),dividerWidth + (highlightWidth / 2f), w - (highlightWidth / 2f), h - (highlightWidth / 2f), highlightPaint);
-            canvas.drawLine(w, h - (highlightWidth / 2f), dividerWidth,h - (highlightWidth / 2f), highlightPaint);
-            canvas.drawLine(dividerWidth + (highlightWidth / 2f),h - (highlightWidth / 2f),dividerWidth + (highlightWidth / 2f), dividerWidth + (highlightWidth / 2f), highlightPaint);
+        if (entireHighlighted) {
+            canvas.drawLine(dividerWidth, dividerWidth + (highlightWidth / 2f), w, dividerWidth + (highlightWidth / 2f), highlightPaint);
+            canvas.drawLine(w - (highlightWidth / 2f), dividerWidth + (highlightWidth / 2f), w - (highlightWidth / 2f), h - (highlightWidth / 2f), highlightPaint);
+            canvas.drawLine(w, h - (highlightWidth / 2f), dividerWidth, h - (highlightWidth / 2f), highlightPaint);
+            canvas.drawLine(dividerWidth + (highlightWidth / 2f), h - (highlightWidth / 2f), dividerWidth + (highlightWidth / 2f), dividerWidth + (highlightWidth / 2f), highlightPaint);
         }
 
-        
+
     }
 
     @Override
     protected void onDrawContent(Canvas canvas, int xStart, int yStart, int xEnd, int yEnd) {
         int h = yEnd - yStart;
         int w = xEnd - xStart;
-        
+
         //# draw texts
-        if (hodina != null){
+        if (hodina != null) {
 
             String zkrpr = hodina.getZkrpr();
             if (zkrpr == null || zkrpr.isEmpty())
@@ -179,13 +199,13 @@ public class HodinaView extends CellView {
             float actualSecondaryTextSize = (zkrmist + zkruc).isEmpty() ? 0 : secondaryTextSize;
             float actualPrimaryTextSize = primaryTextSize;
 
-            if (canvas.getHeight() < getMinimumHeight()){
+            if (canvas.getHeight() < getMinimumHeight()) {
                 float overflow = (actualPrimaryTextSize + textPadding + actualSecondaryTextSize) - h;
-                if (overflow < 0){
+                if (overflow < 0) {
                     overflow = 0;
                 }
                 actualPrimaryTextSize = actualPrimaryTextSize - overflow / ((actualPrimaryTextSize + actualSecondaryTextSize) / actualPrimaryTextSize);
-                if (actualSecondaryTextSize > 0){
+                if (actualSecondaryTextSize > 0) {
                     actualSecondaryTextSize = actualSecondaryTextSize - overflow / ((primaryTextSize + actualSecondaryTextSize) / actualSecondaryTextSize);
                 }
             }
@@ -201,11 +221,11 @@ public class HodinaView extends CellView {
             float zkrucStart = middle - (secondaryTextWidth / 2f);
             float zkrmistStart = zkrucStart + secondaryTextPaint.measureText(zkruc + " ");
 
-            if (canvas.getHeight() < (getMinimalComfortableHeight() - (secondaryTextSize - actualSecondaryTextSize))){
+            if (canvas.getHeight() < (getMinimalComfortableHeight() - (secondaryTextSize - actualSecondaryTextSize))) {
                 //do not align zkrpr to center (vertically)
                 //secondary text will be aligned to the bottom and zkrpr to the center of the remaining space
                 secondaryBaseline = h;
-                zkrprBaseline = (secondaryBaseline - actualSecondaryTextSize) / 2 + (actualPrimaryTextSize/2f);
+                zkrprBaseline = (secondaryBaseline - actualSecondaryTextSize) / 2 + (actualPrimaryTextSize / 2f);
             }
 
             // zkrpr
@@ -228,9 +248,9 @@ public class HodinaView extends CellView {
         }
     }
 
-    private boolean addField(TableLayout layout, int resId, String fieldText){
-        if (fieldText != null && !fieldText.trim().equals("")){
-            TableRow tr = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.lesson_details_dialog_row,null);
+    private boolean addField(TableLayout layout, int resId, String fieldText) {
+        if (fieldText != null && !fieldText.trim().equals("")) {
+            TableRow tr = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.lesson_details_dialog_row, null);
             TextView tw1 = tr.findViewById(R.id.textViewKey);
             TextView tw2 = tr.findViewById(R.id.textViewValue);
             tw1.setText(getContext().getString(resId));
@@ -240,46 +260,47 @@ public class HodinaView extends CellView {
             //tr.addView(tw2,new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             layout.addView(tr, new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
-    public void showDetailDialog(){
+    public void showDetailDialog() {
         if (hodina == null)
             return;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        if (hodina.getNazev() != null && !hodina.getNazev().trim().equals("")){
+        if (hodina.getNazev() != null && !hodina.getNazev().trim().equals("")) {
             builder.setTitle(hodina.getNazev());
-        }else if (hodina.getPr() != null && !hodina.getPr().trim().equals("")){
+        } else if (hodina.getPr() != null && !hodina.getPr().trim().equals("")) {
             builder.setTitle(hodina.getPr());
-        }else if (hodina.getZkrpr() != null && !hodina.getZkrpr().trim().equals("")){
+        } else if (hodina.getZkrpr() != null && !hodina.getZkrpr().trim().equals("")) {
             builder.setTitle(hodina.getZkrpr());
         }
 
         TableLayout tableLayout = new TableLayout(getContext());
         tableLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         int density = (int) getContext().getResources().getDisplayMetrics().density;
-        tableLayout.setPadding(24 * density, 16* density, 24 * density, 0);
+        tableLayout.setPadding(24 * density, 16 * density, 24 * density, 0);
 
-        addField(tableLayout,R.string.notice, hodina.getNotice());
-        if (perm){
-            addField(tableLayout,R.string.cycle, hodina.getCycle());
+        addField(tableLayout, R.string.notice, hodina.getNotice());
+        if (perm) {
+            addField(tableLayout, R.string.cycle, hodina.getCycle());
         }
-        addField(tableLayout,R.string.group, hodina.getSkup()); //you don't see group on the simplified tile anymore, therefore it is one of the main reasons you may want to see this dialog
-        addField(tableLayout,R.string.lesson_teacher, hodina.getUc());
-        if (!addField(tableLayout,R.string.room, hodina.getMist())){
+        addField(tableLayout, R.string.group, hodina.getSkup()); //you don't see group on the simplified tile anymore, therefore it is one of the main reasons you may want to see this dialog
+        addField(tableLayout, R.string.lesson_teacher, hodina.getUc());
+        if (!addField(tableLayout, R.string.room, hodina.getMist())) {
             addField(tableLayout, R.string.room, hodina.getZkrmist());
         }
 
-        addField(tableLayout,R.string.subject_name, hodina.getPr());
-        addField(tableLayout,R.string.lesson_name, hodina.getNazev());
-        addField(tableLayout,R.string.absence, hodina.getAbs());
-        addField(tableLayout,R.string.topic, hodina.getTema());
-        addField(tableLayout,R.string.change, hodina.getChng());
+        addField(tableLayout, R.string.subject_name, hodina.getPr());
+        addField(tableLayout, R.string.lesson_name, hodina.getNazev());
+        addField(tableLayout, R.string.absence, hodina.getAbs());
+        addField(tableLayout, R.string.topic, hodina.getTema());
+        addField(tableLayout, R.string.change, hodina.getChng());
 
         builder.setView(tableLayout);
-        builder.setPositiveButton(R.string.close, (dialog, which) -> {});
+        builder.setPositiveButton(R.string.close, (dialog, which) -> {
+        });
 
         AlertDialog dialog = builder.create();
         dialog.show();

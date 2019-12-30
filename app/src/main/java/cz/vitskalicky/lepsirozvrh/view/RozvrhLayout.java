@@ -66,11 +66,17 @@ public class RozvrhLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = Math.max(MeasureSpec.getSize(widthMeasureSpec), getSuggestedMinimumWidth()) + 1;
-        int height = Math.max(MeasureSpec.getSize(heightMeasureSpec), getSuggestedMinimumHeight());
+        final int specWS = MeasureSpec.getSize(widthMeasureSpec);
+        final int specWM = MeasureSpec.getMode(widthMeasureSpec);
+        final int specHS = MeasureSpec.getSize(heightMeasureSpec);
+        final int specHM = MeasureSpec.getMode(heightMeasureSpec);
+
+        int width = specWS;
+        int height = specHS;
+
         int childState = 0;
 
-        childHeight = (int) Math.ceil((double) height / (rows + 1));
+        childHeight = (int) Math.ceil((double) specHS / (rows + 1));
         int naturalCellWidth = getNaturalCellWidth();
 
         //calculate width of every column
@@ -96,17 +102,18 @@ public class RozvrhLayout extends ViewGroup {
             prefferedWidth += columnSize;
         }
 
-        if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED || (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST && prefferedWidth <= width)){
+        if (specWM == MeasureSpec.UNSPECIFIED || (specWM == MeasureSpec.AT_MOST && prefferedWidth <= specWS)){
             width = prefferedWidth;
         }else {
-            float widthRatio = width / prefferedWidth;
+            float widthRatio = specWS / (float)(prefferedWidth);
             for (int i = 0; i < columnSizes.length; i++) {
-                columnSizes[i] *= widthRatio;
+                columnSizes[i] = (int) Math.floor(columnSizes[i] * widthRatio);
             }
+            width = specWS;
         }
         if (rows == 0 || columns == 0) {
             setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec, childState),
-                    resolveSizeAndState(height, heightMeasureSpec,
+                    resolveSizeAndState(specHS, heightMeasureSpec,
                             childState << MEASURED_HEIGHT_STATE_SHIFT));
             return;
         }
@@ -136,16 +143,9 @@ public class RozvrhLayout extends ViewGroup {
                 }
             }
         }
-        /*for (List<HodinaView> list : hodinaViews) {
-            for (HodinaView item : list) {
-                int hodinaWidthMS = MeasureSpec.makeMeasureSpec((int) (childWidth * item.spread), MeasureSpec.EXACTLY);
-                measureChild(item, hodinaWidthMS, childHeightMS);
-                childState = combineMeasuredStates(childState, item.getMeasuredState());
-            }
-        }*/
 
         setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec, childState),
-                resolveSizeAndState(height, heightMeasureSpec,
+                resolveSizeAndState(specHS, heightMeasureSpec,
                         childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
 
@@ -164,7 +164,12 @@ public class RozvrhLayout extends ViewGroup {
         int prevColumnEnd = l + columnSizes[0];
         for (int i = 0; i < captionViews.length; i++) {
             int thisColumnEnd = prevColumnEnd + columnSizes[i + 1];
-            captionViews[i].layout(prevColumnEnd, t, thisColumnEnd, t + childHeight);
+            if (i == columns - 1){
+                //the last one
+                captionViews[i].layout(prevColumnEnd, t, r, t + childHeight);
+            }else {
+                captionViews[i].layout(prevColumnEnd, t, thisColumnEnd, t + childHeight);
+            }
             prevColumnEnd = thisColumnEnd;
         }
         prevColumnEnd = l + columnSizes[0];
@@ -181,7 +186,12 @@ public class RozvrhLayout extends ViewGroup {
                 List<HodinaView> views = hodinasByCaptions[i][j];
                 for (int k = 0; k < views.size(); k++) {
                     HodinaView item = views.get(k);
-                    item.layout(lastCellEnd, t + childHeight + (j* childHeight), lastCellEnd + cellWidth,t + childHeight + (j + 1)*childHeight);
+                    if (i == columns - 1){
+                        //the last one
+                        item.layout(lastCellEnd, t + childHeight + (j * childHeight), r, t + childHeight + (j + 1) * childHeight);
+                    }else {
+                        item.layout(lastCellEnd, t + childHeight + (j * childHeight), lastCellEnd + cellWidth, t + childHeight + (j + 1) * childHeight);
+                    }
                     lastCellEnd = lastCellEnd + cellWidth;
                 }
             }

@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 
 public class DenView extends CellView {
@@ -20,6 +22,7 @@ public class DenView extends CellView {
     public DenView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDrawDividers(true, true, false);
+        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundHeader, Color.BLUE));
     }
 
     @Override

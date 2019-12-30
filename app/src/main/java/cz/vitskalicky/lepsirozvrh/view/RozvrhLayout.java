@@ -32,10 +32,9 @@ public class RozvrhLayout extends ViewGroup {
     private int rows = 0; //only actual lessons - add 1 to calculate with captions as well
     private int columns = 0; //only actual lessons - add 1 to calculate with day cells as well
 
-    private int childWidth;
     private int childHeight;
 
-    private CornerCell cornerCell;
+    private CornerView cornerView;
     private DenView[] denViews = new DenView[0];
     private CaptionView[] captionViews = new CaptionView[0];
 
@@ -114,9 +113,9 @@ public class RozvrhLayout extends ViewGroup {
 
         int childHeightMS = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
 
-        if (cornerCell != null) {
-            measureChild(cornerCell.getView(), MeasureSpec.makeMeasureSpec(columnSizes[0], MeasureSpec.EXACTLY), childHeightMS);
-            childState = combineMeasuredStates(childState, cornerCell.view.getMeasuredState());
+        if (cornerView != null) {
+            measureChild(cornerView, MeasureSpec.makeMeasureSpec(columnSizes[0], MeasureSpec.EXACTLY), childHeightMS);
+            childState = combineMeasuredStates(childState, cornerView.getMeasuredState());
         }
         for (DenView item : denViews) {
             measureChild(item, MeasureSpec.makeMeasureSpec(columnSizes[0], MeasureSpec.EXACTLY), childHeightMS);
@@ -156,8 +155,8 @@ public class RozvrhLayout extends ViewGroup {
             return;
         }
 
-        if (cornerCell != null) {
-            cornerCell.getView().layout(l, t, l + columnSizes[0], t + childHeight);
+        if (cornerView != null) {
+            cornerView.layout(l, t, l + columnSizes[0], t + childHeight);
         }
         for (int i = 0; i < denViews.length; i++) {
             denViews[i].layout(l, t + ((i + 1) * childHeight), l + columnSizes[0], t + ((i + 2) * childHeight));
@@ -222,7 +221,7 @@ public class RozvrhLayout extends ViewGroup {
             }
         }
 
-        if (denViews.length == rows && captionViews.length == columns && hodinasByCaptions.length == columns && (hodinasByCaptions.length == 0 || hodinasByCaptions[0].length == rows) && cornerCell != null) {
+        if (denViews.length == rows && captionViews.length == columns && hodinasByCaptions.length == columns && (hodinasByCaptions.length == 0 || hodinasByCaptions[0].length == rows) && cornerView != null) {
             //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
 
             return;
@@ -241,10 +240,10 @@ public class RozvrhLayout extends ViewGroup {
         }
 
 
-        if (cornerCell == null) {
-            cornerCell = new CornerCell(context, this);
+        if (cornerView == null) {
+            cornerView = new CornerView(context, null);
         }
-        addView(cornerCell.getView());
+        addView(cornerView);
 
         for (int i = 0; i < columns; i++) {
             CaptionView item = new CaptionView(context, null);
@@ -286,7 +285,7 @@ public class RozvrhLayout extends ViewGroup {
         RozvrhAPI.rememberColumns(context, columns);
 
         //populate
-        cornerCell.update(rozvrh);
+        cornerView.setText(rozvrh.getNazevcyklu());
         for (int i = 0; i < columns; i++) {
             CaptionView item = captionViews[i];
             if (item == null) {
@@ -439,7 +438,7 @@ public class RozvrhLayout extends ViewGroup {
                     RozvrhLayout.this.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     if (nextHodinaView != null) {
                         int parentWidth = hsvParent.getWidth();
-                        hsvParent.smoothScrollTo(((int) nextHodinaView.getX()) - parentWidth / 2 + childWidth / 2, 0);
+                        hsvParent.smoothScrollTo(((int) nextHodinaView.getX()) - parentWidth / 2 + nextHodinaView.getWidth() / 2, 0);
                     }
                 }
             });
@@ -484,7 +483,7 @@ public class RozvrhLayout extends ViewGroup {
         createViews();
 
         //populate
-        cornerCell.empty();
+        cornerView.setText("");
         for (int i = 0; i < columns; i++) {
             CaptionView item = captionViews[i];
             if (item == null) {

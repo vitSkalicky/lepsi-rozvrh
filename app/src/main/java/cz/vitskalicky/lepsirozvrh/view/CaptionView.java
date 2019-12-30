@@ -2,11 +2,14 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
+import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodinaCaption;
 
 public class CaptionView extends CellView {
@@ -18,6 +21,7 @@ public class CaptionView extends CellView {
     public CaptionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDrawDividers(false, true, true);
+        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundHeader, Color.BLUE));
     }
 
     public RozvrhHodinaCaption getCaption() {
@@ -66,9 +70,9 @@ public class CaptionView extends CellView {
         float endTimeLenght = secondaryTextPaint.measureText(endTime);
         if (Math.max(startTimeLenght, endTimeLenght) > h){
             if (startTimeLenght > endTimeLenght){
-                actualSecondaryTextSize = (int) (startTimeLenght / (startTimeLenght / h));
+                actualSecondaryTextSize = (int) (actualSecondaryTextSize / (startTimeLenght / h));
             }else{
-                actualSecondaryTextSize = (int) (endTimeLenght / (endTimeLenght / h));
+                actualSecondaryTextSize = (int) (actualSecondaryTextSize / (endTimeLenght / h));
             }
         }
         primaryTextPaint.setTextSize(actualPrimaryTextSize);
@@ -77,13 +81,17 @@ public class CaptionView extends CellView {
         primaryTextPaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(captionText, w/2f, (h + actualPrimaryTextSize)/2f, primaryTextPaint);
 
-        canvas.save();
+        //canvas.save();
 
         canvas.rotate(-90);
 
-        //TODO: finish this
-        canvas.drawText(startTime, 0,30, secondaryTextPaint);
+        Rect startTimeBounds = new Rect();
+        secondaryTextPaint.getTextBounds(startTime, 0, startTime.length(), startTimeBounds);
+        canvas.drawText(startTime, (yEnd)* -1,startTimeBounds.height() + yStart, secondaryTextPaint);
+        canvas.drawText(endTime, (yEnd) * -1,xEnd, secondaryTextPaint);
 
-        canvas.restore();
+        canvas.rotate(90);
+
+        //canvas.restore();
     }
 }

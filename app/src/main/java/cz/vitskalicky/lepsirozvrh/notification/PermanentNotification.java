@@ -161,7 +161,7 @@ public class PermanentNotification {
 
         CharSequence title = "";
         if (!predmet.isEmpty() && !mistnost.isEmpty()) {
-            title = HtmlCompat.fromHtml(offsetText + predmet + " - <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
+            title = HtmlCompat.fromHtml(offsetText + predmet + " " + context.getString(R.string.in) + " <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         } else{
             title = HtmlCompat.fromHtml(offsetText + predmet + "<b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT);
         }

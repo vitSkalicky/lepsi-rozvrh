@@ -69,6 +69,17 @@ public class HodinaView extends CellView {
             String zkruc = hodina.getZkruc();
             if (zkruc == null)
                 zkruc = "";
+            if (Login.isTeacher(getContext())){
+                // to teacher's we want to show the class, not the teacher
+                // the class name is saved in zkrskup and skup
+                zkruc = hodina.getZkrskup();
+                if (zkruc == null || zkruc.isEmpty()){
+                    zkruc = hodina.getSkup();
+                }
+                if (zkruc == null){
+                    zkruc = "";
+                }
+            }
             int padding = super.getMinimumWidth();
             int primaryText = (int) primaryTextPaint.measureText(zkrpr) + 1;
             int secondaryText = (int) (secondaryTextPaint.measureText(zkruc + " ") + mistPaint.measureText(zkrmist)) + 1;

@@ -16,10 +16,10 @@
         <item name="backgroundEmpty">#00FFFFFF</item>
         <item name="backgroundHeader">#CFD8DC</item>
 
-        <item name="dividerColor">@color/dividerColorDefault</item>
-        <item name="dividerWidth">@dimen/dividerWidth</item>
+        <item name="dividerColor">#607D8B</item>
+        <item name="dividerWidth">1dp</item>
         <item name="dividerHighlightColor">#f9a825</item>
-        <item name="dividerHighlightWidth">@dimen/dividerHighlightWidth</item>
+        <item name="dividerHighlightWidth">2dp</item>
 
         <item name="textPrimaryColor">#000000</item>
         <item name="textRoomColor">#000000</item>

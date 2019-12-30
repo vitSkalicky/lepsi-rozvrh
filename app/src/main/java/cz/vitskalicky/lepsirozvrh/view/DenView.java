@@ -7,6 +7,9 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 
 public class DenView extends CellView {
@@ -81,8 +84,13 @@ public class DenView extends CellView {
     public void setRozvrhDen(RozvrhDen rozvrhDen) {
         this.rozvrhDen = rozvrhDen;
         if (rozvrhDen != null){
-            denText = rozvrhDen.getDay();
-            datumText = rozvrhDen.getDatum();
+            denText = rozvrhDen.getZkratka();
+            if (rozvrhDen.getDatum() == null){
+                datumText = "";
+            }else{
+                DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");
+                datumText = dtf.print(rozvrhDen.getParsedDatum());
+            }
         }else {
             denText = "";
             datumText = "";

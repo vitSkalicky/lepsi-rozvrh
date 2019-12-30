@@ -17,6 +17,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -123,7 +124,11 @@ public class Login {
 
                         Element root1 = doc1.getDocumentElement();
                         root1.normalize();
-                        int result = Integer.parseInt(doc1.getElementsByTagName("result").item(0).getTextContent());
+                        Node resultNode = doc1.getElementsByTagName("result").item(0);
+                        int result = 0;
+                        if (resultNode != null){
+                            result = Integer.parseInt(resultNode.getTextContent());
+                        }
 
                         if (result == -1) {
                             //password incorrect

@@ -139,7 +139,7 @@ public class Login {
                             //password correct (hopefully)
 
                             String modules = doc1.getElementsByTagName("moduly").item(0).getTextContent();
-                            if (!modules.contains("rozvrh")){
+                            if (!(modules.contains("rozvrh") || modules.contains("ucitelrozvrh"))){
                                 // Rozvrh module not enabled
                                 Log.i(TAG, "Login failed: rozvrh not enabled - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
                                 listener.onResponse(ROZVRH_DISABLED,response1);

@@ -26,7 +26,7 @@
     <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
     <string name="connection_failed">Připojení k serveru selhalo</string>
-    <string name="intensive_operation_in_process">Probíhá náročná operace…</string>
+    <string name="loading_schools_info">Načítání informací o školách…</string>
 
     <string name="info_last_week">Minulý týden</string>
     <string name="info_this_week">Tento týden</string>

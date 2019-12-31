@@ -1,0 +1,7 @@
+Verze 1.5 přináší několik nových funkcí a také hromadu vylepšení a oprav, zvláště pro učitele a uživatele tabletů.
+
+- Učitelům se v rozvrhu místo jejich vlastního jména zobrazuje název třídy.
+- Do trvalého upozornění byly přidány tlačítka na rychlé listování mezi hodinami.
+- Výrazně zlepšeno vykreslování rozvrhu, zvláště na tabletech či velmi malých obrazovkách. Už žádné překrývající se nápisy či bílé pruhy napravo od rozvrhu.
+- Upraveno rozložení nápisů, aby byl rozvrh přehlednější.
+- A několik dalších drobných vylepšení či oprav...

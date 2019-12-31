@@ -16,6 +16,7 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
@@ -103,7 +104,8 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
 
         String url = SharedPrefs.getString(context, SharedPrefs.URL);
         String token = Login.getToken(context);
-        String fullUrl = url + "?hx=" + token + "&pm=rozvrh&pmd=" + strDate;
+        String pm = Login.isTeacher(context) ? "ucitelrozvrh" : "rozvrh"; //to fetch teacher schedule for teachers
+        String fullUrl = url + "?hx=" + token + "&pm=" + pm + "&pmd=" + strDate;
         return fullUrl;
     }
 
@@ -121,8 +123,11 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
             Element root = document.getDocumentElement();
             root.normalize();
 
-            int result = Integer.parseInt(root.getElementsByTagName("result").item(0).getTextContent());
-
+            Node resultNode = root.getElementsByTagName("result").item(0);
+            int result = 0;
+            if (resultNode != null){
+                result = Integer.parseInt(resultNode.getTextContent());
+            }
             if (result == -1) {// Login incorrect
                 Log.i(TAG, "Getting timetable failed: login incorrect: url: " + getUrl() + " Date: " + monday + " response:\n" + responseString);
                 //turns into an error in #deliverResponse

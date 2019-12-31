@@ -12,19 +12,25 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.joda.time.LocalDateTime;
+
+import java.util.Random;
 
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
+import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.User;
 
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,6 +58,7 @@ public class MainApplication extends Application {
             notificationManager.createNotificationChannel(channel);
         }
 
+        notificationState = new NotificationState(this);
         if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)){
             enableNotification();
         }else {
@@ -59,10 +66,14 @@ public class MainApplication extends Application {
         }
     }
 
-    private LocalDateTime scheduledNotificationTime = null;
+    private NotificationState notificationState = null;
 
     public LocalDateTime getScheduledNotificationTime() {
-        return scheduledNotificationTime;
+        return notificationState.scheduledNotificationTime;
+    }
+
+    public NotificationState getNotificationState() {
+        return notificationState;
     }
 
     /**
@@ -73,12 +84,15 @@ public class MainApplication extends Application {
         if (triggerTime == null){
             triggerTime = LocalDateTime.now().plusDays(1);
         }
+        if (notificationState.getOffsetResetTime() != null && triggerTime.isAfter(notificationState.getOffsetResetTime())){
+            triggerTime = notificationState.getOffsetResetTime();
+        }
         PendingIntent pendingIntent = getNotiPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(),60 * 60000,  pendingIntent);
 
         Log.d(TAG, "Scheduled a notificatio upadate on " + triggerTime.toString("MM-dd HH:mm:ss"));
-        scheduledNotificationTime = triggerTime;
+        notificationState.scheduledNotificationTime = triggerTime;
     }
 
     private static PendingIntent getNotiPendingIntent(Context context){
@@ -131,15 +145,33 @@ public class MainApplication extends Application {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(getNotiPendingIntent(this));
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), false);
-        PermanentNotification.update(null, this);
+        PermanentNotification.update(null,0, this);
     }
 
     public static interface onFinishedListener {
         public void onFinished(boolean successful);
     }
 
+    /**
+     * Starts up sentry crash reporting, but only if it is an official build and crash reporting is
+     * allowed (see build.gradle).
+     */
     public void enableSentry(){
-        Sentry.init("https://d13d732d380444f5bed7487cfea65814@sentry.io/1820627", new AndroidSentryClientFactory(this));
+        /*
+         * Only enable sentry on the official release build
+         */
+        if (BuildConfig.ALLOW_SENTRY) {
+            Sentry.init("https://d13d732d380444f5bed7487cfea65814@sentry.io/1820627", new AndroidSentryClientFactory(this));
+            Sentry.getContext().addExtra("commit hash",BuildConfig.GitHash);
+
+            if (!SharedPrefs.contains(this, SharedPrefs.SENTRY_ID) || SharedPrefs.getString(this, SharedPrefs.SENTRY_ID).isEmpty()){
+                SharedPrefs.setString(this, SharedPrefs.SENTRY_ID, "android:" + Long.toHexString(new Random().nextLong()));
+            }
+            Sentry.getContext().setUser(new User(SharedPrefs.getString(this, SharedPrefs.SENTRY_ID),null, null, null));
+        }else {
+            diableSentry();
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_SEND_CRASH_REPORTS, false);
+        }
     }
 
     public void diableSentry(){

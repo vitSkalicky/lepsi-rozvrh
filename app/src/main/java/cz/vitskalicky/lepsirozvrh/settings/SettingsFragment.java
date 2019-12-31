@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -25,12 +26,15 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
+import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import io.sentry.Sentry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,17 +58,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
-        findPreference(getString(R.string.PREFS_SEND_CRASH_REPORTS)).setOnPreferenceChangeListener((preference, newValue) -> {
-            if (newValue instanceof Boolean && getActivity() != null) {
-                boolean value = (boolean) newValue;
-                if (value) {
-                    ((MainApplication) getActivity().getApplication()).enableSentry();
-                } else {
-                    ((MainApplication) getActivity().getApplication()).diableSentry();
+        SwitchPreferenceCompat sendCrashReportsPreference = findPreference(getString(R.string.PREFS_SEND_CRASH_REPORTS));
+        //Crash reports are allowed on official release builds only. (see build.gradle)
+        if (BuildConfig.ALLOW_SENTRY){
+            sendCrashReportsPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (newValue instanceof Boolean && getActivity() != null) {
+                    boolean value = (boolean) newValue;
+                    if (value) {
+                        ((MainApplication) getActivity().getApplication()).enableSentry();
+                    } else {
+                        ((MainApplication) getActivity().getApplication()).diableSentry();
+                    }
                 }
-            }
-            return true;
-        });
+                return true;
+            });
+            sendCrashReportsPreference.setVisible(true);
+        }else {
+            sendCrashReportsPreference.setVisible(false);
+        }
 
         findPreference(getString(R.string.PREFS_SEND_FEEDBACK)).setOnPreferenceClickListener(preference -> {
             AlertDialog ad = new AlertDialog.Builder(getContext())
@@ -112,6 +123,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
             return true;
         });
+
+        Preference appVersionPreference = findPreference(getString(R.string.PREFS_APP_VERSION));
+        String versionText = BuildConfig.BUILD_TYPE + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.GitHash + ")";
+        appVersionPreference.setSummary(versionText);
+        appVersionPreference.setOnPreferenceClickListener(preference -> {
+            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(versionText, versionText);
+            clipboard.setPrimaryClip(clip);
+            Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+            return true;
+        });
     }
 
     public void setLogoutListener(LogoutListener listener) {
@@ -127,8 +149,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         try {
             body = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
             body = "\n\n-----------------------------\n" + getContext().getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
-                    Build.VERSION.RELEASE + "\n App Version: " + body + "\n Device Brand: " + Build.BRAND +
+                    Build.VERSION.RELEASE + "\n App Version: " + body + "\n Commit hash: " + BuildConfig.GitHash + "Build type: " + BuildConfig.BUILD_TYPE + "\n Device Brand: " + Build.BRAND +
                     "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
+            if (Sentry.getContext() != null && Sentry.getContext().getUser() != null){
+                body += "\n Sentry client id: " + Sentry.getStoredClient().getContext().getUser().getId();
+            }else {
+                body += "\n Sentry client id not available";
+            }
+            body += "\n Sentry enabled: " + SharedPrefs.getBooleanPreference(getContext(), R.string.PREFS_SEND_CRASH_REPORTS);
             final String finBody = body;
             if (includeRozvrh) {
                 new Thread(() -> {
@@ -179,7 +207,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newPlainText(address, address);
                                 clipboard.setPrimaryClip(clip);
-                                Snackbar.make(getView(), R.string.copied, Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                             });
                             snackbar.show();
                         }
@@ -202,12 +230,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText(address, address);
                         clipboard.setPrimaryClip(clip);
-                        Snackbar.make(getView(), R.string.copied, Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                     });
                     snackbar.show();
                 }
             }
-        } catch (PackageManager.NameNotFoundException | NullPointerException e) {
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(getContext(),"!",Toast.LENGTH_SHORT).show();
         }
     }
 }

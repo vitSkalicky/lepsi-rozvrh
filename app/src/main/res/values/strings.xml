@@ -25,7 +25,7 @@
     <string name="enter_url">Enter url of your Bakaláři server or tap \'choose school\'</string>
     <string name="search">Search…</string>
     <string name="connection_failed">Could not connect to server</string>
-    <string name="intensive_operation_in_process">Intensive operation in process…</string>
+    <string name="loading_schools_info">Loading schools info…</string>
 
     <!-- Info messages -->
     <string name="info_last_week">Last week</string>
@@ -53,18 +53,25 @@
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
 
+    <!--These are shown in the lesson details dialog-->
+    <string name="lesson_teacher">Teacher:</string>
+    <string name="subject_name">Subject name:</string>
+    <string name="room">Room:</string>
+    <string name="absence">Absence:</string>
+    <string name="topic">Topic:</string>
+    <string name="group">Group:</string>
+    <string name="change">Change:</string>
+    <string name="lesson_name">Name:</string>
+    <string name="notice">Notice:</string>
+    <string name="cycle">Cycle:</string>
 
-    <string name="lesson_teacher">Teacher</string>
-    <string name="subject_name">Subject name</string>
-    <string name="room">Room</string>
-    <string name="absence">Absence</string>
-    <string name="topic">Topic</string>
-    <string name="group">Group</string>
     <string name="group_in_notification">group: </string>
-    <string name="change">Change</string>
-    <string name="lesson_name">Name</string>
-    <string name="notice">Notice</string>
-    <string name="cycle">Cycle</string>
+    <string name="in">in</string>
+
+    <string name="next_lesson">Next lesson</string>
+    <string name="prev_lesson">Previous lesson</string>
+    <string name="lesson_cancelled">Cancelled</string>
+    <string name="nothing">No lesson</string>
 
     <string name="close">Close</string>
     <string name="yes">Yes</string>
@@ -84,15 +91,18 @@
     <string name="privacy_policy">Privacy policy</string>
     <string name="oss_licences">Open source licences</string>
     <string name="oss_licences_desc">Show licences of free/libre and open source libraries</string>
+    <string name="app_version">App version</string>
     <string name="email_message">These are information about installation of this app. Please don\'t remove them - they are essential for troubleshooting your problem.</string>
     <string name="send_email">Send email…</string>
     <string name="no_email_client">There are no email clients installed.</string>
     <string name="copy_address">Copy address</string>
-    <string name="copied">Copied</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="include_schedule">Include schedule?</string>
     <string name="include_schedule_desc">Include your schedule in the message?\n\nDefinitely choose \'yes\' if reporting a visual bug.</string>
 
     <string name="notification_channel_name">Permanent notification</string>
+
+    <string name="crash_reports_not_allowed">Automatic crash reports are allowed only on official release builds.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

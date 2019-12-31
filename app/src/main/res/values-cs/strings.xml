@@ -26,7 +26,7 @@
     <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
     <string name="connection_failed">Připojení k serveru selhalo</string>
-    <string name="intensive_operation_in_process">Probíhá náročná operace…</string>
+    <string name="loading_schools_info">Načítání informací o školách…</string>
 
     <string name="info_last_week">Minulý týden</string>
     <string name="info_this_week">Tento týden</string>
@@ -53,17 +53,25 @@
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="dont_show_again">Znovu nezobrazovat</string>
 
-    <string name="lesson_teacher">Vyučující</string>
-    <string name="subject_name">Předmět</string>
-    <string name="room">Místnost</string>
-    <string name="absence">Absence</string>
-    <string name="topic">Téma</string>
-    <string name="group">Skupina</string>
+    <!--These are shown in the lesson details dialog-->
+    <string name="lesson_teacher">Vyučující: </string>
+    <string name="subject_name">Předmět: </string>
+    <string name="room">Místnost: </string>
+    <string name="absence">Absence: </string>
+    <string name="topic">Téma: </string>
+    <string name="group">Skupina: </string>
+    <string name="change">Změna: </string>
+    <string name="lesson_name">Název: </string>
+    <string name="notice">Upozornění: </string>
+    <string name="cycle">Cyklus: </string>
+
     <string name="group_in_notification">skupina: </string>
-    <string name="change">Změna</string>
-    <string name="lesson_name">Název</string>
-    <string name="notice">Upozornění</string>
-    <string name="cycle">Cyklus</string>
+    <string name="in">v</string>
+
+    <string name="next_lesson">Další hodina</string>
+    <string name="prev_lesson">Předchozí hodina</string>
+    <string name="lesson_cancelled">Zrušeno</string>
+    <string name="nothing">Žádná hodina</string>
 
     <string name="close">Zavřít</string>
     <string name="yes">Ano</string>
@@ -83,15 +91,18 @@
     <string name="privacy_policy">Zásady ochrany soukromí</string>
     <string name="oss_licences">Open source linence</string>
     <string name="oss_licences_desc">Zobrzit licence svobodných a open source knihoven</string>
+    <string name="app_version">Verze aplikace</string>
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
     <string name="no_email_client">Není nainstalován žádný emailový klient.</string>
     <string name="copy_address">Zkopírovat adresu</string>
-    <string name="copied">Zkopírováno</string>
+    <string name="copied_to_clipboard">Zkopírováno do schránky</string>
     <string name="include_schedule">Přiložit rozvrh?</string>
     <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
 
     <string name="notification_channel_name">Trvalé upozornění</string>
+
+    <string name="crash_reports_not_allowed">Automatické hlášení pádů je dovoleno pouze u oficiálních vydání.</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

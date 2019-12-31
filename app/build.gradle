@@ -2,19 +2,44 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
 
 android {
+    def getGitHash = { ->
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "cz.vitskalicky.lepsirozvrh"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.4"
+        versionCode 8
+        versionName "1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "GitHash", "\"${getGitHash()}\""
+        /**
+         * Whether to allow automatic crash reporting using Sentry (managed by Vít Skalický).
+         * Allow only for official release builds.
+         */
+        buildConfigField "Boolean", "ALLOW_SENTRY", "false"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+        }
+        /**
+         * For official releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
+         * Crashes from your testing are not welcome there.
+         */
+        releaseOfficial {
+            initWith release
+            buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }
     }
     compileOptions {
@@ -27,6 +52,7 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+
 }
 
 dependencies {
@@ -47,12 +73,12 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:1.7.29'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
-    def room_version = "2.2.1"
+    def room_version = "2.2.3"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    def paging_version = "2.1.0"
+    def paging_version = "2.1.1"
 
     implementation "androidx.paging:paging-runtime:$paging_version"
 }

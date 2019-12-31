@@ -17,6 +17,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -123,7 +124,11 @@ public class Login {
 
                         Element root1 = doc1.getDocumentElement();
                         root1.normalize();
-                        int result = Integer.parseInt(doc1.getElementsByTagName("result").item(0).getTextContent());
+                        Node resultNode = doc1.getElementsByTagName("result").item(0);
+                        int result = 0;
+                        if (resultNode != null){
+                            result = Integer.parseInt(resultNode.getTextContent());
+                        }
 
                         if (result == -1) {
                             //password incorrect
@@ -134,7 +139,7 @@ public class Login {
                             //password correct (hopefully)
 
                             String modules = doc1.getElementsByTagName("moduly").item(0).getTextContent();
-                            if (!modules.contains("rozvrh")){
+                            if (!(modules.contains("rozvrh") || modules.contains("ucitelrozvrh"))){
                                 // Rozvrh module not enabled
                                 Log.i(TAG, "Login failed: rozvrh not enabled - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
                                 listener.onResponse(ROZVRH_DISABLED,response1);
@@ -264,6 +269,19 @@ public class Login {
      */
     public static String calculatePasswordHash(String salt, String ikod, String typ, String password){
         return sha512(salt + ikod + typ + password);
+    }
+
+    /**
+     * Whether to show teacher's or students rozvrh (each is fetched and displayed slightly differently)
+     * @return {@code true} if the user logged in is a teacher or {@code false} if not (then it is a student or a parent)
+     */
+    public static boolean isTeacher(Context context){
+        String type = SharedPrefs.getString(context, SharedPrefs.TYPE);
+        if (type.equals("U")){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     /**

@@ -1,0 +1,7 @@
+Version 1.5 brings several new features and plenty of tweaks and fixes, especially for teachers and tablet users.
+
+- Teachers now see the class name instead of their own name in the schedule.
+- The permanent notification has buttons to browse through the following or past lessons.
+- Massively improved rendering of the schedule, mainly on tablets and small screens. No more white stripes on the right of the schedule or texts overlapping.
+- Improved cell layout to make the schedule less cluttered.
+- And many small tweaks and bug fixes...

@@ -3,10 +3,6 @@
     <color name="colorPrimary">#f9a825</color>
     <color name="colorPrimaryDark">#c17900</color>
     <color name="colorAccent">#455a64</color>
-    <color name="rozvrhHeader">#CFD8DC</color>
     <color name="colorError">#B00020</color>
 
-    <!-- lower APIs don't support ?attr/ this is temporally solution until I reimplement the caption and den cell as custom views -->
-    <!-- Made temporal on 19. 10. 2019 - count how temporal it is in your time. https://xkcd.com/1421/-->
-    <color name="dividerColorDefault">#607D8B</color>
 </resources>

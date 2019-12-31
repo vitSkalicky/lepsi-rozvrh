@@ -16,22 +16,22 @@
         <item name="backgroundEmpty">#00FFFFFF</item>
         <item name="backgroundHeader">#CFD8DC</item>
 
-        <item name="dividerColor">@color/dividerColorDefault</item>
-        <item name="dividerWidth">@dimen/dividerWidth</item>
+        <item name="dividerColor">#607D8B</item>
+        <item name="dividerWidth">1dp</item>
         <item name="dividerHighlightColor">#f9a825</item>
-        <item name="dividerHighlightWidth">@dimen/dividerHighlightWidth</item>
+        <item name="dividerHighlightWidth">2dp</item>
 
         <item name="textPrimaryColor">#000000</item>
-        <item name="textStandOutColor">#000000</item>
+        <item name="textRoomColor">#000000</item>
         <item name="textSecondaryColor">#607D8B</item>
         <item name="textPrimarySize">18sp</item>
-        <item name="textStandOutSize">12sp</item>
         <item name="textSecondarySize">12sp</item>
 
-        <item name="paddingLeft">2dp</item>
-        <item name="paddingTop">2dp</item>
-        <item name="paddingRight">2dp</item>
-        <item name="paddingBottom">4dp</item>
+        <item name="paddingLeft">3dp</item>
+        <item name="paddingTop">3dp</item>
+        <item name="paddingRight">3dp</item>
+        <item name="paddingBottom">3dp</item>
+        <item name="textPadding">2dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

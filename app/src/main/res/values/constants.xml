@@ -9,6 +9,7 @@
     <string name="PREFS_NOTIFICATION" translatable="false">prefs-notification</string>
     <string name="PREFS_SEND_FEEDBACK" translatable="false">prefs-send-feedback</string>
     <string name="PREFS_SEND_CRASH_REPORTS" translatable="false">prefs-send-crash-reports</string>
+    <string name="PREFS_APP_VERSION" translatable="false">prefs-app-version</string>
     <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>

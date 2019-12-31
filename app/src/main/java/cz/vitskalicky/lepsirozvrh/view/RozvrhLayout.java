@@ -24,6 +24,7 @@ public class RozvrhLayout extends ViewGroup {
     public static final String TAG = RozvrhLayout.class.getSimpleName();
 
     private int naturalCellWidth = -1;
+    private int childHeightWhenCalculatingNaturalCellWidth = -1;
 
     private Context context;
     private Rozvrh rozvrh;
@@ -203,7 +204,7 @@ public class RozvrhLayout extends ViewGroup {
      * Creates a cell with reasonably long data and calculates its minimum width
      */
     private int getNaturalCellWidth() {
-        if (naturalCellWidth != -1) {
+        if (naturalCellWidth != -1 && childHeightWhenCalculatingNaturalCellWidth == childHeight) {
             return naturalCellWidth;
         }
 
@@ -211,6 +212,7 @@ public class RozvrhLayout extends ViewGroup {
 
         int minWidth = Math.max(view.measureExampleWidth(), CellView.goldenRectangle(childHeight));
         naturalCellWidth = minWidth;
+        childHeightWhenCalculatingNaturalCellWidth = childHeight;
         return minWidth;
     }
 

@@ -145,6 +145,10 @@ public class CellView extends View {
         int w = getWidth();
         int h = getHeight();
 
+        if (w == 0 || h == 0){
+            return;
+        }
+
         //draw background
         canvas.drawRect(0, 0, w, h, backgroundPaint);
 
@@ -162,7 +166,13 @@ public class CellView extends View {
         if (drawDividerCorner)
             canvas.drawPoint(dividerWidth/2f,dividerWidth/2f, dividerPaint);
 
-        onDrawContent(canvas, dividerWidth + paddingLeft, dividerWidth + paddingTop, w - paddingRight, h - paddingBottom);
+        int xStart = dividerWidth + paddingLeft;
+        int yStart = dividerWidth + paddingTop;
+        //make sure the size is not negative
+        int xEnd = Math.max(w - paddingRight, xStart);
+        int yEnd = Math.max(h - paddingBottom, yStart);
+
+        onDrawContent(canvas, xStart,yStart ,xEnd ,yEnd );
     }
 
     /**

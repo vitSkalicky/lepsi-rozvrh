@@ -88,6 +88,9 @@ public class DenView extends CellView {
         this.rozvrhDen = rozvrhDen;
         if (rozvrhDen != null){
             denText = rozvrhDen.getZkratka();
+            if (denText == null){
+                denText = "";
+            }
             if (rozvrhDen.getDatum() == null){
                 datumText = "";
             }else{

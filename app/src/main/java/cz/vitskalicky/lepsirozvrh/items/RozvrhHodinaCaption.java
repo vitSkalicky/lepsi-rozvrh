@@ -15,13 +15,13 @@ public class RozvrhHodinaCaption {
     }
 
     @Element(required = false)
-    private String caption;
+    private String caption = "";
 
     @Element(required = false)
-    private String begintime;
+    private String begintime = "";
 
     @Element(required = false)
-    private String endtime;
+    private String endtime = "";
 
     public String getCaption() {
         return caption;
@@ -35,5 +35,17 @@ public class RozvrhHodinaCaption {
 
     public String getTimeString(){
         return getBegintime() + " - " + getEndtime();
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setBegintime(String begintime) {
+        this.begintime = begintime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
     }
 }

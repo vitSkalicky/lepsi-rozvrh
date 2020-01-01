@@ -183,6 +183,11 @@ public class PermanentNotification {
         }
         content = contentString;
 
+        CharSequence expanded = content;
+        if (!mistnost.isEmpty()){
+            expanded = expanded + ", " + context.getString(R.string.room) + ": " + mistnost;
+        }
+
         Intent nextIntent = new Intent(context, NotiBroadcastReciever.class);
         nextIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);
         nextIntent.putExtra(NotiBroadcastReciever.EXTRA_NEXT_PREV, 1);
@@ -217,6 +222,8 @@ public class PermanentNotification {
                 .setSound(Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.silence))
                 .setVibrate(new long[]{})
                 .setOnlyAlertOnce(true)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expanded))
                 .addAction(R.drawable.ic_navigate_before_black_24dp, context.getString(R.string.prev_lesson), prevPendingIntent)
                 .addAction(R.drawable.ic_navigate_next_black_24dp,context.getString(R.string.next_lesson), nextPendingIntent)
                 ;

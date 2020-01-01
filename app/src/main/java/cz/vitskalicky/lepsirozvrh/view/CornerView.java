@@ -30,7 +30,11 @@ public class CornerView extends CellView {
     }
 
     public void setText(String text) {
+        if (text == null){
+            text = "";
+        }
         this.text = text;
+
         invalidate();
         requestLayout();
     }

@@ -22,55 +22,55 @@ public class RozvrhHodina {
     private String endtime = "";
 
     @Element(required = false)
-    private String typ;
+    private String typ = "";
 
     @Element(required = false)
-    private String zkrpr;
+    private String zkrpr = "";
 
     @Element(required = false)
-    private String pr;
+    private String pr = "";
 
     @Element(required = false)
-    private String zkruc;
+    private String zkruc = "";
 
     @Element(required = false)
-    private String uc;
+    private String uc = "";
 
     @Element(required = false)
-    private String zkrmist;
+    private String zkrmist = "";
 
     @Element(required = false)
-    private String tema;
+    private String tema = "";
 
     @Element(required = false)
-    private String caption;
+    private String caption = "";
 
     @Element(required = false)
-    private String zkratka;
+    private String zkratka = "";
 
     @Element(required = false)
-    private String nazev;
+    private String nazev = "";
 
     @Element(required = false)
-    private String zkrskup;
+    private String zkrskup = "";
 
     @Element(required = false)
-    private String chng;
+    private String chng = "";
 
     @Element(required = false)
-    private String cycle;
+    private String cycle = "";
 
     @Element(required = false)
-    private String mist;
+    private String mist = "";
 
     @Element(required = false)
-    private String abs;
+    private String abs = "";
 
     @Element(required = false)
-    private String skup;
+    private String skup = "";
 
     @Element(required = false)
-    private String notice;
+    private String notice = "";
 
     public static final int NONE = 0;
     public static final int CHANGED = 1;

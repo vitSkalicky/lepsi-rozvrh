@@ -187,7 +187,7 @@ public class RozvrhLayout extends ViewGroup {
                 List<HodinaView> views = hodinasByCaptions[i][j];
                 for (int k = 0; k < views.size(); k++) {
                     HodinaView item = views.get(k);
-                    if (i == columns - 1){
+                    if (i == columns - 1 && k == views.size() - 1){
                         //the last one
                         item.layout(lastCellEnd, t + childHeight + (j * childHeight), r, t + childHeight + (j + 1) * childHeight);
                     }else {
@@ -323,12 +323,6 @@ public class RozvrhLayout extends ViewGroup {
             int j = 0;
             for (; j < den.getHodiny().size(); j++) {
                 RozvrhHodina item = den.getHodiny().get(j);
-
-                if (captionIndex >= columns) {
-                    Log.w(TAG, "Schedule is having more lessons than there are captions");
-                    Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Schedule is having more lessons than there are captions").build());
-                    captionIndex = columns - 1;
-                }
 
                 HodinaView view = hodinaViewRecycler.retrieve();
                 view.setHodina(item, perm);

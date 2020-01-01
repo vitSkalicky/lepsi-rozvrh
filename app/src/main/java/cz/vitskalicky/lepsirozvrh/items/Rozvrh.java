@@ -14,6 +14,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Commit;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -26,19 +27,19 @@ public class Rozvrh {
     }
 
     @Element(required = false)
-    private String typ;
+    private String typ = "";
 
     @ElementList(required = false)
-    private List<RozvrhHodinaCaption> hodiny;
+    private List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
 
     @ElementList(required = false)
-    private List<RozvrhDen> dny;
+    private List<RozvrhDen> dny = new LinkedList<>();
 
     @Element(required = false)
-    private String nazevcyklu;
+    private String nazevcyklu = "";
 
     @Element(required = false)
-    private String zkratkacyklu;
+    private String zkratkacyklu = "";
 
     @Commit
     private void onCommit() {
@@ -51,7 +52,7 @@ public class Rozvrh {
         ListIterator<RozvrhDen> iteratorDen = dny.listIterator(0);
         while (iteratorDen.hasNext()) {
             RozvrhDen den = iteratorDen.next();
-            if (den.getHodiny() == null)
+            if (den.getHodiny().isEmpty())
                 iteratorDen.remove();
         }
     }
@@ -60,7 +61,7 @@ public class Rozvrh {
         ListIterator<RozvrhHodinaCaption> iteratorCaption = hodiny.listIterator(0);
         while (iteratorCaption.hasNext()) {
             RozvrhHodinaCaption caption = iteratorCaption.next();
-            if (caption.getBegintime() == null || caption.getEndtime() == null)
+            if (caption.getBegintime().isEmpty() || caption.getEndtime().isEmpty())
                 iteratorCaption.remove();
         }
     }

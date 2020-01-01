@@ -15,13 +15,13 @@ public class RozvrhHodinaCaption {
     }
 
     @Element(required = false)
-    private String caption;
+    private String caption = "";
 
     @Element(required = false)
-    private String begintime;
+    private String begintime = "";
 
     @Element(required = false)
-    private String endtime;
+    private String endtime = "";
 
     public String getCaption() {
         return caption;

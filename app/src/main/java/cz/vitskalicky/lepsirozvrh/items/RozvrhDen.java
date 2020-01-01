@@ -13,6 +13,7 @@ import org.simpleframework.xml.Root;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -27,13 +28,13 @@ public class RozvrhDen {
     }
 
     @Element(required = false)
-    private String zkratka;
+    private String zkratka = "";
 
     @Element(required = false)
-    private String datum;
+    private String datum = "";
 
     @ElementList(required = false)
-    private List<RozvrhHodina> hodiny;
+    private List<RozvrhHodina> hodiny = new LinkedList<>();
 
     public String getZkratka() {
         return zkratka;

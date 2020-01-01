@@ -1,5 +1,15 @@
 # Seznam změn / Changelog
 
+## 1.5.1 (1. 12. 2019)
+
+- Opravy chyb
+- Tolerance opravdu divných rozvrhů, ve kterých hodiny "vylézají" z nadepsaných bloků.
+
+---
+
+- bug fixes
+- Very weird schedules with lessons "outside of" captions are tolerated.
+
 ## 1.5 (31. 12. 2019)
 
 Verze 1.5 přináší několik nových funkcí a také hromadu vylepšení a oprav, zvláště pro učitele a uživatele tabletů.

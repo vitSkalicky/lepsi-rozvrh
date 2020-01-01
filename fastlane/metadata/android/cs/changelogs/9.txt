@@ -1,0 +1,2 @@
+- Opravy chyb
+- Tolerance opravdu divných rozvrhů, ve kterých hodiny "vylézají" z nadepsaných bloků.

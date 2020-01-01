@@ -36,4 +36,16 @@ public class RozvrhHodinaCaption {
     public String getTimeString(){
         return getBegintime() + " - " + getEndtime();
     }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public void setBegintime(String begintime) {
+        this.begintime = begintime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
+    }
 }

@@ -324,12 +324,6 @@ public class RozvrhLayout extends ViewGroup {
             for (; j < den.getHodiny().size(); j++) {
                 RozvrhHodina item = den.getHodiny().get(j);
 
-                if (captionIndex >= columns) {
-                    Log.w(TAG, "Schedule is having more lessons than there are captions");
-                    Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Schedule is having more lessons than there are captions").build());
-                    captionIndex = columns - 1;
-                }
-
                 HodinaView view = hodinaViewRecycler.retrieve();
                 view.setHodina(item, perm);
                 addView(view);

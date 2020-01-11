@@ -43,7 +43,8 @@ public class RozvrhLoader {
         if (list == null){
             return;
         }
-        for (RozvrhRequest.Listener item :list) {
+        List<RozvrhRequest.Listener> copy = new LinkedList<>(list);
+        for (RozvrhRequest.Listener item :copy) {
             item.method(result);
         }
         list.clear(); //Don't forget to delete them

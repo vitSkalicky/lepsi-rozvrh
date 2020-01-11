@@ -20,19 +20,20 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 
-import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
+import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.NO_CACHE;
+import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.SUCCESS;
 
 /**
  * This class is responsible for fetching, parsing and caching schedule (CZ: rozvrh).
- *
+ * <p>
  * All downloaded schedules are immediately cached (a.k.a. File storage). This cached date is then loaded
  * when internet connection is not available and also while loading the 'live' data to show schedule
  * to user as soon as possible.
- *
+ * <p>
  * When data is loaded from cache or network, it is stored in a private field in object's memory
  * (a.k.a. Memory). From now on, when showing these data again (user switched to different week and
  * then returns) loading is instant.
- *
+ * <p>
  * Cache data older than month should be deleted every time the app exits. This has to be handled
  * by an activity or something else by calling {@link RozvrhCache#clearOldCache(Context)} on exit.
  */
@@ -81,11 +82,12 @@ public class RozvrhAPI {
      * <b>NOTE: source = {@link RozvrhWrapper#SOURCE_NET}, rozvrh != null, but the
      * code != {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} means that rozvrh
      * could not be fetched from server, so the attached one is from cache.</b>
+     *
      * @param monday Monday identifying week.
      */
-    public LiveData<RozvrhWrapper> getLiveData(LocalDate monday){
+    public LiveData<RozvrhWrapper> getLiveData(LocalDate monday) {
         MutableLiveData<RozvrhWrapper> ld = liveDatas.get(monday);
-        if (ld == null){
+        if (ld == null) {
             ld = new MutableLiveData<RozvrhWrapper>();
             liveDatas.put(monday, ld);
         }
@@ -95,23 +97,24 @@ public class RozvrhAPI {
         //update live data
         Rozvrh rozvrh = getFromMemory(monday);
         // if the rozvrh is already in memory, don't fetch anything from net
-        if (rozvrh == null){
+        if (rozvrh == null) {
             final Mutable<Boolean> netFinishedSucessfully = new Mutable<>(false);
             getFromCacheAndSave(monday, rozvrhWrapper -> {
-                if (!netFinishedSucessfully.getValue()){
+                if (!netFinishedSucessfully.getValue()) {
                     fld.setValue(rozvrhWrapper);
                 }
             });
             getFromNetAndSave(monday, rozvrhWrapper -> {
-                if (rozvrhWrapper.getCode() == SUCCESS){
+                if (rozvrhWrapper.getCode() == SUCCESS) {
                     fld.setValue(rozvrhWrapper);
                     netFinishedSucessfully.setValue(true);
-                }else {
+                } else {
                     Rozvrh prevRozvrh = fld.getValue() == null ? null : fld.getValue().getRozvrh();
                     fld.setValue(new RozvrhWrapper(prevRozvrh, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
                 }
             });
-        }else {
+            fld.setValue(new RozvrhWrapper(null, NO_CACHE, RozvrhWrapper.SOURCE_MEMORY));
+        } else {
             fld.setValue(new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
 
@@ -120,69 +123,79 @@ public class RozvrhAPI {
         return fld;
     }
 
-    private void getFromCacheAndSave(LocalDate monday, RozvrhListener listener){
+    private void getFromCacheAndSave(LocalDate monday, RozvrhListener listener) {
         RozvrhCache.loadRozvrh(monday, rozvrhWrapper -> {
             // cache is always 'righter' than memory
             putToMemory(monday, rozvrhWrapper.getRozvrh());
+            updateLiveData(monday, rozvrhWrapper);
             listener.method(rozvrhWrapper);
-        },context);
+        }, context);
     }
 
     /**
      * saves the fetched rozvrh to cache and memory
      */
-    private void getFromNetAndSave(LocalDate monday, RozvrhListener listener){
+    private void getFromNetAndSave(LocalDate monday, RozvrhListener listener) {
         rozvrhLoader.loadRozvrh(monday, result -> {
-            if (result.code == SUCCESS){
+            RozvrhWrapper rw = new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET);
+            if (result.code == SUCCESS) {
                 RozvrhCache.saveRawRozvrh(monday, result.raw, context);
                 putToMemory(monday, result.rozvrh);
+                updateLiveData(monday, rw);
             }
-            listener.method(new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
+            listener.method(rw);
         });
+    }
+
+    private void updateLiveData(LocalDate monday, RozvrhWrapper rw) {
+        MutableLiveData<RozvrhWrapper> ld = liveDatas.get(monday);
+        if (ld != null) {
+            ld.setValue(rw);
+        }
     }
 
     /**
      * Simply get the rozvrh and calls the listener whet it has the best result. onFinishedListener may even
      * be called immediately if requested rozvrh is in memory.
      */
-    public void getRozvrh(LocalDate monday, RozvrhListener listener){
+    public void getRozvrh(LocalDate monday, RozvrhListener listener) {
         Mutable<Boolean> theOther = new Mutable<>(false);
         Mutable<Integer> netCode = new Mutable<>(-1);
         Mutable<RozvrhWrapper> cacheResult = new Mutable<>(null);
         //just to be sure
         Mutable<Boolean> wasInMemory = new Mutable<>(false);
         Rozvrh rozvrh = getFromMemory(monday);
-        if (rozvrh == null){
+        if (rozvrh == null) {
             getFromCacheAndSave(monday, rozvrhWrapper -> {
-                if (wasInMemory.getValue()){
+                if (wasInMemory.getValue()) {
                     return;
                 }
-                if (netCode.getValue() == SUCCESS){
+                if (netCode.getValue() == SUCCESS) {
                     return;
-                } else if (theOther.getValue()){
+                } else if (theOther.getValue()) {
                     listener.method(rozvrhWrapper);
-                }else{
+                } else {
                     cacheResult.setValue(rozvrhWrapper);
                 }
                 theOther.setValue(true);
             });
-            getFromNetAndSave(monday,rozvrhWrapper -> {
-                if (wasInMemory.getValue()){
+            getFromNetAndSave(monday, rozvrhWrapper -> {
+                if (wasInMemory.getValue()) {
                     return;
                 }
                 netCode.setValue(rozvrhWrapper.getCode());
-                if (rozvrhWrapper.getCode() == SUCCESS){
+                if (rozvrhWrapper.getCode() == SUCCESS) {
                     listener.method(rozvrhWrapper);
-                }else if (cacheResult.getValue() != null && cacheResult.getValue().getCode() == SUCCESS){
+                } else if (cacheResult.getValue() != null && cacheResult.getValue().getCode() == SUCCESS) {
                     listener.method(cacheResult.getValue());
-                }else if (theOther.getValue()){
+                } else if (theOther.getValue()) {
                     listener.method(new RozvrhWrapper(null, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
                 }
                 theOther.setValue(true);
             });
         }
         wasInMemory.setValue(rozvrh != null);
-        if (rozvrh != null){
+        if (rozvrh != null) {
             listener.method(new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
     }
@@ -195,7 +208,8 @@ public class RozvrhAPI {
     public void cacheWeek(LocalDate date) {
         final LocalDate monday = Utils.getWeekMonday(date); //just to be extra sure
         if (!isInMemory(monday)) {
-            getFromNetAndSave(monday, rozvrhWrapper -> {});
+            getFromNetAndSave(monday, rozvrhWrapper -> {
+            });
         }
     }
 
@@ -227,7 +241,7 @@ public class RozvrhAPI {
     /**
      * Puts a rozvrh into object's memory. Also prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
-    private Rozvrh putToMemory(LocalDate date, Rozvrh item){
+    private Rozvrh putToMemory(LocalDate date, Rozvrh item) {
         lastUpdated.put(date, LocalTime.now());
         return saved.put(date, item);
     }
@@ -235,22 +249,22 @@ public class RozvrhAPI {
     /**
      * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
-    private Rozvrh getFromMemory(LocalDate date){
+    private Rozvrh getFromMemory(LocalDate date) {
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))) {
             return saved.get(date);
-        }else {
+        } else {
             lastUpdated.remove(date);
             saved.remove(date);
             return null;
         }
     }
 
-    private boolean isInMemory(LocalDate date){
+    private boolean isInMemory(LocalDate date) {
         LocalTime updateTime = lastUpdated.get(date);
-        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))){
+        if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))) {
             return saved.containsKey(date);
-        }else {
+        } else {
             lastUpdated.remove(date);
             saved.remove(date);
             return false;
@@ -266,28 +280,24 @@ public class RozvrhAPI {
     }
 
     /**
-     * Clears memory and requests new schedule from net, if connection fails, it loads it from cache,
-     * if it doesn't it clears cache and saves the new one to cache (also caches next, prev., perm., ...) and returns it using {@code onLoaded}
-     * listener. Codes:
-     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} - successfully fetched new timetable from server and cleared cache. Refreshed timetable is in {@code rozvrh}.
-     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNREACHABLE} - could not get response from server, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
-     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#UNEXPECTED_RESPONSE} - error in parsing fetched data, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
-     * - {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#LOGIN_FAILED} - Response contaned message indicating faile login, loaded timetable from cache and cache was not cleared. {@code rozvrh} is the one loaded from cache or {@code null} if there was none in cache.
+     * Clears memory and requests new schedule from net,
+     * if it is cusccessful it clears cache and saves the new one to cache (also caches next, prev., perm., ...) and returns it using {@code onLoaded}
+     * listener.
      *
      * @param monday monday identifying week or {@code null} for permanent timetable.
      */
     public void refresh(LocalDate monday, RozvrhListener onLoaded) {
         clearMemory();
         rozvrhLoader.loadRozvrh(monday, result -> {
-            if (result.code == SUCCESS){
+            if (result.code == SUCCESS) {
                 RozvrhCache.clearCache(context);
                 RozvrhCache.saveRawRozvrh(monday, result.raw, context);
                 cacheCNPP();
-                cacheNP(monday);putToMemory(monday, result.rozvrh);
-                onLoaded.method(new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
-            }else {
-                getFromCacheAndSave(monday, onLoaded);
+                cacheNP(monday);
+                putToMemory(monday, result.rozvrh);
+                updateLiveData(monday, new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
             }
+            onLoaded.method(new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
         });
     }
 
@@ -297,14 +307,14 @@ public class RozvrhAPI {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             LocalDateTime updateTime = null;
             int code1 = 0;
-            if (rozvrh != null){
+            if (rozvrh != null) {
                 Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
                 updateTime = values.localDateTime;
                 code1 = values.errCode;
             }
-            if (updateTime != null){
+            if (updateTime != null) {
                 listener.method(updateTime);
-            }else if (code1 == 2){
+            } else if (code1 == 2) {
                 //old schedule -> try the next week
                 getRozvrh(Utils.getCurrentMonday().plusWeeks(1), (rozvrhWrapper2) -> {
                     Rozvrh rozvrh1 = rozvrhWrapper2.getRozvrh();
@@ -316,7 +326,7 @@ public class RozvrhAPI {
         });
     }
 
-    public static interface TimeListener{
+    public static interface TimeListener {
         public void method(LocalDateTime updateTime);
     }
 }

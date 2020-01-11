@@ -16,12 +16,7 @@ public class RozvrhWrapper {
     /**
      * source of the data: {@link #SOURCE_NOT_SPECIFIED}, {@link #SOURCE_MEMORY}, {@link #SOURCE_CACHE} or {@link #SOURCE_NET};
      */
-    private int source = SOURCE_NOT_SPECIFIED;
-
-    public RozvrhWrapper(Rozvrh rozvrh, int code) {
-        this.rozvrh = rozvrh;
-        this.code = code;
-    }
+    private int source;
 
     public RozvrhWrapper(Rozvrh rozvrh, int code, int source) {
         this.rozvrh = rozvrh;

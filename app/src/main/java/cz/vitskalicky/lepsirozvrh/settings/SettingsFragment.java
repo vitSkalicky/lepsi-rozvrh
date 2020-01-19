@@ -125,7 +125,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         Preference appVersionPreference = findPreference(getString(R.string.PREFS_APP_VERSION));
-        String versionText = BuildConfig.BUILD_TYPE + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.GitHash + ")";
+        String versionText = BuildConfig.FLAVOR + "-" + BuildConfig.BUILD_TYPE + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.GitHash + ")";
         appVersionPreference.setSummary(versionText);
         appVersionPreference.setOnPreferenceClickListener(preference -> {
             ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);

@@ -32,16 +32,29 @@ android {
         }
         debug {
             debuggable true
+            buildConfigField "Boolean", "ALLOW_SENTRY", "false"
+        }
+    }
+    flavorDimensions "version"
+    productFlavors {
+        /**
+         * For almost anything.
+         *
+         * // it is named "defalt" because "default" is a keyword.
+         */
+        defalt {
+            dimension "version"
         }
         /**
          * For official releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
          * Crashes from your testing are not welcome there.
          */
-        releaseOfficial {
-            initWith release
+        official {
+            dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }
     }
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'

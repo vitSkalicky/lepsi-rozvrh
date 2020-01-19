@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,12 @@ public class WelcomeActivity extends AppCompatActivity {
         Button buttonStart = findViewById(R.id.buttonStart);
         CheckBox checkBox = findViewById(R.id.checkBoxSendCrashReports);
         Button buttonPrivacyPolicy = findViewById(R.id.buttonPrivacyPolicy);
+        TextView itNetworkTW = findViewById(R.id.textViewItNetwork);
+
+        itNetworkTW.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.itnetwork.cz/programovani/programatorske-souteze/itnetwork-winter-2019-ceny-v-hodnote-10-000-kc"));
+            startActivity(browserIntent);
+        });
 
         buttonStart.setOnClickListener(v -> {
             boolean sendReports = checkBox.isChecked();

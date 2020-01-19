@@ -113,5 +113,6 @@
         <item quantity="other">%d weeks forward</item>
     </plurals>
 
+    <string name="itnetwork_winter">This app is participating in ITnetwork.cz winter competition. Click here for more info</string>
 
 </resources>

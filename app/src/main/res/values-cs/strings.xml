@@ -114,4 +114,7 @@
         <item quantity="few">%d týdny vpřed</item>
         <item quantity="other">%d týdnů vpřed</item>
     </plurals>
+
+    <string name="itnetwork_winter">Tato aplikace se účastní zimní soutěže ITnetwork.cz. Klikněte sem pro více informací</string>
+
 </resources>

@@ -5,8 +5,12 @@
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png"
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/cz.vitskalicky.lepsirozvrh)
+    
+![ITnetwork.cz](https://www.itnetwork.cz/images/5/loga/itnetwork_logo_text.png)
 
-# Lepší rozvrh
+# Lepší rozvrh - soutěžní verze
+
+Na této větvi se nachází soutěžní verze pro [zimní soutěž ITnetwork.cz](https://www.itnetwork.cz/programovani/programatorske-souteze/itnetwork-winter-2019-ceny-v-hodnote-10-000-kc).
 
 Rychlejší a přehlednější klient pro rozvrh systému Bakaláři. Aplikaci jsem vytvořil,
 protože mi docházela trpělivost s nepřehledností a hlavně pomalostí oficiální
@@ -37,7 +41,9 @@ Lepší rozvrh je *[svobodný software][1]* licencovaný pod licencí [GPLv3][2]
 
 Pokud se chcete dozvědět více o tom, co *svobodný software* znamená a jaké má výhody, přečtěte si jeho [definici][1].
 
-# Better schedule
+# Better schedule - competition version
+
+On this branch you can find the app version for [ITnetwork.cz winter competition](https://www.itnetwork.cz/programovani/programatorske-souteze/itnetwork-winter-2019-ceny-v-hodnote-10-000-kc).
 
 This is faster and less confusing schedule client for Bakaláři. I created this app,
 because I am annoyed by the slowness of the the official app.

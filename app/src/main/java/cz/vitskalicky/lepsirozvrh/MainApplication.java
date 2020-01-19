@@ -14,11 +14,15 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.Random;
 
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
@@ -30,6 +34,15 @@ import io.sentry.event.User;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
+
+    private NotificationState notificationState = null;
+    private LiveData<RozvrhWrapper> notificationLiveData = null;
+    private Observer<RozvrhWrapper> notificationObserver = rozvrhWrapper -> {
+        if (!SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)){
+            return;
+        }
+        PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
+    };
 
     @Override
     public void onCreate() {
@@ -65,8 +78,6 @@ public class MainApplication extends Application {
             disableNotification();
         }
     }
-
-    private NotificationState notificationState = null;
 
     public LocalDateTime getScheduledNotificationTime() {
         return notificationState.scheduledNotificationTime;
@@ -138,7 +149,11 @@ public class MainApplication extends Application {
     public void enableNotification(){
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), true);
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
-        PermanentNotification.update(this, rozvrhAPI,() -> {});
+        if (notificationLiveData != null)
+            notificationLiveData.removeObserver(notificationObserver);
+        notificationLiveData = rozvrhAPI.getLiveData(Utils.getDisplayWeekMonday(this));
+        notificationLiveData.observeForever(notificationObserver);
+        PermanentNotification.update(notificationLiveData.getValue() == null ? null : notificationLiveData.getValue().getRozvrh(), this);
     }
 
     public void disableNotification(){
@@ -146,6 +161,10 @@ public class MainApplication extends Application {
         alarmManager.cancel(getNotiPendingIntent(this));
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), false);
         PermanentNotification.update(null,0, this);
+        if (notificationLiveData != null) {
+            notificationLiveData.removeObserver(notificationObserver);
+            notificationLiveData = null;
+        }
     }
 
     public static interface onFinishedListener {
@@ -177,4 +196,15 @@ public class MainApplication extends Application {
     public void diableSentry(){
         Sentry.close();
     }
+
+    @Override
+    public void onTerminate() {
+        //prevent leaks
+        if (notificationLiveData != null) {
+            notificationLiveData.removeObserver(notificationObserver);
+            notificationLiveData = null;
+        }
+        super.onTerminate();
+    }
+
 }

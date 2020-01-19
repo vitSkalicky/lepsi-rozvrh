@@ -10,6 +10,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -23,6 +25,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
@@ -40,6 +43,7 @@ public class RozvrhTableFragment extends Fragment {
     private View view;
     private RozvrhLayout rozvrhLayout;
     private ScrollView scrollView;
+    private LiveData<RozvrhWrapper> liveData;
 
     /**<code>false</code> when rozvrh for a certain week is displayed for the first time (a.k.a. <code>true</code> when being re-displayed
      * as fresh rozvrh is received from the internet)
@@ -115,30 +119,33 @@ public class RozvrhTableFragment extends Fragment {
 
         displayInfo.setMessage(infoMessage);
 
-        netCode = -1;
-        Rozvrh item = rozvrhAPI.get(week, (code, rozvrh) -> {
-            //onCachLoaded
-            // have to make sure that net was not faster
-            if (netCode != SUCCESS)
-                onCacheResponse(code, rozvrh, finalWeek);
-            if (netCode != -1 && netCode != SUCCESS) {
-                onNetResponse(netCode, null, finalWeek);
-            }
-        }, (code, rozvrh) -> {
-            netCode = code;
-            onNetResponse(code, rozvrh, finalWeek);
-        });
+        if (liveData != null)
+            liveData.removeObservers(this);
+        liveData = rozvrhAPI.getLiveData(week);
+        RozvrhWrapper rw = liveData.getValue();
+        Rozvrh item = rw == null ? null : liveData.getValue().getRozvrh();
         if (item != null) {
             rozvrhLayout.setRozvrh(item, !redisplayed && scrollToCurrentLesson);
             redisplayed = true;
-            if (offline) {
-                displayInfo.setLoadingState(DisplayInfo.ERROR);
-            } else {
-                displayInfo.setLoadingState(DisplayInfo.LOADED);
+            if (rw.getSource() == RozvrhWrapper.SOURCE_MEMORY){
+                if (offline) {
+                    displayInfo.setLoadingState(DisplayInfo.ERROR);
+                } else {
+                    displayInfo.setLoadingState(DisplayInfo.LOADED);
+                }
             }
         } else {
             rozvrhLayout.empty();
         }
+
+        liveData.observe(this, rozvrhWrapper -> {
+            if (rozvrhWrapper.getSource() == RozvrhWrapper.SOURCE_CACHE){
+                onCacheResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getRozvrh(), finalWeek);
+            }else if (rozvrhWrapper.getSource() == RozvrhWrapper.SOURCE_NET){
+                onNetResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getRozvrh(), finalWeek);
+            }
+        });
+
         //debug timing: Log.d(TAG_TIMER, "displayWeek end " + Utils.getDebugTime());
     }
 
@@ -164,7 +171,7 @@ public class RozvrhTableFragment extends Fragment {
             displayInfo.setMessage(Utils.getfl10nedWeekString(weekIndex, getContext()));
             displayInfo.setLoadingState(DisplayInfo.LOADED);
 
-            //if it is the current or next week, which may influence the notification, update time
+            /*//if it is the current or next week, which may influence the notification, update time
             //TODO: this is very dirty, you must rewrite this when you finally get to rewrite RozvrhAPI
             if (week != null && rozvrh != null && (week.equals(Utils.getCurrentMonday()) || week.equals(Utils.getCurrentMonday().plusWeeks(1)))){
                 final LocalDateTime current = mainApplication.getScheduledNotificationTime();
@@ -182,7 +189,7 @@ public class RozvrhTableFragment extends Fragment {
             //TODO: and it is dirty as well.
             if (week != null && rozvrh != null && week.equals(Utils.getDisplayWeekMonday(getContext()))){
                 PermanentNotification.update(mainApplication, rozvrhAPI, () -> {});
-            }
+            }*/
         } else {
             offline = true;
             displayInfo.setLoadingState(DisplayInfo.ERROR);
@@ -226,8 +233,12 @@ public class RozvrhTableFragment extends Fragment {
         displayInfo.setLoadingState(DisplayInfo.LOADING);
         cacheSuccessful = false;
 
-        rozvrhAPI.refresh(week, (code, rozvrh) -> {
-            onNetResponse(code, rozvrh, finalWeek);
+        rozvrhAPI.refresh(week, rw -> {
+            /*if (rw.getCode() != SUCCESS){
+                displayWeek(weekIndex, false);
+            }else {*/
+                onNetResponse(rw.getCode(), rw.getRozvrh(), finalWeek);
+            /*}*/
         });
     }
 

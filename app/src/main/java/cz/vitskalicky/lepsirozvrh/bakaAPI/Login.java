@@ -38,6 +38,7 @@ import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRequest;
 
 public class Login {
@@ -203,7 +204,7 @@ public class Login {
         SharedPrefs.remove(context, SharedPrefs.PASSWORD_HASH);
         SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
-        RozvrhAPI.clearCache(context);
+        RozvrhCache.clearCache(context);
         AppSingleton.getInstance(context).getRozvrhAPI().clearMemory();
     }
 

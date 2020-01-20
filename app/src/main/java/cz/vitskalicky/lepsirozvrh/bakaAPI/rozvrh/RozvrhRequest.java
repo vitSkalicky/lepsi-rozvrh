@@ -88,6 +88,7 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
         Log.d(TAG, "Starting request for week " + (monday == null ? "null" : monday.toString()));
 
         setRetryPolicy(new DefaultRetryPolicy(TIMEOUT, 1 , 1f));
+        setShouldCache(false);
     }
 
     public RozvrhRequest(LocalDate monday, Listener allListener, Context context) {

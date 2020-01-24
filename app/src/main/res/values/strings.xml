@@ -37,6 +37,10 @@
     <string name="info_unreachable">Error - server unreachable</string> <!-- Same as 'info_offline', but when user uses refresh button -->
     <string name="info_login_failed">Login failed</string>
     <string name="info_unexpected_response">Error - unexpected server response</string> <!-- Same as 'info_offline', but when user uses refresh button -->
+    <string name="unsecure_connectio_title">Connection is not secure!</string>
+    <string name="unsecure_connectio">Your school does not allow for secure connection with the server. Therefore, transmitted data are <b>not encrypted</b> and anyone in the same network may <b>steal</b> or even change them. The <b>danger</b> is especially high on <b>public wi-fi networks</b>.\nAre you sure you want to log in?</string>
+    <string name="unsecure_connection_connect">Log in anyway</string>
+    <string name="unsecure_connection_cancel">Cancel</string>
 
     <string name="user">User</string>
     <string name="student">Student</string>

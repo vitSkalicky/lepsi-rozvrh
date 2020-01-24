@@ -3,7 +3,8 @@ package cz.vitskalicky.lepsirozvrh.activity;
 import android.content.Intent;
 
 import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,59 +67,79 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         bLogin.setOnClickListener(v -> {
-            bLogin.setEnabled(false);
-            progressBar.setVisibility(View.VISIBLE);
-            twMessage.setText("");
+            String url = tilURL.getEditText().getText().toString();
+            if (url.startsWith("http://")){
+                showUnsecureConnectionWanrning();
+            }else {
+                logIn();
+            }
+        });
+    }
+
+    public void logIn(){
+        bLogin.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+        twMessage.setText("");
 
             /*tilUsername.setError(null);
             tilPassword.setError(null);
             tilURL.setError(null);*/
-            tilUsername.setErrorEnabled(false);
-            tilPassword.setErrorEnabled(false);
-            tilURL.setErrorEnabled(false);
+        tilUsername.setErrorEnabled(false);
+        tilPassword.setErrorEnabled(false);
+        tilURL.setErrorEnabled(false);
 
-            if (tilURL.getEditText().getText().toString().trim().equals("")){
-                tilURL.setError(getText(R.string.enter_url));
-                bLogin.setEnabled(true);
-                progressBar.setVisibility(View.GONE);
+        if (tilURL.getEditText().getText().toString().trim().equals("")){
+            tilURL.setError(getText(R.string.enter_url));
+            bLogin.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+        if (tilUsername.getEditText().getText().toString().trim().equals("")){
+            tilUsername.setError(getText(R.string.enter_username));
+            bLogin.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code, data) -> {
+            if (code == Login.SUCCESS){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 return;
             }
-            if (tilUsername.getEditText().getText().toString().trim().equals("")){
-                tilUsername.setError(getText(R.string.enter_username));
-                bLogin.setEnabled(true);
-                progressBar.setVisibility(View.GONE);
-                return;
+            bLogin.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
+            if (code == Login.WRONG_USERNAME){
+                tilUsername.setError(getText(R.string.invalid_username));
+            }
+            if (code == Login.WRONG_PASSWORD){
+                tilPassword.setError(getText(R.string.invalid_password));
+            }
+            if (code == Login.SERVER_UNREACHABLE){
+                twMessage.setText(R.string.unreachable);
+                tilURL.setError(" ");
+            }
+            if (code == Login.UNEXPECTER_RESPONSE){
+                tilURL.setError(getText(R.string.unexpected_response));
+            }
+            if (code == Login.ROZVRH_DISABLED){
+                tilURL.setError(" ");
+                twMessage.setText(R.string.schedule_disabled);
             }
 
-            Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code, data) -> {
-                if (code == Login.SUCCESS){
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
-                bLogin.setEnabled(true);
-                progressBar.setVisibility(View.GONE);
-                if (code == Login.WRONG_USERNAME){
-                    tilUsername.setError(getText(R.string.invalid_username));
-                }
-                if (code == Login.WRONG_PASSWORD){
-                    tilPassword.setError(getText(R.string.invalid_password));
-                }
-                if (code == Login.SERVER_UNREACHABLE){
-                    twMessage.setText(R.string.unreachable);
-                    tilURL.setError(" ");
-                }
-                if (code == Login.UNEXPECTER_RESPONSE){
-                    tilURL.setError(getText(R.string.unexpected_response));
-                }
-                if (code == Login.ROZVRH_DISABLED){
-                    tilURL.setError(" ");
-                    twMessage.setText(R.string.schedule_disabled);
-                }
+        }, this);
+    }
 
-            }, this);
-        });
+    public void showUnsecureConnectionWanrning(){
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle(R.string.unsecure_connectio_title)
+                .setMessage(R.string.unsecure_connectio)
+                .setPositiveButton(R.string.unsecure_connection_connect, (dialog, which) -> logIn())
+                .setNegativeButton(R.string.unsecure_connection_cancel, (dialog, which) -> {})
+                .setIcon(R.drawable.ic_no_encryption_black_24dp);
+
+        adb.show();
     }
 
 

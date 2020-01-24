@@ -78,6 +78,7 @@ public class RozvrhAPI {
 
     /**
      * Returns {@link LiveData} for the selected week. THey will be updated with the most recent data.
+     * Also, if the rozvrh is in memory, the LiveData will be updated right away.
      *
      * <b>NOTE: source = {@link RozvrhWrapper#SOURCE_NET}, rozvrh != null, but the
      * code != {@link cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode#SUCCESS} means that rozvrh

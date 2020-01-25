@@ -25,13 +25,13 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.activity.LicencesActivity;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import io.sentry.Sentry;
 
@@ -75,6 +75,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }else {
             sendCrashReportsPreference.setVisible(false);
         }
+
+        findPreference(getString(R.string.PREFS_OSS_LICENCES)).setOnPreferenceClickListener(preference -> {
+            Intent i = new Intent(getContext(), LicencesActivity.class);
+            startActivity(i);
+            return true;
+        });
 
         findPreference(getString(R.string.PREFS_SEND_FEEDBACK)).setOnPreferenceClickListener(preference -> {
             AlertDialog ad = new AlertDialog.Builder(getContext())

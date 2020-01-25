@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.jaredsburrows.license'
 
 android {
     def getGitHash = { ->
@@ -65,6 +66,15 @@ android {
         abortOnError false
     }
 
+}
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = false
+
+    // These options are ignored for Java projects
+    copyHtmlReportToAssets = true
+    copyJsonReportToAssets = false
 }
 
 dependencies {

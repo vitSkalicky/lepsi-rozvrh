@@ -1,5 +1,13 @@
 # Seznam změn / Changelog
 
+## 1.5.3 (25. 1. 2020)
+
+- Použita jiná knihovna pro zobrazování open source licencí.
+
+---
+
+- Changed the library for displaying open source licenses.
+
 ## 1.5.2 (25. 1. 2020)
 
 - Opravy chyb

@@ -20,19 +20,18 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.activity.LicencesActivity;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import io.sentry.Sentry;
 
@@ -77,6 +76,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             sendCrashReportsPreference.setVisible(false);
         }
 
+        findPreference(getString(R.string.PREFS_OSS_LICENCES)).setOnPreferenceClickListener(preference -> {
+            Intent i = new Intent(getContext(), LicencesActivity.class);
+            startActivity(i);
+            return true;
+        });
+
         findPreference(getString(R.string.PREFS_SEND_FEEDBACK)).setOnPreferenceClickListener(preference -> {
             AlertDialog ad = new AlertDialog.Builder(getContext())
                     .setTitle(R.string.include_schedule)
@@ -88,12 +93,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             ad.show();
             return true;
         });
-        findPreference(getString(R.string.PREFS_OSS_LICENCES)).setOnPreferenceClickListener(preference -> {
-            Intent intent = new Intent(getContext(), OssLicensesMenuActivity.class);
-            startActivity(intent);
-            return true;
-        });
-
 
         Preference userInfo = findPreference(getString(R.string.PREFS_USER));
         userInfo.setTitle(SharedPrefs.getString(getContext(), SharedPrefs.NAME));

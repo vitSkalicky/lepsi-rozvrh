@@ -189,7 +189,7 @@ public class PermanentNotification {
 
         CharSequence expanded = content;
         if (!mistnost.isEmpty()){
-            expanded = expanded + ", " + context.getString(R.string.room) + ": " + mistnost;
+            expanded = expanded + ", " + context.getString(R.string.room) + " " + mistnost;
         }
 
         Intent nextIntent = new Intent(context, NotiBroadcastReciever.class);

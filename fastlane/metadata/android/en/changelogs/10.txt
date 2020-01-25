@@ -1,0 +1,2 @@
+- Bug fixes
+- Allowed for unencrypted connection (http), because some schools still don't use https.

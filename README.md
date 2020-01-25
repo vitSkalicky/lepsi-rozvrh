@@ -26,6 +26,14 @@ aplikace.
 - Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
 - Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
+## Testovací server
+
+Pokud nemáte přístup k serveru Bakalářů, můžete použít [jednoduchý testovací server](https://github.com/vitSkalicky/lepsi-rozvrh-test-server). Stačí zadat následující přihlašovací údaje:
+
+- Přihlašovací jméno: cokoliv
+- Heslo: cokoliv
+- Adresa serveru: [https://lepsi-rozvrh-test-server.herokuapp.com/](https://lepsi-rozvrh-test-server.herokuapp.com/)
+
 ## Licence
 
 Lepší rozvrh je *[svobodný software][1]* licencovaný pod licencí [GPLv3][2], což znamená, že
@@ -55,6 +63,14 @@ because I am annoyed by the slowness of the the official app.
 - Widget
 - More themes (dark, black & white, ...)
 - Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues
+
+## Testing server
+
+If you don't have access to any Bakaláři server you can use a [simple testing server](https://github.com/vitSkalicky/lepsi-rozvrh-test-server). Just enter the following credentials:
+
+- User name: anything
+- Password: anything
+- Server address: [https://lepsi-rozvrh-test-server.herokuapp.com/](https://lepsi-rozvrh-test-server.herokuapp.com/)
 
 ## Licence
 

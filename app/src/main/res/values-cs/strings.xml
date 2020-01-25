@@ -37,6 +37,10 @@
     <string name="info_unreachable">Chyba - server nedostupný</string>
     <string name="info_login_failed">Přihlášení selhalo</string>
     <string name="info_unexpected_response">Chyba - neočekávaná odpověď serveru</string>
+    <string name="unsecure_connectio_title">Spojení není zabezpečené!</string>
+    <string name="unsecure_connectio">Vaše škola neumožňuje zabezpečené spojení se serverem. Přenášná data tedy <b>nejsou šifrována</b> a kdokoliv ve stejné síti je může <b>odposlouchávat</b> nebo dokonce i měnit. <b>Nebezpečí</b> je obzvlášť vysoké <b>na veřejných wi-fi sítích</b>.\nOpravdu se chcete přihlásit?</string>
+    <string name="unsecure_connection_connect">Přesto se přihlásit</string>
+    <string name="unsecure_connection_cancel">Zrušit</string>
 
     <string name="user">Uživatel</string>
     <string name="student">Student</string>

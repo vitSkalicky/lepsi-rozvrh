@@ -44,8 +44,6 @@ public class NotiBroadcastReciever extends BroadcastReceiver {
             application.scheduleNotificationUpdate(application.getNotificationState().getOffsetResetTime());
         }
 
-        PermanentNotification.update(application, rozvrhAPI, () -> {
-            pendingResult.finish();
-        });
+        PermanentNotification.update(rozvrhAPI, application, () -> pendingResult.finish());
     }
 }

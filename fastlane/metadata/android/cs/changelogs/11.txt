@@ -1,0 +1,1 @@
+- Použita jiná knihovna pro zobrazování open source licencí.

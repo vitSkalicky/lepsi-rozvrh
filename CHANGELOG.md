@@ -1,13 +1,23 @@
 # Seznam změn / Changelog
 
-## 1.5.1 (1. 12. 2019)
+## 1.5.2 (25. 1. 2020)
+
+- Opravy chyb
+- Povoleno nezabezpečené spojení (http), protože některé školy stále nepoužívají http**s**.
+
+---
+
+- Bug fixes
+- Allowed for unencrypted connection (http), because some schools still don't use http**s**.
+
+## 1.5.1 (1. 1. 2020)
 
 - Opravy chyb
 - Tolerance opravdu divných rozvrhů, ve kterých hodiny "vylézají" z nadepsaných bloků.
 
 ---
 
-- bug fixes
+- Bug fixes
 - Very weird schedules with lessons "outside of" captions are tolerated.
 
 ## 1.5 (31. 12. 2019)

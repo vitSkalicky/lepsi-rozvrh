@@ -151,6 +151,72 @@ public class Rozvrh {
     }
 
     /**
+     * Returns info about the day and lesson that widget should display.
+     * @return denIndex - index of the day in this week, if <code>-1</code> than this is not the
+     * current week. hodinaIndex - index if the current lesson in the day. If <code>-1</code> than
+     * school hasn't started yet and {@link Integer#MAX_VALUE} means that school si already over.
+     */
+    public WidgetValues getWidgetDiaplayValues(){
+        LocalDate nowDate = LocalDate.now();
+        LocalTime nowTime = LocalTime.now();
+
+        RozvrhDen dneska = null;
+        int denIndex = 0;
+        for (RozvrhDen item : dny) {
+            if (item.getParsedDatum() == null) //permanent timetable check
+                return new WidgetValues();
+            if (item.getParsedDatum().isEqual(nowDate)) {
+                dneska = item;
+                break;
+            }
+            denIndex++;
+        }
+
+        if (dneska == null) //current timetable check
+            return new WidgetValues();
+
+        RozvrhHodina dalsi = null;
+        boolean prvni = true;
+        int hodinaIndex = 0;
+        for (int i = 0; i < dneska.getHodiny().size(); i++) {
+            RozvrhHodina item = dneska.getHodiny().get(i);
+            if (!item.getTyp().equals("X") || !prvni){
+                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))){
+                    hodinaIndex = -1;
+                    break;
+                }
+                if (nowTime.isBefore(item.getParsedEndtime().minusMinutes(10))) {
+                    dalsi = item;
+                    break;
+                }
+                prvni = false;
+            }
+            hodinaIndex++;
+        }
+
+        if (dalsi == null) {
+            hodinaIndex = Integer.MAX_VALUE;
+        }
+
+        WidgetValues wv = new WidgetValues();
+        wv.denIndex = denIndex;
+        wv.lessonIndex = hodinaIndex;
+
+        return wv;
+    }
+
+    public static class WidgetValues {
+        /**
+         * -1 not this week
+         */
+        public int denIndex = -1;
+        /**
+         * -1 not yet, {@link Integer#MAX_VALUE} it's after school.
+         */
+        public int lessonIndex = -1;
+    }
+
+    /**
      * Returns the time, when the notification or widget should be updated, or empty {@link GetNCLCTreturnValues} with error code if this is
      * a permanent schedule ({@link GetNCLCTreturnValues#errCode} = 1), old schedule ({@link GetNCLCTreturnValues#errCode} = 2) or there was a different problem ({@link GetNCLCTreturnValues#errCode} = 3)
      */

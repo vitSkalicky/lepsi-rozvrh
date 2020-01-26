@@ -27,6 +27,7 @@ import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.widget.AppWidgetProvider;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 import io.sentry.event.User;
@@ -42,6 +43,9 @@ public class MainApplication extends Application {
             return;
         }
         PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
+    };
+    private Observer<RozvrhWrapper> widgetObserver = rozvrhWrapper -> {
+        AppWidgetProvider.update(rozvrhWrapper.getRozvrh(), this);
     };
 
     @Override
@@ -77,6 +81,9 @@ public class MainApplication extends Application {
         }else {
             disableNotification();
         }
+
+        RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
+        rozvrhAPI.getCurrentWeekLiveData().observeForever(widgetObserver);
     }
 
     public LocalDateTime getScheduledNotificationTime() {
@@ -151,7 +158,7 @@ public class MainApplication extends Application {
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
         if (notificationLiveData != null)
             notificationLiveData.removeObserver(notificationObserver);
-        notificationLiveData = rozvrhAPI.getLiveData(Utils.getDisplayWeekMonday(this));
+        notificationLiveData = rozvrhAPI.getCurrentWeekLiveData();
         notificationLiveData.observeForever(notificationObserver);
         PermanentNotification.update(notificationLiveData.getValue() == null ? null : notificationLiveData.getValue().getRozvrh(), this);
     }

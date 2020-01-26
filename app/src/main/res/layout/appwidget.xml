@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/rounded_corner_white"
-    android:gravity="center"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_height="match_parent" android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/textViewZkrpr"
+    <ImageView
+        android:id="@+id/bgcolor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/rounded_corner_white" />
+
+    <LinearLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Lssn"
-        android:textAlignment="center" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewSecondary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tchr A105"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/textViewZkrpr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Lssn"
+            android:textAlignment="center" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/textViewSecondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tchr A105"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -113,7 +114,8 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             views.setInt(R.id.textViewSecondary, "setTextColor", item.secondaryTextColor);
             views.setFloat(R.id.textViewZkrpr, "setTextSize", item.primaryTextSize);
             views.setFloat(R.id.textViewSecondary, "setTextSize", item.secondaryTextSize);
-            views.setInt(R.id.root,"setBackgroundColor", item.backgroundColor);
+            views.setInt(R.id.bgcolor, "setImageAlpha", 255);
+            views.setInt(R.id.bgcolor, "setColorFilter",  0xFFFFFFFF);
 
 
             appWidgetManager.updateAppWidget(id, views);

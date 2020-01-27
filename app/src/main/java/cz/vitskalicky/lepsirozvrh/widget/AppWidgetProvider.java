@@ -87,38 +87,31 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
                     }
                 }
 
+                // update content
                 RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget);
                 views.setTextViewText(R.id.textViewZkrpr, zkrpr);
                 views.setViewVisibility(R.id.textViewZkrpr,View.VISIBLE);
                 views.setTextViewText(R.id.textViewSecondary, HtmlCompat.fromHtml(zkruc + " <b>" + zkrmist + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT));
+
+                // update style
+                WidgetsSettings.Widged item = widgetsSettings.widgets.get(id);
+
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+                views.setOnClickPendingIntent(R.id.root, pendingIntent);
+
+                views.setInt(R.id.textViewZkrpr, "setTextColor", item.primaryTextColor);
+                views.setInt(R.id.textViewSecondary, "setTextColor", item.secondaryTextColor);
+                views.setFloat(R.id.textViewZkrpr, "setTextSize", item.primaryTextSize);
+                views.setFloat(R.id.textViewSecondary, "setTextSize", item.secondaryTextSize);
+                views.setInt(R.id.bgcolor, "setImageAlpha", 255);
+                views.setInt(R.id.bgcolor, "setColorFilter",  item.backgroundColor);
+
+
                 appWidgetManager.updateAppWidget(id, views);
             }
-        }
-    }
-
-    public static void updateLooks(Context context){
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        WidgetsSettings widgetsSettings = AppSingleton.getInstance(context).getWidgetsSettings();
-
-        for (int id :widgetsSettings.widgets.keySet()) {
-            WidgetsSettings.Widged item = widgetsSettings.widgets.get(id);
-
-            Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget);
-            views.setOnClickPendingIntent(R.id.root, pendingIntent);
-
-            views.setInt(R.id.textViewZkrpr, "setTextColor", item.primaryTextColor);
-            views.setInt(R.id.textViewSecondary, "setTextColor", item.secondaryTextColor);
-            views.setFloat(R.id.textViewZkrpr, "setTextSize", item.primaryTextSize);
-            views.setFloat(R.id.textViewSecondary, "setTextSize", item.secondaryTextSize);
-            views.setInt(R.id.bgcolor, "setImageAlpha", 255);
-            views.setInt(R.id.bgcolor, "setColorFilter",  0xFFFFFFFF);
-
-
-            appWidgetManager.updateAppWidget(id, views);
         }
     }
 
@@ -150,7 +143,6 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         if (somethingAdded){
             AppSingleton.getInstance(context).saveWidgetSettings();
         }
-        updateLooks(context);
 
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();

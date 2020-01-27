@@ -13,6 +13,5 @@
     <string-array name="widget_style_entries">
         <item>Light</item>
         <item>Dark</item>
-        <item>Black</item>
     </string-array>
 </resources>

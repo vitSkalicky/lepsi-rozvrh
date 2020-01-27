@@ -12,12 +12,13 @@
         layout="@layout/appwidget"
         android:layout_width="80dp"
         android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
@@ -26,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

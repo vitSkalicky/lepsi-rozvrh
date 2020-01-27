@@ -42,6 +42,8 @@
     <string name="unsecure_connection_connect">Přesto se přihlásit</string>
     <string name="unsecure_connection_cancel">Zrušit</string>
 
+    <string name="widget_style">Motiv</string>
+
     <string name="user">Uživatel</string>
     <string name="student">Student</string>
     <string name="teacher">Učitel</string>
@@ -80,6 +82,7 @@
     <string name="close">Zavřít</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
     <string name="scr_dialog">Odesísal zprávy o chybách?</string>

@@ -22,14 +22,18 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Lssn"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/widgetLightPrimaryText"
+            android:textSize="@dimen/widgetTextPrimary" />
 
         <TextView
             android:id="@+id/textViewSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tchr A105"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/widgetLightSecondaryText"
+            android:textSize="@dimen/widgetTextSecondary" />
 
     </LinearLayout>
 

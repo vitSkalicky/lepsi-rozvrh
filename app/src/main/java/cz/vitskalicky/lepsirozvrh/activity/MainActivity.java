@@ -147,23 +147,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ibSettings.setOnLongClickListener(v -> {
-            File dir = context.getFilesDir();
-
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File fileDir, String name) {
-                    if (fileDir == dir) {
-                        return true;
-                    }
-                    return false;
-                }
-            };
-
-            String[] fileNames = dir.list(filter);
-
-            for (String item : fileNames) {
-                context.deleteFile(item);
-            }
             return true;
         });
 

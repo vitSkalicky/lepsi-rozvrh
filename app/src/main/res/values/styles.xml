@@ -59,4 +59,13 @@
         <!--<item name="android:textSize">?attr/textPrimarySize</item>-->
     </style>
 
+    <style name="AppTheme.WallpaperBackground" parent="AppTheme">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/wallpaperActivityBackgroundColor</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <!-- I would usually write this as a hardcoded value to the windowBackground, but it wants a reference for some reason, so here is a workaround -->
+    <color name="wallpaperActivityBackgroundColor">#1000</color>
+
 </resources>

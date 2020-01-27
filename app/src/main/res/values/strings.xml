@@ -42,6 +42,8 @@
     <string name="unsecure_connection_connect">Log in anyway</string>
     <string name="unsecure_connection_cancel">Cancel</string>
 
+    <string name="widget_style">Style</string>
+
     <string name="user">User</string>
     <string name="student">Student</string>
     <string name="teacher">Teacher</string>
@@ -80,6 +82,7 @@
     <string name="close">Close</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
     <string name="scr_dialog">Send crash reports?</string>

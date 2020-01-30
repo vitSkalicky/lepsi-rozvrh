@@ -23,7 +23,6 @@ import java.util.Random;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.notification.NotiBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.widget.AppWidgetProvider;
@@ -36,18 +35,15 @@ public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
 
     private NotificationState notificationState = null;
-    private LiveData<RozvrhWrapper> notificationLiveData = null;
-    private Observer<RozvrhWrapper> notificationObserver = rozvrhWrapper -> {
-        if (!SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
-            return;
-        }
-        PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
-    };
-    private LocalDateTime widgetUpdateTime = null;
-    private Observer<RozvrhWrapper> widgetObserver = rozvrhWrapper -> {
+    private LocalDateTime updateTime = null;
+    private LiveData<RozvrhWrapper> currentWeekLivedata = null;
+    private Observer<RozvrhWrapper> currentWeekObserver = rozvrhWrapper -> {
         if (rozvrhWrapper.getRozvrh() != null) {
             AppWidgetProvider.update(rozvrhWrapper.getRozvrh(), this);
-            checkWidgetUpdate(rozvrhWrapper.getRozvrh());
+            if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
+                PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
+            }
+            updateUpdateTime(rozvrhWrapper.getRozvrh());
         }
     };
 
@@ -86,133 +82,57 @@ public class MainApplication extends Application {
         }
 
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
-        rozvrhAPI.getCurrentWeekLiveData().observeForever(widgetObserver);
+        currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
+        currentWeekLivedata.observeForever(currentWeekObserver);
     }
 
-    public LocalDateTime getScheduledNotificationTime() {
-        return notificationState.scheduledNotificationTime;
+    public void scheduleUpdate(LocalDateTime triggerTime){
+        if (triggerTime == null) {
+            triggerTime = LocalDateTime.now().plusHours(6);
+        }
+        if (notificationState.getOffsetResetTime() != null && triggerTime.isAfter(notificationState.getOffsetResetTime())) {
+            triggerTime = notificationState.getOffsetResetTime();
+        }
+        Intent intent = new Intent(this, UpdateBroadcastReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, UpdateBroadcastReciever.REQUEST_CODE, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(), 60 * 60000, pendingIntent);
+
+        Log.d(TAG, "Scheduled an update on " + triggerTime.toString("MM-dd HH:mm:ss"));
+        updateTime = triggerTime;
     }
 
     public NotificationState getNotificationState() {
         return notificationState;
     }
 
-    /**
-     * Schedules AlarmManager for notification update
-     *
-     * @param triggerTime
-     */
-    public void scheduleNotificationUpdate(LocalDateTime triggerTime) {
-        if (triggerTime == null) {
-            triggerTime = LocalDateTime.now().plusDays(1);
-        }
-        if (notificationState.getOffsetResetTime() != null && triggerTime.isAfter(notificationState.getOffsetResetTime())) {
-            triggerTime = notificationState.getOffsetResetTime();
-        }
-        PendingIntent pendingIntent = getNotiPendingIntent(this);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime.toDate().getTime(), 60 * 60000, pendingIntent);
-
-        Log.d(TAG, "Scheduled a notificatio upadate on " + triggerTime.toString("MM-dd HH:mm:ss"));
-        notificationState.scheduledNotificationTime = triggerTime;
-    }
-
-    public void checkWidgetUpdate(Rozvrh rozvrh) {
+    public void updateUpdateTime(Rozvrh rozvrh) {
         if (rozvrh == null){
             return;
         }
         Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
-        if (widgetUpdateTime == null || !widgetUpdateTime.equals(values.localDateTime)) {
-            scheduleWidgetUpdate(values.localDateTime);
+        if (values.localDateTime != null && (updateTime == null || updateTime.isAfter(values.localDateTime))) {
+            scheduleUpdate(values.localDateTime);
         }
     }
 
-    public void checkWidgetUpdate() {
-        AppSingleton.getInstance(this).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-            if (rozvrhWrapper.getRozvrh() != null) {
-                Rozvrh.GetNCLCTreturnValues values = rozvrhWrapper.getRozvrh().getNextCurrentLessonChangeTime();
-                if (widgetUpdateTime == null || !widgetUpdateTime.equals(values.localDateTime)) {
-                    scheduleWidgetUpdate(values.localDateTime);
-                }
-            }
-        });
-
-    }
-
-    public void scheduleWidgetUpdate(LocalDateTime updateTime) {
-        if (updateTime == null) {
-            updateTime = LocalDateTime.now().plusHours(6);
+    public void updateUpdateTime() {
+        if (currentWeekLivedata != null && currentWeekLivedata.getValue() != null){
+            updateUpdateTime(currentWeekLivedata.getValue().getRozvrh());
         }
-        Intent intent = new Intent(this, AppWidgetProvider.class);
-        intent.setAction(AppWidgetProvider.ACTION_UPDATE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, updateTime.toDate().getTime(), pendingIntent);
-
-        Log.d(TAG, "Scheduled a widget upadate on " + updateTime.toString("MM-dd HH:mm:ss"));
-    }
-
-    private static PendingIntent getNotiPendingIntent(Context context) {
-        Intent intent = new Intent(context, NotiBroadcastReciever.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context.getApplicationContext(), NotiBroadcastReciever.REQUEST_CODE, intent, 0);
-        return pendingIntent;
-    }
-
-    /**
-     * Schedules notification update accordingly to the give Rozvrh using
-     * {@link Rozvrh#getNextCurrentLessonChangeTime()}. If there is already one scheduled, it is
-     * overwritten.
-     *
-     * @return <code>true</code> if successful or <code>false</code> if not
-     * ({@link Rozvrh#getNextCurrentLessonChangeTime()} returned error, because this is an
-     * old/permanent schedule).
-     */
-    public boolean scheduleNotificationUpdate(Rozvrh rozvrh) {
-        Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
-        if (values.localDateTime == null) {
-            return false;
-        }
-        scheduleNotificationUpdate(values.localDateTime);
-        return true;
-    }
-
-    /**
-     * Same as {@link #scheduleNotificationUpdate(Rozvrh)}, but gets the rozvrh for you.
-     *
-     * @param onFinished
-     */
-    public void scheduleNotificationUpdate(onFinishedListener onFinished) {
-        RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
-        rozvrhAPI.getNextNotificationUpdateTime(updateTime -> {
-            if (updateTime == null) {
-                onFinished.onFinished(false);
-            } else {
-                scheduleNotificationUpdate(updateTime);
-                onFinished.onFinished(true);
-            }
-        });
     }
 
     public void enableNotification() {
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), true);
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
-        if (notificationLiveData != null)
-            notificationLiveData.removeObserver(notificationObserver);
-        notificationLiveData = rozvrhAPI.getCurrentWeekLiveData();
-        notificationLiveData.observeForever(notificationObserver);
-        PermanentNotification.update(notificationLiveData.getValue() == null ? null : notificationLiveData.getValue().getRozvrh(), this);
+        if (currentWeekLivedata != null){
+            PermanentNotification.update(currentWeekLivedata.getValue() == null ? null : currentWeekLivedata.getValue().getRozvrh(), this);
+        }
     }
 
     public void disableNotification() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(getNotiPendingIntent(this));
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), false);
         PermanentNotification.update(null, 0, this);
-        if (notificationLiveData != null) {
-            notificationLiveData.removeObserver(notificationObserver);
-            notificationLiveData = null;
-        }
     }
 
     public static interface onFinishedListener {
@@ -248,9 +168,9 @@ public class MainApplication extends Application {
     @Override
     public void onTerminate() {
         //prevent leaks
-        if (notificationLiveData != null) {
-            notificationLiveData.removeObserver(notificationObserver);
-            notificationLiveData = null;
+        if (currentWeekLivedata != null) {
+            currentWeekLivedata.removeObserver(currentWeekObserver);
+            currentWeekLivedata = null;
         }
         super.onTerminate();
     }

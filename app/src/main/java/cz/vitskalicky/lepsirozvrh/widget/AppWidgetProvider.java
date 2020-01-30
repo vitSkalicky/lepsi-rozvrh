@@ -30,19 +30,10 @@ import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 
 public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
-    public static final String ACTION_UPDATE = AppWidgetProvider.class.getCanonicalName() + ".UPDATE_ALL_WIDGETS";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        if (ACTION_UPDATE.equals(intent.getAction())){
-            PendingResult pendingResult = goAsync();
-
-            AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-                update(rozvrhWrapper.getRozvrh(), context);
-                pendingResult.finish();
-            });
-        }
     }
 
     public static void update(Rozvrh rozvrh, Context context){
@@ -151,7 +142,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             update(rozvrh, context);
-            ((MainApplication) context.getApplicationContext()).checkWidgetUpdate(rozvrh);
+            ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
             pendingResult.finish();
         });
     }

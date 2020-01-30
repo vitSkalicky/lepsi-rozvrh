@@ -1,6 +1,5 @@
 package cz.vitskalicky.lepsirozvrh.notification;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -22,6 +21,7 @@ import java.util.List;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
+import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
@@ -30,7 +30,6 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
-import io.sentry.util.Util;
 
 public class PermanentNotification {
     public static final int PERMANENT_NOTIFICATION_ID = 7055713;
@@ -75,7 +74,7 @@ public class PermanentNotification {
                 }
                 update(rozvrhHodina, offset, context);
             }
-            application.scheduleNotificationUpdate(rozvrh);
+            application.updateUpdateTime(rozvrh);
         }
 
     }
@@ -192,15 +191,15 @@ public class PermanentNotification {
             expanded = expanded + ", " + context.getString(R.string.room) + " " + mistnost;
         }
 
-        Intent nextIntent = new Intent(context, NotiBroadcastReciever.class);
-        nextIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);
-        nextIntent.putExtra(NotiBroadcastReciever.EXTRA_NEXT_PREV, 1);
+        Intent nextIntent = new Intent(context, UpdateBroadcastReciever.class);
+        nextIntent.setAction(UpdateBroadcastReciever.ACTION_NEXT_PREV);
+        nextIntent.putExtra(UpdateBroadcastReciever.EXTRA_NEXT_PREV, 1);
         PendingIntent nextPendingIntent =
                 PendingIntent.getBroadcast(context, 458631, nextIntent, 0);
 
-        Intent prevIntent = new Intent(context, NotiBroadcastReciever.class);
-        prevIntent.setAction(NotiBroadcastReciever.ACTION_NEXT_PREV);
-        prevIntent.putExtra(NotiBroadcastReciever.EXTRA_NEXT_PREV, -1);
+        Intent prevIntent = new Intent(context, UpdateBroadcastReciever.class);
+        prevIntent.setAction(UpdateBroadcastReciever.ACTION_NEXT_PREV);
+        prevIntent.putExtra(UpdateBroadcastReciever.EXTRA_NEXT_PREV, -1);
         PendingIntent prevPendingIntent =
                 PendingIntent.getBroadcast(context, 4586, prevIntent,0);
 

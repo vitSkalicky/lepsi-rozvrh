@@ -6,7 +6,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.net.Uri;
@@ -39,7 +38,7 @@ public class MainApplication extends Application {
     private LiveData<RozvrhWrapper> currentWeekLivedata = null;
     private Observer<RozvrhWrapper> currentWeekObserver = rozvrhWrapper -> {
         if (rozvrhWrapper.getRozvrh() != null) {
-            AppWidgetProvider.update(rozvrhWrapper.getRozvrh(), this);
+            AppWidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), this);
             if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
                 PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
             }

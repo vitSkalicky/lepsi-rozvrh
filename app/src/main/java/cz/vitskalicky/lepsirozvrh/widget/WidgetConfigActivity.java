@@ -1,13 +1,10 @@
 package cz.vitskalicky.lepsirozvrh.widget;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-import android.app.WallpaperManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -75,7 +72,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
                 setResult(RESULT_OK, resultValue);
                 AppSingleton.getInstance(this).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-                    AppWidgetProvider.update(rozvrhWrapper.getRozvrh(), this);
+                    AppWidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), this);
                     finish();
                 });
             } else {

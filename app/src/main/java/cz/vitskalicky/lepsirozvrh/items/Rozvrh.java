@@ -252,6 +252,54 @@ public class Rozvrh {
         }
     }
 
+    /**
+     * Returns lessons that should be displayed on a widget.
+     *
+     * @param lenght how many lessons does the widget display - determines the length of the returned array.
+     * @return {@code null} if this is not a current week or it is not school-time now.
+     */
+    public RozvrhHodina[] getWidgetDiaplayValues(int lenght){
+        LocalDate nowDate = LocalDate.now();
+        LocalTime nowTime = LocalTime.now();
+
+        RozvrhDen dneska = null;
+        for (RozvrhDen item : dny) {
+            if (item.getParsedDatum() == null) //permanent timetable check
+                return null;
+            if (item.getParsedDatum().isEqual(nowDate)) {
+                dneska = item;
+                break;
+            }
+        }
+
+        if (dneska == null) //current timetable check
+            return null;
+
+        RozvrhHodina[] ret = new RozvrhHodina[lenght];
+
+        boolean prvni = true;
+        int currentHodinaIndex = 0;
+        for (int i = 0; i < dneska.getHodiny().size(); i++) {
+            RozvrhHodina item = dneska.getHodiny().get(i);
+            if (!item.getTyp().equals("X") || !prvni){
+                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(3))){
+                    return null;
+                }
+                if (nowTime.isBefore(item.getParsedEndtime().minusMinutes(10))) {
+                    break;
+                }
+                prvni = false;
+            }
+            currentHodinaIndex++;
+        }
+
+        for (int i = 0; i < lenght && i + currentHodinaIndex < dneska.getHodiny().size(); i++) {
+            ret[i] = dneska.getHodiny().get(i + currentHodinaIndex);
+        }
+
+       return ret;
+    }
+
     public List<RozvrhHodinaCaption> getHodiny() {
         return hodiny;
     }

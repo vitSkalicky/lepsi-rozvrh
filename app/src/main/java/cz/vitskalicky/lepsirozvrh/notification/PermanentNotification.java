@@ -36,6 +36,7 @@ public class PermanentNotification {
     public static final String PERMANENT_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".permanentNotificationChannel";
     public static final String PREF_DONT_SHOW_INFO_DIALOG = "dont-show-notification-info-dialog-again";
     public static final String EXTRA_NOTIFICATION = PermanentNotification.class.getCanonicalName() + "-extra-notification";
+    public static final int PENDING_INTENT_REQUEST_CODE = 7894562;
 
     public static void update(RozvrhAPI rozvrhAPI, MainApplication application, Utils.Listener onFinished){
         Context context = application;
@@ -209,7 +210,7 @@ public class PermanentNotification {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(intent);
 
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(PENDING_INTENT_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //create notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PERMANENT_CHANNEL_ID)

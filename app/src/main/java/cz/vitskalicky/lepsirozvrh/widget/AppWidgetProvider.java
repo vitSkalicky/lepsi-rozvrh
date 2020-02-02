@@ -22,8 +22,11 @@ import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 
 public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
+
+    public static final int PENDING_INTENT_REQUEST_CODE = 85321;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -109,7 +112,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, PENDING_INTENT_REQUEST_CODE, intent, 0);
 
             views.setOnClickPendingIntent(R.id.root, pendingIntent);
 

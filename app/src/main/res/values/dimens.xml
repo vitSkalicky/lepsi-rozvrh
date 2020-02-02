@@ -6,5 +6,6 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-
+    <dimen name="widgetTextPrimary">16sp</dimen>
+    <dimen name="widgetTextSecondary">12sp</dimen>
 </resources>

@@ -5,4 +5,11 @@
     <color name="colorAccent">#455a64</color>
     <color name="colorError">#B00020</color>
 
+
+    <color name="widgetLightPrimaryText">#000000</color>
+    <color name="widgetLightSecondaryText">#607D8B</color>
+    <color name="widgetLightBackground">#FFFFFFFF</color>
+    <color name="widgetDarkPrimaryText">#dedede</color>
+    <color name="widgetDarkSecondaryText">#a0a0a0</color>
+    <color name="widgetDarkBackground">#FF000000</color>
 </resources>

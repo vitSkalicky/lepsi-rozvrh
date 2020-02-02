@@ -63,7 +63,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
 
 
-        if (width < 400 || hodiny == null) {
+        if (width < 250 || hodiny == null) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget);
             
             RozvrhHodina hodina;
@@ -102,8 +102,8 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             updateCell(views, R.id.bgcolor, R.id.textViewZkrpr4, R.id.textViewSecondary4, hodiny[4], item, true, context);
 
 
-            views.setInt(R.id.imageViewDivider0, "setImageAlpha", 255);
-            views.setInt(R.id.imageViewDivider0, "setColorFilter", item.primaryTextColor);
+            views.setInt(R.id.imageViewDivider, "setImageAlpha", 255);
+            views.setInt(R.id.imageViewDivider, "setColorFilter", item.primaryTextColor);
             views.setInt(R.id.bgcolor, "setImageAlpha", 255);
             views.setInt(R.id.bgcolor, "setColorFilter", item.backgroundColor);
 

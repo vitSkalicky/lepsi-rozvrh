@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_height="match_parent" android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/bgcolor"
@@ -22,7 +23,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/top"
+                android:id="@+id/cell0"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -51,7 +52,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageViewDivider0"
+                android:id="@+id/imageViewDivider"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="4dp"
@@ -63,59 +64,39 @@
 
 
         <LinearLayout
-            android:layout_width="2dp"
+            android:id="@+id/cell1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/cell1"
+            <TextView
+                android:id="@+id/textViewZkrpr1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:text="Lssn"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightPrimaryText"
+                android:textSize="@dimen/widgetTextPrimary" />
 
-                <TextView
-                    android:id="@+id/textViewZkrpr1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Lssn"
-                    android:textAlignment="center"
-                    android:textColor="@color/widgetLightPrimaryText"
-                    android:textSize="@dimen/widgetTextPrimary" />
-
-                <TextView
-                    android:id="@+id/textViewSecondary1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tchr A105"
-                    android:textAlignment="center"
-                    android:textColor="@color/widgetLightSecondaryText"
-                    android:textSize="@dimen/widgetTextSecondary" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageViewDivider1"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                app:srcCompat="@drawable/rounded_corner_black" />
+            <TextView
+                android:id="@+id/textViewSecondary1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tchr A105"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightSecondaryText"
+                android:textSize="@dimen/widgetTextSecondary" />
 
         </LinearLayout>
 
         <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <LinearLayout
             android:id="@+id/cell2"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -140,24 +121,11 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageViewDivider2"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/rounded_corner_black" />
-
-    </LinearLayout><LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
         <LinearLayout
             android:id="@+id/cell3"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -182,24 +150,11 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageViewDivider3"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/rounded_corner_black" />
-
-    </LinearLayout><LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
         <LinearLayout
             android:id="@+id/cell4"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -224,15 +179,6 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageViewDivider4"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            app:srcCompat="@drawable/rounded_corner_black" />
-
-    </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

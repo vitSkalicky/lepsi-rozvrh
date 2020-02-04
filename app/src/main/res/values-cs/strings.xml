@@ -108,6 +108,9 @@
 
     <string name="crash_reports_not_allowed">Automatické hlášení pádů je dovoleno pouze u oficiálních vydání.</string>
 
+    <string name="small_widget_label">Aktuální hodina</string>
+    <string name="wide_widget_label">Pětihodinový přehled</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>
         <item quantity="few">%d týdny zpět</item>

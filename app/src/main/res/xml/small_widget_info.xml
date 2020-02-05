@@ -5,6 +5,7 @@
     android:minResizeWidth="40dp"
     android:minResizeHeight="20dp"
     android:updatePeriodMillis="86400000"
+    android:configure="cz.vitskalicky.lepsirozvrh.widget.SmallWidgetConfigActivity"
     android:initialLayout="@layout/small_widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">

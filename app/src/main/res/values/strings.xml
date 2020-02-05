@@ -80,6 +80,7 @@
     <string name="close">Close</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
     <string name="scr_dialog">Send crash reports?</string>
@@ -110,6 +111,7 @@
 
     <string name="small_widget_label">Current lesson</string>
     <string name="wide_widget_label">Five lessons overview</string>
+    <string name="widget_style">Style</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

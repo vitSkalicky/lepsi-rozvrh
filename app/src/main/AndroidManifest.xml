@@ -24,6 +24,13 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".widget.WideWidgetConfigActivity"
+            android:theme="@style/AppTheme.WallpaperBackground">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.LicencesActivity" />
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".settings.SettingsActivity" />

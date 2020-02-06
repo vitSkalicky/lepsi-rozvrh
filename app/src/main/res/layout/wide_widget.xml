@@ -44,7 +44,7 @@
                     android:id="@+id/textViewSecondary0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tch 105"
+                    android:text="Hm 119"
                     android:textAlignment="center"
                     android:textColor="@color/widgetLightSecondaryText"
                     android:textSize="@dimen/widgetTextSecondary" />
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ma"
+                android:text="Bio"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightPrimaryText"
                 android:textSize="@dimen/widgetTextPrimary" />
@@ -84,7 +84,7 @@
                 android:id="@+id/textViewSecondary1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tch 105"
+                android:text="Di 223"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightSecondaryText"
                 android:textSize="@dimen/widgetTextSecondary" />
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ma"
+                android:text="G"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightPrimaryText"
                 android:textSize="@dimen/widgetTextPrimary" />
@@ -113,7 +113,7 @@
                 android:id="@+id/textViewSecondary2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tch 105"
+                android:text="Ex 110"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightSecondaryText"
                 android:textSize="@dimen/widgetTextSecondary" />
@@ -133,16 +133,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ma"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightPrimaryText"
-                android:textSize="@dimen/widgetTextPrimary" />
+                android:textSize="@dimen/widgetTextPrimary"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textViewSecondary3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tch 105"
+                android:text="@string/lesson_cancelled"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightSecondaryText"
                 android:textSize="@dimen/widgetTextSecondary" />
@@ -162,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ma"
+                android:text="En"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightPrimaryText"
                 android:textSize="@dimen/widgetTextPrimary" />
@@ -171,7 +171,7 @@
                 android:id="@+id/textViewSecondary4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tch 105"
+                android:text="Ce 302"
                 android:textAlignment="center"
                 android:textColor="@color/widgetLightSecondaryText"
                 android:textSize="@dimen/widgetTextSecondary" />

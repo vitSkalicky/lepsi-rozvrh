@@ -110,7 +110,7 @@
     <string name="crash_reports_not_allowed">Automatic crash reports are allowed only on official release builds.</string>
 
     <string name="small_widget_label">Current lesson</string>
-    <string name="wide_widget_label">Five lessons overview</string>
+    <string name="wide_widget_label">5-lesson overview</string>
     <string name="widget_style">Style</string>
 
     <plurals name="info_weeks_back">

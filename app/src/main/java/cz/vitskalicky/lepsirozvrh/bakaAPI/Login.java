@@ -179,6 +179,7 @@ public class Login {
                 });
 
                 passwordCheck.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
+                passwordCheck.setShouldCache(false);
                 queue.add(passwordCheck);
 
             } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
@@ -192,6 +193,7 @@ public class Login {
             listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
         });
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
+        stringRequest.setShouldCache(false);
 
         queue.add(stringRequest);
     }

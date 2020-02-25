@@ -63,17 +63,16 @@ public class RozvrhAPI {
     }
 
     private HashMap<LocalDate, Rozvrh> saved = new HashMap<>();
-    private RequestQueue requestQueue;
     private Context context;
     private Map<LocalDate, LocalTime> lastUpdated = new HashMap<>();
-    private HashMap<LocalDate, List<RozvrhListener>> listeners = new HashMap<>();
     private HashMap<LocalDate, MutableLiveData<RozvrhWrapper>> liveDatas = new HashMap<>();
+    private MutableLiveData<RozvrhWrapper> currentWeekLiveData;
     private RozvrhLoader rozvrhLoader;
 
     public RozvrhAPI(RequestQueue requestQueue, Context context) {
-        this.requestQueue = requestQueue;
         this.context = context;
         rozvrhLoader = new RozvrhLoader(context, requestQueue);
+        currentWeekLiveData = new MutableLiveData<>();
     }
 
     /**
@@ -102,21 +101,21 @@ public class RozvrhAPI {
             final Mutable<Boolean> netFinishedSucessfully = new Mutable<>(false);
             getFromCacheAndSave(monday, rozvrhWrapper -> {
                 if (!netFinishedSucessfully.getValue()) {
-                    fld.setValue(rozvrhWrapper);
+                    updateLiveData(monday, rozvrhWrapper);
                 }
             });
             getFromNetAndSave(monday, rozvrhWrapper -> {
                 if (rozvrhWrapper.getCode() == SUCCESS) {
-                    fld.setValue(rozvrhWrapper);
+                    updateLiveData(monday, rozvrhWrapper);
                     netFinishedSucessfully.setValue(true);
                 } else {
                     Rozvrh prevRozvrh = fld.getValue() == null ? null : fld.getValue().getRozvrh();
-                    fld.setValue(new RozvrhWrapper(prevRozvrh, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
+                    updateLiveData(monday, new RozvrhWrapper(prevRozvrh, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
                 }
             });
-            fld.setValue(new RozvrhWrapper(null, NO_CACHE, RozvrhWrapper.SOURCE_MEMORY));
+            updateLiveData(monday, new RozvrhWrapper(null, NO_CACHE, RozvrhWrapper.SOURCE_MEMORY));
         } else {
-            fld.setValue(new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
+            updateLiveData(monday, new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
 
         cacheCNPP();
@@ -152,6 +151,10 @@ public class RozvrhAPI {
         MutableLiveData<RozvrhWrapper> ld = liveDatas.get(monday);
         if (ld != null) {
             ld.setValue(rw);
+        }
+
+        if (monday != null && Utils.getWeekMonday(monday).equals(Utils.getCurrentMonday())){
+            currentWeekLiveData.setValue(rw);
         }
     }
 
@@ -199,6 +202,13 @@ public class RozvrhAPI {
         if (rozvrh != null) {
             listener.method(new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
+    }
+
+    /**
+     * Returns live data that are updated always with the current week (even if new week begins after getting them).
+     */
+    public LiveData<RozvrhWrapper> getCurrentWeekLiveData(){
+        return currentWeekLiveData;
     }
 
     /**

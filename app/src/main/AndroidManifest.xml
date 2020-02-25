@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notification.NotiBroadcastReciever">
+        <receiver android:name=".UpdateBroadcastReciever">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

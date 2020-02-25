@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -14,6 +15,7 @@ import androidx.core.text.HtmlCompat;
 import java.util.HashSet;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
@@ -23,6 +25,7 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 
 public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
+    public static final String TAG = WidgetProvider.class.getSimpleName();
     public static final int PENDING_INTENT_REQUEST_CODE = 85321;
 
     @Override
@@ -44,6 +47,12 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
     public static void update(int widgetID, RozvrhHodina[] hodiny, Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         WidgetsSettings.Widget widgetSettings = AppSingleton.getInstance(context).getWidgetsSettings().widgets.get(widgetID);
+
+        // failsafe
+        if (widgetSettings == null){
+            widgetSettings = new WidgetsSettings.Widget();
+            Log.e(TAG,"There are widget settings missing for widget id " + widgetID);
+        }
 
         boolean allEmpty = true;
         if (hodiny == null) {
@@ -78,6 +87,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
             if (hodiny.length < 5) {
                 RozvrhHodina[] tmp = new RozvrhHodina[5];
+                //noinspection ManualArrayCopy
                 for (int i = 0; i < hodiny.length; i++) {
                     tmp[i] = hodiny[i];
                 }
@@ -184,7 +194,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             updateAll(rozvrh, context);
-            //((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
+            ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
             pendingResult.finish();
         });
     }
@@ -223,7 +233,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             update(appWidgetId, rozvrh.getWidgetDiaplayValues(5), context);
-            //((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
+            ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
             pendingResult.finish();
         });
     }

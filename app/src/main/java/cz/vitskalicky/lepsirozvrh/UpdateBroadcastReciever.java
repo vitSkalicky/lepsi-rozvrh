@@ -1,23 +1,19 @@
-package cz.vitskalicky.lepsirozvrh.notification;
+package cz.vitskalicky.lepsirozvrh;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
-import androidx.core.app.RemoteInput;
-
-import cz.vitskalicky.lepsirozvrh.AppSingleton;
-import cz.vitskalicky.lepsirozvrh.BuildConfig;
-import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 
 /**
- * Stands for <b>Noti</b>fication <b>broadcast reciever</b>
+ * Broadcast receiver that updates notification and widgets when receives a broadcast.
  */
-public class NotiBroadcastReciever extends BroadcastReceiver {
-    private static final String TAG = NotiBroadcastReciever.class.getSimpleName();
+public class UpdateBroadcastReciever extends BroadcastReceiver {
+    private static final String TAG = UpdateBroadcastReciever.class.getSimpleName();
     public static final int REQUEST_CODE = 64857;
     /**
      * +1 for next, -1 for prev
@@ -41,9 +37,16 @@ public class NotiBroadcastReciever extends BroadcastReceiver {
         if (intent != null && intent.getAction() != null && intent.getAction().equals(ACTION_NEXT_PREV) && intent.hasExtra(EXTRA_NEXT_PREV)){
             int offset = intent.getIntExtra(EXTRA_NEXT_PREV, 0);
             application.getNotificationState().setOffset(application.getNotificationState().getOffset() + offset);
-            application.scheduleNotificationUpdate(application.getNotificationState().getOffsetResetTime());
+            application.scheduleUpdate(application.getNotificationState().getOffsetResetTime());
         }
 
-        PermanentNotification.update(rozvrhAPI, application, () -> pendingResult.finish());
+        rozvrhAPI.getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
+            PermanentNotification.update(rozvrhWrapper.getRozvrh(), application);
+            WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), context);
+
+            application.updateUpdateTime(rozvrhWrapper.getRozvrh());
+
+            pendingResult.finish();
+        });
     }
 }

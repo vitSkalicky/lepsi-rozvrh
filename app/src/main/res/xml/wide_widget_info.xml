@@ -8,5 +8,6 @@
     android:configure="cz.vitskalicky.lepsirozvrh.widget.WideWidgetConfigActivity"
     android:initialLayout="@layout/wide_widget"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen">
+    android:widgetCategory="home_screen"
+    android:previewImage="@drawable/wide_widget_preview">
 </appwidget-provider>

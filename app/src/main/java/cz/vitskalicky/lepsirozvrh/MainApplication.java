@@ -80,7 +80,9 @@ public class MainApplication extends Application {
                     PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
                 }
             }
-            updateUpdateTime(() -> {});
+
+            updateUpdateTime(rozvrhWrapper.getRozvrh());
+
         };
 
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();

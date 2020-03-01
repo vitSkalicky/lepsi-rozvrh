@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+
 @Root(name = "rozvrh", strict = false)
 public class Rozvrh {
     public static final String TAG = Rozvrh.class.getSimpleName();
@@ -151,6 +153,8 @@ public class Rozvrh {
     }
 
     /**
+     * Prefer {@link cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI#getNextCurrentLessonChangeTime(RozvrhAPI.TimeListener)} because that one also checks the next week if the time cannot be determine from the current one.
+     *
      * Returns the time, when the notification or widget should be updated, or empty {@link GetNCLCTreturnValues} with error code if this is
      * a permanent schedule ({@link GetNCLCTreturnValues#errCode} = 1), old schedule ({@link GetNCLCTreturnValues#errCode} = 2) or there was a different problem ({@link GetNCLCTreturnValues#errCode} = 3)
      */

@@ -213,8 +213,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             updateAll(rozvrh, context);
-            ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
-            pendingResult.finish();
+            ((MainApplication) context.getApplicationContext()).updateUpdateTime(pendingResult::finish);
         });
     }
 
@@ -252,8 +251,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
             update(appWidgetId, rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5), context);
-            ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
-            pendingResult.finish();
+            ((MainApplication) context.getApplicationContext()).updateUpdateTime(pendingResult::finish);
         });
     }
 }

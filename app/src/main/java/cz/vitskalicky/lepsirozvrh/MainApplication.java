@@ -36,15 +36,7 @@ public class MainApplication extends Application {
     private NotificationState notificationState = null;
     private LocalDateTime updateTime = null;
     private LiveData<RozvrhWrapper> currentWeekLivedata = null;
-    private Observer<RozvrhWrapper> currentWeekObserver = rozvrhWrapper -> {
-        if (rozvrhWrapper.getRozvrh() != null) {
-            WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), this);
-            if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
-                PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
-            }
-            updateUpdateTime(rozvrhWrapper.getRozvrh());
-        }
-    };
+    private Observer<RozvrhWrapper> currentWeekObserver = null;
 
     @Override
     public void onCreate() {
@@ -81,6 +73,16 @@ public class MainApplication extends Application {
         }
 
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
+        currentWeekObserver = rozvrhWrapper -> {
+            if (rozvrhWrapper.getRozvrh() != null) {
+                WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), this);
+                if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
+                    PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
+                }
+            }
+            updateUpdateTime(() -> {});
+        };
+
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
         currentWeekLivedata.observeForever(currentWeekObserver);
     }
@@ -105,20 +107,33 @@ public class MainApplication extends Application {
         return notificationState;
     }
 
-    public void updateUpdateTime(Rozvrh rozvrh) {
+    /**
+     * Updates the widget and notification update time using the data from the given Rozvrh. !!! Use {@link #updateUpdateTime(Utils.Listener)}, because that one accounts for week shift during weekend !!!
+     * @return true if updated, false if the update time could not be determined from the given rozvrh.
+     */
+    private boolean updateUpdateTime(Rozvrh rozvrh) {
         if (rozvrh == null){
-            return;
+            return false;
         }
         Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
-        if (values.localDateTime != null && (updateTime == null || (updateTime.isAfter(values.localDateTime)) && updateTime.isAfter(LocalDateTime.now()))) { //update only if the new time is sooner than the scheduled (and also check if the scheduled isn't in the past)
+
+        if (values.errCode != 0 || values.localDateTime == null){
+            return false;
+        }
+
+        if (updateTime == null || (updateTime.isAfter(values.localDateTime)) || updateTime.isBefore(LocalDateTime.now())) { //update only if the new time is sooner than the scheduled (and also check if the scheduled isn't in the past)
             scheduleUpdate(values.localDateTime);
         }
+        return true;
     }
 
-    public void updateUpdateTime() {
-        if (currentWeekLivedata != null && currentWeekLivedata.getValue() != null){
-            updateUpdateTime(currentWeekLivedata.getValue().getRozvrh());
-        }
+    public void updateUpdateTime(Utils.Listener onFinished) {
+        AppSingleton.getInstance(this).getRozvrhAPI().getNextCurrentLessonChangeTime(updateTime1 -> {
+            if (updateTime1 != null && (updateTime == null || (updateTime.isAfter(updateTime1)) || updateTime.isBefore(LocalDateTime.now()))){
+                scheduleUpdate(updateTime1);
+            }
+            onFinished.method();
+        });
     }
 
     public void enableNotification() {

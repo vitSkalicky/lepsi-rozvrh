@@ -44,9 +44,7 @@ public class UpdateBroadcastReciever extends BroadcastReceiver {
             PermanentNotification.update(rozvrhWrapper.getRozvrh(), application);
             WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), context);
 
-            application.updateUpdateTime(rozvrhWrapper.getRozvrh());
-
-            pendingResult.finish();
+            application.updateUpdateTime(pendingResult::finish);
         });
     }
 }

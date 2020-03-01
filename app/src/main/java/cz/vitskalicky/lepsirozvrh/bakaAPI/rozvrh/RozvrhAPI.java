@@ -312,7 +312,11 @@ public class RozvrhAPI {
         });
     }
 
-    public void getNextNotificationUpdateTime(TimeListener listener) {
+    /**
+     * Return he time when notification and widgets should be updated. It also checks the next week if the lessons of current week are already over, but it hasn't ended yet.
+     * @param listener Listener using which data is returned.
+     */
+    public void getNextCurrentLessonChangeTime(TimeListener listener) {
         getRozvrh(Utils.getCurrentMonday(), (rozvrhWrapper) -> {
             int code = rozvrhWrapper.getCode();
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();

@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
+
 @Root(name = "rozvrh", strict = false)
 public class Rozvrh {
     public static final String TAG = Rozvrh.class.getSimpleName();
@@ -151,6 +153,8 @@ public class Rozvrh {
     }
 
     /**
+     * Prefer {@link cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI#getNextCurrentLessonChangeTime(RozvrhAPI.TimeListener)} because that one also checks the next week if the time cannot be determine from the current one.
+     *
      * Returns the time, when the notification or widget should be updated, or empty {@link GetNCLCTreturnValues} with error code if this is
      * a permanent schedule ({@link GetNCLCTreturnValues#errCode} = 1), old schedule ({@link GetNCLCTreturnValues#errCode} = 2) or there was a different problem ({@link GetNCLCTreturnValues#errCode} = 3)
      */
@@ -250,6 +254,54 @@ public class Rozvrh {
             this.localDateTime = localDateTime;
             this.errCode = errCode;
         }
+    }
+
+    /**
+     * Returns lessons that should be displayed on a widget.
+     *
+     * @param lenght how many lessons does the widget display - determines the length of the returned array.
+     * @return {@code null} if this is not a current week or it is not school-time now.
+     */
+    public RozvrhHodina[] getWidgetDiaplayValues(int lenght){
+        LocalDate nowDate = LocalDate.now();
+        LocalTime nowTime = LocalTime.now();
+
+        RozvrhDen dneska = null;
+        for (RozvrhDen item : dny) {
+            if (item.getParsedDatum() == null) //permanent timetable check
+                return null;
+            if (item.getParsedDatum().isEqual(nowDate)) {
+                dneska = item;
+                break;
+            }
+        }
+
+        if (dneska == null) //current timetable check
+            return null;
+
+        RozvrhHodina[] ret = new RozvrhHodina[lenght];
+
+        boolean prvni = true;
+        int currentHodinaIndex = 0;
+        for (int i = 0; i < dneska.getHodiny().size(); i++) {
+            RozvrhHodina item = dneska.getHodiny().get(i);
+            if (!item.getTyp().equals("X") || !prvni){
+                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(3))){
+                    return null;
+                }
+                if (nowTime.isBefore(item.getParsedEndtime().minusMinutes(10))) {
+                    break;
+                }
+                prvni = false;
+            }
+            currentHodinaIndex++;
+        }
+
+        for (int i = 0; i < lenght && i + currentHodinaIndex < dneska.getHodiny().size(); i++) {
+            ret[i] = dneska.getHodiny().get(i + currentHodinaIndex);
+        }
+
+       return ret;
     }
 
     public List<RozvrhHodinaCaption> getHodiny() {

@@ -80,6 +80,7 @@
     <string name="close">Close</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
     <string name="scr_dialog">Send crash reports?</string>
@@ -107,6 +108,11 @@
     <string name="notification_channel_name">Permanent notification</string>
 
     <string name="crash_reports_not_allowed">Automatic crash reports are allowed only on official release builds.</string>
+
+    <string name="small_widget_label">Current lesson</string>
+    <string name="wide_widget_label">5-lesson overview</string>
+    <string name="widget_style">Style</string>
+    <string name="widget_logged_out">Logged out</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

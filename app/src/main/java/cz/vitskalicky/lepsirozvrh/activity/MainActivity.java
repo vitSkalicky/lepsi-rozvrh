@@ -15,9 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
@@ -145,26 +142,6 @@ public class MainActivity extends AppCompatActivity {
                 ibRefresh.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
             }
-        });
-        ibSettings.setOnLongClickListener(v -> {
-            File dir = context.getFilesDir();
-
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File fileDir, String name) {
-                    if (fileDir == dir) {
-                        return true;
-                    }
-                    return false;
-                }
-            };
-
-            String[] fileNames = dir.list(filter);
-
-            for (String item : fileNames) {
-                context.deleteFile(item);
-            }
-            return true;
         });
 
         rtFragment.createViews();

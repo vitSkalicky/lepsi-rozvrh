@@ -5,4 +5,8 @@
         <item>V neděli</item>
         <item>V sobotu</item>
     </string-array>
+    <string-array name="widget_style_entries">
+        <item>Světlý</item>
+        <item>Tmavý</item>
+    </string-array>
 </resources>

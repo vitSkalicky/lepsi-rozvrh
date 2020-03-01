@@ -283,7 +283,7 @@ public class RozvrhHodina {
 
     /**
      * {@code true} is {@code typ == "X"} and all the other fields (excluding time and caption related ones) are empty.
-     * Usually {@code true} for the empty lessons on the end of each day, if case they weren't removed already.
+     * Usually {@code true} for the empty lessons on the end of each day, in case they weren't removed already.
      */
     public boolean isEmpty() {
         return typ.equals("X") &&

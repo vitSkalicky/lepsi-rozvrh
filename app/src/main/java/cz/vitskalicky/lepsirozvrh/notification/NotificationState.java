@@ -10,6 +10,7 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 
+@SuppressWarnings("WeakerAccess")
 public class NotificationState {
     private static final String TAG = NotificationState.class.getSimpleName();
     public static final String SHARED_PREF_OFFSET = "notification-offset";
@@ -17,10 +18,8 @@ public class NotificationState {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     private Context context;
 
-    public LocalDateTime scheduledNotificationTime = null;
-
-    private int offset = 0;
-    private LocalDateTime offsetTime = null;
+    private int offset;
+    private LocalDateTime offsetTime;
 
     private static final int RESET_OFFSET_AFTER_MINUTES = 5;
 

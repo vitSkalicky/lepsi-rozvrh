@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root">
+
+    <ImageView
+        android:id="@+id/bgcolor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/rounded_corner_white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/cell0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewZkrpr0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Ma"
+                    android:textAlignment="center"
+                    android:textColor="@color/widgetLightPrimaryText"
+                    android:textSize="@dimen/widgetTextPrimary" />
+
+                <TextView
+                    android:id="@+id/textViewSecondary0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hm 119"
+                    android:textAlignment="center"
+                    android:textColor="@color/widgetLightSecondaryText"
+                    android:textSize="@dimen/widgetTextSecondary" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageViewDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/rounded_corner_black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cell1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewZkrpr1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Bio"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightPrimaryText"
+                android:textSize="@dimen/widgetTextPrimary" />
+
+            <TextView
+                android:id="@+id/textViewSecondary1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Di 223"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightSecondaryText"
+                android:textSize="@dimen/widgetTextSecondary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cell2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewZkrpr2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="G"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightPrimaryText"
+                android:textSize="@dimen/widgetTextPrimary" />
+
+            <TextView
+                android:id="@+id/textViewSecondary2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ex 110"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightSecondaryText"
+                android:textSize="@dimen/widgetTextSecondary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cell3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewZkrpr3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightPrimaryText"
+                android:textSize="@dimen/widgetTextPrimary"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textViewSecondary3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lesson_cancelled"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightSecondaryText"
+                android:textSize="@dimen/widgetTextSecondary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cell4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewZkrpr4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="En"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightPrimaryText"
+                android:textSize="@dimen/widgetTextPrimary" />
+
+            <TextView
+                android:id="@+id/textViewSecondary4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ce 302"
+                android:textAlignment="center"
+                android:textColor="@color/widgetLightSecondaryText"
+                android:textSize="@dimen/widgetTextSecondary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

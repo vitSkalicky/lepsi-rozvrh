@@ -22,6 +22,13 @@ public class SharedPrefs {
     public static final String REMEMBERED_ROWS = "remembered_rows";
     public static final String REMEMBERED_COLUMNS = "remembered_columns";
 
+    public static final String LAST_VERSION_SEEN = "last_version_seen";
+
+    /**
+     * Access thi one only using {@link AppSingleton#getWidgetsSettings()}.
+     */
+    public static final String WIDGETS_SETTINGS = "widgets-settings";
+
     public static String getString(Context context, String key) {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)

@@ -1,5 +1,16 @@
 # Seznam změn / Changelog
 
+## 1.6 (1. 3. 2020)
+
+- Konečně přidán widget s tmavým nebo světlým vzhledem
+- Přidán seznam změn přímo v aplikaci
+
+---
+
+- Finally added widget with light or dark theme
+- Added changelog right in the app
+
+
 ## 1.5.3 (25. 1. 2020)
 
 - Použita jiná knihovna pro zobrazování open source licencí.

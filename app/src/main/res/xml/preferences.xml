@@ -39,6 +39,9 @@
             android:key="@string/PREFS_NOTIFICATION"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/about">
+        <Preference android:title="@string/whats_new"
+            android:key="@string/PREFS_CHANGELOG"
+            android:icon="@drawable/ic_whats_new"/>
         <Preference android:title="@string/source_code"
             android:summary="@string/source_code_desc"
             android:icon="@drawable/ic_web_black_24dp">

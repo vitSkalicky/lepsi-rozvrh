@@ -8,10 +8,10 @@ Main features:
 • Very fast schedule loading — Combines offline and online data to display schedule within a second.
 • Seamless offline mode — Everything is cached in the background so that schedule can be shown even when you are offline.
 • Persistent notification — You don't have to open the app to see next lesson any more.
+• Beautiful widget — The next lesson or overview of the entire day always on your home screen.
 • Simple interface — Easy switching between weeks.
 • Free and open source software — No ads, no spying, free, forever.
 
 Coming soon:
-• Widget
 • More themes (dark, black & white, ...)
 • Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues

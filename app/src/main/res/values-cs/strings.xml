@@ -80,6 +80,7 @@
     <string name="close">Zavřít</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
     <string name="scr_dialog">Odesísal zprávy o chybách?</string>
@@ -107,6 +108,16 @@
     <string name="notification_channel_name">Trvalé upozornění</string>
 
     <string name="crash_reports_not_allowed">Automatické hlášení pádů je dovoleno pouze u oficiálních vydání.</string>
+
+    <string name="small_widget_label">Aktuální hodina</string>
+    <string name="wide_widget_label">Pětihodinový přehled</string>
+    <string name="widget_style">Vzhled</string>
+    <string name="widget_logged_out">Uživatel odhlášen</string>
+
+    <string name="app_updated">Aplikace byla aktualizována</string>
+    <string name="whats_new">Co je nového</string>
+    <!-- Interesting feature messages-->
+    <string name="interestig_widget">Konečně byl přidán widget!</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

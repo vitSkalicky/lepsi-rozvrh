@@ -40,6 +40,8 @@ import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRequest;
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 
 public class Login {
     private static String TAG = Login.class.getSimpleName();
@@ -207,6 +209,8 @@ public class Login {
         SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
         RozvrhCache.clearCache(context);
+        PermanentNotification.update(null, 0, context);
+        WidgetProvider.updateAll(null, context);
         AppSingleton.getInstance(context).getRozvrhAPI().clearMemory();
     }
 
@@ -230,25 +234,23 @@ public class Login {
         if (!isLoggedIn && !(currentActivity instanceof LoginActivity)){
             Intent intent = new Intent(ctx, LoginActivity.class);
             ctx.startActivity(intent);
-            currentActivity.finish();
             return LoginActivity.class;
         }
         if (!(currentActivity instanceof MainActivity)){
             Intent intent = new Intent(ctx, MainActivity.class);
             ctx.startActivity(intent);
-            currentActivity.finish();
             return MainActivity.class;
         }
         return null;
     }
 
     /**
-     * Claculates token from saved credentials. !!! returns empty string if the user is not logged in !!!
+     * Calculates token from saved credentials. !!! returns empty string if the user is not logged in !!!
      */
     public static String getToken(Context context){
         if (!SharedPrefs.contains(context, SharedPrefs.USERNAME) || !SharedPrefs.contains(context, SharedPrefs.PASSWORD_HASH)){
             //not logged in
-            Log.e(TAG, "Getting token failed: lot logged in - returning \"\"");
+            Log.w(TAG, "Getting token failed: lot logged in - returning \"\"");
             return "";
         }
         return calculateToken(SharedPrefs.getString(context,SharedPrefs.USERNAME), SharedPrefs.getString(context, SharedPrefs.PASSWORD_HASH));

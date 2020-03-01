@@ -48,6 +48,14 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         WidgetsSettings.Widget widgetSettings = AppSingleton.getInstance(context).getWidgetsSettings().widgets.get(widgetID);
 
+        boolean loggedOut = false;
+
+        // check login
+        if (Login.getToken(context).isEmpty()){
+            //logged out
+            loggedOut = true;
+        }
+
         // failsafe
         if (widgetSettings == null){
             widgetSettings = new WidgetsSettings.Widget();
@@ -71,7 +79,18 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
         RemoteViews views;
 
-        if (width < 250 || allEmpty) {
+        if (loggedOut){
+            views = new RemoteViews(context.getPackageName(), R.layout.small_widget);
+
+            views.setTextViewText(R.id.textViewZkrpr, "");
+            views.setViewVisibility(R.id.textViewZkrpr, View.GONE);
+            views.setTextViewText(R.id.textViewSecondary, context.getString(R.string.widget_logged_out));
+            views.setInt(R.id.textViewZkrpr, "setTextColor", widgetSettings.primaryTextColor);
+            views.setInt(R.id.textViewSecondary, "setTextColor", widgetSettings.secondaryTextColor);
+            views.setFloat(R.id.textViewZkrpr, "setTextSize", widgetSettings.primaryTextSize);
+            views.setFloat(R.id.textViewSecondary, "setTextSize", widgetSettings.secondaryTextSize);
+
+        } else if (width < 250 || allEmpty) {
             views = new RemoteViews(context.getPackageName(), R.layout.small_widget);
 
             RozvrhHodina hodina;
@@ -232,7 +251,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
         AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
             Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
-            update(appWidgetId, rozvrh.getWidgetDiaplayValues(5), context);
+            update(appWidgetId, rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5), context);
             ((MainApplication) context.getApplicationContext()).updateUpdateTime(rozvrh);
             pendingResult.finish();
         });

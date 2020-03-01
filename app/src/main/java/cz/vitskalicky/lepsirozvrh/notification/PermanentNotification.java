@@ -77,6 +77,10 @@ public class PermanentNotification {
                 }
                 update(rozvrhHodina, offset, context);
             }
+        } else {
+            if (Login.getToken(context).isEmpty()){
+                update(null,0, context);
+            }
         }
 
     }

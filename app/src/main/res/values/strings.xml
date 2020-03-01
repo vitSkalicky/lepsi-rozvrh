@@ -112,6 +112,7 @@
     <string name="small_widget_label">Current lesson</string>
     <string name="wide_widget_label">5-lesson overview</string>
     <string name="widget_style">Style</string>
+    <string name="widget_logged_out">Logged out</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>

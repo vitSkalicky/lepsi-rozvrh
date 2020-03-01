@@ -114,6 +114,11 @@
     <string name="widget_style">Vzhled</string>
     <string name="widget_logged_out">Uživatel odhlášen</string>
 
+    <string name="app_updated">Aplikace byla aktualizována</string>
+    <string name="whats_new">Co je nového</string>
+    <!-- Interesting feature messages-->
+    <string name="interestig_widget">Konečně byl přidán widget!</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>
         <item quantity="few">%d týdny zpět</item>

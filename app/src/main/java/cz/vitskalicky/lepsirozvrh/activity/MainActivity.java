@@ -8,6 +8,8 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
@@ -15,7 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
@@ -25,6 +30,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
+import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -149,6 +155,24 @@ public class MainActivity extends AppCompatActivity {
             week = 0;
         else
             week = savedInstanceState.getInt(STATE_WEEK, 0);
+
+        int lastInterestingFeatureVersion = 12;
+        String lastInterestingFeatureMessage = getString(R.string.interestig_widget);
+
+        if (!SharedPrefs.contains(this, SharedPrefs.LAST_VERSION_SEEN) || (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < lastInterestingFeatureVersion)){
+            Snackbar snackbar = Snackbar.make(infoLine, lastInterestingFeatureMessage, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(R.string.whats_new,view1 -> {
+                WhatsNewFragment whatsNewFragment = new WhatsNewFragment();
+                whatsNewFragment.show(getSupportFragmentManager(), "dialog");
+            });
+            snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            snackbar.setDuration(5000);
+
+            snackbar.show();
+
+            SharedPrefs.setInt(this, SharedPrefs.LAST_VERSION_SEEN, BuildConfig.VERSION_CODE);
+        }
+
 
         showHideButtons();
 

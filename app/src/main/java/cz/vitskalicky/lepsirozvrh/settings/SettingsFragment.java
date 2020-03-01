@@ -33,6 +33,7 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.LicencesActivity;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 import io.sentry.Sentry;
 
 /**
@@ -131,6 +132,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             ClipData clip = ClipData.newPlainText(versionText, versionText);
             clipboard.setPrimaryClip(clip);
             Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+            return true;
+        });
+
+        findPreference(getString(R.string.PREFS_CHANGELOG)).setOnPreferenceClickListener(preference -> {
+            WhatsNewFragment whatsNewFragment = new WhatsNewFragment();
+            whatsNewFragment.show(getActivity().getSupportFragmentManager(), "dialog");
             return true;
         });
     }

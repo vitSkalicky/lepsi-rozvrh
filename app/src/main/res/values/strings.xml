@@ -114,6 +114,11 @@
     <string name="widget_style">Style</string>
     <string name="widget_logged_out">Logged out</string>
 
+    <string name="app_updated">App has been updated</string>
+    <string name="whats_new">What\'s new</string>
+    <!-- Interesting feature messages-->
+    <string name="interestig_widget">Widget is finally here!</string>
+
     <plurals name="info_weeks_back">
         <item quantity="one">%d week back</item>
         <item quantity="other">%d weeks back</item>

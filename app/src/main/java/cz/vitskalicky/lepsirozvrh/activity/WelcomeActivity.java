@@ -57,6 +57,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void onButtonPressed(boolean sendReports) {
+        SharedPrefs.setInt(this, SharedPrefs.LAST_VERSION_SEEN, BuildConfig.VERSION_CODE);
+
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_SEND_CRASH_REPORTS), sendReports);
         if (getApplication() instanceof MainApplication) {
             if (sendReports) {

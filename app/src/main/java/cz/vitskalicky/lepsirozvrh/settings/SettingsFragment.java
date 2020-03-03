@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -87,9 +88,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             AlertDialog ad = new AlertDialog.Builder(getContext())
                     .setTitle(R.string.include_schedule)
                     .setMessage(R.string.include_schedule_desc)
-                    .setNegativeButton(R.string.no, (dialog, which) -> sendFeedback(false))
-                    .setPositiveButton(R.string.yes, (dialog, which) -> sendFeedback(true))
-                    .setOnCancelListener(dialog -> sendFeedback(false))
+                    .setNegativeButton(R.string.no, (dialog, which) -> sendFeedback(false, getContext(), getView()))
+                    .setPositiveButton(R.string.yes, (dialog, which) -> sendFeedback(true, getContext(), getView()))
+                    .setOnCancelListener(dialog -> sendFeedback(false, getContext(), getView()))
                     .create();
             ad.show();
             return true;
@@ -150,11 +151,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         public void onLogout();
     }
 
-    public void sendFeedback(boolean includeRozvrh) {
+    public static void sendFeedback(boolean includeRozvrh, Context context, @Nullable View forToast) {
         String body = null;
         try {
-            body = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
-            body = "\n\n-----------------------------\n" + getContext().getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
+            body = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+            body = "\n\n-----------------------------\n" + context.getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
                     Build.VERSION.RELEASE + "\n App Version: " + body + "\n Commit hash: " + BuildConfig.GitHash + "Build type: " + BuildConfig.BUILD_TYPE + "\n Device Brand: " + Build.BRAND +
                     "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
             if (Sentry.getContext() != null && Sentry.getContext().getUser() != null){
@@ -162,16 +163,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }else {
                 body += "\n Sentry client id not available";
             }
-            body += "\n Sentry enabled: " + SharedPrefs.getBooleanPreference(getContext(), R.string.PREFS_SEND_CRASH_REPORTS);
+            body += "\n Sentry enabled: " + SharedPrefs.getBooleanPreference(context, R.string.PREFS_SEND_CRASH_REPORTS);
             final String finBody = body;
             if (includeRozvrh) {
                 new Thread(() -> {
-                    String fileCurrent = "rozvrh-" + Utils.dateToString(Utils.getDisplayWeekMonday(getContext())) + ".xml";
+                    String fileCurrent = "rozvrh-" + Utils.dateToString(Utils.getDisplayWeekMonday(context)) + ".xml";
                     String filePerm = "rozvrh-perm.xml";
 
                     String current = "";
                     String permanent = "";
-                    try (FileInputStream inputStream = getContext().openFileInput(fileCurrent)) {
+                    try (FileInputStream inputStream = context.openFileInput(fileCurrent)) {
                         //converts inputStream to string
                         java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
                         current = s.hasNext() ? s.next() : "";
@@ -180,7 +181,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     } catch (IOException e) {
                         current = "IOException: " + e.getMessage();
                     }
-                    try (FileInputStream inputStream = getContext().openFileInput(filePerm)) {
+                    try (FileInputStream inputStream = context.openFileInput(filePerm)) {
                         //converts inputStream to string
                         java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
                         permanent = s.hasNext() ? s.next() : "";
@@ -200,20 +201,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("message/rfc822");
-                        String address = getContext().getString(R.string.CONTACT_MAIL);
+                        String address = context.getString(R.string.CONTACT_MAIL);
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
                         intent.putExtra(Intent.EXTRA_SUBJECT, "");
                         intent.putExtra(Intent.EXTRA_TEXT, newBody);
 
                         try {
-                            getContext().startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
+                            context.startActivity(Intent.createChooser(intent, context.getString(R.string.send_email)));
                         } catch (android.content.ActivityNotFoundException ex) {
-                            Snackbar snackbar = Snackbar.make(getView(), getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar.make(forToast, context.getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
                             snackbar.setAction(R.string.copy_address, v -> {
-                                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newPlainText(address, address);
                                 clipboard.setPrimaryClip(clip);
-                                Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(forToast, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                             });
                             snackbar.show();
                         }
@@ -223,26 +224,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             } else {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
-                String address = getContext().getString(R.string.CONTACT_MAIL);
+                String address = context.getString(R.string.CONTACT_MAIL);
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "");
                 intent.putExtra(Intent.EXTRA_TEXT, body);
 
                 try {
-                    getContext().startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
+                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.send_email)));
                 } catch (android.content.ActivityNotFoundException ex) {
-                    Snackbar snackbar = Snackbar.make(getView(), getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(forToast, context.getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
                     snackbar.setAction(R.string.copy_address, v -> {
-                        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText(address, address);
                         clipboard.setPrimaryClip(clip);
-                        Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(forToast, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                     });
                     snackbar.show();
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(getContext(),"!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
         }
     }
 }

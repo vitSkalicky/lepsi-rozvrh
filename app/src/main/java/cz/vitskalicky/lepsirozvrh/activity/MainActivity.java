@@ -149,6 +149,11 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
             }
         });
+/*
+        ibSettings.setOnLongClickListener(v -> {
+            SharedPrefs.setString(context, SharedPrefs.DISABLE_WTF_ROZVRH_UP_TO_DATE, Utils.dateToString(LocalDate.now()));
+            return true;
+        });*/
 
         rtFragment.createViews();
         if (savedInstanceState == null)

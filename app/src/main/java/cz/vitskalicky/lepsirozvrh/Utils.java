@@ -1,11 +1,25 @@
 /*
- Taken from Bakalab <https://github.com/bakalaborg/bakalab>
- Modified by Vít Skalický 2019
+ Initially taken from Bakalab <https://github.com/bakalaborg/bakalab>
+ Modified by Vít Skalický 2020
 */
 package cz.vitskalicky.lepsirozvrh;
 
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -13,10 +27,16 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
+
+import io.sentry.Sentry;
 
 public class Utils {
     public static final String TAG = Utils.class.getSimpleName();
@@ -110,5 +130,101 @@ public class Utils {
 
     public static interface Listener{
         public void method();
+    }
+
+    /**
+     * Asks the user to send his Rozvrh because it is weird.
+
+     * @param forToast View to use for displaying snackbar
+     * @param rozvrhDate rozvrh date, null for permanent
+     */
+    public static void wtfRozvrh(Context context, View forToast, LocalDate rozvrhDate){
+
+        //similar to {@link cz.vitskalicky.lepsirozvrh.settings.SettingsFragment#sendFeedback(boolean, Context, View)}
+
+        LocalDate silent;
+        try {
+            silent = Utils.parseDate(SharedPrefs.getString(context, SharedPrefs.DISABLE_WTF_ROZVRH_UP_TO_DATE));
+        }catch (IllegalArgumentException e){
+            silent = null;
+        }
+
+        if (silent != null && LocalDate.now().isBefore(silent)){
+            return;
+        }
+
+        AlertDialog ad = new AlertDialog.Builder(context)
+                .setTitle(R.string.wtf_rozvrh_title)
+                .setMessage(R.string.wtf_rozvrh_message)
+                .setPositiveButton(R.string.wtf_rozvrh_report, (dialog, which) -> {
+                    String body = null;
+                    try {
+                        body = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+                        body = "\n\n-----------------------------\n" + context.getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
+                                Build.VERSION.RELEASE + "\n App Version: " + body + "\n Commit hash: " + BuildConfig.GitHash + "Build type: " + BuildConfig.BUILD_TYPE + "\n Device Brand: " + Build.BRAND +
+                                "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
+                        if (Sentry.getContext() != null && Sentry.getContext().getUser() != null){
+                            body += "\n Sentry client id: " + Sentry.getStoredClient().getContext().getUser().getId();
+                        }else {
+                            body += "\n Sentry client id not available";
+                        }
+                        body += "\n Sentry enabled: " + SharedPrefs.getBooleanPreference(context, R.string.PREFS_SEND_CRASH_REPORTS);
+                        final String finBody = body;
+                        new Thread(() -> {
+                            String fileName;
+                            if (rozvrhDate != null) {
+                                fileName = "rozvrh-" + Utils.dateToString(Utils.getWeekMonday(rozvrhDate)) + ".xml";
+                            } else {
+                                fileName = "rozvrh-perm.xml";
+                            }
+
+                            String rozvrh = "";
+                            try (FileInputStream inputStream = context.openFileInput(fileName)) {
+                                //converts inputStream to string
+                                Scanner s = new Scanner(inputStream).useDelimiter("\\A");
+                                rozvrh = s.hasNext() ? s.next() : "";
+                            } catch (FileNotFoundException e) {
+                                rozvrh = "File not found: " + e.getMessage();
+                            } catch (IOException e) {
+                                rozvrh = "IOException: " + e.getMessage();
+                            }
+
+                            String finRozvrh = rozvrh;
+
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                String newBody = finBody + "\nSchedule:\n\n" + finRozvrh + "\n";
+
+                                Intent intent = new Intent(Intent.ACTION_SEND);
+                                intent.setType("message/rfc822");
+                                String address = context.getString(R.string.CONTACT_MAIL);
+                                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+                                intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                                intent.putExtra(Intent.EXTRA_TEXT, newBody);
+
+                                try {
+                                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.send_email)));
+                                } catch (ActivityNotFoundException ex) {
+                                    Snackbar snackbar = Snackbar.make(forToast, context.getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
+                                    snackbar.setAction(R.string.copy_address, v -> {
+                                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText(address + "\n\n" + newBody, address + "\n\n" + newBody);
+                                        clipboard.setPrimaryClip(clip);
+                                        Snackbar.make(forToast, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+                                    });
+                                    snackbar.show();
+                                }
+                            });
+
+                        }).start();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.wtf_rozvrh_later, (dialog, which) -> {})
+                .setNeutralButton(R.string.wtf_not_fot_month, (dialog, which) -> {
+                    SharedPrefs.setString(context, SharedPrefs.DISABLE_WTF_ROZVRH_UP_TO_DATE, Utils.dateToString(LocalDate.now().plusDays(30)));
+                })
+                .create();
+        ad.show();
     }
 }

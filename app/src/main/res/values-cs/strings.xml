@@ -100,7 +100,7 @@
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
     <string name="no_email_client">Není nainstalován žádný emailový klient.</string>
-    <string name="copy_address">Zkopírovat adresu</string>
+    <string name="copy_address">Zkopírovat adresu a zprávu</string>
     <string name="copied_to_clipboard">Zkopírováno do schránky</string>
     <string name="include_schedule">Přiložit rozvrh?</string>
     <string name="include_schedule_desc">Přejete si přiložit ke zprávě Váš rozvrh?\n\nRozhodně vyberte \"ano\" pokud chcete nahlásit chybu ve vzhledu.</string>
@@ -118,6 +118,12 @@
     <string name="whats_new">Co je nového</string>
     <!-- Interesting feature messages-->
     <string name="interestig_widget">Konečně byl přidán widget!</string>
+
+    <string name="wtf_rozvrh_title">Nastala chyba</string>
+    <string name="wtf_rozvrh_message">Váš rozvrh nemohl být správně vykreslen! Přejete si tento problém nyní nahlásit prostřednictví emailu? Problémový rozvrh bude přiložen.</string>
+    <string name="wtf_rozvrh_report">Nahlásit</string>
+    <string name="wtf_rozvrh_later">Teď ne</string>
+    <string name="wtf_not_fot_month">Možná za měsíc</string>
 
     <plurals name="info_weeks_back">
         <item quantity="one">%d týden zpět</item>

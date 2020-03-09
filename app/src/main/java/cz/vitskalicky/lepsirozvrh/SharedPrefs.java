@@ -23,9 +23,13 @@ public class SharedPrefs {
     public static final String REMEMBERED_COLUMNS = "remembered_columns";
 
     public static final String LAST_VERSION_SEEN = "last_version_seen";
+    /**
+     * All weird rozvrh before this date won't show any dialog.
+     */
+    public static final String DISABLE_WTF_ROZVRH_UP_TO_DATE = "disable_wtf_rozvrh_up_to_date";
 
     /**
-     * Access thi one only using {@link AppSingleton#getWidgetsSettings()}.
+     * Access this one only using {@link AppSingleton#getWidgetsSettings()}.
      */
     public static final String WIDGETS_SETTINGS = "widgets-settings";
 

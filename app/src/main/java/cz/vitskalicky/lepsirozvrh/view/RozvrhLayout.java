@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
@@ -361,6 +363,8 @@ public class RozvrhLayout extends ViewGroup {
         //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());
     }
 
+    boolean displayingWtfRozvrhDialog = false;
+
     public void highlightCurrentLesson() {
         if (rozvrh == null){
             nextHodinaView = null;
@@ -399,6 +403,25 @@ public class RozvrhLayout extends ViewGroup {
         RozvrhHodina hodina = values.rozvrhHodina;
         int denIndex = values.dayIndex;
         int hodinaIndex = values.lessonIndex;
+
+        //fail-safe
+        if (hodinaIndex >= hodinasByCaptions.length || denIndex >= hodinasByCaptions[hodinaIndex].length){
+            // I've never seen such rozvrh
+            Log.w(TAG, "There are more lessons than captions in a weekly schedule. Showing WTF rozvrh dialog.");
+            Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("There are more lessons than captions in a weekly schedule. Showing WTF rozvrh dialog.").build());
+
+            if (!displayingWtfRozvrhDialog){
+                try {
+                    Utils.wtfRozvrh(context, this, rozvrh.getDny().get(0).getParsedDatum());
+                    displayingWtfRozvrhDialog = true;
+                }catch (Exception e){
+                    Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            hodinaIndex = Math.min(hodinaIndex, hodinasByCaptions.length - 1);
+            denIndex = Math.min(denIndex, hodinasByCaptions[hodinaIndex].length - 1);
+        }
 
         nextHodinaView = hodinasByCaptions[hodinaIndex][denIndex].get(0);
         //to be extra sure

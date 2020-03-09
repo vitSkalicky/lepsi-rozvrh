@@ -1,6 +1,5 @@
 package cz.vitskalicky.lepsirozvrh.whatsnew;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -63,7 +63,7 @@ public class WhatsNewFragment extends DialogFragment {
         }
 
         CharSequence cs = HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT);
-        return new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.close, (dialogInterface, i) -> {
-        }).setMessage(cs).setTitle(R.string.whats_new).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(R.string.whats_new).setPositiveButton(R.string.close, (dialogInterface, i) -> {
+        }).setMessage(cs).create();
     }
 }

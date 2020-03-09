@@ -1,5 +1,13 @@
 # Seznam změn / Changelog
 
+## 1.6.1 (9. 3. 2020)
+
+- Opravy chyb
+
+---
+
+- Bug fixes
+
 ## 1.6 (1. 3. 2020)
 
 - Konečně přidán widget s tmavým nebo světlým vzhledem

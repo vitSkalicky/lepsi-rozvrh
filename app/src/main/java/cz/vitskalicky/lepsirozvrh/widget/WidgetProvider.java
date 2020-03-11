@@ -15,9 +15,8 @@ import androidx.core.text.HtmlCompat;
 import java.util.HashSet;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
-import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
@@ -188,9 +187,9 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(TAG, "Updating widgets");
         WidgetsSettings widgetsSettings = AppSingleton.getInstance(context).getWidgetsSettings();
 
-        PendingResult pendingResult = goAsync();
 
         boolean somethingAdded = false;
 
@@ -210,11 +209,8 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
             AppSingleton.getInstance(context).saveWidgetsSettings();
         }
 
-        AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-            Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
-            updateAll(rozvrh, context);
-            ((MainApplication) context.getApplicationContext()).updateUpdateTime(pendingResult::finish);
-        });
+        Intent updateIntent = new Intent(context, UpdateBroadcastReciever.class);
+        context.sendBroadcast(updateIntent);
     }
 
     @Override
@@ -232,9 +228,8 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        Log.d(TAG, "Updating widget options");
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-
-        PendingResult pendingResult = goAsync();
 
         WidgetsSettings widgetsSettings = AppSingleton.getInstance(context).getWidgetsSettings();
         if (widgetsSettings.widgetIds.add(appWidgetId)) {
@@ -248,10 +243,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
             AppSingleton.getInstance(context).saveWidgetsSettings();
         }
 
-        AppSingleton.getInstance(context).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-            Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
-            update(appWidgetId, rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5), context);
-            ((MainApplication) context.getApplicationContext()).updateUpdateTime(pendingResult::finish);
-        });
+        Intent updateIntent = new Intent(context, UpdateBroadcastReciever.class);
+        context.sendBroadcast(updateIntent);
     }
 }

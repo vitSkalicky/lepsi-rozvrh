@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     int week = 0;
 
+    boolean showedNotiInfo = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,10 +158,12 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
         rtFragment.createViews();
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             week = 0;
-        else
+        }else {
             week = savedInstanceState.getInt(STATE_WEEK, 0);
+            showedNotiInfo = savedInstanceState.getBoolean(STATE_SHOWE_NOTI_INFO, false);
+        }
 
         int lastInterestingFeatureVersion = 12;
         String lastInterestingFeatureMessage = getString(R.string.interestig_widget);
@@ -205,8 +209,9 @@ public class MainActivity extends AppCompatActivity {
         }
         boolean fromNotification = intent.getBooleanExtra(PermanentNotification.EXTRA_NOTIFICATION, false);
         intent.removeExtra(PermanentNotification.EXTRA_NOTIFICATION);
-        if (fromNotification){
+        if (fromNotification && !showedNotiInfo){
             PermanentNotification.showInfoDialog(context, false);
+            showedNotiInfo = true;
         }
     }
 
@@ -244,11 +249,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static final String STATE_WEEK = "week";
+    private static final String STATE_SHOWE_NOTI_INFO = "showed-noti-info";
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_WEEK, week);
+        outState.putBoolean(STATE_SHOWE_NOTI_INFO, showedNotiInfo);
     }
 
     @Override

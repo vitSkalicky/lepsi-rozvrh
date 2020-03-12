@@ -10,13 +10,15 @@ import android.widget.CheckBox;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends CyaneaAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

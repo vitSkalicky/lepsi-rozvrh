@@ -6,9 +6,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import cz.vitskalicky.lepsirozvrh.R;
 
-public class LicencesActivity extends AppCompatActivity {
+public class LicencesActivity extends CyaneaAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

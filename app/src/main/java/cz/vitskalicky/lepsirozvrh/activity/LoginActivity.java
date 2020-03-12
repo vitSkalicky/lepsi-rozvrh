@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.activity;
 import android.content.Intent;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends CyaneaAppCompatActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
     /**
      * when you want this activity to log out as soon as it starts, pass this in intent extras.

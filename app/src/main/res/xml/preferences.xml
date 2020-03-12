@@ -14,6 +14,9 @@
             android:key="@string/PREFS_LOGOUT"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/look_and_behaviour">
+        <Preference
+            android:title="cyanea"
+            android:key="cyanea"/>
         <SwitchPreferenceCompat
             android:title="@string/info_line"
             android:summary="@string/info_line_desc"

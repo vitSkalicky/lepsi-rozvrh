@@ -15,5 +15,32 @@
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
     <string name="PRIVACY_POLICY_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh/blob/master/Z%C3%A1sady%20ochrany%20soukrom%C3%AD.md</string>
+    
+    <string name="THEME_ROZVRH_COLOR_BG_EMPTY" translatable="false">THEME_ROZVRH_COLOR_BG_EMPTY</string>
+    <string name="THEME_ROZVRH_COLOR_BG_A" translatable="false">THEME_ROZVRH_COLOR_BG_A</string>
+    <string name="THEME_ROZVRH_COLOR_BG_H" translatable="false">THEME_ROZVRH_COLOR_BG_H</string>
+    <string name="THEME_ROZVRH_COLOR_BG_CHNG" translatable="false">THEME_ROZVRH_COLOR_BG_CHNG</string>
+    <string name="THEME_ROZVRH_COLOR_BG_HEADER" translatable="false">THEME_ROZVRH_COLOR_BG_HEADER</string>
+
+    <string name="THEME_ROZVRH_COLOR_DIVIDER" translatable="false">THEME_ROZVRH_COLOR_DIVIDER</string>
+    <string name="THEME_ROZVRH_DP_DIVIDER" translatable="false">THEME_ROZVRH_DP_DIVIDER</string>
+    <string name="THEME_ROZVRH_COLOR_HIGHLIGHT" translatable="false">THEME_ROZVRH_COLOR_HIGHLIGHT</string>
+    <string name="THEME_ROZVRH_DP_HIGHLIGHT" translatable="false">THEME_ROZVRH_DP_HIGHLIGHT</string>
+
+    <string name="THEME_ROZVRH_COLOR_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_SECONDARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_ROOM_TEXT" translatable="false">THEME_ROZVRH_COLOR_ROOM_TEXT</string>
+    <string name="THEME_ROZVRH_SP_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_SP_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_SP_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_SP_SECONDARY_TEXT</string>
+
+    <string name="THEME_ROZVRH_DP_PADDING_LEFT" translatable="false">THEME_ROZVRH_DP_PADDING_LEFT</string>
+    <string name="THEME_ROZVRH_DP_PADDING_TOP" translatable="false">THEME_ROZVRH_DP_PADDING_TOP</string>
+    <string name="THEME_ROZVRH_DP_PADDING_RIGHT" translatable="false">THEME_ROZVRH_DP_PADDING_RIGHT</string>
+    <string name="THEME_ROZVRH_DP_PADDING_BOTTOM" translatable="false">THEME_ROZVRH_DP_PADDING_BOTTOM</string>
+    <string name="THEME_ROZVRH_DP_TEXT_PADDING" translatable="false">THEME_ROZVRH_DP_TEXT_PADDING</string>
+
+    <string name="THEME_INFOLINE_COLOR" translatable="false">THEME_INFOLINE_COLOR</string>
+    <string name="THEME_INFOLINE_COLOR_TEXT" translatable="false">THEME_INFOLINE_COLOR_TEXT</string>
+    <string name="THEME_INFOLINE_SP_TEXT" translatable="false">THEME_INFOLINE_SP_TEXT</string>
 
 </resources>

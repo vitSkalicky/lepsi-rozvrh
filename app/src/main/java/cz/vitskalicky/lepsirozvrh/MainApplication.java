@@ -15,6 +15,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import com.jaredrummler.cyanea.Cyanea;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.Random;
@@ -41,6 +43,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Cyanea.init(this, getResources());
+
         // Initialize the Sentry (crash report) client
         if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_SEND_CRASH_REPORTS)) {
             enableSentry();

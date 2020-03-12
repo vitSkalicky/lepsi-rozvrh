@@ -69,6 +69,18 @@ public class SharedPrefs {
         preferenceManager.apply();
     }
 
+    public static float getFloat(Context context, String key){
+        return PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getFloat(key, 0);
+    }
+
+    public static void setFloat(Context context, String key, float value) {
+        SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        preferenceManager.putFloat(key, value);
+        preferenceManager.apply();
+    }
+
     public static void remove(Context context, String key) {
         SharedPreferences.Editor preferenceManager = PreferenceManager.getDefaultSharedPreferences(context).edit();
         preferenceManager.remove(key);
@@ -102,6 +114,11 @@ public class SharedPrefs {
         return getInt(context, context.getString(stringId));
     }
 
+    public static float getFloatPreference(Context context, int stringId, float defaultValue){
+        if (!containsPreference(context, stringId)) return defaultValue;
+        return getFloat(context, context.getString(stringId));
+    }
+
     public static String getStringPreference(Context context, int stringId){
         return getStringPreference(context, stringId, "");
     }
@@ -114,6 +131,10 @@ public class SharedPrefs {
         return getIntPreference(context, stringId, 0);
     }
 
+    public static float getFloatPreference(Context context, int stringId){
+        return getFloatPreference(context, stringId, 0);
+    }
+
     public static void setStringPreference(Context context, int stringId, String value){
         setString(context, context.getString(stringId), value);
     }
@@ -124,5 +145,9 @@ public class SharedPrefs {
 
     public static void setBooleanPreference(Context context, int stringId, boolean value){
         setBoolean(context, context.getString(stringId), value);
+    }
+
+    public static void setFloatPreference(Context context, int stringId, float value){
+        setFloat(context, context.getString(stringId), value);
     }
 }

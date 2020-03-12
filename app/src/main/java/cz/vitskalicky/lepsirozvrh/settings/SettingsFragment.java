@@ -22,6 +22,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.cyanea.prefs.CyaneaSettingsActivity;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -133,6 +134,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             ClipData clip = ClipData.newPlainText(versionText, versionText);
             clipboard.setPrimaryClip(clip);
             Snackbar.make(getView(), R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+            return true;
+        });
+
+        findPreference("cyanea").setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getContext(), CyaneaSettingsActivity.class));
             return true;
         });
 

@@ -6,10 +6,13 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.jaredrummler.cyanea.Cyanea;
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends CyaneaAppCompatActivity {
     Toolbar toolbar;
     SettingsFragment fragment;
 
@@ -32,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
             return;
         });
+
     }
 
     @Override

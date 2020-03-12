@@ -12,4 +12,7 @@
     <color name="widgetDarkPrimaryText">#dedede</color>
     <color name="widgetDarkSecondaryText">#a0a0a0</color>
     <color name="widgetDarkBackground">#FF000000</color>
+
+    <color name="cyanea_primary_reference">#f9a825</color>
+    <color name="cyanea_accent_reference">#455a64</color>
 </resources>

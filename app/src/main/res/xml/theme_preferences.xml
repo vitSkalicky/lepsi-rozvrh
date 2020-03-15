@@ -1,0 +1,87 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:title="@string/app_theme">
+
+    <androidx.preference.PreferenceCategory
+        app:title="Empty cell">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_BG_EMPTY"
+            app:title="Background"/>
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        app:title="Normal lesson">
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_BG_H"
+            app:title="Background"/>
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_PRIMARY_TEXT"
+            app:title="primary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_SECONDARY_TEXT"
+            app:title="secondary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_ROOM_TEXT"
+            app:title="room text"/>
+
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        app:title="Change">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_BG_CHNG"
+            app:title="Background"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_CHNG_PRIMARY_TEXT"
+            app:title="primary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_CHNG_SECONDARY_TEXT"
+            app:title="secondary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_CHNG_ROOM_TEXT"
+            app:title="room text"/>
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        app:title="No school">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_BG_A"
+            app:title="Background"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_A_PRIMARY_TEXT"
+            app:title="primary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_A_SECONDARY_TEXT"
+            app:title="secondary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HODINA_A_ROOM_TEXT"
+            app:title="room text"/>
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        app:title="Headers">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_BG_HEADER"
+            app:title="Background"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HEADER_PRIMARY_TEXT"
+            app:title="primary text"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HEADER_SECONDARY_TEXT"
+            app:title="secondary text"/>
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        app:title="Dividers">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_DIVIDER"
+            app:title="divider"/>
+        <EditTextPreference
+            android:key="divider width"
+            app:title="divider width"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_ROZVRH_COLOR_HIGHLIGHT"
+            app:title="highlight"/>
+        <EditTextPreference
+            android:key="highlight width"
+            app:title="highlight width"/>
+    </androidx.preference.PreferenceCategory>
+
+</PreferenceScreen>

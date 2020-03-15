@@ -93,8 +93,10 @@ public class MainApplication extends Application {
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
         currentWeekLivedata.observeForever(currentWeekObserver);
 
-        Themator themator = new Themator(this);
-        themator.applyDefaultTheme();
+        if (!SharedPrefs.containsPreference(this, R.string.THEME_ROZVRH_COLOR_BG_H)){
+            Themator themator = new Themator(this);
+            themator.applyDefaultTheme();
+        }
     }
 
     public void scheduleUpdate(LocalDateTime triggerTime){

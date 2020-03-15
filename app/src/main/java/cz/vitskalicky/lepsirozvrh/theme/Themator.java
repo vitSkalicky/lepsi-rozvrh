@@ -37,9 +37,17 @@ public class Themator {
         setRozvrhDividerWidth(theme.dpDividerWidth);
         setRozvrhHighlightColor(theme.cHighlight);
         setRozvrhHighlightWidth(theme.dpHighlightWidth);
-        setRozvrhPrimaryTextColor(theme.cPrimaryText);
-        setRozvrhSecondaryTextColor(theme.cSecondaryText);
-        setRozvrhRoomTextColor(theme.cRoomText);
+        setRozvrhHodinaPrimaryTextColor(theme.cHodinaPrimaryText);
+        setRozvrhHodinaSecondaryTextColor(theme.cHodinaSecondaryText);
+        setRozvrhHodinaRoomTextColor(theme.cHodinaRoomText);
+        setRozvrhHodinaChngPrimaryTextColor(theme.cHodinaChngPrimaryText);
+        setRozvrhHodinaChngSecondaryTextColor(theme.cHodinaChngSecondaryText);
+        setRozvrhHodinaChngRoomTextColor(theme.cHodinaChngRoomText);
+        setRozvrhHodinaAPrimaryTextColor(theme.cHodinaAPrimaryText);
+        setRozvrhHodinaASecondaryTextColor(theme.cHodinaASecondaryText);
+        setRozvrhHodinaARoomTextColor(theme.cHodinaARoomText);
+        setRozvrhHeaderPrimaryTextColor(theme.cCaptionPrimaryText);
+        setRozvrhHeaderSecondaryTextColor(theme.cCaptionSecondaryText);
         setRozvrhPrimaryTextSize(theme.spPrimaryText);
         setRozvrhSecondaryTextSize(theme.spSecondaryText);
         setRozvrhPaddingLeft(theme.dpPaddingLeft);
@@ -64,9 +72,17 @@ public class Themator {
         theme.dpDividerWidth = getRozvrhDividerWidth();
         theme.cHighlight = getRozvrhHighlightColor();
         theme.dpHighlightWidth = getRozvrhHighlightWidth();
-        theme.cPrimaryText = getRozvrhPrimaryTextColor();
-        theme.cSecondaryText = getRozvrhSecondaryTextColor();
-        theme.cRoomText = getRozvrhRoomTextColor();
+        theme.cHodinaPrimaryText = getRozvrhHodinaPrimaryTextColor();
+        theme.cHodinaSecondaryText = getRozvrhHodinaSecondaryTextColor();
+        theme.cHodinaRoomText = getRozvrhHodinaRoomTextColor();
+        theme.cHodinaChngPrimaryText = getRozvrhHodinaChngPrimaryTextColor();
+        theme.cHodinaChngSecondaryText = getRozvrhHodinaChngSecondaryTextColor();
+        theme.cHodinaChngRoomText = getRozvrhHodinaChngRoomTextColor();
+        theme.cHodinaAPrimaryText = getRozvrhHodinaAPrimaryTextColor();
+        theme.cHodinaASecondaryText = getRozvrhHodinaASecondaryTextColor();
+        theme.cHodinaARoomText = getRozvrhHodinaARoomTextColor();
+        theme.cCaptionPrimaryText = getRozvrhHeaderPrimaryTextColor();
+        theme.cCaptionSecondaryText = getRozvrhHeaderSecondaryTextColor();
         theme.spPrimaryText = getRozvrhPrimaryTextSize();
         theme.spSecondaryText = getRozvrhSecondaryTextSize();
         theme.dpPaddingLeft = getRozvrhPaddingLeft();
@@ -86,26 +102,31 @@ public class Themator {
     }*/
 
     public void applyDefaultTheme(){
-        Cyanea.getInstance().edit()
-                .primary(0xf9a825)
-                .accent(0x455a64)
-                .baseTheme(Cyanea.BaseTheme.LIGHT);
+
 
         Theme theme = new Theme();
         theme.cyaneaTheme = new CyaneaTheme("", Cyanea.getInstance());
 
-        theme.cBgChng = 0xffd95a;
-        theme.cBgA = 0xffd95a;
-        theme.cBgH = 0xeceff1;
-        theme.cBgEmpty = 0x00FFFFFF;
-        theme.cBgHeader = 0xCFD8DC;
-        theme.cDivider = 0x607D8B;
+        theme.cBgChng = 0xffffd95a;
+        theme.cBgA = 0xffffd95a;
+        theme.cBgH = 0xffeceff1;
+        theme.cBgEmpty = 0xFFFFFFFF;
+        theme.cBgHeader = 0xffCFD8DC;
+        theme.cDivider = 0xff607D8B;
         theme.dpDividerWidth = 1;
-        theme.cHighlight = 0xf9a825;
+        theme.cHighlight = 0xfff9a825;
         theme.dpHighlightWidth = 2;
-        theme.cPrimaryText = 0x000000;
-        theme.cRoomText = 0x000000;
-        theme.cSecondaryText = 0x607D8B;
+        theme.cHodinaPrimaryText = 0xff000000;
+        theme.cHodinaRoomText = 0xff000000;
+        theme.cHodinaSecondaryText = 0xff607D8B;
+        theme.cHodinaChngPrimaryText = 0xff000000;
+        theme.cHodinaChngRoomText = 0xff000000;
+        theme.cHodinaChngSecondaryText = 0xff607D8B;
+        theme.cHodinaAPrimaryText = 0xff000000;
+        theme.cHodinaARoomText = 0xff000000;
+        theme.cHodinaASecondaryText = 0xff607D8B;
+        theme.cCaptionPrimaryText = 0xff000000;
+        theme.cCaptionSecondaryText = 0xff607D8B;
         theme.spPrimaryText = 18;
         theme.spSecondaryText = 12;
         theme.dpPaddingLeft = 3;
@@ -115,6 +136,10 @@ public class Themator {
         theme.dpTextPadding = 2;
 
         applyTheme(theme);
+        Cyanea.getInstance().edit()
+                .primary(0xfff9a825)
+                .accent(0xff455a64)
+                .baseTheme(Cyanea.BaseTheme.LIGHT);
     }
 
 
@@ -141,7 +166,7 @@ public class Themator {
      * In px
      */
     public int getRozvrhDividerWidth() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_DIVIDER, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_DIVIDER, 1) * context.getResources().getDisplayMetrics().density);
     }
     public int getRozvrhHighlightColor() {
         return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HIGHLIGHT, FALLBACK_COLOR);
@@ -152,14 +177,38 @@ public class Themator {
     public int getRozvrhHighlightWidth() {
         return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_HIGHLIGHT, 10) * context.getResources().getDisplayMetrics().density);
     }
-    public int getRozvrhPrimaryTextColor() {
-        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_PRIMARY_TEXT, FALLBACK_COLOR);
+    public int getRozvrhHodinaPrimaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_PRIMARY_TEXT, FALLBACK_COLOR);
     }
-    public int getRozvrhSecondaryTextColor() {
-        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_SECONDARY_TEXT, FALLBACK_COLOR);
+    public int getRozvrhHodinaSecondaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_SECONDARY_TEXT, FALLBACK_COLOR);
     }
-    public int getRozvrhRoomTextColor() {
-        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_ROOM_TEXT, FALLBACK_COLOR);
+    public int getRozvrhHodinaRoomTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_ROOM_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaChngPrimaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_PRIMARY_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaChngSecondaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_SECONDARY_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaChngRoomTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_ROOM_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaAPrimaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_PRIMARY_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaASecondaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_SECONDARY_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHodinaARoomTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_ROOM_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHeaderPrimaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HEADER_PRIMARY_TEXT, FALLBACK_COLOR);
+    }
+    public int getRozvrhHeaderSecondaryTextColor() {
+        return SharedPrefs.getIntPreference(context, R.string.THEME_ROZVRH_COLOR_HEADER_SECONDARY_TEXT, FALLBACK_COLOR);
     }
     /**
      * In px
@@ -177,31 +226,31 @@ public class Themator {
      * In px
      */
     public int getRozvrhPaddingLeft() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_LEFT, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_LEFT, 2) * context.getResources().getDisplayMetrics().density);
     }
     /**
      * In px
      */
     public int getRozvrhPaddingTop() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_TOP, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_TOP, 1) * context.getResources().getDisplayMetrics().density);
     }
     /**
      * In px
      */
     public int getRozvrhPaddingRight() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_RIGHT, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_RIGHT, 2) * context.getResources().getDisplayMetrics().density);
     }
     /**
      * In px
      */
     public int getRozvrhPaddingBottom() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_BOTTOM, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_BOTTOM, 1) * context.getResources().getDisplayMetrics().density);
     }
     /**
      * In px
      */
     public int getRozvrhTextPadding() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_TEXT_PADDING, 10) * context.getResources().getDisplayMetrics().density);
+        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_TEXT_PADDING, 1) * context.getResources().getDisplayMetrics().density);
     }
     public int getInfolineColor() {
         return SharedPrefs.getIntPreference(context, R.string.THEME_INFOLINE_COLOR, FALLBACK_COLOR);
@@ -256,17 +305,26 @@ public class Themator {
         SharedPrefs.setFloatPreference(context, R.string.THEME_ROZVRH_DP_HIGHLIGHT, value);
     }
 
-    public void setRozvrhPrimaryTextColor(int color) {
-        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_PRIMARY_TEXT, color);
+    public void setRozvrhHodinaPrimaryTextColor(int color) {
+        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_PRIMARY_TEXT, color);
     }
 
-    public void setRozvrhSecondaryTextColor(int color) {
-        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_SECONDARY_TEXT, color);
+    public void setRozvrhHodinaSecondaryTextColor(int color) {
+        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_SECONDARY_TEXT, color);
     }
 
-    public void setRozvrhRoomTextColor(int color) {
-        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_ROOM_TEXT, color);
+    public void setRozvrhHodinaRoomTextColor(int color) {
+        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_ROOM_TEXT, color);
     }
+
+    public void setRozvrhHodinaChngPrimaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_PRIMARY_TEXT, color);    }
+    public void setRozvrhHodinaChngSecondaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_SECONDARY_TEXT, color);    }
+    public void setRozvrhHodinaChngRoomTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_CHNG_ROOM_TEXT, color);    }
+    public void setRozvrhHodinaAPrimaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_PRIMARY_TEXT, color);    }
+    public void setRozvrhHodinaASecondaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_SECONDARY_TEXT, color);    }
+    public void setRozvrhHodinaARoomTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HODINA_A_ROOM_TEXT, color);    }
+    public void setRozvrhHeaderPrimaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HEADER_PRIMARY_TEXT, color);    }
+    public void setRozvrhHeaderSecondaryTextColor(int color) {        SharedPrefs.setIntPreference(context, R.string.THEME_ROZVRH_COLOR_HEADER_SECONDARY_TEXT, color);    }
 
     public void setRozvrhPrimaryTextSize(float value) {
         SharedPrefs.setFloatPreference(context, R.string.THEME_ROZVRH_SP_PRIMARY_TEXT, value);
@@ -308,5 +366,5 @@ public class Themator {
         SharedPrefs.setFloatPreference(context, R.string.THEME_INFOLINE_SP_TEXT, value);
     }
 
-    
+
 }

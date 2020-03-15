@@ -28,9 +28,17 @@ public class Theme {
     public int cHighlight; //for current lesson
     public int dpHighlightWidth;
 
-    public int cPrimaryText;
-    public int cRoomText;
-    public int cSecondaryText;
+    public int cHodinaPrimaryText;
+    public int cHodinaRoomText;
+    public int cHodinaSecondaryText;
+    public int cHodinaChngPrimaryText;
+    public int cHodinaChngRoomText;
+    public int cHodinaChngSecondaryText;
+    public int cHodinaAPrimaryText;
+    public int cHodinaARoomText;
+    public int cHodinaASecondaryText;
+    public int cCaptionPrimaryText;
+    public int cCaptionSecondaryText;
     public int spPrimaryText;
     public int spSecondaryText;
 

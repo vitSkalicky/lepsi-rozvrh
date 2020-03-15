@@ -26,6 +26,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.theme.Themator;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
@@ -91,6 +92,9 @@ public class MainApplication extends Application {
 
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
         currentWeekLivedata.observeForever(currentWeekObserver);
+
+        Themator themator = new Themator(this);
+        themator.applyDefaultTheme();
     }
 
     public void scheduleUpdate(LocalDateTime triggerTime){

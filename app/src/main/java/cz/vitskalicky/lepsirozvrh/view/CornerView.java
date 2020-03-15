@@ -19,7 +19,7 @@ public class CornerView extends CellView {
     public CornerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDrawDividers(false, false, false);
-        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundHeader, Color.BLUE));
+        backgroundPaint.setColor(t.getRozvrhBgHeaderColor());
         myTextPaint = new TextPaint();
         myTextPaint.setAntiAlias(true);
         myTextPaint.setTextSize(secondaryTextSize);

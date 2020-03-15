@@ -56,6 +56,7 @@
     <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině.</string>
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="dont_show_again">Znovu nezobrazovat</string>
+    <string name="app_theme">Styl aplikace</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Vyučující: </string>

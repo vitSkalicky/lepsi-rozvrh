@@ -36,6 +36,16 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
             return;
         });
 
+        fragment.setOnThemeClickListener( () -> {
+            // Instantiate the new Fragment
+            final ThemeSettingsFragment themeFragment = new ThemeSettingsFragment();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, themeFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
     }
 
     @Override

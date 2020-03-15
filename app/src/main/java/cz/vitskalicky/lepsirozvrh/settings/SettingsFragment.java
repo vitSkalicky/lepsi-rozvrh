@@ -45,6 +45,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private LogoutListener logoutListener = () -> {
     };
+    private Utils.Listener themeListener = () -> {};
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -147,6 +148,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             whatsNewFragment.show(getActivity().getSupportFragmentManager(), "dialog");
             return true;
         });
+
+        findPreference(getString(R.string.PREFS_THEME)).setOnPreferenceClickListener(preference -> {
+            themeListener.method();
+            return true;
+        });
     }
 
     public void setLogoutListener(LogoutListener listener) {
@@ -156,6 +162,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public static interface LogoutListener {
         public void onLogout();
     }
+
+    public void setOnThemeClickListener(Utils.Listener listener){ this.themeListener = listener; }
 
     public static void sendFeedback(boolean includeRozvrh, Context context, @Nullable View forToast) {
         String body = null;

@@ -14,6 +14,9 @@
             android:key="@string/PREFS_LOGOUT"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/look_and_behaviour">
+        <Preference app:title="@string/app_theme"
+            app:fragment="cz.vitskalicky.lepsirozvrh.settings.ThemeSettingsFragment"
+            android:key="@string/PREFS_THEME"/>
         <Preference
             android:title="cyanea"
             android:key="cyanea"/>

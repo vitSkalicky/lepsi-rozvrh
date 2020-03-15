@@ -11,6 +11,7 @@
     <string name="PREFS_SEND_CRASH_REPORTS" translatable="false">prefs-send-crash-reports</string>
     <string name="PREFS_APP_VERSION" translatable="false">prefs-app-version</string>
     <string name="PREFS_CHANGELOG" translatable="false">prefs-changelog</string>
+    <string name="PREFS_THEME" translatable="false">prefs-theme</string>
     <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
@@ -27,9 +28,17 @@
     <string name="THEME_ROZVRH_COLOR_HIGHLIGHT" translatable="false">THEME_ROZVRH_COLOR_HIGHLIGHT</string>
     <string name="THEME_ROZVRH_DP_HIGHLIGHT" translatable="false">THEME_ROZVRH_DP_HIGHLIGHT</string>
 
-    <string name="THEME_ROZVRH_COLOR_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_PRIMARY_TEXT</string>
-    <string name="THEME_ROZVRH_COLOR_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_SECONDARY_TEXT</string>
-    <string name="THEME_ROZVRH_COLOR_ROOM_TEXT" translatable="false">THEME_ROZVRH_COLOR_ROOM_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_SECONDARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_ROOM_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_ROOM_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_CHNG_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_CHNG_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_CHNG_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_CHNG_SECONDARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_CHNG_ROOM_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_CHNG_ROOM_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_A_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_A_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_A_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_A_SECONDARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HODINA_A_ROOM_TEXT" translatable="false">THEME_ROZVRH_COLOR_HODINA_A_ROOM_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HEADER_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HEADER_PRIMARY_TEXT</string>
+    <string name="THEME_ROZVRH_COLOR_HEADER_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_COLOR_HEADER_SECONDARY_TEXT</string>
     <string name="THEME_ROZVRH_SP_PRIMARY_TEXT" translatable="false">THEME_ROZVRH_SP_PRIMARY_TEXT</string>
     <string name="THEME_ROZVRH_SP_SECONDARY_TEXT" translatable="false">THEME_ROZVRH_SP_SECONDARY_TEXT</string>
 

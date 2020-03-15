@@ -2,8 +2,15 @@ package cz.vitskalicky.lepsirozvrh.theme;
 
 import android.content.Context;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.prefs.CyaneaTheme;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.R;
@@ -69,9 +76,9 @@ public class Themator {
         theme.cBgChng = getRozvrhBgChngColor();
         theme.cBgHeader = getRozvrhBgHeaderColor();
         theme.cDivider = getRozvrhDividerColor();
-        theme.dpDividerWidth = getRozvrhDividerWidth();
+        theme.dpDividerWidth = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_DIVIDER, 1);
         theme.cHighlight = getRozvrhHighlightColor();
-        theme.dpHighlightWidth = getRozvrhHighlightWidth();
+        theme.dpHighlightWidth = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_HIGHLIGHT, 1);
         theme.cHodinaPrimaryText = getRozvrhHodinaPrimaryTextColor();
         theme.cHodinaSecondaryText = getRozvrhHodinaSecondaryTextColor();
         theme.cHodinaRoomText = getRozvrhHodinaRoomTextColor();
@@ -83,18 +90,43 @@ public class Themator {
         theme.cHodinaARoomText = getRozvrhHodinaARoomTextColor();
         theme.cCaptionPrimaryText = getRozvrhHeaderPrimaryTextColor();
         theme.cCaptionSecondaryText = getRozvrhHeaderSecondaryTextColor();
-        theme.spPrimaryText = getRozvrhPrimaryTextSize();
-        theme.spSecondaryText = getRozvrhSecondaryTextSize();
-        theme.dpPaddingLeft = getRozvrhPaddingLeft();
-        theme.dpPaddingTop = getRozvrhPaddingTop();
-        theme.dpPaddingRight = getRozvrhPaddingRight();
-        theme.dpPaddingBottom = getRozvrhPaddingBottom();
-        theme.dpTextPadding = getRozvrhTextPadding();
+        theme.spPrimaryText = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_SP_PRIMARY_TEXT, 10);
+        theme.spSecondaryText = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_SP_SECONDARY_TEXT, 10);
+        theme.dpPaddingLeft = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_LEFT, 2);
+        theme.dpPaddingTop = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_TOP, 1);
+        theme.dpPaddingRight = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_RIGHT, 2);
+        theme.dpPaddingBottom = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_PADDING_BOTTOM, 1);
+        theme.dpTextPadding = SharedPrefs.getFloatPreference(context, R.string.THEME_ROZVRH_DP_TEXT_PADDING, 1);
         theme.cInfoline = getInfolineColor();
         theme.cInfolineText = getInfolineTextColor();
-        theme.spInfolineTextSize = getInfolineTextSize();
+        theme.spInfolineTextSize = SharedPrefs.getFloatPreference(context, R.string.THEME_INFOLINE_SP_TEXT, 10);
 
         return theme;
+    }
+
+    public boolean writeCurrentTheme(OutputStream os){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(os, constructTheme());
+            String json = mapper.writeValueAsString(constructTheme());
+            System.out.println(json);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean loadTheme(InputStream is){
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            Theme theme = mapper.readValue(is, Theme.class);
+            applyTheme(theme);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /*public static Theme getDefaultTheme(){

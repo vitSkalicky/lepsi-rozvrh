@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.theme.Themator;
 
 public class ThemeSettingsFragment extends PreferenceFragmentCompat {
@@ -37,5 +38,30 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             }
             return true;
         });
+
+        findPreference("save").setOnPreferenceClickListener(preference -> {
+            onSaveClickedListener.method();
+            return true;
+        });
+        findPreference("load").setOnPreferenceClickListener(preference -> {
+            onLoadClickedListener.method();
+            return true;
+        });
+        findPreference("default").setOnPreferenceClickListener(preference -> {
+            Themator themator = new Themator(getContext());
+            themator.applyDefaultTheme();
+            return true;
+        });
+    }
+
+    private Utils.Listener onSaveClickedListener = () -> {};
+    private Utils.Listener onLoadClickedListener = () -> {};
+
+    public void setOnSaveClickedListener(Utils.Listener onSaveClickedListener) {
+        this.onSaveClickedListener = onSaveClickedListener;
+    }
+
+    public void setOnLoadClickedListener(Utils.Listener onLoadClickedListener) {
+        this.onLoadClickedListener = onLoadClickedListener;
     }
 }

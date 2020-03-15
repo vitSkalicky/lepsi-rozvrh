@@ -3,6 +3,21 @@
     app:title="@string/app_theme">
 
     <androidx.preference.PreferenceCategory
+        app:title="Save/load">
+
+        <Preference
+            android:key="save"
+            app:title="Export theme"/>
+        <Preference
+            android:key="load"
+            app:title="Import theme"/>
+        <Preference
+            android:key="default"
+            app:title="Load default"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
         app:title="Empty cell">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_EMPTY"

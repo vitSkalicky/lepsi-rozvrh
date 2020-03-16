@@ -38,6 +38,17 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             }
             return true;
         });
+        findPreference("infoline text size").setOnPreferenceChangeListener((preference, newValue) -> {
+            try {
+                float value = Float.parseFloat((String) newValue);
+                Themator themator = new Themator(getContext());
+                themator.setRozvrhHighlightWidth(value);
+            }catch (NumberFormatException e){
+                Toast.makeText(getContext(), "Enter a decimal number (e.g. 0.8)", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            return true;
+        });
 
         findPreference("save").setOnPreferenceClickListener(preference -> {
             onSaveClickedListener.method();

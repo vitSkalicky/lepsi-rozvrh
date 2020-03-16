@@ -25,7 +25,7 @@ public class Themator {
     /**
      * Fallback color, deep purple in debug (to be noticeable), grey for release (to be hopefully unnoticed)
      */
-    private final static int FALLBACK_COLOR = BuildConfig.DEBUG ? 0xFF00FF : 0x2C2C2C;
+    private final static int FALLBACK_COLOR = BuildConfig.DEBUG ? 0xFFFF00FF : 0xFF2C2C2C;
     private Context context;
 
     public Themator(Context context) {
@@ -166,6 +166,9 @@ public class Themator {
         theme.dpPaddingRight = 3;
         theme.dpPaddingBottom = 3;
         theme.dpTextPadding = 2;
+        theme.cInfoline = 0xff424242;
+        theme.cInfolineText = 0xffffffff;
+        theme.spInfolineTextSize = 12;
 
         applyTheme(theme);
         Cyanea.getInstance().edit()
@@ -290,11 +293,8 @@ public class Themator {
     public int getInfolineTextColor() {
         return SharedPrefs.getIntPreference(context, R.string.THEME_INFOLINE_COLOR_TEXT, FALLBACK_COLOR);
     }
-    /**
-     * In px
-     */
     public int getInfolineTextSize() {
-        return (int) (SharedPrefs.getFloatPreference(context, R.string.THEME_INFOLINE_SP_TEXT, 10) * context.getResources().getDisplayMetrics().scaledDensity);
+        return (int) SharedPrefs.getFloatPreference(context, R.string.THEME_INFOLINE_SP_TEXT, 10);
     }
 
 

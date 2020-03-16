@@ -99,4 +99,17 @@
             app:title="highlight width"/>
     </androidx.preference.PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="Info line">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_INFOLINE_COLOR"
+            app:title="background"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/THEME_INFOLINE_COLOR_TEXT"
+            app:title="text color"/>
+        <EditTextPreference
+            android:key="infoline text size"
+            app:title="text size"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -14,6 +14,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.multidex.MultiDexApplication;
 
 import com.jaredrummler.cyanea.Cyanea;
 
@@ -33,7 +34,7 @@ import io.sentry.android.AndroidSentryClientFactory;
 import io.sentry.event.User;
 
 
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
     private static final String TAG = MainApplication.class.getSimpleName();
 
     private NotificationState notificationState = null;

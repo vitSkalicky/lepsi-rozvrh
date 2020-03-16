@@ -30,6 +30,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
+import cz.vitskalicky.lepsirozvrh.theme.Themator;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
@@ -157,6 +158,11 @@ public class MainActivity extends CyaneaAppCompatActivity {
             SharedPrefs.setString(context, SharedPrefs.DISABLE_WTF_ROZVRH_UP_TO_DATE, Utils.dateToString(LocalDate.now()));
             return true;
         });*/
+
+        Themator themator = new Themator(this);
+        infoLine.setBackgroundColor(themator.getInfolineColor());
+        infoLine.setTextColor(themator.getInfolineTextColor());
+        infoLine.setTextSize(themator.getInfolineTextSize());
 
         rtFragment.createViews();
         if (savedInstanceState == null) {

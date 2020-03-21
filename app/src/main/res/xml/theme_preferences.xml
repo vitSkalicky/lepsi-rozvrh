@@ -2,8 +2,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     app:title="@string/app_theme">
 
+    <ListPreference
+        app:title="Theme"
+        android:key="theme"
+        android:entries="@array/themes_entries"
+        android:entryValues="@array/themes_values"/>
+
     <androidx.preference.PreferenceCategory
-        app:title="Save/load">
+        app:title="Save/load"
+        android:key="save_load">
 
         <Preference
             android:key="save"
@@ -18,13 +25,15 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
-        app:title="Empty cell">
+        app:title="Empty cell"
+        android:key="empty">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_EMPTY"
             app:title="Background"/>
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
-        app:title="Normal lesson">
+        app:title="Normal lesson"
+        android:key="normal">
 
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_H"
@@ -42,7 +51,8 @@
 
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
-        app:title="Change">
+        app:title="Change"
+        android:key="change">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_CHNG"
             app:title="Background"/>
@@ -57,7 +67,8 @@
             app:title="room text"/>
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
-        app:title="No school">
+        app:title="No school"
+        android:key="no_school">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_A"
             app:title="Background"/>
@@ -72,7 +83,8 @@
             app:title="room text"/>
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
-        app:title="Headers">
+        app:title="Headers"
+        android:key="headers">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_BG_HEADER"
             app:title="Background"/>
@@ -84,7 +96,8 @@
             app:title="secondary text"/>
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory
-        app:title="Dividers">
+        app:title="Dividers"
+        android:key="dividers">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_ROZVRH_COLOR_DIVIDER"
             app:title="divider"/>
@@ -100,7 +113,8 @@
     </androidx.preference.PreferenceCategory>
 
     <PreferenceCategory
-        app:title="Info line">
+        app:title="Info line"
+        android:key="infoline">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/THEME_INFOLINE_COLOR"
             app:title="background"/>

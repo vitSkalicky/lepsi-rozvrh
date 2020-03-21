@@ -9,9 +9,11 @@ import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
@@ -36,6 +38,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent0 = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
@@ -54,31 +57,35 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
             return;
         });
 
-        fragment.setOnThemeClickListener( () -> {
-            // Instantiate the new Fragment
-            final ThemeSettingsFragment themeFragment = new ThemeSettingsFragment();
+        fragment.setOnThemeClickListener(this::showThemeSettings);
+        if (intent0 != null && intent0.getExtras() != null && intent0.getExtras().getBoolean("start_theme", false)){
+            showThemeSettings();
+        }
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment, themeFragment)
-                    .addToBackStack(null)
-                    .commit();
-            themeFragment.setOnSaveClickedListener(() -> {
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+    }
 
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TITLE, "better schedule theme.json");
+    private void showThemeSettings(){
+        final ThemeSettingsFragment themeFragment = new ThemeSettingsFragment();
 
-                startActivityForResult(intent, SAVE_CODE);
-            });
-            themeFragment.setOnLoadClickedListener(() -> {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("text/plain");
-                startActivityForResult(intent, LOAD_CODE);
-            });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, themeFragment)
+                .addToBackStack(null)
+                .commit();
+        themeFragment.setOnSaveClickedListener(() -> {
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TITLE, "better schedule theme.json");
+
+            startActivityForResult(intent, SAVE_CODE);
         });
-
+        themeFragment.setOnLoadClickedListener(() -> {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("text/plain");
+            startActivityForResult(intent, LOAD_CODE);
+        });
     }
 
     @Override
@@ -129,6 +136,15 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
 
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    public void saveInstanceState(Bundle outState){
+        onSaveInstanceState(outState);
     }
 
     @Override

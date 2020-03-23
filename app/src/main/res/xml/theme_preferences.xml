@@ -25,6 +25,28 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
+        title="General"
+        android:key="basic">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            app:title="Primary color"
+            android:key="pref_color_primary"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            app:title="Accent color"
+            android:key="pref_color_accent"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            app:title="Background color"
+            android:key="pref_color_background"
+            app:cpv_colorPresets="@array/cyanea_background_color_presets"
+            />
+        <EditTextPreference
+            app:title="Primary text size"
+            android:key="primary_text"/>
+        <EditTextPreference
+            app:title="Primary text size"
+            android:key="secondary_text"/>
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
         app:title="Empty cell"
         android:key="empty">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
@@ -125,5 +147,15 @@
             android:key="infoline text size"
             app:title="text size"/>
     </PreferenceCategory>
+
+    <Preference
+        app:title="Customize less"
+        android:key="less"
+        android:icon="@drawable/ic_prev_black_24"/>
+    <Preference
+        app:title="Customize more"
+        android:key="more"
+        android:icon="@drawable/ic_next_black_24"/>
+
 
 </PreferenceScreen>

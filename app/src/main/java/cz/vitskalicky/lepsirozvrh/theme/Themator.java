@@ -1,12 +1,14 @@
 package cz.vitskalicky.lepsirozvrh.theme;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.prefs.CyaneaTheme;
+import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -397,6 +399,147 @@ public class Themator {
     public void setInfolineTextSize(float value) {
         SharedPrefs.setFloatPreference(context, R.string.THEME_INFOLINE_SP_TEXT, value);
     }
+
+    public void regenerateColors(int generationLevel){
+        Cyanea cyanea = Cyanea.getInstance();
+        int primary = cyanea.getPrimary();
+        int accent = cyanea.getAccent();
+        int background = cyanea.getBackgroundColor();
+        if (generationLevel < 1){
+            return;
+        }
+        if (generationLevel < 2){
+            //cell colors
+            setRozvrhDividerColor(background);
+            setRozvrhBgEmptyColor(generateEmptyCellColor(background));
+            setRozvrhBgHColor(generateHodinaColor(background));
+            setRozvrhBgAColor(generateChangeColor(background, accent));
+            setRozvrhBgChngColor(generateChangeColor(background, accent));
+            setRozvrhBgHeaderColor(generateHeaderColor(background, primary));
+            setRozvrhHighlightColor(accent);
+
+            setRozvrhHighlightWidth(1);
+            setRozvrhDividerWidth(1);
+
+            setInfolineColor(0xff424242);
+        }
+        if (generationLevel < 3){
+            //generate text colors and sizes
+            setRozvrhPrimaryTextSize(18);
+            setRozvrhSecondaryTextSize(12);
+            setInfolineTextSize(12);
+
+            int[] colors = generateTextColors(getRozvrhBgHColor(), accent);
+            setRozvrhHodinaPrimaryTextColor(colors[0]);
+            setRozvrhHodinaSecondaryTextColor(colors[1]);
+            setRozvrhHodinaRoomTextColor(colors[2]);
+
+            colors = generateTextColors(getRozvrhBgChngColor(), accent);
+            setRozvrhHodinaChngPrimaryTextColor(colors[0]);
+            setRozvrhHodinaChngSecondaryTextColor(colors[1]);
+            setRozvrhHodinaChngRoomTextColor(colors[2]);
+
+            colors = generateTextColors(getRozvrhBgAColor(), accent);
+            setRozvrhHodinaAPrimaryTextColor(colors[0]);
+            setRozvrhHodinaASecondaryTextColor(colors[1]);
+            setRozvrhHodinaARoomTextColor(colors[2]);
+
+            colors = generateTextColors(getRozvrhBgHeaderColor(), accent);
+            setRozvrhHeaderPrimaryTextColor(colors[0]);
+            setRozvrhHeaderSecondaryTextColor(colors[2]);
+
+            if (ColorUtils.isDarkColor(getInfolineColor())){
+                setInfolineTextColor(0xffffffff);
+            }else {
+                setInfolineTextColor(0xff000000);
+            }
+        }
+    }
+
+    /**
+     * [0] primary text.
+     * [1] secondary text,
+     * [2] third (accent of accent color) text
+     */
+    public int[] generateTextColors(int backgroundColor, int accentColor){
+        int[] ret = new int[3];
+        if (useDarkText(backgroundColor)){
+            ret[0] = 0xff000000;
+            ret[1] = mix(accentColor, 0xff000000, -0.3f);
+            ret[2] = 0xff000000;
+        }else {
+            ret[0] = 0xffffffff;
+            ret[1] = mix(accentColor, 0xffffffff, -0.3f);
+            ret[2] = 0xffffffff;
+        }
+        return ret;
+    }
+
+    public int generateEmptyCellColor(int backgroundColor){
+        return backgroundColor;
+    }
+
+    public int generateHodinaColor(int backgroundColor){
+        int lightSumBg = Math.round((Color.red(backgroundColor) + Color.green(backgroundColor) + Color.blue(backgroundColor) ) * (Color.alpha(backgroundColor) / 255f));
+        int maxColor = ColorUtils.darker(0xffffffff);
+        int lightSumMax = Math.round((Color.red(maxColor) + Color.green(maxColor) + Color.blue(maxColor) ) * (Color.alpha(maxColor) / 255f));
+        if (lightSumBg > lightSumMax){
+            return ColorUtils.darker(backgroundColor,0.9f);
+        }else {
+            return ColorUtils.lighter(backgroundColor, 0.1f);
+        }
+    }
+
+    public int generateChangeColor(int backgroundColor, int accentColor){
+        return mix(accentColor, backgroundColor, 0.2f);
+    }
+
+    public int generateHeaderColor(int backgroundColor, int primaryColor){
+        return mix(backgroundColor, primaryColor, 0.9f);
+    }
+
+    public int generateHightlightColor(int primaryColor){
+        return primaryColor;
+    }
+    
+    public int mix(int baseColor, int addedColor, float addedWeight){
+        int[] base = new int[4];
+        base[0] = Color.red(baseColor);
+        base[1] = Color.green(baseColor);
+        base[2] = Color.blue(baseColor);
+        base[3] = Color.alpha(baseColor);
+
+        int added[] = new int[4];
+        added[0] = Color.red(addedColor);
+        added[1] = Color.green(addedColor);
+        added[2] = Color.blue(addedColor);
+        added[3] = Color.alpha(addedColor);
+
+        int[] mix = new int[4];
+        mix[3] = 1 - (1 - added[3]) * (1 - base[3]); // alpha
+        /*
+        mix[0] = Math.round((added[0] * added[3] / (float)mix[3]) + (base[0] * base[3] * (1 - added[3]) / (float)mix[3])); // red
+        mix[1] = Math.round((added[1] * added[3] / (float)mix[3]) + (base[1] * base[3] * (1 - added[3]) / (float)mix[3])); // green
+        mix[2] = Math.round((added[2] * added[3] / (float)mix[3]) + (base[2] * base[3] * (1 - added[3]) / (float)mix[3])); // blue
+*/
+        mix[0] = Math.round((base[0] * (1 - addedWeight) + added[0] * (1 + addedWeight)) / 2f);
+        mix[1] = Math.round((base[1] * (1 - addedWeight) + added[1] * (1 + addedWeight)) / 2f);
+        mix[2] = Math.round((base[2] * (1 - addedWeight) + added[2] * (1 + addedWeight)) / 2f);
+        mix[3] = Math.round((base[3] * (1 - addedWeight) + added[3] * (1 + addedWeight)) / 2f);
+
+        return Color.argb(mix[3], mix[0], mix[1], mix[2]);
+    }
+
+    public boolean useDarkText(int backgroundColor){
+        double bgLum = androidx.core.graphics.ColorUtils.calculateLuminance(backgroundColor);
+        if (bgLum > 0.179){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    
+    
 
 
 }

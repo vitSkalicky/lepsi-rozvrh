@@ -35,7 +35,7 @@
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".activity.SchoolsListActivity" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity" android:launchMode="singleTop" />
         <activity android:name=".activity.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>

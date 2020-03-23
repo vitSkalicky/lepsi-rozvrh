@@ -13,12 +13,15 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
@@ -192,6 +195,13 @@ public class MainActivity extends CyaneaAppCompatActivity {
 
         showHideButtons();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(ColorUtils.darker(themator.getRozvrhBgHeaderColor()));
+        }
     }
 
     @Override

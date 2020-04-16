@@ -1,11 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Intent;
-
-import com.google.android.material.textfield.TextInputLayout;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +8,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.textfield.TextInputLayout;
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends CyaneaAppCompatActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
     /**
      * when you want this activity to log out as soon as it starts, pass this in intent extras.
@@ -68,15 +68,15 @@ public class LoginActivity extends AppCompatActivity {
 
         bLogin.setOnClickListener(v -> {
             String url = tilURL.getEditText().getText().toString();
-            if (url.startsWith("http://")){
+            if (url.startsWith("http://")) {
                 showUnsecureConnectionWanrning();
-            }else {
+            } else {
                 logIn();
             }
         });
     }
 
-    public void logIn(){
+    public void logIn() {
         bLogin.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         twMessage.setText("");
@@ -88,13 +88,13 @@ public class LoginActivity extends AppCompatActivity {
         tilPassword.setErrorEnabled(false);
         tilURL.setErrorEnabled(false);
 
-        if (tilURL.getEditText().getText().toString().trim().equals("")){
+        if (tilURL.getEditText().getText().toString().trim().equals("")) {
             tilURL.setError(getText(R.string.enter_url));
             bLogin.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             return;
         }
-        if (tilUsername.getEditText().getText().toString().trim().equals("")){
+        if (tilUsername.getEditText().getText().toString().trim().equals("")) {
             tilUsername.setError(getText(R.string.enter_username));
             bLogin.setEnabled(true);
             progressBar.setVisibility(View.GONE);
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code, data) -> {
-            if (code == Login.SUCCESS){
+            if (code == Login.SUCCESS) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -110,20 +110,20 @@ public class LoginActivity extends AppCompatActivity {
             }
             bLogin.setEnabled(true);
             progressBar.setVisibility(View.GONE);
-            if (code == Login.WRONG_USERNAME){
+            if (code == Login.WRONG_USERNAME) {
                 tilUsername.setError(getText(R.string.invalid_username));
             }
-            if (code == Login.WRONG_PASSWORD){
+            if (code == Login.WRONG_PASSWORD) {
                 tilPassword.setError(getText(R.string.invalid_password));
             }
-            if (code == Login.SERVER_UNREACHABLE){
+            if (code == Login.SERVER_UNREACHABLE) {
                 twMessage.setText(R.string.unreachable);
                 tilURL.setError(" ");
             }
-            if (code == Login.UNEXPECTER_RESPONSE){
+            if (code == Login.UNEXPECTER_RESPONSE) {
                 tilURL.setError(getText(R.string.unexpected_response));
             }
-            if (code == Login.ROZVRH_DISABLED){
+            if (code == Login.ROZVRH_DISABLED) {
                 tilURL.setError(" ");
                 twMessage.setText(R.string.schedule_disabled);
             }
@@ -131,12 +131,13 @@ public class LoginActivity extends AppCompatActivity {
         }, this);
     }
 
-    public void showUnsecureConnectionWanrning(){
+    public void showUnsecureConnectionWanrning() {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle(R.string.unsecure_connectio_title)
                 .setMessage(R.string.unsecure_connectio)
                 .setPositiveButton(R.string.unsecure_connection_connect, (dialog, which) -> logIn())
-                .setNegativeButton(R.string.unsecure_connection_cancel, (dialog, which) -> {})
+                .setNegativeButton(R.string.unsecure_connection_cancel, (dialog, which) -> {
+                })
                 .setIcon(R.drawable.ic_no_encryption_black_24dp);
 
         adb.show();
@@ -146,11 +147,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_PICK_SCHOOL && resultCode == SchoolsListActivity.RESULT_OK && data != null){
+        if (requestCode == REQUEST_PICK_SCHOOL && resultCode == SchoolsListActivity.RESULT_OK && data != null) {
             String url = data.getStringExtra(SchoolsListActivity.EXTRA_URL);
-            if (url != null){
+            if (url != null) {
                 tilURL.getEditText().setText(url);
-            }else {
+            } else {
                 Log.e(TAG, "No extra containing url (extra key: " + SchoolsListActivity.EXTRA_URL + ")");
             }
         }

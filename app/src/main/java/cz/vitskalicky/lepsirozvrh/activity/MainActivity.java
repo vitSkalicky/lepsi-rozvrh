@@ -2,22 +2,21 @@ package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.cyanea.Cyanea;
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
@@ -32,7 +31,7 @@ import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends CyaneaAppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TAG_TIMER = TAG + "-timer";
 
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     Context context = this;
 
     Toolbar bottomAppBar;
-
     RozvrhTableFragment rtFragment;
 
     ImageButton ibSettings;
@@ -83,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
         infoLine = findViewById(R.id.infoLine);
         displayInfo.addOnMessageChangeListener((oldMessage, newMessage) -> {
             setInfoText(newMessage);
-            if (displayInfo.getErrorMessage() != null){
+            if (displayInfo.getErrorMessage() != null) {
                 TooltipCompat.setTooltipText(ibRefresh, displayInfo.getErrorMessage());
-            }else {
+            } else {
                 TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh));
             }
         });
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             //rtFragment.displayWeek(week);
         });
         displayInfo.addOnLoadingStateChangeListener((oldState, newState) -> {
-            if (newState == DisplayInfo.LOADED){
+            if (newState == DisplayInfo.LOADED) {
                 ibRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 ibRefresh.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_refresh_black_24));
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 ibRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 ibRefresh.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_refresh_problem_black_24dp));
-            } else if (newState == DisplayInfo.LOADING){
+            } else if (newState == DisplayInfo.LOADING) {
                 ibRefresh.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
             }
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         rtFragment.createViews();
         if (savedInstanceState == null) {
             week = 0;
-        }else {
+        } else {
             week = savedInstanceState.getInt(STATE_WEEK, 0);
             showedNotiInfo = savedInstanceState.getBoolean(STATE_SHOWE_NOTI_INFO, false);
         }
@@ -168,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
         int lastInterestingFeatureVersion = 12;
         String lastInterestingFeatureMessage = getString(R.string.interestig_widget);
 
-        if (!SharedPrefs.contains(this, SharedPrefs.LAST_VERSION_SEEN) || (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < lastInterestingFeatureVersion)){
+        if (!SharedPrefs.contains(this, SharedPrefs.LAST_VERSION_SEEN) || (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < lastInterestingFeatureVersion)) {
             Snackbar snackbar = Snackbar.make(infoLine, lastInterestingFeatureMessage, Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(R.string.whats_new,view1 -> {
+            snackbar.setAction(R.string.whats_new, view1 -> {
                 WhatsNewFragment whatsNewFragment = new WhatsNewFragment();
                 whatsNewFragment.show(getSupportFragmentManager(), "dialog");
             });
-            snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            snackbar.setActionTextColor(Cyanea.getInstance().getPrimary());
             snackbar.setDuration(5000);
 
             snackbar.show();
@@ -193,40 +191,49 @@ public class MainActivity extends AppCompatActivity {
 
         checkLogin();
 
-        if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleanPreference(context, R.string.PREFS_SHOW_INFO_LINE)){
+        if (!SharedPrefs.containsPreference(context, R.string.PREFS_SHOW_INFO_LINE) || SharedPrefs.getBooleanPreference(context, R.string.PREFS_SHOW_INFO_LINE)) {
             infoLine.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             infoLine.setVisibility(View.GONE);
         }
 
         Intent intent = getIntent();
-        boolean jumpToToday = intent.getBooleanExtra(EXTRA_JUMP_TO_TODAY,false);
-        if (jumpToToday){
+        boolean jumpToToday = intent.getBooleanExtra(EXTRA_JUMP_TO_TODAY, false);
+        if (jumpToToday) {
             rtFragment.displayWeek(0, true);
             intent.removeExtra(EXTRA_JUMP_TO_TODAY);
-        }else {
+        } else {
             rtFragment.displayWeek(week, true);
         }
         boolean fromNotification = intent.getBooleanExtra(PermanentNotification.EXTRA_NOTIFICATION, false);
         intent.removeExtra(PermanentNotification.EXTRA_NOTIFICATION);
-        if (fromNotification && !showedNotiInfo){
+        if (fromNotification && !showedNotiInfo) {
             PermanentNotification.showInfoDialog(context, false);
             showedNotiInfo = true;
         }
+
+        int iconColor = Cyanea.getInstance().getMenuIconColor();
+        ibSettings.setColorFilter(iconColor);
+        ibPrev.setColorFilter(iconColor);
+        ibCurrent.setColorFilter(iconColor);
+        ibPermanent.setColorFilter(iconColor);
+        ibNext.setColorFilter(iconColor);
+        ibRefresh.setColorFilter(iconColor);
+        //bottomAppBar.setBackgroundColor(Cyanea.getInstance().getPrimary());
     }
 
     /**
      * shows/hides buttons accordingly to current state. My english is bad, but you got the point.
      */
-    private void showHideButtons(){
-        if (week == 0){
+    private void showHideButtons() {
+        if (week == 0) {
             ibPermanent.setVisibility(View.VISIBLE);
             ibCurrent.setVisibility(View.GONE);
-        }else{
+        } else {
             ibPermanent.setVisibility(View.GONE);
             ibCurrent.setVisibility(View.VISIBLE);
         }
-        if (week == Integer.MAX_VALUE){
+        if (week == Integer.MAX_VALUE) {
             ibNext.setVisibility(View.GONE);
             ibPrev.setVisibility(View.GONE);
         } else {
@@ -235,13 +242,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setInfoText(String text){
+    private void setInfoText(String text) {
         infoLine.setText(text);
     }
 
-    public void checkLogin(){
-        if (Login.checkLogin(this) != null){
-            if (rozvrhAPI != null){
+    public void checkLogin() {
+        if (Login.checkLogin(this) != null) {
+            if (rozvrhAPI != null) {
                 rozvrhAPI.clearMemory();
             }
             finish();

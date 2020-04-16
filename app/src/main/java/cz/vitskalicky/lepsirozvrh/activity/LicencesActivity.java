@@ -1,14 +1,16 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import androidx.appcompat.widget.Toolbar;
+
+import com.jaredrummler.cyanea.Cyanea;
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import cz.vitskalicky.lepsirozvrh.R;
 
-public class LicencesActivity extends AppCompatActivity {
+public class LicencesActivity extends CyaneaAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,7 @@ public class LicencesActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/open_source_licenses.html");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Cyanea.getInstance().getMenuIconColor());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());

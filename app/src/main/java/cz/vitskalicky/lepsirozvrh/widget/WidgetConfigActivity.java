@@ -1,8 +1,5 @@
 package cz.vitskalicky.lepsirozvrh.widget;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+
+import androidx.core.content.ContextCompat;
+
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
@@ -21,7 +22,7 @@ import cz.vitskalicky.lepsirozvrh.Utils;
  * A subclass should override {@link #setupContentView()} to provide content view and
  * {@link #onStyleSet(int)} to change the appearance of displayed preview.
  */
-public class WidgetConfigActivity extends AppCompatActivity {
+public class WidgetConfigActivity extends CyaneaAppCompatActivity {
     private static final String TAG = WidgetConfigActivity.class.getSimpleName();
 
     Spinner spinner;
@@ -80,7 +81,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
     /**
      * A subclass should override this and set the {@link #spinner} and {@link #buttonOK}.
      */
-    protected void setupContentView(){
+    protected void setupContentView() {
         //This is just a fail-safe
         // !! THIS CODE SHOULD NOT BE EXECUTED !!
         setContentView(R.layout.activity_small_widget_config);
@@ -93,7 +94,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isWidgetIDSet){
+        if (isWidgetIDSet) {
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
             setResult(RESULT_CANCELED, resultValue);
@@ -102,10 +103,9 @@ public class WidgetConfigActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param style 0 = light; 1 = dark
      */
-    public void setStyle(int style){
+    public void setStyle(int style) {
         this.style = style;
         onStyleSet(style);
     }
@@ -113,18 +113,18 @@ public class WidgetConfigActivity extends AppCompatActivity {
     /**
      * Override this to change the appearance of preview.
      */
-    protected void onStyleSet(int style){
+    protected void onStyleSet(int style) {
 
     }
 
-    public void saveConfig(){
-        if (isWidgetIDSet){
+    public void saveConfig() {
+        if (isWidgetIDSet) {
             WidgetsSettings.Widget ws = new WidgetsSettings.Widget();
 
             ws.primaryTextSize = getResources().getDimension(R.dimen.widgetTextPrimary) / getResources().getDisplayMetrics().scaledDensity;
             ws.secondaryTextSize = getResources().getDimension(R.dimen.widgetTextSecondary) / getResources().getDisplayMetrics().scaledDensity;
 
-            if (style == 0){
+            if (style == 0) {
                 ws.primaryTextColor = ContextCompat.getColor(this, R.color.widgetLightPrimaryText);
                 ws.secondaryTextColor = ContextCompat.getColor(this, R.color.widgetLightSecondaryText);
                 ws.backgroundColor = ContextCompat.getColor(this, R.color.widgetLightBackground);

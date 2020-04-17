@@ -1,10 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.theme;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.prefs.CyaneaTheme;
+import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +41,9 @@ public class Theme {
         return new Theme(context);
     }
 
+    /**
+     * Apply the values from given {@link ThemeData}.
+     */
     public void setThemeData(ThemeData td){
 
         td.cyaneaTheme.apply(getCyanea());
@@ -76,6 +81,9 @@ public class Theme {
         setCError(td.cError);
     }
 
+    /**
+     * Returns a {@link ThemeData} with values of current theme.
+     */
     public ThemeData getThemeData(){
         ThemeData td = new ThemeData();
 
@@ -116,29 +124,37 @@ public class Theme {
         return td;
     }
 
-    public boolean writeCurrentThemeData(OutputStream os){
+    /**
+     * Serializes {@link ThemeData} using JSON and writes them to the given output stream.
+     * @return {@code true} if successful
+     */
+    public static boolean writeThemeData(OutputStream os, ThemeData td){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(os, getThemeData());
+            mapper.writeValue(os, td);
             //todo:this is debug
-            String json = mapper.writeValueAsString(getThemeData());
+            String json = mapper.writeValueAsString(td);
             System.out.println(json);
             return true;
         } catch (IOException e) {
-            new IOException("Failed to write current theme",e).printStackTrace();
+            new IOException("Failed to write ThemeData.",e).printStackTrace();
             return false;
         }
     }
 
-    public boolean loadThemeData(InputStream is){
+    /**
+     * Deserializes a {@link ThemeData} from JSON
+     * @param is Input stream to read from.
+     * @return Deserialized ThemeData or {@code null} if it fails.
+     */
+    public static ThemeData loadThemeData(InputStream is){
         ObjectMapper mapper = new ObjectMapper();
         try{
-            ThemeData theme = mapper.readValue(is, ThemeData.class);
-            setThemeData(theme);
-            return true;
+            ThemeData td = mapper.readValue(is, ThemeData.class);
+            return td;
         } catch (IOException e) {
             new IOException("Failed to load theme",e).printStackTrace();
-            return false;
+            return null;
         }
     }
 
@@ -276,6 +292,158 @@ public class Theme {
     public int getPxInfolineTextSize(){ return Math.round(getSpInfolineTextSize() * context.getResources().getDisplayMetrics().scaledDensity); }
 
     //@formatter:on
+
+    /**
+     * Generates part of the color so that user can specify only primary and accent (or more) and the rest will be generated in a half-decent-looking way.
+     * @param customizationLevel how many colors should be generated. The lower, the more is generated. 3 none (everything is specified by the user); 2 generate text colors and size; 1 generate cell colors based on primary and accent colors (text colors too); 0 one of the pre-set themes is used (do not touch anything)
+     */
+    public void regenerateColors(int customizationLevel){
+        Cyanea cyanea = Cyanea.getInstance();
+        int primary = cyanea.getPrimary();
+        int accent = cyanea.getAccent();
+        int background = cyanea.getBackgroundColor();
+        if (customizationLevel < 1){
+            return;
+        }
+        if (customizationLevel < 2){
+            //cell colors
+            setCDivider(background);
+            setCEmptyBg(Utils.generateEmptyCellColor(primary, accent, background));
+            setCHBg(Utils.generateHodinaColor(primary, accent, background));
+            setCABg(Utils.generateChangeColor(primary, accent, background));
+            setCChngBg(Utils.generateChangeColor(primary, accent, background));
+            setCHeaderBg(Utils.generateHeaderColor(primary, accent, background));
+            setCHighlight(Utils.generateHighlightColor(primary, accent, background));
+
+            setDpDividerWidth(1);
+            setDpHighlightWidth(1);
+
+            setCInfolineBg(0xff424242);
+        }
+        if (customizationLevel < 3){
+            //generate text colors and sizes
+            setSpPrimaryText(18);
+            setSpSecondaryText(12);
+            setSpInfolineTextSize(12);
+
+            int[] colors = Utils.generateTextColors(primary, accent, background, getCHBg());
+            setCHPrimaryText(colors[0]);
+            setCHSecondaryText(colors[1]);
+            setCHRoomText(colors[2]);
+
+            colors = Utils.generateTextColors(primary, accent, background, getCChngBg());
+            setCChngPrimaryText(colors[0]);
+            setCChngSecondaryText(colors[1]);
+            setCChngRoomText(colors[2]);
+
+            colors = Utils.generateTextColors(primary, accent, background, getCABg());
+            setCAPrimaryText(colors[0]);
+            setCASecondaryText(colors[1]);
+            setCARoomText(colors[2]);
+
+            colors = Utils.generateTextColors(primary, accent, background, getCHeaderBg());
+            setCHeaderPrimaryText(colors[0]);
+            setCHeaderSecondaryText(colors[1]);
+
+            if (ColorUtils.isDarkColor(getCInfolineBg())){
+                setCInfolineText(0xffffffff);
+            }else {
+                setCInfolineText(0xff000000);
+            }
+        }
+    }
+
+    public static class Utils{
+
+
+        /**
+         * [0] primary text.
+         * [1] secondary text,
+         * [2] third (accent of accent color) text
+         */
+        public static int[] generateTextColors(int primaryColor, int accentColor, int backgroundColor, int cellBackground){
+            int[] ret = new int[3];
+            if (useDarkText(cellBackground)){
+                ret[0] = 0xff000000;
+                ret[1] = mix(accentColor, 0xff000000, -0.3f);
+                ret[2] = 0xff000000;
+            }else {
+                ret[0] = 0xffffffff;
+                ret[1] = mix(accentColor, 0xffffffff, -0.3f);
+                ret[2] = 0xffffffff;
+            }
+            return ret;
+        }
+
+        public static int generateEmptyCellColor(int primaryColor, int accentColor, int backgroundColor){
+            return backgroundColor;
+        }
+
+        public static int generateHodinaColor(int primaryColor, int accentColor, int backgroundColor){
+            int lightSumBg = Math.round((Color.red(backgroundColor) + Color.green(backgroundColor) + Color.blue(backgroundColor) ) * (Color.alpha(backgroundColor) / 255f));
+            int maxColor = ColorUtils.darker(0xffffffff);
+            int lightSumMax = Math.round((Color.red(maxColor) + Color.green(maxColor) + Color.blue(maxColor) ) * (Color.alpha(maxColor) / 255f));
+            if (lightSumBg > lightSumMax){
+                return ColorUtils.darker(backgroundColor,0.9f);
+            }else {
+                return ColorUtils.lighter(backgroundColor, 0.1f);
+            }
+        }
+
+        public static int generateChangeColor(int primaryColor, int accentColor, int backgroundColor){
+            return mix(accentColor, backgroundColor, 0.2f);
+        }
+
+        public static int generateHeaderColor(int primaryColor, int accentColor, int backgroundColor){
+            return mix(backgroundColor, primaryColor, 0.9f);
+        }
+
+        public static int generateHighlightColor(int primaryColor, int accentColor, int backgroundColor){
+            return primaryColor;
+        }
+
+        /**
+         * Actually only averages the two colors. Mixes alpha too
+         * @param baseColor one color
+         * @param addedColor other color
+         * @param addedWeight from -1.0 to 1.0 - if 0, both colors are mixed equally, if 1 the base color is completely ignored.
+         * @return resulting color
+         */
+        public static int mix(int baseColor, int addedColor, float addedWeight){
+            int[] base = new int[4];
+            base[0] = Color.red(baseColor);
+            base[1] = Color.green(baseColor);
+            base[2] = Color.blue(baseColor);
+            base[3] = Color.alpha(baseColor);
+
+            int added[] = new int[4];
+            added[0] = Color.red(addedColor);
+            added[1] = Color.green(addedColor);
+            added[2] = Color.blue(addedColor);
+            added[3] = Color.alpha(addedColor);
+
+            int[] mix = new int[4];
+            mix[0] = Math.round((base[0] * (1 - addedWeight) + added[0] * (1 + addedWeight)) / 2f);
+            mix[1] = Math.round((base[1] * (1 - addedWeight) + added[1] * (1 + addedWeight)) / 2f);
+            mix[2] = Math.round((base[2] * (1 - addedWeight) + added[2] * (1 + addedWeight)) / 2f);
+            mix[3] = Math.round((base[3] * (1 - addedWeight) + added[3] * (1 + addedWeight)) / 2f);
+
+            return Color.argb(mix[3], mix[0], mix[1], mix[2]);
+        }
+
+        /**
+         * Determines whether a dark text should be used on give background.
+         * @return {@code true} if dark text should be used on this background.
+         */
+        public static boolean useDarkText(int backgroundColor){
+            double bgLum = androidx.core.graphics.ColorUtils.calculateLuminance(backgroundColor);
+            if (bgLum > 0.179){
+                return true;
+            }else {
+                return false;
+            }
+        }
+    }
 
     /*
 cEmptyBg                int color

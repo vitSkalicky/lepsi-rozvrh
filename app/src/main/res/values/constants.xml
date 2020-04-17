@@ -16,4 +16,36 @@
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
     <string name="PRIVACY_POLICY_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh/blob/master/Z%C3%A1sady%20ochrany%20soukrom%C3%AD.md</string>
 
+    <!-- See ThemeData.java -->
+    <string name="PREFS_THEME_cEmptyBg" translatable="false">PREFS-THEME-cEmptyBg</string>
+    <string name="PREFS_THEME_cABg" translatable="false">PREFS-THEME-cABg</string>
+    <string name="PREFS_THEME_cHBg" translatable="false">PREFS-THEME-cHBg</string>
+    <string name="PREFS_THEME_cChngBg" translatable="false">PREFS-THEME-cChngBg</string>
+    <string name="PREFS_THEME_cHeaderBg" translatable="false">PREFS-THEME-cHeaderBg</string>
+    <string name="PREFS_THEME_cDivider" translatable="false">PREFS-THEME-cDivider</string>
+    <string name="PREFS_THEME_dpDividerWidth" translatable="false">PREFS-THEME-dpDividerWidth</string>
+    <string name="PREFS_THEME_cHighlight" translatable="false">PREFS-THEME-cHighlight</string>
+    <string name="PREFS_THEME_dpHighlightWidth" translatable="false">PREFS-THEME-dpHighlightWidth</string>
+    <string name="PREFS_THEME_cHPrimaryText" translatable="false">PREFS-THEME-cHPrimaryText</string>
+    <string name="PREFS_THEME_cHRoomText" translatable="false">PREFS-THEME-cHRoomText</string>
+    <string name="PREFS_THEME_cHSecondaryText" translatable="false">PREFS-THEME-cHSecondaryText</string>
+    <string name="PREFS_THEME_cChngPrimaryText" translatable="false">PREFS-THEME-cChngPrimaryText</string>
+    <string name="PREFS_THEME_cChngRoomText" translatable="false">PREFS-THEME-cChngRoomText</string>
+    <string name="PREFS_THEME_cChngSecondaryText" translatable="false">PREFS-THEME-cChngSecondaryText</string>
+    <string name="PREFS_THEME_cAPrimaryText" translatable="false">PREFS-THEME-cAPrimaryText</string>
+    <string name="PREFS_THEME_cARoomText" translatable="false">PREFS-THEME-cARoomText</string>
+    <string name="PREFS_THEME_cASecondaryText" translatable="false">PREFS-THEME-cASecondaryText</string>
+    <string name="PREFS_THEME_cHeaderPrimaryText" translatable="false">PREFS-THEME-cHeaderPrimaryText</string>
+    <string name="PREFS_THEME_cHeaderSecondaryText" translatable="false">PREFS-THEME-cHeaderSecondaryText</string>
+    <string name="PREFS_THEME_spPrimaryText" translatable="false">PREFS-THEME-spPrimaryText</string>
+    <string name="PREFS_THEME_spSecondaryText" translatable="false">PREFS-THEME-spSecondaryText</string>
+    <string name="PREFS_THEME_dpPaddingLeft" translatable="false">PREFS-THEME-dpPaddingLeft</string>
+    <string name="PREFS_THEME_dpPaddingTop" translatable="false">PREFS-THEME-dpPaddingTop</string>
+    <string name="PREFS_THEME_dpPaddingRight" translatable="false">PREFS-THEME-dpPaddingRight</string>
+    <string name="PREFS_THEME_dpPaddingBottom" translatable="false">PREFS-THEME-dpPaddingBottom</string>
+    <string name="PREFS_THEME_dpTextPadding" translatable="false">PREFS-THEME-dpTextPadding</string>
+    <string name="PREFS_THEME_cInfolineBg" translatable="false">PREFS-THEME-cInfolineBg</string>
+    <string name="PREFS_THEME_cInfolineText" translatable="false">PREFS-THEME-cInfolineText</string>
+    <string name="PREFS_THEME_spInfolineTextSize" translatable="false">PREFS-THEME-spInfolineTextSize</string>
+
 </resources>

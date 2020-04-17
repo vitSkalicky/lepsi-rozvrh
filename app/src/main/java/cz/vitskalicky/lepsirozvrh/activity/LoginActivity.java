@@ -16,6 +16,7 @@ import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class LoginActivity extends CyaneaAppCompatActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
@@ -53,6 +54,7 @@ public class LoginActivity extends CyaneaAppCompatActivity {
 
         progressBar.setVisibility(View.GONE);
         twMessage.setText("");
+        twMessage.setTextColor(Theme.of(this).getCError());
 
         if (tilUsername.getEditText().getText().toString().isEmpty())
             tilUsername.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.USERNAME));

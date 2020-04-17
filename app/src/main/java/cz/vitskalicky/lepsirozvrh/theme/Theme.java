@@ -25,8 +25,19 @@ public class Theme {
     /**
      * Fallback color, deep purple in debug (to be noticeable), grey for release (to be hopefully unnoticed)
      */
-    private final static int FALLBACK_COLOR = BuildConfig.DEBUG ? 0xFFFF00FF : 0xFF2C2C2C;
+    public final static int FALLBACK_COLOR = BuildConfig.DEBUG ? 0xFFFF00FF : 0xFF2C2C2C;
     private Context context;
+
+    public Theme(Context context) {
+        this.context = context.getApplicationContext();
+    }
+
+    /**
+     * Just a shortcut for {@code new Theme(context)}
+     */
+    public static Theme of(Context context){
+        return new Theme(context);
+    }
 
     public void setThemeData(ThemeData td){
 
@@ -62,6 +73,7 @@ public class Theme {
         setCInfolineBg(td.cInfolineBg);
         setCInfolineText(td.cInfolineText);
         setSpInfolineTextSize(td.spInfolineTextSize);
+        setCError(td.cError);
     }
 
     public ThemeData getThemeData(){
@@ -99,6 +111,7 @@ public class Theme {
         td.cInfolineBg = getCInfolineBg();
         td.cInfolineText = getCInfolineText();
         td.spInfolineTextSize = getSpInfolineTextSize();
+        td.cError = getCError();
 
         return td;
     }
@@ -160,6 +173,7 @@ public class Theme {
         setCInfolineBg(0xff424242);
         setCInfolineText(0xffFFFFFF);
         setSpInfolineTextSize(12);
+        setCError(0xffB00020);
 
         getCyanea().edit()
                 .primary(0xfff9a825)
@@ -215,6 +229,7 @@ public class Theme {
     public void setCInfolineBg(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cInfolineBg, color); }
     public void setCInfolineText(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cInfolineText, color); }
     public void setSpInfolineTextSize(float size){ SharedPrefs.setFloatPreference(context, R.string.PREFS_THEME_spInfolineTextSize, size); }
+    public void setCError(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cError, color); }
 
     public int getCEmptyBg(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cEmptyBg, FALLBACK_COLOR);}
     public int getCABg(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cABg, FALLBACK_COLOR);}
@@ -246,6 +261,20 @@ public class Theme {
     public int getCInfolineBg(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cInfolineBg, FALLBACK_COLOR);}
     public int getCInfolineText(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cInfolineText, FALLBACK_COLOR);}
     public float getSpInfolineTextSize(){ return SharedPrefs.getFloatPreference(context, R.string.PREFS_THEME_spInfolineTextSize, 10.0f);}
+    public int getCError(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cError, FALLBACK_COLOR);}
+
+    public int getPxDividerWidth(){ return Math.round(getDpDividerWidth() * context.getResources().getDisplayMetrics().density);}
+    public int getPxHighlightWidth(){ return Math.round(getDpHighlightWidth() * context.getResources().getDisplayMetrics().density);}
+    public int getPxPaddingLeft(){ return Math.round(getDpPaddingLeft() * context.getResources().getDisplayMetrics().density);}
+    public int getPxPaddingTop(){ return Math.round(getDpPaddingTop() * context.getResources().getDisplayMetrics().density);}
+    public int getPxPaddingRight(){ return Math.round(getDpPaddingRight() * context.getResources().getDisplayMetrics().density);}
+    public int getPxPaddingBottom(){ return Math.round(getDpPaddingBottom() * context.getResources().getDisplayMetrics().density);}
+    public int getPxTextPadding(){ return Math.round(getDpTextPadding() * context.getResources().getDisplayMetrics().density);}
+
+    public int getPxPrimaryText(){ return Math.round(getSpPrimaryText() * context.getResources().getDisplayMetrics().scaledDensity); }
+    public int getPxSecondaryText(){ return Math.round(getSpSecondaryText() * context.getResources().getDisplayMetrics().scaledDensity); }
+    public int getPxInfolineTextSize(){ return Math.round(getSpInfolineTextSize() * context.getResources().getDisplayMetrics().scaledDensity); }
+
     //@formatter:on
 
     /*
@@ -279,5 +308,6 @@ dpTextPadding           float size
 cInfolineBg             int color
 cInfolineText           int color
 spInfolineTextSize      float size
+cError                  int color
      */
 }

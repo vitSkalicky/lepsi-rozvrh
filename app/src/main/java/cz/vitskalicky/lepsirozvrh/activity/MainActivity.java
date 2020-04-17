@@ -28,6 +28,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
@@ -219,6 +220,11 @@ public class MainActivity extends CyaneaAppCompatActivity {
         ibPermanent.setColorFilter(iconColor);
         ibNext.setColorFilter(iconColor);
         ibRefresh.setColorFilter(iconColor);
+
+        Theme t = new Theme(context);
+        infoLine.setBackgroundColor(t.getCInfolineBg());
+        infoLine.setTextSize(t.getSpInfolineTextSize());
+        infoLine.setTextColor(t.getCInfolineText());
         //bottomAppBar.setBackgroundColor(Cyanea.getInstance().getPrimary());
     }
 

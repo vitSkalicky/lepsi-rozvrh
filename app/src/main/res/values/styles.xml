@@ -1,34 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.Cyanea.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.Cyanea.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorError">@color/colorError</item>
-
-        <item name="backgroundChng">#ffd95a</item>
-        <item name="backgroundA">#ffd95a</item>
-        <item name="backgroundH">#eceff1</item>
-        <item name="backgroundEmpty">#00FFFFFF</item>
-        <item name="backgroundHeader">#CFD8DC</item>
-
-        <item name="dividerColor">#607D8B</item>
-        <item name="dividerWidth">1dp</item>
-        <item name="dividerHighlightColor">#f9a825</item>
-        <item name="dividerHighlightWidth">2dp</item>
-
-        <item name="textPrimaryColor">#000000</item>
-        <item name="textRoomColor">#000000</item>
-        <item name="textSecondaryColor">#607D8B</item>
-        <item name="textPrimarySize">18sp</item>
-        <item name="textSecondarySize">12sp</item>
-
-        <item name="paddingLeft">3dp</item>
-        <item name="paddingTop">3dp</item>
-        <item name="paddingRight">3dp</item>
-        <item name="paddingBottom">3dp</item>
-        <item name="textPadding">2dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -37,9 +13,6 @@
     </style>
 
     <style name="AppTheme.InfoLine">
-        <item name="android:background">#424242</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#FFFFFF</item>
         <item name="android:textAlignment">center</item>
     </style>
 

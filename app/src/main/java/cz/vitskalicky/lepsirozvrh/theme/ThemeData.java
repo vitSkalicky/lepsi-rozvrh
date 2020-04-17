@@ -151,6 +151,12 @@ public class ThemeData {
     public int cInfolineText;
     public float spInfolineTextSize;
 
+    //<editor-fold desc="Annotations" defaultstate="collapsed">
+    @JsonSerialize(using = ColorSerializer.class)
+    @JsonDeserialize(using = ColorDeserializer.class)
+    //</editor-fold>
+    public int cError;
+
     public static class CyaneaThemeSerializer extends StdSerializer<CyaneaTheme> {
 
         protected CyaneaThemeSerializer() {
@@ -201,13 +207,22 @@ public class ThemeData {
         @Override
         public Integer deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
             String text = p.getText().toLowerCase();
-            if(!text.matches("#[0-9a-f]{8}")){
-                throw new JsonParseException(p, "Expected #argb hex color string (eg. \"#0f420042\"), but got \"" + text + "\".");
+            boolean alpha;
+            if(text.matches("#[0-9a-f]{8}")) {
+                alpha = true;
+            }else if (text.matches("#[0-9a-f]{6}")) {
+                alpha = false;
+            } else {
+                throw new JsonParseException(p, "Expected #rgb or #argb hex color string (eg. \"#012830\" or \"#0f014230\"), but got \"" + text + "\".");
             }
             try{
-                return Integer.parseInt(p.getText().substring(1),16);
+                if (alpha){
+                    return Integer.parseInt(p.getText().substring(1),16);
+                } else {
+                    return 0xff000000 | Integer.parseInt(p.getText().substring(1),16);
+                }
             }catch (NumberFormatException e){
-                throw new JsonParseException(p, "Expected #argb hex color string (eg. \"#0f420042\"), but got \"" + text + "\".", e);
+                throw new JsonParseException(p, "Expected #rgb or #argb hex color string (eg. \"#012830\" or \"#0f014230\"), but got \"" + text + "\".", e);
             }
         }
     }

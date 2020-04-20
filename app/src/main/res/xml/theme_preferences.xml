@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/theme_general_settings">
+        <ListPreference
+            android:title="@string/app_theme"
+            android:key="@string/PREFS_APP_THEME"
+            android:entries="@array/themes_entries"
+            android:entryValues="@array/themes_values"
+            android:icon="@drawable/ic_palette_black_24dp"/>
+        <Preference
+            android:title="@string/export_theme"
+            android:summary="@string/export_theme_desc"
+            android:key="@string/PREFS_EXPORT_THEME"
+            android:icon="@drawable/ic_save_black_24dp"/>
+        <Preference
+            android:title="@string/import_theme"
+            android:summary="@string/import_theme_desc"
+            android:key="@string/PREFS_IMPORT_THEME"
+            android:icon="@drawable/ic_file_black_24dp"/>
+        <Preference
+            android:title="@string/share_theme"
+            android:summary="@string/share_theme_desc"
+            android:key="@string/PREFS_SHARE_THEME"
+            android:icon="@drawable/ic_share_black_24dp"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

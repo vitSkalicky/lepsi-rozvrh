@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * Class containing theme values. JSONable.
@@ -216,10 +217,11 @@ public class ThemeData {
                 throw new JsonParseException(p, "Expected #rgb or #argb hex color string (eg. \"#012830\" or \"#0f014230\"), but got \"" + text + "\".");
             }
             try{
+                int integerValue = new BigInteger(text.substring(1), 16).intValue();
                 if (alpha){
-                    return Integer.parseInt(p.getText().substring(1),16);
+                    return integerValue;
                 } else {
-                    return 0xff000000 | Integer.parseInt(p.getText().substring(1),16);
+                    return 0xff000000 | integerValue;
                 }
             }catch (NumberFormatException e){
                 throw new JsonParseException(p, "Expected #rgb or #argb hex color string (eg. \"#012830\" or \"#0f014230\"), but got \"" + text + "\".", e);

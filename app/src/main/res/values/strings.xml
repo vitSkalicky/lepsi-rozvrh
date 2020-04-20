@@ -56,6 +56,23 @@
     <string name="notification_desc">Shows a silent notification with your next lesson.</string>
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
+    <string name="something_went_wron">Something went wrong</string>
+    <string name="report">Report</string>
+    <string name="malformed_theme_file">Invalid theme file</string>
+
+    <!-- Theme preferences -->]
+    <string name="app_theme_screen">Theme settings</string>
+    <string name="app_theme_screen_desc">Customize colours of this app</string>
+
+    <string name="theme_general_settings">General settings</string>
+    <string name="app_theme">App theme</string>
+    <string name="export_theme">Export theme</string>
+    <string name="export_theme_desc">Save current theme into a file</string>
+    <string name="import_theme">Import theme</string>
+    <string name="import_theme_desc">Load theme from a file</string>
+    <string name="share_theme">Share theme</string>
+    <string name="share_theme_desc">Share current theme with your friends</string>
+    <string name="theme_file_name">Better Schedule theme</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>

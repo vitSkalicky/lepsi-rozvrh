@@ -165,7 +165,7 @@ public class MainActivity extends CyaneaAppCompatActivity {
         }
 
         int lastInterestingFeatureVersion = 12;
-        String lastInterestingFeatureMessage = getString(R.string.interestig_widget);
+        String lastInterestingFeatureMessage = getString(R.string.interesting_widget);
 
         if (!SharedPrefs.contains(this, SharedPrefs.LAST_VERSION_SEEN) || (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < lastInterestingFeatureVersion)) {
             Snackbar snackbar = Snackbar.make(infoLine, lastInterestingFeatureMessage, Snackbar.LENGTH_INDEFINITE);

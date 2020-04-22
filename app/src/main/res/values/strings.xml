@@ -58,7 +58,6 @@
     <string name="dont_show_again">Don\'t show again</string>
     <string name="something_went_wron">Something went wrong</string>
     <string name="report">Report</string>
-    <string name="malformed_theme_file">Invalid theme file</string>
 
     <!-- Theme preferences -->]
     <string name="app_theme_screen">Theme settings</string>
@@ -67,12 +66,18 @@
     <string name="theme_general_settings">General settings</string>
     <string name="app_theme">App theme</string>
     <string name="export_theme">Export theme</string>
-    <string name="export_theme_desc">Save current theme into a file</string>
+    <string name="export_theme_desc">Generate a text containing your current theme</string>
+    <string name="export_theme_detail">The following text contains all data about your current theme. Send it to your friends to share your amazing design skills with them!</string>
     <string name="import_theme">Import theme</string>
-    <string name="import_theme_desc">Load theme from a file</string>
-    <string name="share_theme">Share theme</string>
-    <string name="share_theme_desc">Share current theme with your friends</string>
-    <string name="theme_file_name">Better Schedule theme</string>
+    <string name="import_theme_desc">Import theme from a text generated using the button above</string>
+    <string name="import_theme_detail">Paste text generated using the \'export theme\' feature here. Get one from your friends or on (link here)!</string>
+    <string name="copy_to_clipboard">Copy</string>
+    <string name="paste_from_clipboard">Paste from clipboard</string>
+    <string name="share">Share</string>
+    <string name="share_subject">My Better Schedule theme</string>
+    <string name="share_instructions">Paste the following block of text (make sure you paste it all) into \'Better Schedule &gt; Settings &gt; Theme settings &gt; Import theme\' to apply this theme.</string>
+    <string name="share_via">Share…</string>
+    <string name="import_buttom">Import</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>
@@ -134,7 +139,7 @@
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->
-    <string name="interestig_widget">Widget is finally here!</string>
+    <string name="interesting_widget">Widget is finally here!</string>
 
     <string name="wtf_rozvrh_title">An error occurred</string>
     <string name="wtf_rozvrh_message">Your schedule could not be rendered correctly! Would you like to report this issue via email now? The problematic schedule will be included in the report.</string>
@@ -150,6 +155,5 @@
         <item quantity="one">%d week forward</item>
         <item quantity="other">%d weeks forward</item>
     </plurals>
-
 
 </resources>

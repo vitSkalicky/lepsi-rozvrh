@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".settings.ExportThemeFragment">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/export_theme_detail"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/share"
+        app:icon="@drawable/ic_share_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonShare"
+        app:layout_constraintStart_toStartOf="parent"
+        android:animateLayoutChanges="true">
+
+        <Button
+            android:id="@+id/buttonCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:animateLayoutChanges="true"
+            android:text="@string/copy_to_clipboard"
+            android:visibility="visible"
+            app:icon="@drawable/ic_content_copy_black_24dp" />
+
+        <Button
+            android:id="@+id/buttonCopied"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:animateLayoutChanges="true"
+            android:text="@string/copied_to_clipboard"
+            android:visibility="invisible"
+            app:icon="@drawable/ic_check_black_24dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textViewData"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="monospace"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textIsSelectable="true"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        tools:text="H4sIAAAAAAAAAH2SX0+DMBTFv0ufFwMoynjjbzDxYdlIfK60g8bRklqNuOy7217qGGxYwgO/c3vuuTccURXFNQpRnqdrP0Ir/b2RrMWyL+m30oIDB4StEO013dFKcDJeeHSe0iA2UtLwemZu0JK/0W62MMJyl5R9MULlhGVtp3rb2hxgUgpTFWtXD3wLqMiSLM9d+F5KVtyMVSxnKijWkcA+ydMgTUa42APUfyxZ3Rz0a2i+jgLPN/SZ78WBcQqtHjzzXGLrMi6hx5zisqEtReERdUMWqPB9yIGrivK/ZHDnDVfvtRSfnGgawEGnFSKdXfwrI6pBoXvnGHiOabE34A0mhOm/QSglWhTeT+gL3as52w6jTmEpujMyo1lsu3x0l2Pv2I+e0bXKZOtuMMDZsk3t6RfIzE44EQMAAA==" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

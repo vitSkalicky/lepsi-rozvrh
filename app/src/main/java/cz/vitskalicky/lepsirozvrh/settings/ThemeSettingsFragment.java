@@ -16,7 +16,6 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import io.sentry.Sentry;
-import io.sentry.event.Breadcrumb;
 import io.sentry.event.BreadcrumbBuilder;
 
 public class ThemeSettingsFragment extends PreferenceFragmentCompat {

@@ -38,6 +38,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
     Toolbar toolbar;
     SettingsFragment settingsFragment;
     ThemeSettingsFragment themeSettingsFragment;
+    ExportThemeFragment exportThemeFragment;
     View root;
 
     @Override
@@ -61,6 +62,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
         if (savedInstanceState != null) {
             settingsFragment = (SettingsFragment) fm.getFragment(savedInstanceState, "settingsFragment");
             themeSettingsFragment = (ThemeSettingsFragment) fm.getFragment(savedInstanceState, "themeSettingsFragment");
+            exportThemeFragment = (ExportThemeFragment) fm.getFragment(savedInstanceState, "exportThemeFragment"); 
             setupRootListeners();
             setupThemeListeners();
         }
@@ -108,70 +110,14 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
                 overridePendingTransition(0, android.R.anim.fade_out);
             });
             themeSettingsFragment.setExportListener(() -> {
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("text/json");
-                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.theme_file_name) + ".bstheme");
-
-                startActivityForResult(intent, SAVE_CODE);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout, new ExportThemeFragment(),"exportThemeFragment")
+                        .addToBackStack(null)
+                        .commit();
             });
             themeSettingsFragment.setImportListener(() -> {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                startActivityForResult(intent, LOAD_CODE);
+
             });
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == SAVE_CODE){
-                AsyncTask.execute(() -> {
-                    if (data != null){
-                        Uri contentUri = data.getData();
-                        try {
-                            ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(contentUri, "w");
-                            FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
-
-                            Theme theme = new Theme(this);
-                            Theme.writeThemeData(fos, theme.getThemeData());
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.somethingWrong(e, root, this);
-                        }
-                    }
-                });
-
-            }
-
-            if (requestCode == LOAD_CODE){
-                AsyncTask.execute(() -> {
-                    if (data != null) {
-                        Uri uri = data.getData();
-
-                        try {
-                            InputStream inputStream = getContentResolver().openInputStream(uri);
-                            Theme theme = new Theme(this);
-                            theme.setThemeData(Theme.loadThemeData(inputStream));
-                            new Handler(getMainLooper()).post(() -> {
-                                if (themeSettingsFragment != null){
-                                    themeSettingsFragment.applyChanges();
-                                }
-                            });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Snackbar.make(root, R.string.malformed_theme_file, BaseTransientBottomBar.LENGTH_SHORT)
-                                    .show();
-                        }
-                    }
-                });
-
-            }
         }
     }
 
@@ -190,5 +136,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
             getSupportFragmentManager().putFragment(outState, "settingsFragment", settingsFragment);
         if (themeSettingsFragment != null)
             getSupportFragmentManager().putFragment(outState, "themeSettingsFragment", themeSettingsFragment);
+        if (exportThemeFragment != null)
+            getSupportFragmentManager().putFragment(outState, "exportThemeFragment", exportThemeFragment);
     }
 }

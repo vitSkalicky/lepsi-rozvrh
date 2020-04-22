@@ -19,11 +19,6 @@
             android:summary="@string/import_theme_desc"
             android:key="@string/PREFS_IMPORT_THEME"
             android:icon="@drawable/ic_file_black_24dp"/>
-        <Preference
-            android:title="@string/share_theme"
-            android:summary="@string/share_theme_desc"
-            android:key="@string/PREFS_SHARE_THEME"
-            android:icon="@drawable/ic_share_black_24dp"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

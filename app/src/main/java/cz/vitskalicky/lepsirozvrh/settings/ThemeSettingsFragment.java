@@ -15,6 +15,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
+import cz.vitskalicky.lepsirozvrh.theme.ThemeData;
 import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
@@ -70,8 +71,6 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
     private int detailLevel;
     private Preference exportPref = null;
     private Preference importPref = null;
-    private Preference sharePref = null;
-    private Utils.Listener recreateListener = null;
     private Utils.Listener exportListener = () -> {
     };
     private Utils.Listener importListener = () -> {
@@ -109,7 +108,7 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
                 }
                 AsyncTask.execute(() -> {
                     try (InputStream is = getResources().openRawResource(resId);) {
-                        Theme.of(getContext()).setThemeData(Theme.loadThemeData(is));
+                        Theme.of(getContext()).setThemeData(ThemeData.parseJson(is));
                     } catch (IOException | NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -133,7 +132,6 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
 
         exportPref = findPreference(getString(R.string.PREFS_EXPORT_THEME));
         importPref = findPreference(getString(R.string.PREFS_IMPORT_THEME));
-        sharePref = findPreference(getString(R.string.PREFS_SHARE_THEME));
 
         exportPref.setOnPreferenceClickListener(preference -> {
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Exporting theme.").build());
@@ -148,24 +146,16 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
     }
 
     public void applyChanges() {
-        if (recreateListener == null) {
-            //this does no make a nice animation
-            if (getActivity() != null) {
-                getActivity().recreate();
-            }
-        } else {
-            //if you do this correctly (see SettingsActivity) you get a nice animation
-            recreateListener.method();
+        if (getActivity() instanceof Utils.RecreateWithAnimationActivity){
+            ((Utils.RecreateWithAnimationActivity) getActivity()).recreateWithAnimation();
+        }else{
+            getActivity().recreate();
         }
     }
 
     private void setDetailLevel(int detailLevel) {
         this.detailLevel = detailLevel;
         SharedPrefs.setIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, detailLevel);
-    }
-
-    public void setRecreateListener(Utils.Listener recreateListener) {
-        this.recreateListener = recreateListener;
     }
 
     public void setExportListener(Utils.Listener exportListener) {

@@ -16,6 +16,11 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <style name="AppTheme.ButtonBorderless" parent="Cyanea.ColoredButton">
+        <item name="android:colorBackground">#550055</item>
+        <item name="android:background">@drawable/ic_check_black_24dp</item>
+    </style>
+
     <style name="AppTheme.WallpaperBackground" parent="AppTheme">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowShowWallpaper">true</item>

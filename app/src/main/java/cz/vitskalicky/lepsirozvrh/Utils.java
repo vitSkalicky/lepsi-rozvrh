@@ -4,6 +4,7 @@
 */
 package cz.vitskalicky.lepsirozvrh;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -340,5 +341,12 @@ public class Utils {
         } catch (PackageManager.NameNotFoundException e) {
             Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static interface RecreateWithAnimationActivity{
+        /**
+         * Use this to recreate an activity with some nice animation instead of just "blink", which is what {@link Activity#recreate()} does.
+         */
+        public void recreateWithAnimation();
     }
 }

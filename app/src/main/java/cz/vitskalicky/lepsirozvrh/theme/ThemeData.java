@@ -1,11 +1,18 @@
 package cz.vitskalicky.lepsirozvrh.theme;
 
+import android.util.Base64;
+import android.util.Base64InputStream;
+import android.util.Base64OutputStream;
+
+import androidx.annotation.Nullable;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,8 +24,14 @@ import com.jaredrummler.cyanea.prefs.CyaneaTheme;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Class containing theme values. JSONable.
@@ -282,5 +295,110 @@ public class ThemeData {
                 throw new JsonParseException(p, "Expected rgb or argb hex color string with or wothou \"#\" prefix (eg. \"012830\" or \"0f014230\" or \"#0f014230\"), but got \"" + text + "\".");
             }
         }
+    }
+
+    /**
+     * Serializes this object using JSON and writes it to the given output stream.
+     * @throws IOException if it fails
+     */
+    public void toJsonString(OutputStream os) throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(os, this);
+        } catch (IOException e) {
+            throw new IOException("Failed to write ThemeData.",e);
+        }
+    }
+
+    /**
+     * Serializes this object using JSON.
+     * @return JSON string or {@code null} if it fails (it shouldn't)
+     */
+    public String toJsonString(){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Serializes this object using JSON, compresses using gzip, encodes in base64 and writes it to the given output stream.
+     * @throws IOException if it fails
+     */
+    public void toZippedString(@Nullable OutputStream os) throws IOException{
+        Base64OutputStream bos = new Base64OutputStream(os, Base64.NO_WRAP);
+        GZIPOutputStream gzos = new GZIPOutputStream(bos);
+        toJsonString(gzos);
+    }
+
+    /**
+     * Serializes this object using JSON, compresses using gzip and encodes in base64
+     * @return JSON string or {@code null} if it fails (it shouldn't)
+     */
+    public String toZippedString(){
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            toZippedString(baos);
+            return baos.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Deserializes a {@link ThemeData} from JSON
+     * @param is Input stream to read from.
+     * @throws IOException if anything fails
+     * @return Deserialized ThemeData
+     */
+    public static ThemeData parseJson(InputStream is) throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            return mapper.readValue(is, ThemeData.class);
+        } catch (IOException e) {
+            throw new IOException("Failed to parse theme",e);
+        }
+    }
+
+    /**
+     * Deserializes a {@link ThemeData} from JSON
+     * @param s Json string
+     * @throws IOException if parsing fails
+     * @return Deserialized ThemeData
+     */
+    public static ThemeData parseJson(String s) throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            return mapper.readValue(s, ThemeData.class);
+        } catch (IOException e) {
+            throw new IOException("Failed to parse theme from this string:" + s,e);
+        }
+    }
+
+    /**
+     * Deserializes a {@link ThemeData} from base64 encoded (no wrap), gzipped, JSON.
+     * @param is Input stream to read from.
+     * @throws IOException if anything fails
+     * @return Deserialized ThemeData
+     */
+    public static ThemeData parseZipped(InputStream is) throws IOException{
+        Base64InputStream bis = new Base64InputStream(is, Base64.NO_WRAP);
+        GZIPInputStream gzis = new GZIPInputStream(bis);
+        return parseJson(gzis);
+    }
+
+    /**
+     * Deserializes a {@link ThemeData} from base64 encoded (no wrap), gzipped, JSON.
+     * @param s base64 encoded (no wrap), gzipped, JSON
+     * @throws IOException if anything fails
+     * @return Deserialized ThemeData
+     */
+    public static ThemeData parseZipped(String s) throws IOException{
+        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
+        return parseZipped(bais);
     }
 }

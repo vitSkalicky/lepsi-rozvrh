@@ -124,37 +124,6 @@ public class Theme {
         return td;
     }
 
-    /**
-     * Serializes {@link ThemeData} using JSON and writes them to the given output stream.
-     * @return {@code true} if successful
-     */
-    public static void writeThemeData(OutputStream os, ThemeData td) throws IOException{
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            mapper.writeValue(os, td);
-            //todo:this is debug
-            String json = mapper.writeValueAsString(td);
-            System.out.println(json);
-        } catch (IOException e) {
-            throw new IOException("Failed to write ThemeData.",e);
-        }
-    }
-
-    /**
-     * Deserializes a {@link ThemeData} from JSON
-     * @param is Input stream to read from.
-     * @return Deserialized ThemeData or {@code null} if it fails.
-     */
-    public static ThemeData loadThemeData(InputStream is) throws IOException{
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            ThemeData td = mapper.readValue(is, ThemeData.class);
-            return td;
-        } catch (IOException e) {
-            throw new IOException("Failed to load theme",e);
-        }
-    }
-
     public void useDefaultTheme(){
         setCABg(0xffffd95a);
         setCEmptyBg(0x00FFFFFF);

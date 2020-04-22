@@ -56,7 +56,7 @@
     <string name="notification_desc">Shows a silent notification with your next lesson.</string>
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
-    <string name="something_went_wron">Something went wrong</string>
+    <string name="something_went_wron">Something went wrong :(</string>
     <string name="report">Report</string>
 
     <!-- Theme preferences -->]
@@ -71,13 +71,16 @@
     <string name="import_theme">Import theme</string>
     <string name="import_theme_desc">Import theme from a text generated using the button above</string>
     <string name="import_theme_detail">Paste text generated using the \'export theme\' feature here. Get one from your friends or on (link here)!</string>
+    <string name="import_invalid">Invalid data. Make sure you haven\'t missed any letters at the end.</string>
     <string name="copy_to_clipboard">Copy</string>
     <string name="paste_from_clipboard">Paste from clipboard</string>
     <string name="share">Share</string>
     <string name="share_subject">My Better Schedule theme</string>
     <string name="share_instructions">Paste the following block of text (make sure you paste it all) into \'Better Schedule &gt; Settings &gt; Theme settings &gt; Import theme\' to apply this theme.</string>
     <string name="share_via">Share…</string>
-    <string name="import_buttom">Import</string>
+    <string name="import_button">Import</string>
+    <string name="import_clear">Clear</string>
+    <string name="import_edittext_hint">Paste here</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>

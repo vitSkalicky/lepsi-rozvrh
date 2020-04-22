@@ -31,7 +31,7 @@ import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
-public class SettingsActivity extends CyaneaAppCompatActivity {
+public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.RecreateWithAnimationActivity {
     private static final int SAVE_CODE = 324;
     private static final int LOAD_CODE = 8723;
 
@@ -39,6 +39,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
     SettingsFragment settingsFragment;
     ThemeSettingsFragment themeSettingsFragment;
     ExportThemeFragment exportThemeFragment;
+    ImportThemeFragment importThemeFragment;
     View root;
 
     @Override
@@ -62,7 +63,8 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
         if (savedInstanceState != null) {
             settingsFragment = (SettingsFragment) fm.getFragment(savedInstanceState, "settingsFragment");
             themeSettingsFragment = (ThemeSettingsFragment) fm.getFragment(savedInstanceState, "themeSettingsFragment");
-            exportThemeFragment = (ExportThemeFragment) fm.getFragment(savedInstanceState, "exportThemeFragment"); 
+            exportThemeFragment = (ExportThemeFragment) fm.getFragment(savedInstanceState, "exportThemeFragment");
+            importThemeFragment = (ImportThemeFragment) fm.getFragment(savedInstanceState, "importThemeFragment");
             setupRootListeners();
             setupThemeListeners();
         }
@@ -100,25 +102,36 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
 
     private void setupThemeListeners(){
         if (themeSettingsFragment != null){
-            themeSettingsFragment.setRecreateListener(() -> {
-                Bundle temp_bundle = new Bundle();
-                onSaveInstanceState(temp_bundle);
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra("bundle", temp_bundle);
-                finish();
-                startActivity(intent);
-                overridePendingTransition(0, android.R.anim.fade_out);
-            });
             themeSettingsFragment.setExportListener(() -> {
+                if (exportThemeFragment == null){
+                    exportThemeFragment = new ExportThemeFragment();
+                }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, new ExportThemeFragment(),"exportThemeFragment")
+                        .replace(R.id.frame_layout, exportThemeFragment,"exportThemeFragment")
                         .addToBackStack(null)
                         .commit();
             });
-            themeSettingsFragment.setImportListener(() -> {
-
+            themeSettingsFragment.setImportListener(() ->{
+                if (importThemeFragment == null){
+                    importThemeFragment = new ImportThemeFragment();
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout, importThemeFragment,"importThemeFragment")
+                        .addToBackStack(null)
+                        .commit();
             });
         }
+    }
+
+    @Override
+    public void recreateWithAnimation(){
+        Bundle temp_bundle = new Bundle();
+        onSaveInstanceState(temp_bundle);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.putExtra("bundle", temp_bundle);
+        finish();
+        startActivity(intent);
+        overridePendingTransition(0, android.R.anim.fade_out);
     }
 
     @Override
@@ -132,11 +145,13 @@ public class SettingsActivity extends CyaneaAppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (settingsFragment != null)
+        if (settingsFragment != null && getSupportFragmentManager().findFragmentByTag("settingsFragment") != null)
             getSupportFragmentManager().putFragment(outState, "settingsFragment", settingsFragment);
-        if (themeSettingsFragment != null)
+        if (themeSettingsFragment != null && getSupportFragmentManager().findFragmentByTag("themeSettingsFragment") != null)
             getSupportFragmentManager().putFragment(outState, "themeSettingsFragment", themeSettingsFragment);
-        if (exportThemeFragment != null)
+        if (exportThemeFragment != null && getSupportFragmentManager().findFragmentByTag("exportThemeFragment") != null)
             getSupportFragmentManager().putFragment(outState, "exportThemeFragment", exportThemeFragment);
+        if (importThemeFragment != null && getSupportFragmentManager().findFragmentByTag("importThemeFragment") != null)
+            getSupportFragmentManager().putFragment(outState, "importThemeFragment", importThemeFragment);
     }
 }

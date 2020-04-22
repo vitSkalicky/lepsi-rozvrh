@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +35,10 @@ public class ExportThemeFragment extends Fragment {
     Button buttonCopy;
     Button buttonCopied;
     Button buttonShare;
+
+    //secret feature - switch between zipped and raw json format
+    boolean showRaw = false;
+
     public ExportThemeFragment() {
         // Required empty public constructor
     }
@@ -42,6 +47,11 @@ public class ExportThemeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("showRaw")){
+            showRaw = savedInstanceState.getBoolean("showRaw");
+        }
+
         root = inflater.inflate(R.layout.fragment_export_theme, container, false);
         textViewData = root.findViewById(R.id.textViewData);
         buttonCopy = root.findViewById(R.id.buttonCopy);
@@ -61,33 +71,45 @@ public class ExportThemeFragment extends Fragment {
         buttonShare.setOnClickListener(v -> {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getContext().getText(R.string.share_subject));
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getContext().getString(R.string.share_instructions) + "\n\n" + textViewData.getText());
             startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_via)));
+        });
+
+        //secret feature - switch between zipped and raw json format
+        buttonShare.setOnLongClickListener(v -> {
+            showRaw = !showRaw;
+            showData();
+            return true;
         });
 
         return root;
     }
 
+    private void showData(){
+        AsyncTask.execute(() -> {
+            ThemeData td = new Theme(getContext()).getThemeData();
+            String data;
+            if (showRaw){
+                data = td.toJsonString();
+            }else {
+                data = td.toZippedString();
+            }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                textViewData.setText(data);
+            });
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        AsyncTask.execute(() -> {
-            ThemeData td = new Theme(getContext()).getThemeData();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try {
-                Base64OutputStream b64os = new Base64OutputStream(baos, Base64.NO_WRAP);
-                GZIPOutputStream gos = new GZIPOutputStream(b64os);
-                Theme.writeThemeData(gos, td);
-            } catch (IOException e) {
-                IOException ne = new IOException("Failed to create base64 theme string. This should never happen!", e);
-                ne.printStackTrace();
-                Utils.somethingWrong(ne, root, getContext());
-            }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                textViewData.setText(baos.toString());
-            });
-        });
+        showData();
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("showRaw", showRaw);
     }
 }

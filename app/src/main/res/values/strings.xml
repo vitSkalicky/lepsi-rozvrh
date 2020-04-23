@@ -82,6 +82,44 @@
     <string name="import_clear">Clear</string>
     <string name="import_edittext_hint">Paste here</string>
 
+    <string name="theme_custom_settings">Custom theme settings</string>
+    <string name="primary_color">Primary colour</string>
+    <string name="primary_color_desc">App bar, buttons,…</string>
+    <string name="accent_color">Accent colour</string>
+    <string name="accent_color_desc">Switches, checkboxes,…</string>
+    <string name="background_color">Background colour</string>
+    <string name="cells_background">Cell fill colour</string>
+    <string name="cell_background">Fill</string>
+    <string name="cell_primary_t">Primary text</string>
+    <string name="cell_primary_t_desc">Subject and day of week abbreviations</string>
+    <string name="cell_secondary_t">Secondary text</string>
+    <string name="cell_secondary_t_desc">Teacher abbreviation, date, lesson begin time,…</string>
+    <string name="cell_room_t">Room text</string>
+    <string name="cell_room_t_desc">Classroom number</string>
+    <string name="type_normal_lesson">Normal lesson</string>
+    <string name="type_change">Change</string>
+    <string name="type_change_desc">Lesson cancelled, moved, etc.</string>
+    <string name="type_no_school">No school</string>
+    <string name="type_no_school_desc">School trip, museum visit, etc.</string>
+    <string name="type_empty">Empty cell</string>
+    <string name="type_header">Headers</string>
+    <string name="type_header_desc">Day and time cells</string>
+    <string name="other">Other</string>
+    <string name="divider_color">Divider colour</string>
+    <string name="divider_width">Divider width</string>
+    <string name="highlight_color">Highlight colour</string>
+    <string name="highlight_color_desc">Highlight of current lesson</string>
+    <string name="highlight_width">Highlight width</string>
+    <string name="infoline_fill">Info-line fill</string>
+    <string name="infoline_fill_desc">The little text on the bottom, if enabled</string>
+    <string name="infoline_text_color">Info-line text colour</string>
+    <string name="infoline_text_size">Info-line text size</string>
+    <string name="customize_less">Customize less</string>
+    <string name="customize_less_desc">Calculates some colours automatically based on provided values</string>
+    <string name="customize_more">Customize more</string>
+    <string name="customize_more_desc">You choose everything</string>
+    <string name="not_a_float_error">Enter a decimal number like 4.2!</string>
+
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>
     <string name="subject_name">Subject name:</string>

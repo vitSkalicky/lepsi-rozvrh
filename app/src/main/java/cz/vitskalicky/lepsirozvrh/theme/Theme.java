@@ -402,12 +402,8 @@ public class Theme {
          * @return {@code true} if dark text should be used on this background.
          */
         public static boolean useDarkText(int backgroundColor){
-            double bgLum = androidx.core.graphics.ColorUtils.calculateLuminance(backgroundColor);
-            if (bgLum > 0.179){
-                return true;
-            }else {
-                return false;
-            }
+            // This is exactly same as in Cyanea library, ensuring consistency
+            return !ColorUtils.isDarkColor(backgroundColor, 0.75);
         }
     }
 

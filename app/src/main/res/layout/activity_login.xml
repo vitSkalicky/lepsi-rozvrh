@@ -97,6 +97,7 @@
                         android:id="@+id/textEditURL"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
                         android:hint="@string/bakalari_server_adress"
                         android:inputType="textUri" />
 

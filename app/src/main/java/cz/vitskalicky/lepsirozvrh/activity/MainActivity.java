@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
@@ -184,11 +186,19 @@ public class MainActivity extends CyaneaAppCompatActivity {
 
         showHideButtons();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ColorUtils.darker(Theme.of(this).getCHeaderBg()));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (SharedPrefs.getBooleanPreference(context, R.string.THEME_CHANGED, false)){
+            SharedPrefs.setBooleanPreference(context, R.string.THEME_CHANGED,false);
+            recreate();
+        }
 
         checkLogin();
 

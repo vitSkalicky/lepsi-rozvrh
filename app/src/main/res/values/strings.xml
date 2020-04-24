@@ -56,7 +56,7 @@
     <string name="notification_desc">Shows a silent notification with your next lesson.</string>
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
-    <string name="something_went_wron">Something went wrong :(</string>
+    <string name="something_went_wrong">Something went wrong :(</string>
     <string name="report">Report</string>
 
     <!-- Theme preferences -->]
@@ -114,11 +114,11 @@
     <string name="infoline_fill_desc">The little text on the bottom, if enabled</string>
     <string name="infoline_text_color">Info-line text colour</string>
     <string name="infoline_text_size">Info-line text size</string>
-    <string name="customize_less">Customize less</string>
-    <string name="customize_less_desc">Calculates some colours automatically based on provided values</string>
-    <string name="customize_more">Customize more</string>
+    <string name="customize_less">Customize less details</string>
+    <string name="customize_less_desc">Generates some colours automatically based on provided values</string>
+    <string name="customize_more">Customize more details</string>
     <string name="customize_more_desc">You choose everything</string>
-    <string name="not_a_float_error">Enter a decimal number like 4.2!</string>
+    <string name="not_a_float_error">Enter a decimal number like 4.2</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>

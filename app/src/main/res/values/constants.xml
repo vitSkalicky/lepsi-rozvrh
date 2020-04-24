@@ -21,6 +21,7 @@
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
     <string name="PRIVACY_POLICY_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh/blob/master/Z%C3%A1sady%20ochrany%20soukrom%C3%AD.md</string>
+    <string name="THEME_CHANGED" translatable="false">theme-changed</string>
 
     <!-- See ThemeData.java -->
     <string name="PREFS_THEME_cEmptyBg" translatable="false">PREFS-THEME-cEmptyBg</string>

@@ -214,7 +214,7 @@ public class ThemeData {
      */
     public static String colorIntToHex(int color, boolean includePrefix) {
         String hex;
-        if (color < 0xff000000) {
+        if (color != ( 0xff000000 | color)) {
             hex = String.format("%08X", color);
         } else {
             hex = String.format("%06X", 0x00ffffff & color);

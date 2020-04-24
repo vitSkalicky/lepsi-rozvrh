@@ -234,7 +234,7 @@ public class Utils {
     }
 
     public static void somethingWrong(Exception e, View forToast, Context context){
-        Snackbar.make(forToast, R.string.something_went_wron, BaseTransientBottomBar.LENGTH_LONG)
+        Snackbar.make(forToast, R.string.something_went_wrong, BaseTransientBottomBar.LENGTH_LONG)
                 .setAction(R.string.report,v -> {
                     sendFeedback(false, e, context, forToast);
                 })

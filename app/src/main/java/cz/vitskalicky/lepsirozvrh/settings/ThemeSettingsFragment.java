@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -102,6 +103,7 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
         SharedPrefs.setInt(getContext(), "cpc-color-accent", cyanea.getAccent());
         SharedPrefs.setInt(getContext(), "cpc-color-background", cyanea.getBackgroundColor());
         super.onCreate(savedInstanceState);
+        SharedPrefs.setBooleanPreference(getContext(), R.string.THEME_CHANGED,true);
 
         detailLevel = SharedPrefs.getIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, 0);
         ListPreference themePref = findPreference(getString(R.string.PREFS_APP_THEME));
@@ -125,11 +127,24 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
                         resId = R.raw.theme_light;
                 }
                 AsyncTask.execute(() -> {
+                    ThemeData td = null;
+                    Exception e = null;
                     try (InputStream is = getResources().openRawResource(resId);) {
-                        Theme.of(getContext()).setThemeData(ThemeData.parseJson(is));
-                    } catch (IOException | NullPointerException e) {
+                        td = ThemeData.parseJson(is);
+                    } catch (IOException | NullPointerException ex) {
+                        e = ex;
                         e.printStackTrace();
                     }
+                    final ThemeData ftd = td;
+                    final Exception fe = e;
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (ftd != null){
+                            Theme.of(getContext()).setThemeData(ftd);
+                            applyChanges();
+                        }else if (getView() != null){
+                            Utils.somethingWrong(fe, getView(),getContext());
+                        }
+                    });
                 });
                 setDetailLevel(0);
             } else {
@@ -137,7 +152,6 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
                     setDetailLevel(2);
                 }
             }
-            applyChanges();
             valueToSummaryBinder.onPreferenceChange(preference, newValue);
             return true;
         });
@@ -192,21 +206,21 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
 
         primaryPref.setOnPreferenceChangeListener((preference, newValue) -> {
             cyanea.edit().primary((Integer) newValue).apply();
-            theme.regenerateColors(1);
+            theme.regenerateColors(detailLevel);
             dismissDialog(primaryPref); //this prevents a bug where the dialog appears again after activity recreation
             applyChanges();
             return true;
         });
         accentPref.setOnPreferenceChangeListener((preference, newValue) -> {
             cyanea.edit().accent((Integer) newValue).apply();
-            theme.regenerateColors(1);
+            theme.regenerateColors(detailLevel);
             dismissDialog(accentPref); //this prevents a bug where the dialog appears again after activity recreation
             applyChanges();
             return true;
         });
         backgroundPref.setOnPreferenceChangeListener((preference, newValue) -> {
             cyanea.edit().background((Integer) newValue).apply();
-            theme.regenerateColors(1);
+            theme.regenerateColors(detailLevel);
             dismissDialog(backgroundPref); //this prevents a bug where the dialog appears again after activity recreation
             applyChanges();
             return true;
@@ -257,6 +271,8 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             setDetailLevel(detailLevel - 1);
             return true;
         });
+
+        setDetailLevel(detailLevel);
     }
 
     private void dismissDialog(ColorPreferenceCompat pref){
@@ -277,6 +293,7 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void setDetailLevel(int detailLevel) {
+        int oldDetaillevel = this.detailLevel;
         this.detailLevel = detailLevel;
         SharedPrefs.setIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, detailLevel);
 
@@ -379,6 +396,9 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             less.setVisible(true);
         }else {
             less.setVisible(false);
+        }
+        if (oldDetaillevel > detailLevel){
+            theme.regenerateColors(detailLevel);
         }
     }
 

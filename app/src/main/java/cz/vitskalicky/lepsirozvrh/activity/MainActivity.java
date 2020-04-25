@@ -235,7 +235,7 @@ public class MainActivity extends CyaneaAppCompatActivity {
         infoLine.setBackgroundColor(t.getCInfolineBg());
         infoLine.setTextSize(t.getSpInfolineTextSize());
         infoLine.setTextColor(t.getCInfolineText());
-        //bottomAppBar.setBackgroundColor(Cyanea.getInstance().getPrimary());
+        bottomAppBar.setBackgroundColor(Cyanea.getInstance().getPrimary());
     }
 
     /**

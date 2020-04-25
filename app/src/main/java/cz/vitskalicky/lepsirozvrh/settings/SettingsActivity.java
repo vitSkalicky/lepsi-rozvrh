@@ -1,39 +1,22 @@
 package cz.vitskalicky.lepsirozvrh.settings;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
-import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.RecreateWithAnimationActivity {
-    private static final int SAVE_CODE = 324;
-    private static final int LOAD_CODE = 8723;
 
     Toolbar toolbar;
     SettingsFragment settingsFragment;
@@ -44,7 +27,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.R
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (getIntent().hasExtra("bundle") && savedInstanceState==null){
+        if (getIntent().hasExtra("bundle") && savedInstanceState == null) {
             savedInstanceState = getIntent().getExtras().getBundle("bundle");
         }
 
@@ -52,6 +35,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.R
         setContentView(R.layout.activity_settings);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Cyanea.getInstance().getMenuIconColor());
+        toolbar.setBackgroundColor(Cyanea.getInstance().getPrimary());
         setSupportActionBar(toolbar);
 
         root = findViewById(R.id.root);
@@ -69,54 +53,53 @@ public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.R
             setupThemeListeners();
         }
 
-        if (settingsFragment == null){
+        if (settingsFragment == null) {
             settingsFragment = new SettingsFragment();
             setupRootListeners();
             fm.beginTransaction()
-                    .replace(R.id.frame_layout, settingsFragment,"settingsFragment")
+                    .replace(R.id.frame_layout, settingsFragment, "settingsFragment")
                     .commit();
         }
     }
 
 
-
-    private void setupRootListeners(){
-        if (settingsFragment != null){
+    private void setupRootListeners() {
+        if (settingsFragment != null) {
             settingsFragment.setLogoutListener(() -> {
                 Login.logout(this);
                 finish();
                 return;
             });
             settingsFragment.setShownThemeSettingsListener(() -> {
-                if (themeSettingsFragment == null){
+                if (themeSettingsFragment == null) {
                     themeSettingsFragment = new ThemeSettingsFragment();
                     setupThemeListeners();
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, themeSettingsFragment,"themeSettingsFragment")
+                        .replace(R.id.frame_layout, themeSettingsFragment, "themeSettingsFragment")
                         .addToBackStack(null)
                         .commit();
             });
         }
     }
 
-    private void setupThemeListeners(){
-        if (themeSettingsFragment != null){
+    private void setupThemeListeners() {
+        if (themeSettingsFragment != null) {
             themeSettingsFragment.setExportListener(() -> {
-                if (exportThemeFragment == null){
+                if (exportThemeFragment == null) {
                     exportThemeFragment = new ExportThemeFragment();
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, exportThemeFragment,"exportThemeFragment")
+                        .replace(R.id.frame_layout, exportThemeFragment, "exportThemeFragment")
                         .addToBackStack(null)
                         .commit();
             });
-            themeSettingsFragment.setImportListener(() ->{
-                if (importThemeFragment == null){
+            themeSettingsFragment.setImportListener(() -> {
+                if (importThemeFragment == null) {
                     importThemeFragment = new ImportThemeFragment();
                 }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, importThemeFragment,"importThemeFragment")
+                        .replace(R.id.frame_layout, importThemeFragment, "importThemeFragment")
                         .addToBackStack(null)
                         .commit();
             });
@@ -124,7 +107,7 @@ public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.R
     }
 
     @Override
-    public void recreateWithAnimation(){
+    public void recreateWithAnimation() {
         Bundle temp_bundle = new Bundle();
         onSaveInstanceState(temp_bundle);
         Intent intent = new Intent(this, SettingsActivity.class);

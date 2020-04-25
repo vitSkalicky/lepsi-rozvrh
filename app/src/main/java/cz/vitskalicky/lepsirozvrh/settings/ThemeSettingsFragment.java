@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -103,7 +102,7 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
         SharedPrefs.setInt(getContext(), "cpc-color-accent", cyanea.getAccent());
         SharedPrefs.setInt(getContext(), "cpc-color-background", cyanea.getBackgroundColor());
         super.onCreate(savedInstanceState);
-        SharedPrefs.setBooleanPreference(getContext(), R.string.THEME_CHANGED,true);
+        SharedPrefs.setBooleanPreference(getContext(), R.string.THEME_CHANGED, true);
 
         detailLevel = SharedPrefs.getIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, 0);
         ListPreference themePref = findPreference(getString(R.string.PREFS_APP_THEME));
@@ -138,11 +137,11 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
                     final ThemeData ftd = td;
                     final Exception fe = e;
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        if (ftd != null){
+                        if (ftd != null) {
                             Theme.of(getContext()).setThemeData(ftd);
                             applyChanges();
-                        }else if (getView() != null){
-                            Utils.somethingWrong(fe, getView(),getContext());
+                        } else if (getView() != null) {
+                            Utils.somethingWrong(fe, getView(), getContext());
                         }
                     });
                 });
@@ -229,36 +228,36 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
         dpDividerWidth.setSummaryProvider(EditTextPreference.SimpleSummaryProvider.getInstance());
         dpDividerWidth.setText(Float.toString(theme.getDpDividerWidth()));
         dpDividerWidth.setOnPreferenceChangeListener((preference, newValue) -> {
-            try{
-                Float parsed = Float.parseFloat(newValue.toString().replace(',','.'));
+            try {
+                Float parsed = Float.parseFloat(newValue.toString().replace(',', '.'));
                 theme.setDpDividerWidth(parsed);
                 return true;
-            }catch (NumberFormatException e){
-                Snackbar.make(getView(),R.string.not_a_float_error, BaseTransientBottomBar.LENGTH_LONG).show();
+            } catch (NumberFormatException e) {
+                Snackbar.make(getView(), R.string.not_a_float_error, BaseTransientBottomBar.LENGTH_LONG).show();
                 return false;
             }
         });
         dpHighlightWidth.setSummaryProvider(EditTextPreference.SimpleSummaryProvider.getInstance());
         dpHighlightWidth.setText(Float.toString(theme.getDpHighlightWidth()));
         dpHighlightWidth.setOnPreferenceChangeListener((preference, newValue) -> {
-            try{
-                Float parsed = Float.parseFloat(newValue.toString().replace(',','.'));
+            try {
+                Float parsed = Float.parseFloat(newValue.toString().replace(',', '.'));
                 theme.setDpHighlightWidth(parsed);
                 return true;
-            }catch (NumberFormatException e){
-                Snackbar.make(getView(),R.string.not_a_float_error,BaseTransientBottomBar.LENGTH_LONG).show();
+            } catch (NumberFormatException e) {
+                Snackbar.make(getView(), R.string.not_a_float_error, BaseTransientBottomBar.LENGTH_LONG).show();
                 return false;
             }
         });
         spInfolineTextSize.setSummaryProvider(EditTextPreference.SimpleSummaryProvider.getInstance());
         spInfolineTextSize.setText(Float.toString(theme.getSpInfolineTextSize()));
         spInfolineTextSize.setOnPreferenceChangeListener((preference, newValue) -> {
-            try{
-                Float parsed = Float.parseFloat(newValue.toString().replace(',','.'));
+            try {
+                Float parsed = Float.parseFloat(newValue.toString().replace(',', '.'));
                 theme.setSpInfolineTextSize(parsed);
                 return true;
-            }catch (NumberFormatException e){
-                Snackbar.make(getView(),R.string.not_a_float_error,BaseTransientBottomBar.LENGTH_LONG).show();
+            } catch (NumberFormatException e) {
+                Snackbar.make(getView(), R.string.not_a_float_error, BaseTransientBottomBar.LENGTH_LONG).show();
                 return false;
             }
         });
@@ -275,10 +274,10 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
         setDetailLevel(detailLevel);
     }
 
-    private void dismissDialog(ColorPreferenceCompat pref){
-        if (getActivity() != null){
+    private void dismissDialog(ColorPreferenceCompat pref) {
+        if (getActivity() != null) {
             Fragment f = getActivity().getSupportFragmentManager().findFragmentByTag(pref.getFragmentTag());
-            if (f instanceof DialogFragment){
+            if (f instanceof DialogFragment) {
                 ((DialogFragment) f).dismiss();
             }
         }
@@ -297,23 +296,23 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
         this.detailLevel = detailLevel;
         SharedPrefs.setIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, detailLevel);
 
-        if (detailLevel < 1){
+        if (detailLevel < 1) {
             exportPref.setVisible(false);
             importPref.setVisible(false);
             customBasics.setVisible(false);
-        }else {
+        } else {
             exportPref.setVisible(true);
             importPref.setVisible(true);
             customBasics.setVisible(true);
         }
-        if (detailLevel < 2){
+        if (detailLevel < 2) {
             cellsFill.setVisible(false);
             other.setVisible(false);
-        }else{
+        } else {
             cellsFill.setVisible(true);
             other.setVisible(true);
         }
-        if (detailLevel < 3){
+        if (detailLevel < 3) {
             //cellsFill.setVisible(true);
             ctgrNormal.setVisible(false);
             ctgrChange.setVisible(false);
@@ -352,7 +351,7 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             prefcInfolineText.setVisible(false);
             spInfolineTextSize.setVisible(false);
 
-        } else{
+        } else {
             cellsFill.setVisible(false);
             ctgrNormal.setVisible(true);
             ctgrChange.setVisible(true);
@@ -387,17 +386,17 @@ public class ThemeSettingsFragment extends PreferenceFragmentCompat {
             prefcInfolineText.setVisible(true);
             spInfolineTextSize.setVisible(true);
         }
-        if (detailLevel > 0 && detailLevel < 3){
+        if (detailLevel > 0 && detailLevel < 3) {
             more.setVisible(true);
-        }else{
+        } else {
             more.setVisible(false);
         }
-        if (detailLevel > 1){
+        if (detailLevel > 1) {
             less.setVisible(true);
-        }else {
+        } else {
             less.setVisible(false);
         }
-        if (oldDetaillevel > detailLevel){
+        if (oldDetaillevel > detailLevel) {
             theme.regenerateColors(detailLevel);
         }
     }

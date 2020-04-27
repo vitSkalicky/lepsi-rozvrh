@@ -21,7 +21,7 @@
         <item name="android:background">@drawable/ic_check_black_24dp</item>
     </style>
 
-    <style name="AppTheme.WallpaperBackground" parent="AppTheme">
+    <style name="AppTheme.WallpaperBackground" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/wallpaperActivityBackgroundColor</item>

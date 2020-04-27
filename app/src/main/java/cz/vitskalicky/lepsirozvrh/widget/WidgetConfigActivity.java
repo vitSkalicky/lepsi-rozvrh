@@ -9,9 +9,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
@@ -22,7 +21,7 @@ import cz.vitskalicky.lepsirozvrh.Utils;
  * A subclass should override {@link #setupContentView()} to provide content view and
  * {@link #onStyleSet(int)} to change the appearance of displayed preview.
  */
-public class WidgetConfigActivity extends CyaneaAppCompatActivity {
+public class WidgetConfigActivity extends AppCompatActivity {
     private static final String TAG = WidgetConfigActivity.class.getSimpleName();
 
     Spinner spinner;
@@ -38,6 +37,7 @@ public class WidgetConfigActivity extends CyaneaAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setupContentView();
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

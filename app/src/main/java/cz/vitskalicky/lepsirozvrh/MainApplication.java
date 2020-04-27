@@ -98,6 +98,7 @@ public class MainApplication extends MultiDexApplication {
         if(!SharedPrefs.containsPreference(this, R.string.PREFS_THEME_cHBg)){
             //theme not initialized yet (first start or after update from pre-themes version)
             Theme.of(this).applyDefaultTheme();
+            SharedPrefs.setStringPreference(this, R.string.PREFS_APP_THEME,"0");
         }
     }
 

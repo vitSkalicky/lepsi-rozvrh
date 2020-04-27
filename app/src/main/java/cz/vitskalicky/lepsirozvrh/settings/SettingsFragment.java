@@ -42,7 +42,7 @@ import io.sentry.Sentry;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
 
     private Utils.Listener logoutListener = () -> {
     };

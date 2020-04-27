@@ -416,9 +416,9 @@ public class Theme {
             ret[0] = textColor;
             ret[1] = textColor;
             int third = mix(accentColor, textColor, -0.3f);
-            if (androidx.core.graphics.ColorUtils.calculateContrast(third, backgroundColor) < 4.5) {
+            if (!isLegible(third, backgroundColor)) {
                 third = mix(primaryColor, textColor, -0.3f);
-                if (androidx.core.graphics.ColorUtils.calculateContrast(third, backgroundColor) < 4.5) {
+                if (!isLegible(third, backgroundColor)) {
                     third = textColor;
                 }
             }
@@ -506,6 +506,20 @@ public class Theme {
                 }
             }
             return bestColor;
+        }
+
+        /**
+         * Returns {@code false} if the contrast between he text and background is too low
+         */
+        public static boolean isLegible(int textColor, int backgroundColor){
+            return androidx.core.graphics.ColorUtils.calculateContrast(textColor, backgroundColor) > 4.5;
+        }
+
+        /**
+         * Returns {@code false} if the contrast between he text and background is too low
+         */
+        public static boolean isLegible(int textColor, int backgroundColor, int minContrast){
+            return androidx.core.graphics.ColorUtils.calculateContrast(textColor, backgroundColor) > minContrast;
         }
     }
 

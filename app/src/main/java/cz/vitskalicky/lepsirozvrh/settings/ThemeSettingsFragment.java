@@ -1,5 +1,8 @@
 package cz.vitskalicky.lepsirozvrh.settings;
 
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +33,7 @@ import cz.vitskalicky.lepsirozvrh.theme.ThemeData;
 import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
-public class ThemeSettingsFragment extends PreferenceFragmentCompat {
+public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
 
     public static Preference.OnPreferenceChangeListener valueToSummaryBinder = (preference, newValue) -> {
         String stringValue = newValue.toString();

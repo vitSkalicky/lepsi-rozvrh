@@ -14,9 +14,11 @@ import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.activity.BaseActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
-public class SettingsActivity extends CyaneaAppCompatActivity implements Utils.RecreateWithAnimationActivity {
+public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity {
 
     Toolbar toolbar;
     SettingsFragment settingsFragment;

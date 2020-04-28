@@ -11,9 +11,6 @@ import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.prefs.CyaneaTheme;
 import com.jaredrummler.cyanea.utils.ColorUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
@@ -171,13 +168,30 @@ public class Theme {
                 .apply();
     }
 
+    /**
+     * if theme is set to follow system theme (R.string.PREF_FOLLOW_SYSTEM_THEME is set to true in
+     * shared preferences) this switches to the right theme and returns {@code true} if a change has been made.
+     */
+    public boolean checkSystemTheme(){
+        if (SharedPrefs.getBooleanPreference(context, R.string.PREFS_FOLLOW_SYSTEM_THEME, false)){
+            boolean systemIsDark = SystemTheme.isDarkTheme(context);
+            boolean currentIsDark = SharedPrefs.getBooleanPreference(context, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
+            if (systemIsDark != currentIsDark){
+                if (systemIsDark){
+                    setThemeData(DefaultThemes.getDarkTheme());
+                }else {
+                    setThemeData(DefaultThemes.getLightTheme());
+                }
+                SharedPrefs.setBooleanPreference(context, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, systemIsDark);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void applyDefaultTheme() {
         AsyncTask.execute(() -> {
-            ThemeData td = null;
-            try (InputStream is = context.getResources().openRawResource(R.raw.theme_light)) {
-                td = ThemeData.parseJson(is);
-            } catch (IOException | NullPointerException ignored) {
-            }
+            ThemeData td = DefaultThemes.getLightTheme();
             final ThemeData ftd = td;
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (ftd != null) {

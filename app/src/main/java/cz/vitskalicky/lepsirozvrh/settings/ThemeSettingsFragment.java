@@ -1,12 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.settings;
 
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -15,21 +9,17 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
 import com.jaredrummler.cyanea.Cyanea;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
-import cz.vitskalicky.lepsirozvrh.theme.ThemeData;
 import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
@@ -111,48 +101,34 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         ListPreference themePref = findPreference(getString(R.string.PREFS_APP_THEME));
         themePref.setOnPreferenceChangeListener((preference, newValue) -> {
             int value = Integer.parseInt((String) newValue);
-            if (value < 3) {
-                int resId;
+            if (value < 4) {
                 switch (value) {
                     case 0:
-                        //noinspection DuplicateBranchesInSwitch
-                        resId = R.raw.theme_light;
-                        break;
+                        SharedPrefs.setBooleanPreference(getContext(), R.string.PREFS_FOLLOW_SYSTEM_THEME,true);
+                        theme.setThemeData(DefaultThemes.getLightTheme());
+                        SharedPrefs.setBooleanPreference(getContext(), R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
+                        theme.checkSystemTheme();
                     case 1:
-                        resId = R.raw.theme_dark;
+                        theme.setThemeData(DefaultThemes.getLightTheme());
                         break;
                     case 2:
-                        resId = R.raw.theme_black;
+                        theme.setThemeData(DefaultThemes.getDarkTheme());
+                        break;
+                    case 3:
+                        theme.setThemeData(DefaultThemes.getBlackTheme());
                         break;
                     default:
-                        //fail safe
-                        resId = R.raw.theme_light;
+                        theme.setThemeData(DefaultThemes.getLightTheme());
                 }
-                AsyncTask.execute(() -> {
-                    ThemeData td = null;
-                    Exception e = null;
-                    try (InputStream is = getResources().openRawResource(resId);) {
-                        td = ThemeData.parseJson(is);
-                    } catch (IOException | NullPointerException ex) {
-                        e = ex;
-                        e.printStackTrace();
-                    }
-                    final ThemeData ftd = td;
-                    final Exception fe = e;
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        if (ftd != null) {
-                            Theme.of(getContext()).setThemeData(ftd);
-                            applyChanges();
-                        } else if (getView() != null) {
-                            Utils.somethingWrong(fe, getView(), getContext());
-                        }
-                    });
-                });
+                applyChanges();
                 setDetailLevel(0);
             } else {
                 if (detailLevel == 0) {
                     setDetailLevel(2);
                 }
+            }
+            if (value > 0){
+                SharedPrefs.setBooleanPreference(getContext(), R.string.PREFS_FOLLOW_SYSTEM_THEME,false);
             }
             valueToSummaryBinder.onPreferenceChange(preference, newValue);
             return true;

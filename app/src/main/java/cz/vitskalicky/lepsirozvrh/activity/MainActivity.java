@@ -34,7 +34,7 @@ import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
-public class MainActivity extends CyaneaAppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TAG_TIMER = TAG + "-timer";
 
@@ -154,9 +154,9 @@ public class MainActivity extends CyaneaAppCompatActivity {
         });
 /*
         ibSettings.setOnLongClickListener(v -> {
-            SharedPrefs.setString(context, SharedPrefs.DISABLE_WTF_ROZVRH_UP_TO_DATE, Utils.dateToString(LocalDate.now()));
+            SharedPrefs.remove(this, getString(R.string.PREFS_THEME_cHBg));
             return true;
-        });*/
+        });/**/
 
         rtFragment.createViews();
         if (savedInstanceState == null) {

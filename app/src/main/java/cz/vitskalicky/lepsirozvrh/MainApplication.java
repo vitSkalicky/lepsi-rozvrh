@@ -26,6 +26,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import io.sentry.Sentry;
@@ -95,10 +96,13 @@ public class MainApplication extends MultiDexApplication {
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
         currentWeekLivedata.observeForever(currentWeekObserver);
 
-        if(!SharedPrefs.containsPreference(this, R.string.PREFS_THEME_cHBg)){
+        if (!SharedPrefs.containsPreference(this, R.string.PREFS_THEME_cHBg)) {
             //theme not initialized yet (first start or after update from pre-themes version)
-            Theme.of(this).applyDefaultTheme();
-            SharedPrefs.setStringPreference(this, R.string.PREFS_APP_THEME,"0");
+            SharedPrefs.setStringPreference(this, R.string.PREFS_APP_THEME, "0");
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_FOLLOW_SYSTEM_THEME, true);
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
+            Theme.of(this).setThemeData(DefaultThemes.getLightTheme());
+            Theme.of(this).checkSystemTheme();
         }
     }
 

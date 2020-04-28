@@ -18,7 +18,7 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
-public class LoginActivity extends CyaneaAppCompatActivity {
+public class LoginActivity extends BaseActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
     /**
      * when you want this activity to log out as soon as it starts, pass this in intent extras.

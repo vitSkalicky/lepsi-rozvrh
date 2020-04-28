@@ -10,7 +10,7 @@ import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.R;
 
-public class LicencesActivity extends CyaneaAppCompatActivity {
+public class LicencesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

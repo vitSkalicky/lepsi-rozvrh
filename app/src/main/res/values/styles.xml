@@ -1,37 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Cyanea.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorError">@color/colorError</item>
-
-        <item name="backgroundChng">#ffd95a</item>
-        <item name="backgroundA">#ffd95a</item>
-        <item name="backgroundH">#eceff1</item>
-        <item name="backgroundEmpty">#00FFFFFF</item>
-        <item name="backgroundHeader">#CFD8DC</item>
-
-        <item name="dividerColor">#607D8B</item>
-        <item name="dividerWidth">1dp</item>
-        <item name="dividerHighlightColor">#f9a825</item>
-        <item name="dividerHighlightWidth">2dp</item>
-
-        <item name="textPrimaryColor">#000000</item>
-        <item name="textRoomColor">#000000</item>
-        <item name="textSecondaryColor">#607D8B</item>
-        <item name="textPrimarySize">18sp</item>
-        <item name="textSecondarySize">12sp</item>
-
-        <item name="paddingLeft">3dp</item>
-        <item name="paddingTop">3dp</item>
-        <item name="paddingRight">3dp</item>
-        <item name="paddingBottom">3dp</item>
-        <item name="textPadding">2dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -40,13 +13,15 @@
     </style>
 
     <style name="AppTheme.InfoLine">
-        <item name="android:background">#424242</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#FFFFFF</item>
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="AppTheme.WallpaperBackground" parent="AppTheme">
+    <style name="AppTheme.ButtonBorderless" parent="Cyanea.ColoredButton">
+        <item name="android:colorBackground">#550055</item>
+        <item name="android:background">@drawable/ic_check_black_24dp</item>
+    </style>
+
+    <style name="AppTheme.WallpaperBackground" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/wallpaperActivityBackgroundColor</item>
@@ -54,18 +29,5 @@
     </style>
     <!-- I would usually write this as a hardcoded value to the windowBackground, but it wants a reference for some reason, so here is a workaround -->
     <color name="wallpaperActivityBackgroundColor">#1000</color>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="AppTheme.secondaryText" parent="TextAppearance.AppCompat.Small">
-        <!--<item name="android:textColor">?attr/textSecondaryColor</item>-->
-        <!--<item name="android:textSize">?attr/textSecondarySize</item>-->
-    </style>
-    <style name="AppTheme.primaryText" parent="TextAppearance.AppCompat.Large">
-        <!--<item name="android:textColor">?attr/textPrimaryColor</item>-->
-        <!--<item name="android:textSize">?attr/textPrimarySize</item>-->
-    </style>
 
 </resources>

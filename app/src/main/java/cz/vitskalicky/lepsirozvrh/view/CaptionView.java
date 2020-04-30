@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodinaCaption;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class CaptionView extends CellView {
     private RozvrhHodinaCaption caption = null;
@@ -21,7 +22,10 @@ public class CaptionView extends CellView {
     public CaptionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDrawDividers(false, true, true);
-        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundHeader, Color.BLUE));
+
+        backgroundPaint.setColor(t.getCHeaderBg());
+        primaryTextPaint.setColor(t.getCHeaderPrimaryText());
+        secondaryTextPaint.setColor(t.getCHeaderSecondaryText());
     }
 
     public RozvrhHodinaCaption getCaption() {

@@ -56,6 +56,69 @@
     <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině.</string>
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="dont_show_again">Znovu nezobrazovat</string>
+    <string name="something_went_wrong">Něco se nepovedlo :(</string>
+    <string name="report">Nahlásit</string>
+
+    <!-- Theme preferences -->]
+    <string name="app_theme_screen">Motiv</string>
+    <string name="app_theme_screen_desc">Nastavte si barvy aplikace přesně podle sebe</string>
+
+    <string name="theme_general_settings">Obecné nastavení</string>
+    <string name="app_theme">Motiv aplikace</string>
+    <string name="export_theme">Exportovat motiv</string>
+    <string name="export_theme_desc">Vytvoří speciální text, který obasuje aktuální motiv</string>
+    <string name="export_theme_detail">Text níže obsahuje všechna data aktuáního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
+    <string name="import_theme">Importovat motiv</string>
+    <string name="import_theme_desc">Naimportuje motiv ze speciálního textu vytvořeného tlačítkem výše</string>
+    <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na (tady má být odkaz)</string>
+    <string name="import_invalid">Neplatná data. Ujistěte se, že nevytratily žádné znaky na začátku ani na konci.</string>
+    <string name="copy_to_clipboard">Kopírovat</string>
+    <string name="paste_from_clipboard">Vložit ze schránky</string>
+    <string name="share">Sdílet</string>
+    <string name="share_subject">Můj motiv Lepšího rozvrhu</string>
+    <string name="share_instructions">Pro použití motivu vložte následující text do \"Lepší rozvrh &gt; Nastavení &gt; Motiv &gt; Importovat motiv\" a ujistěte se, že jste ho zkopírovali přesně.</string>
+    <string name="share_via">Sdílet…</string>
+    <string name="import_button">Importovat</string>
+    <string name="import_clear">Vymazat</string>
+    <string name="import_edittext_hint">Text vložte sem</string>
+
+    <string name="theme_custom_settings">Nastavení vlastního motivu</string>
+    <string name="primary_color">Hlavní barva</string>
+    <string name="primary_color_desc">Ovládací řádek, tlačítka,…</string>
+    <string name="accent_color">Doplňková barva</string>
+    <string name="accent_color_desc">Přepínače, zaškrtávací políčka…</string>
+    <string name="background_color">Pozadí</string>
+    <string name="cells_background">Výplň buněk</string>
+    <string name="cell_background">Výplň</string>
+    <string name="cell_primary_t">Hlavní text</string>
+    <string name="cell_primary_t_desc">Zkratka předmětu nebo dne</string>
+    <string name="cell_secondary_t">Vedlejší text</string>
+    <string name="cell_secondary_t_desc">Zkratka učitele, datum, čas začátku hodiny,…</string>
+    <string name="cell_room_t">Zkratka místnosti</string>
+    <string name="cell_room_t_desc"></string>
+    <string name="type_normal_lesson">Normální hodina</string>
+    <string name="type_change">Změna</string>
+    <string name="type_change_desc">Zrušná či přesunutá hodina, atd.</string>
+    <string name="type_no_school">Vyučování zrušeno</string>
+    <string name="type_no_school_desc">Školní výlet, ředitelské volno, atd.</string>
+    <string name="type_empty">Prázdná buňka</string>
+    <string name="type_header">Hlavička</string>
+    <string name="type_header_desc">Duňky se dnem nebo číslem hodiny</string>
+    <string name="other">Ostatní</string>
+    <string name="divider_color">Barva mřížky</string>
+    <string name="divider_width">Tloušťka mřížky</string>
+    <string name="highlight_color">Barva zvýraznění</string>
+    <string name="highlight_color_desc">Kolem aktuální hodiny</string>
+    <string name="highlight_width">Tloušťka zvýraznění</string>
+    <string name="infoline_fill">Barva informačního řádku</string>
+    <string name="infoline_fill_desc">Ten malý text pod rozvrhem, pokud je zapnutý</string>
+    <string name="infoline_text_color">Barva textu v informačním řádku</string>
+    <string name="infoline_text_size">Velikost textu v informačním řádku</string>
+    <string name="customize_less">Méně podrobností</string>
+    <string name="customize_less_desc">Vygeneruje některé barvy na základě zadaných hodnot</string>
+    <string name="customize_more">Více podrobností</string>
+    <string name="customize_more_desc">Vše bude podle vás</string>
+    <string name="not_a_float_error">Zadejte číslo, třeba 4.2</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Vyučující: </string>
@@ -117,7 +180,7 @@
     <string name="app_updated">Aplikace byla aktualizována</string>
     <string name="whats_new">Co je nového</string>
     <!-- Interesting feature messages-->
-    <string name="interestig_widget">Konečně byl přidán widget!</string>
+    <string name="interesting_widget">Konečně byl přidán widget!</string>
 
     <string name="wtf_rozvrh_title">Nastala chyba</string>
     <string name="wtf_rozvrh_message">Váš rozvrh nemohl být správně vykreslen! Přejete si tento problém nyní nahlásit prostřednictví emailu? Problémový rozvrh bude přiložen.</string>

@@ -9,4 +9,11 @@
         <item>Světlý</item>
         <item>Tmavý</item>
     </string-array>
+    <string-array name="themes_entries">
+        <item>Podle systému</item>
+        <item>Světlý</item>
+        <item>Tmavý</item>
+        <item>Černý</item>
+        <item>Vlastní</item>
+    </string-array>
 </resources>

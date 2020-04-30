@@ -344,11 +344,16 @@ public class Rozvrh {
                     .append(hodiny.get(hodiny.size() - 1).getEndtime()).append(";\n");
             for (RozvrhDen item : dny) {
                 sb.append(item.getZkratka()).append("; ")
-                        .append(item.getHodiny().size()).append("; ")
-                        .append(item.getHodiny().get(0).getCaption()).append("; ")
-                        .append(item.getHodiny().get(0).getBegintime()).append("; ")
-                        .append(item.getHodiny().get(item.getHodiny().size() - 1).getCaption()).append("; ")
-                        .append(item.getHodiny().get(item.getHodiny().size() - 1).getEndtime()).append(";\n");
+                        .append(item.getHodiny().size()).append("; ");
+                if (item.getHodiny().size() > 0){
+                    sb.append(item.getHodiny().get(0).getCaption()).append("; ")
+                            .append(item.getHodiny().get(0).getBegintime()).append("; ")
+                            .append(item.getHodiny().get(item.getHodiny().size() - 1).getCaption()).append("; ")
+                            .append(item.getHodiny().get(item.getHodiny().size() - 1).getEndtime()).append(";\n");
+                }else {
+                    sb.append("empty;\n");
+                }
+
             }
         } catch (Exception e) {
             Log.e(TAG, "Creating rozvrh structure failed", e);

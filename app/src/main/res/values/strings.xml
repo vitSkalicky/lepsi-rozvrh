@@ -56,6 +56,69 @@
     <string name="notification_desc">Shows a silent notification with your next lesson.</string>
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
     <string name="dont_show_again">Don\'t show again</string>
+    <string name="something_went_wrong">Something went wrong :(</string>
+    <string name="report">Report</string>
+
+    <!-- Theme preferences -->]
+    <string name="app_theme_screen">Theme settings</string>
+    <string name="app_theme_screen_desc">Customize colours of this app</string>
+
+    <string name="theme_general_settings">General settings</string>
+    <string name="app_theme">App theme</string>
+    <string name="export_theme">Export theme</string>
+    <string name="export_theme_desc">Generate a text containing your current theme</string>
+    <string name="export_theme_detail">The following text contains all data about your current theme. Send it to your friends to share your amazing design skills with them!</string>
+    <string name="import_theme">Import theme</string>
+    <string name="import_theme_desc">Import theme from a text generated using the button above</string>
+    <string name="import_theme_detail">Paste text generated using the \'export theme\' feature here. Get one from your friends or on (link here)!</string>
+    <string name="import_invalid">Invalid data. Make sure you haven\'t missed any letters at the end.</string>
+    <string name="copy_to_clipboard">Copy</string>
+    <string name="paste_from_clipboard">Paste from clipboard</string>
+    <string name="share">Share</string>
+    <string name="share_subject">My Better Schedule theme</string>
+    <string name="share_instructions">Paste the following block of text (make sure you paste it all) into \'Better Schedule &gt; Settings &gt; Theme settings &gt; Import theme\' to apply this theme.</string>
+    <string name="share_via">Share…</string>
+    <string name="import_button">Import</string>
+    <string name="import_clear">Clear</string>
+    <string name="import_edittext_hint">Paste here</string>
+
+    <string name="theme_custom_settings">Custom theme settings</string>
+    <string name="primary_color">Primary colour</string>
+    <string name="primary_color_desc">App bar, buttons,…</string>
+    <string name="accent_color">Accent colour</string>
+    <string name="accent_color_desc">Switches, checkboxes,…</string>
+    <string name="background_color">Background colour</string>
+    <string name="cells_background">Cell fill colour</string>
+    <string name="cell_background">Fill</string>
+    <string name="cell_primary_t">Primary text</string>
+    <string name="cell_primary_t_desc">Subject and day of week abbreviations</string>
+    <string name="cell_secondary_t">Secondary text</string>
+    <string name="cell_secondary_t_desc">Teacher abbreviation, date, lesson begin time,…</string>
+    <string name="cell_room_t">Room text</string>
+    <string name="cell_room_t_desc">Classroom number</string>
+    <string name="type_normal_lesson">Normal lesson</string>
+    <string name="type_change">Change</string>
+    <string name="type_change_desc">Lesson cancelled, moved, etc.</string>
+    <string name="type_no_school">No school</string>
+    <string name="type_no_school_desc">School trip, museum visit, etc.</string>
+    <string name="type_empty">Empty cell</string>
+    <string name="type_header">Headers</string>
+    <string name="type_header_desc">Day and time cells</string>
+    <string name="other">Other</string>
+    <string name="divider_color">Divider colour</string>
+    <string name="divider_width">Divider width</string>
+    <string name="highlight_color">Highlight colour</string>
+    <string name="highlight_color_desc">Highlight of current lesson</string>
+    <string name="highlight_width">Highlight width</string>
+    <string name="infoline_fill">Info-line fill</string>
+    <string name="infoline_fill_desc">The little text on the bottom, if enabled</string>
+    <string name="infoline_text_color">Info-line text colour</string>
+    <string name="infoline_text_size">Info-line text size</string>
+    <string name="customize_less">Customize less details</string>
+    <string name="customize_less_desc">Generates some colours automatically based on provided values</string>
+    <string name="customize_more">Customize more details</string>
+    <string name="customize_more_desc">You choose everything</string>
+    <string name="not_a_float_error">Enter a decimal number like 4.2</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>
@@ -117,7 +180,7 @@
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->
-    <string name="interestig_widget">Widget is finally here!</string>
+    <string name="interesting_widget">Widget is finally here!</string>
 
     <string name="wtf_rozvrh_title">An error occurred</string>
     <string name="wtf_rozvrh_message">Your schedule could not be rendered correctly! Would you like to report this issue via email now? The problematic schedule will be included in the report.</string>
@@ -133,6 +196,5 @@
         <item quantity="one">%d week forward</item>
         <item quantity="other">%d weeks forward</item>
     </plurals>
-
 
 </resources>

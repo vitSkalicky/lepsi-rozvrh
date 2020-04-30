@@ -22,7 +22,9 @@ public class DenView extends CellView {
     public DenView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDrawDividers(true, true, false);
-        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundHeader, Color.BLUE));
+        backgroundPaint.setColor(t.getCHeaderBg());
+        primaryTextPaint.setColor(t.getCHeaderPrimaryText());
+        secondaryTextPaint.setColor(t.getCHeaderSecondaryText());
     }
 
     @Override

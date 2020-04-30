@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f9a825</color>
-    <color name="colorPrimaryDark">#c17900</color>
-    <color name="colorAccent">#455a64</color>
-    <color name="colorError">#B00020</color>
+    <color name="cyanea_primary_reference">#f9a825</color>
+    <color name="cyanea_accent_reference">#455a64</color>
 
 
     <color name="widgetLightPrimaryText">#000000</color>

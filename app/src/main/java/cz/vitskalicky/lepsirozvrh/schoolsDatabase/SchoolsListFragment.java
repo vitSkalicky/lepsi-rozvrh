@@ -23,13 +23,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.jaredrummler.cyanea.app.CyaneaFragment;
 
 import cz.vitskalicky.lepsirozvrh.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SchoolsListFragment extends Fragment {
+public class SchoolsListFragment extends CyaneaFragment {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SchoolsAdapter adapter = null;

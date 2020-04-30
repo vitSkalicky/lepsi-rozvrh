@@ -37,18 +37,18 @@ public class HodinaView extends CellView {
         super(context, attrs);
 
         mistPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mistPaint.setColor(a.getColor(R.styleable.Rozvrh_textRoomColor, Color.BLACK));
+        mistPaint.setColor(t.getCHRoomText());
         mistPaint.setTextSize(secondaryTextSize);
         mistPaint.setTypeface(Typeface.DEFAULT);
         mistPaint.setTextAlign(Paint.Align.LEFT);
 
         highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        highlightPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
-        highlightWidth = a.getDimensionPixelSize(R.styleable.Rozvrh_dividerHighlightWidth, 2);
+        highlightPaint.setColor(t.getCHighlight());
+        highlightWidth = t.getPxHighlightWidth();
         highlightPaint.setStrokeWidth(highlightWidth);
 
         highlightedDividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        highlightedDividerPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
+        highlightedDividerPaint.setColor(t.getCHighlight());
         highlightedDividerPaint.setStrokeWidth(dividerWidth);
 
         setOnClickListener(v -> showDetailDialog());
@@ -122,15 +122,30 @@ public class HodinaView extends CellView {
         this.perm = perm;
 
         if (hodina == null) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
+            backgroundPaint.setColor(t.getCEmptyBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.CHANGED) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundChng, Color.RED));
+            backgroundPaint.setColor(t.getCChngBg());
+            primaryTextPaint.setColor(t.getCChngPrimaryText());
+            secondaryTextPaint.setColor(t.getCChngSecondaryText());
+            mistPaint.setColor(t.getCChngRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundA, Color.RED));
+            backgroundPaint.setColor(t.getCABg());
+            primaryTextPaint.setColor(t.getCAPrimaryText());
+            secondaryTextPaint.setColor(t.getCASecondaryText());
+            mistPaint.setColor(t.getCARoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.NONE) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundH, Color.WHITE));
+            backgroundPaint.setColor(t.getCHBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.EMPTY) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
+            backgroundPaint.setColor(t.getCEmptyBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         }
 
         invalidate();

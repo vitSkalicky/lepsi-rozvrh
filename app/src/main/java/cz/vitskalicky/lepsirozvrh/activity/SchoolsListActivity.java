@@ -1,13 +1,14 @@
 package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.schoolsDatabase.SchoolsListFragment;
 
-public class SchoolsListActivity extends AppCompatActivity {
+public class SchoolsListActivity extends BaseActivity {
     public static final String EXTRA_URL = SchoolsListActivity.class.getCanonicalName() + ".url";
     public static final int RESULT_OK = 0;
     public static final int RESULT_CANCEL = 1;

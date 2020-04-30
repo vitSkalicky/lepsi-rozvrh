@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.theme;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -161,8 +162,7 @@ public class Theme {
             primary = 0xff00ff;
         }
 
-        getCyanea().edit()
-                .primary(primary)
+        Utils.setPrimaryCorrectly(getCyanea().edit(), primary)
                 .accent(0xff455a64)
                 .baseTheme(Cyanea.BaseTheme.LIGHT)
                 .apply();
@@ -205,7 +205,7 @@ public class Theme {
     }
 
     /**
-     * Primary, accent, background and other standard colors are here
+     * Primary, accent, background and other standard colors are here. DO NOT USE FOR SETTING PRIMARY COLOR. Use {@link #setPrimary(int)} instead to get correct text color.
      */
     public Cyanea getCyanea() {
         return Cyanea.getInstance();
@@ -219,6 +219,10 @@ public class Theme {
         return getCyanea().getAccent();
     }
     //Edit primary and accent using getCyanea().edit().primary(color).apply();
+
+    public void setPrimary(int color){
+        Utils.setPrimaryCorrectly(getCyanea().edit(), color).apply();
+    }
 
     public int getCEmptyBg(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cEmptyBg, FALLBACK_COLOR);}
 
@@ -534,6 +538,20 @@ public class Theme {
          */
         public static boolean isLegible(int textColor, int backgroundColor, int minContrast){
             return androidx.core.graphics.ColorUtils.calculateContrast(textColor, backgroundColor) > minContrast;
+        }
+
+        public static Cyanea.Editor setPrimaryCorrectly(Cyanea.Editor editor, int primaryColor){
+            int navBarColor;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || textColorFor(primaryColor)==0xffffffff /*meaning it is dark*/){
+                navBarColor = primaryColor;
+            } else {
+                navBarColor=Color.BLACK;
+            }
+            editor
+                    .primary(primaryColor)
+                    .menuIconColor(textColorFor(primaryColor))
+                    .navigationBar(navBarColor);
+            return editor;
         }
     }
 

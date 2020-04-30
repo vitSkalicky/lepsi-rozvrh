@@ -257,8 +257,8 @@ public class ThemeData {
             try {
                 TreeNode tn = p.readValueAsTree();
                 Cyanea temp = Cyanea.getInstance("temp446");
-                temp.edit()
-                        .primary(colorHexToInt(tn.get("primary").toString().replace("\"", "")))
+
+                Theme.Utils.setPrimaryCorrectly(temp.edit(), colorHexToInt(tn.get("primary").toString().replace("\"", "")))
                         .accent(colorHexToInt(tn.get("accent").toString().replace("\"", "")))
                         .background(colorHexToInt(tn.get("background").toString().replace("\"", "")));
                 return new CyaneaTheme("", temp);

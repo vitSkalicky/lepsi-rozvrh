@@ -183,7 +183,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         });
 
         primaryPref.setOnPreferenceChangeListener((preference, newValue) -> {
-            cyanea.edit().primary((Integer) newValue).apply();
+            theme.setPrimary((Integer) newValue);
             theme.regenerateColors(detailLevel);
             dismissDialog(primaryPref); //this prevents a bug where the dialog appears again after activity recreation
             applyChanges();

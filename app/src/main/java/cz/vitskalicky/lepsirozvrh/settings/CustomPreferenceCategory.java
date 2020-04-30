@@ -33,9 +33,9 @@ public class CustomPreferenceCategory extends PreferenceCategory {
         super.onBindViewHolder(holder);
         Cyanea cyanea = Cyanea.getInstance();
         int textColor = cyanea.getAccent();
-        if (!Theme.Utils.isLegible(cyanea.getAccent(), cyanea.getBackgroundColor(), 2)) {
+        if (!Theme.Utils.isLegible(cyanea.getAccent(), cyanea.getBackgroundColor(), 3)) {
             textColor = Theme.Utils.whichTextColor(cyanea.getBackgroundColor(), cyanea.getAccentDark(), cyanea.getAccentLight());
-            if (!Theme.Utils.isLegible(textColor, cyanea.getBackgroundColor(), 2)) {
+            if (!Theme.Utils.isLegible(textColor, cyanea.getBackgroundColor(), 3)) {
                 textColor = Theme.Utils.textColorFor(cyanea.getBackgroundColor());
             }
 

@@ -118,13 +118,12 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
             updateCell(views, R.id.textViewZkrpr3, R.id.textViewSecondary3, hodiny[3], widgetSettings, true, context);
             updateCell(views, R.id.textViewZkrpr4, R.id.textViewSecondary4, hodiny[4], widgetSettings, true, context);
 
-
             views.setInt(R.id.imageViewDivider, "setImageAlpha", 255);
             views.setInt(R.id.imageViewDivider, "setColorFilter", widgetSettings.primaryTextColor);
         }
 
-        views.setInt(R.id.bgcolor, "setImageAlpha", 255);
-        views.setInt(R.id.bgcolor, "setColorFilter", widgetSettings.backgroundColor);
+        views.setInt(R.id.bgcolor, "setImageAlpha", (widgetSettings.backgroundColor & 0xff000000) >> 24);
+        views.setInt(R.id.bgcolor, "setColorFilter", widgetSettings.backgroundColor | 0xff000000);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_JUMP_TO_TODAY, true);

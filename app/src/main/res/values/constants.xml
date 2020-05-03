@@ -25,6 +25,11 @@
     <string name="PREFS_FOLLOW_SYSTEM_THEME" translatable="false">prefs-follow-system-theme</string>]
     <!-- When following system theme set this to true if dark theme is applied-->
     <string name="PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED" translatable="false">pref-is-dark-theme-for-system-applied</string>
+    <string name="WIDGET_PREF_THEME" translatable="false">widget-pref-theme</string>
+    <string name="WIDGET_PREF_BG" translatable="false">widget-pref-background</string>
+    <string name="WIDGET_PREF_TRANSPARENCY" translatable="false">widget-pref-transparency</string>
+    <string name="WIDGET_PREF_AUTO_TEXT" translatable="false">widget-pref-auto-text</string>
+    <string name="WIDGET_PREF_TEXT" translatable="false">widget-pref-text</string>
 
     <!-- See ThemeData.java -->
     <string name="PREFS_THEME_cEmptyBg" translatable="false">PREFS-THEME-cEmptyBg</string>

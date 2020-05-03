@@ -176,6 +176,10 @@
     <string name="wide_widget_label">5-lesson overview</string>
     <string name="widget_style">Style</string>
     <string name="widget_logged_out">Logged out</string>
+    <string name="widget_background">Background</string>
+    <string name="widget_transparency">Transparency</string>
+    <string name="widget_autotext">Automatic text color</string>
+    <string name="widget_text_color">Text colour</string>
 
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>

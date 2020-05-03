@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <DropDownPreference
+        android:key="@string/WIDGET_PREF_THEME"
+        android:title="@string/widget_style"
+        android:entries="@array/widget_style_entries"
+        android:entryValues="@array/widget_style_values"
+        android:defaultValue="0"/>
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+        android:key="@string/WIDGET_PREF_BG"
+        android:title="@string/widget_background"
+        android:persistent="false"/>
+    <SeekBarPreference
+        android:key="@string/WIDGET_PREF_TRANSPARENCY"
+        android:title="@string/widget_transparency"
+        android:defaultValue="0"
+        android:max="255"
+        app:seekBarIncrement="1"/>
+    <SwitchPreferenceCompat
+        android:key="@string/WIDGET_PREF_AUTO_TEXT"
+        android:title="@string/widget_autotext"
+        android:defaultValue="true"
+        android:persistent="false"/>
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+        android:key="@string/WIDGET_PREF_TEXT"
+        android:title="@string/widget_text_color"/>
+</PreferenceScreen>

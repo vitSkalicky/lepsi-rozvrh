@@ -63,5 +63,6 @@
     <string name="PREFS_THEME_cInfolineText" translatable="false">PREFS-THEME-cInfolineText</string>
     <string name="PREFS_THEME_spInfolineTextSize" translatable="false">PREFS-THEME-spInfolineTextSize</string>
     <string name="PREFS_THEME_cError" translatable="false">PREFS-THEME-cError</string>
+    <string name="PREFS_THEME_cHomework" translatable="false">PREFS-THEME-cHomework</string>
 
 </resources>

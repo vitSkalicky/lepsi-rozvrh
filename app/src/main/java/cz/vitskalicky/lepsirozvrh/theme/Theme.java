@@ -80,6 +80,7 @@ public class Theme {
         td.cInfolineText = getCInfolineText();
         td.spInfolineTextSize = getSpInfolineTextSize();
         td.cError = getCError();
+        td.cHomework = getCHomework();
 
         return td;
     }
@@ -122,6 +123,7 @@ public class Theme {
         setCInfolineText(td.cInfolineText);
         setSpInfolineTextSize(td.spInfolineTextSize);
         setCError(td.cError);
+        setCHomework(td.cHomework);
     }
 
     public void applyFallbackTheme() {
@@ -156,6 +158,7 @@ public class Theme {
         setCInfolineText(0xffFFFFFF);
         setSpInfolineTextSize(12);
         setCError(0xffB00020);
+        setCHomework(0xfff9a825);
 
         int primary = 0xfff9a825;
         if (BuildConfig.DEBUG) {
@@ -349,6 +352,10 @@ public class Theme {
 
     public void setCError(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cError, color); }
 
+    public int getCHomework(){ return SharedPrefs.getIntPreference(context, R.string.PREFS_THEME_cHomework, FALLBACK_COLOR);}
+
+    public void setCHomework(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cHomework, color); }
+
     public int getPxDividerWidth(){ return Math.round(getDpDividerWidth() * context.getResources().getDisplayMetrics().density);}
     public int getPxHighlightWidth(){ return Math.round(getDpHighlightWidth() * context.getResources().getDisplayMetrics().density);}
     public int getPxPaddingLeft(){ return Math.round(getDpPaddingLeft() * context.getResources().getDisplayMetrics().density);}
@@ -385,6 +392,7 @@ public class Theme {
             setCChngBg(Utils.generateChangeColor(primary, accent, background));
             setCHeaderBg(Utils.generateHeaderColor(primary, accent, background));
             setCHighlight(Utils.generateHighlightColor(primary, accent, background));
+            setCHomework(Utils.generateHomeworkColor(primary,accent,background));
 
             setDpDividerWidth(1);
             setDpHighlightWidth(1);
@@ -471,6 +479,10 @@ public class Theme {
             return primaryColor;
         }
 
+        public static int generateHomeworkColor(int primaryColor, int accentColor, int backgroundColor){
+            return accentColor;
+        }
+
         /**
          * Actually only averages the two colors. Mixes alpha too
          *
@@ -536,7 +548,7 @@ public class Theme {
         /**
          * Returns {@code false} if the contrast between he text and background is too low
          */
-        public static boolean isLegible(int textColor, int backgroundColor, int minContrast){
+        public static boolean isLegible(int textColor, int backgroundColor, double minContrast){
             return androidx.core.graphics.ColorUtils.calculateContrast(textColor, backgroundColor) > minContrast;
         }
 

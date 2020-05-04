@@ -119,6 +119,8 @@
     <string name="customize_more">Customize more details</string>
     <string name="customize_more_desc">You choose everything</string>
     <string name="not_a_float_error">Enter a decimal number like 4.2</string>
+    <string name="homework_color">Homework dot colour</string>
+    <string name="homework_color_desc">Colour of the little dot which marks that there is a homework for the lesson</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Teacher:</string>
@@ -131,6 +133,7 @@
     <string name="lesson_name">Name:</string>
     <string name="notice">Notice:</string>
     <string name="cycle">Cycle:</string>
+    <string name="homework">Homework:</string>
 
     <string name="group_in_notification">group: </string>
     <string name="in">in</string>

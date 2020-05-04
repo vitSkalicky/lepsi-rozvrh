@@ -72,6 +72,9 @@ public class RozvrhHodina {
     @Element(required = false)
     private String notice = "";
 
+    @Element(required = false)
+    private String ukolodevzdat = "";
+
     public static final int NONE = 0;
     public static final int CHANGED = 1;
     public static final int NO_LESSON = 2;
@@ -195,6 +198,14 @@ public class RozvrhHodina {
 
     public String getNotice() {
         return notice;
+    }
+
+    public String getUkolodevzdat() {
+        return ukolodevzdat;
+    }
+
+    public void setUkolodevzdat(String ukolodevzdat) {
+        this.ukolodevzdat = ukolodevzdat;
     }
 
     public void setNotice(String notice) {

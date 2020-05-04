@@ -6,7 +6,8 @@
         android:id="@+id/textViewKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Key: " />
+        android:text="Key: "
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/textViewValue"
@@ -14,6 +15,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_weight="1"
-        android:text="Value"
-        android:textStyle="bold" />
+        android:text="Value" />
 </TableRow>

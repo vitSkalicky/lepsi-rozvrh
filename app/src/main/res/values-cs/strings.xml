@@ -119,18 +119,21 @@
     <string name="customize_more">Více podrobností</string>
     <string name="customize_more_desc">Vše bude podle vás</string>
     <string name="not_a_float_error">Zadejte číslo, třeba 4.2</string>
+    <string name="homework_color">Barva tečky domácího úkolu</string>
+    <string name="homework_color_desc">Barva té malé tečky, která značí, že na danou hodinu má být hotov nějaký domácí úkol</string>
 
     <!--These are shown in the lesson details dialog-->
-    <string name="lesson_teacher">Vyučující: </string>
-    <string name="subject_name">Předmět: </string>
-    <string name="room">Místnost: </string>
-    <string name="absence">Absence: </string>
-    <string name="topic">Téma: </string>
-    <string name="group">Skupina: </string>
-    <string name="change">Změna: </string>
-    <string name="lesson_name">Název: </string>
-    <string name="notice">Upozornění: </string>
-    <string name="cycle">Cyklus: </string>
+    <string name="lesson_teacher">Vyučující:</string>
+    <string name="subject_name">Předmět:</string>
+    <string name="room">Místnost:</string>
+    <string name="absence">Absence:</string>
+    <string name="topic">Téma:</string>
+    <string name="group">Skupina:</string>
+    <string name="change">Změna:</string>
+    <string name="lesson_name">Název:</string>
+    <string name="notice">Upozornění:</string>
+    <string name="cycle">Cyklus:</string>
+    <string name="homework">Domácí úkol:</string>
 
     <string name="group_in_notification">skupina: </string>
     <string name="in">v</string>

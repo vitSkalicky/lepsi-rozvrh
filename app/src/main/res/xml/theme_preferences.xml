@@ -155,6 +155,10 @@
             android:key="etp-dpHighlightWidth"
             android:title="@string/highlight_width"/>
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHomework"
+            android:title="@string/homework_color"
+            android:summary="@string/homework_color_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/PREFS_THEME_cInfolineBg"
             android:title="@string/infoline_fill"
             android:summary="@string/infoline_fill_desc"/>

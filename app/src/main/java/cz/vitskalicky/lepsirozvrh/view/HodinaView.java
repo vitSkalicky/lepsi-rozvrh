@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class HodinaView extends CellView {
 
@@ -27,6 +28,7 @@ public class HodinaView extends CellView {
     private Paint mistPaint;
     private Paint highlightPaint;
     private Paint highlightedDividerPaint;
+    private Paint homeworkPaint;
 
     private int highlightWidth;
 
@@ -50,6 +52,9 @@ public class HodinaView extends CellView {
         highlightedDividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         highlightedDividerPaint.setColor(t.getCHighlight());
         highlightedDividerPaint.setStrokeWidth(dividerWidth);
+
+        homeworkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        homeworkPaint.setColor(t.getCHomework());
 
         setOnClickListener(v -> showDetailDialog());
         setDrawDividers(true, true, true);
@@ -277,6 +282,15 @@ public class HodinaView extends CellView {
             secondaryTextPaint.setTextAlign(Paint.Align.LEFT);
             canvas.drawText(zkruc, zkrucStart + xStart, secondaryBaseline + yStart, secondaryTextPaint);
 
+            //draw little dot if there is a homework
+            if (!hodina.getUkolodevzdat().isEmpty()) {
+                Paint use = homeworkPaint;
+                if (!Theme.Utils.isLegible(homeworkPaint.getColor(), backgroundPaint.getColor(), 1.7)) {
+                    use = primaryTextPaint;
+                }
+                canvas.drawCircle(xEnd - 5, yStart + 5, 5, use);
+            }
+
             /*// draw cycle
             if (perm && hodina.getCycle() != null && !hodina.getCycle().isEmpty()){
                 float cycleBaseline = zkrprBaseline - primaryTextSize - textPadding;
@@ -287,7 +301,7 @@ public class HodinaView extends CellView {
     }
 
     private boolean addField(TableLayout layout, int resId, String fieldText) {
-        if (fieldText != null && !fieldText.trim().equals("")) {
+        if (fieldText != null && !fieldText.isEmpty()) {
             TableRow tr = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.lesson_details_dialog_row, null);
             TextView tw1 = tr.findViewById(R.id.textViewKey);
             TextView tw2 = tr.findViewById(R.id.textViewValue);
@@ -320,6 +334,7 @@ public class HodinaView extends CellView {
         int density = (int) getContext().getResources().getDisplayMetrics().density;
         tableLayout.setPadding(24 * density, 16 * density, 24 * density, 0);
 
+        addField(tableLayout, R.string.homework, hodina.getUkolodevzdat());
         addField(tableLayout, R.string.notice, hodina.getNotice());
         if (perm) {
             addField(tableLayout, R.string.cycle, hodina.getCycle());

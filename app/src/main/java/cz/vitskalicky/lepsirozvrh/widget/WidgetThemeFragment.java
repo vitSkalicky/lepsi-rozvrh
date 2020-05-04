@@ -182,7 +182,7 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
     }
 
     private int getSecondaryTextColor() {
-        return ColorUtils.blendARGB(background, text, 0.8f);
+        return text & 0x00ffffff | 0x99000000;
     }
 
     private int generateTextColor() {

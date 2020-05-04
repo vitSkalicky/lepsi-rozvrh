@@ -174,8 +174,12 @@
 
     <string name="small_widget_label">Aktuální hodina</string>
     <string name="wide_widget_label">Pětihodinový přehled</string>
-    <string name="widget_style">Vzhled</string>
+    <string name="widget_style">Motiv</string>
     <string name="widget_logged_out">Uživatel odhlášen</string>
+    <string name="widget_background">Pozadí</string>
+    <string name="widget_transparency">Průhlednost</string>
+    <string name="widget_autotext">Automatiká barva textu</string>
+    <string name="widget_text_color">Barva textu</string>
 
     <string name="app_updated">Aplikace byla aktualizována</string>
     <string name="whats_new">Co je nového</string>

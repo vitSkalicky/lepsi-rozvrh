@@ -178,6 +178,7 @@ public class ThemeData {
     @JsonDeserialize(using = ColorDeserializer.class)
     //</editor-fold>
     public int cHomework;
+    public float dpHomework;
 
     /**
      * Parses hexadecimal color string, with or without alpha (if no alpha supplied, 255 is used - opaque), with or without # prefix. (eg. "012830" or "0f014230" or "#0f014230")

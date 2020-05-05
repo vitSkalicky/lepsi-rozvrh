@@ -158,6 +158,9 @@
             android:key="@string/PREFS_THEME_cHomework"
             android:title="@string/homework_color"
             android:summary="@string/homework_color_desc"/>
+        <EditTextPreference
+            android:key="etp-dpHomework"
+            android:title="@string/homework_size" />
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:key="@string/PREFS_THEME_cInfolineBg"
             android:title="@string/infoline_fill"

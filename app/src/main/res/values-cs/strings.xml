@@ -121,6 +121,7 @@
     <string name="not_a_float_error">Zadejte číslo, třeba 4.2</string>
     <string name="homework_color">Barva tečky domácího úkolu</string>
     <string name="homework_color_desc">Barva té malé tečky, která značí, že na danou hodinu má být hotov nějaký domácí úkol</string>
+    <string name="homework_size">Velikost tečky domácího úkolu</string>
 
     <!--These are shown in the lesson details dialog-->
     <string name="lesson_teacher">Vyučující:</string>

@@ -81,6 +81,7 @@ public class Theme {
         td.spInfolineTextSize = getSpInfolineTextSize();
         td.cError = getCError();
         td.cHomework = getCHomework();
+        td.dpHomework = getDpHomework();
 
         return td;
     }
@@ -124,6 +125,7 @@ public class Theme {
         setSpInfolineTextSize(td.spInfolineTextSize);
         setCError(td.cError);
         setCHomework(td.cHomework);
+        setDpHomework(td.dpHomework);
     }
 
     public void applyFallbackTheme() {
@@ -158,7 +160,8 @@ public class Theme {
         setCInfolineText(0xffFFFFFF);
         setSpInfolineTextSize(12);
         setCError(0xffB00020);
-        setCHomework(0xfff9a825);
+        setCHomework(0xffef5350);
+        setDpHomework(5);
 
         int primary = 0xfff9a825;
         if (BuildConfig.DEBUG) {
@@ -356,6 +359,10 @@ public class Theme {
 
     public void setCHomework(int color){ SharedPrefs.setIntPreference(context, R.string.PREFS_THEME_cHomework, color); }
 
+    public float getDpHomework(){ return SharedPrefs.getFloatPreference(context, R.string.PREFS_THEME_dpHomework, 50.0f);}
+
+    public void setDpHomework(float size){ SharedPrefs.setFloatPreference(context, R.string.PREFS_THEME_dpHomework, size); }
+
     public int getPxDividerWidth(){ return Math.round(getDpDividerWidth() * context.getResources().getDisplayMetrics().density);}
     public int getPxHighlightWidth(){ return Math.round(getDpHighlightWidth() * context.getResources().getDisplayMetrics().density);}
     public int getPxPaddingLeft(){ return Math.round(getDpPaddingLeft() * context.getResources().getDisplayMetrics().density);}
@@ -367,6 +374,8 @@ public class Theme {
     public int getPxPrimaryText(){ return Math.round(getSpPrimaryText() * context.getResources().getDisplayMetrics().scaledDensity); }
     public int getPxSecondaryText(){ return Math.round(getSpSecondaryText() * context.getResources().getDisplayMetrics().scaledDensity); }
     public int getPxInfolineTextSize(){ return Math.round(getSpInfolineTextSize() * context.getResources().getDisplayMetrics().scaledDensity); }
+
+    public int getPxHomework(){ return Math.round(getDpHomework() * context.getResources().getDisplayMetrics().density);}
 
     //@formatter:on
 
@@ -396,6 +405,7 @@ public class Theme {
 
             setDpDividerWidth(1);
             setDpHighlightWidth(1);
+            setDpHomework(5);
 
             setCInfolineBg(0xff424242);
         }

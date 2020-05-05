@@ -31,6 +31,7 @@ public class HodinaView extends CellView {
     private Paint homeworkPaint;
 
     private int highlightWidth;
+    private int homeworkSize;
 
     private boolean topHighlighted, leftHighlighted, cornerHighlighted;
     private boolean entireHighlighted; //the highlighting is thicker
@@ -55,6 +56,8 @@ public class HodinaView extends CellView {
 
         homeworkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         homeworkPaint.setColor(t.getCHomework());
+
+        homeworkSize = t.getPxHomework();
 
         setOnClickListener(v -> showDetailDialog());
         setDrawDividers(true, true, true);
@@ -285,10 +288,10 @@ public class HodinaView extends CellView {
             //draw little dot if there is a homework
             if (!hodina.getUkolodevzdat().isEmpty()) {
                 Paint use = homeworkPaint;
-                if (!Theme.Utils.isLegible(homeworkPaint.getColor(), backgroundPaint.getColor(), 1.7)) {
+                if (!Theme.Utils.isLegible(homeworkPaint.getColor(), backgroundPaint.getColor(), 1.5)) {
                     use = primaryTextPaint;
                 }
-                canvas.drawCircle(xEnd - 5, yStart + 5, 5, use);
+                canvas.drawCircle(xEnd - homeworkSize, yStart + homeworkSize, homeworkSize, use);
             }
 
             /*// draw cycle

@@ -76,6 +76,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     private EditTextPreference dpDividerWidth;
     private EditTextPreference dpHighlightWidth;
     private EditTextPreference spInfolineTextSize;
+    private EditTextPreference dpHomework;
 
     private Utils.Listener exportListener = () -> {
     };
@@ -122,6 +123,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                 }
                 applyChanges();
                 setDetailLevel(0);
+                updateNumberPreferences();
             } else {
                 if (detailLevel == 0) {
                     setDetailLevel(2);
@@ -167,6 +169,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         dpDividerWidth = findPreference("etp-dpDividerWidth");
         dpHighlightWidth = findPreference("etp-dpHighlightWidth");
         spInfolineTextSize = findPreference("etp-spInfolineTextSize");
+        dpHomework = findPreference("etp-dpHomework");
 
         more = findPreference("p-more");
         less = findPreference("p-less");
@@ -240,7 +243,18 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                 return false;
             }
         });
-
+        dpHomework.setSummaryProvider(EditTextPreference.SimpleSummaryProvider.getInstance());
+        dpHomework.setText(Float.toString(theme.getDpHomework()));
+        dpHomework.setOnPreferenceChangeListener((preference, newValue) -> {
+            try {
+                Float parsed = Float.parseFloat(newValue.toString().replace(',', '.'));
+                theme.setDpHomework(parsed);
+                return true;
+            } catch (NumberFormatException e) {
+                Snackbar.make(getView(), R.string.not_a_float_error, BaseTransientBottomBar.LENGTH_LONG).show();
+                return false;
+            }
+        });
         more.setOnPreferenceClickListener(preference -> {
             setDetailLevel(detailLevel + 1);
             return true;
@@ -268,6 +282,17 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         } else {
             getActivity().recreate();
         }
+    }
+
+    /**
+     * refreshes the number displayed on text size, divider width,... preferences
+     */
+    public void updateNumberPreferences(){
+        dpDividerWidth.setText(Float.toString(theme.getDpDividerWidth()));
+        dpHighlightWidth.setText(Float.toString(theme.getDpHighlightWidth()));
+        spInfolineTextSize.setText(Float.toString(theme.getSpInfolineTextSize()));
+        dpHomework.setText(Float.toString(theme.getDpHomework()));
+
     }
 
     private void setDetailLevel(int detailLevel) {
@@ -377,6 +402,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         }
         if (oldDetaillevel > detailLevel) {
             theme.regenerateColors(detailLevel);
+            updateNumberPreferences();
         }
     }
 

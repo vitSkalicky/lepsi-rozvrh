@@ -1,8 +1,9 @@
 package cz.vitskalicky.lepsirozvrh;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Sponsoring {
     private Context context;
@@ -11,15 +12,15 @@ public class Sponsoring {
         this.context = context;
     }
 
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return false;
     }
 
-    public boolean inSponsor(){
+    public boolean inSponsor() {
         return true;
     }
 
-    public void showDialog(AppCompatActivity activity){
-        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+    public void showDialog(AppCompatActivity activity) {
+        Toast.makeText(context, "Error (no donate dialog in " + BuildConfig.FLAVOR+ " flavour)", Toast.LENGTH_SHORT).show();
     }
 }

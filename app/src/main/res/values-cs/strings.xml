@@ -186,7 +186,7 @@
     <string name="widget_text_color">Barva textu</string>
 
     <string name="donate_title">Staňte se sponzorem</string>
-    <string name="donate_text1">Podpořte vývoj aplikace a navíc získáte bonusové funkce:</string>
+    <string name="donate_text1">Podpořte vývoj aplikace a získáte bonusové funkce:</string>
     <string name="donate_bonus_features">- Upravitelná barva a průhlednost widgetu\n- Černý motiv\n- Vlastní motivy\n- Jakýkoliv motiv z internetu\n- Možnost sdílet Váš úžasný motiv\n</string>
     <string name="donate_a_little">Přispět trochu (%s)</string>
     <string name="donate_more">Přispět více (%s)</string>

@@ -25,6 +25,7 @@ import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.Sponsoring;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
@@ -152,9 +153,9 @@ public class MainActivity extends BaseActivity {
                 progressBar.setVisibility(View.VISIBLE);
             }
         });
-/*
+
         ibSettings.setOnLongClickListener(v -> {
-            SharedPrefs.remove(this, getString(R.string.PREFS_THEME_cHBg));
+            new Sponsoring(context).showDialog(this);
             return true;
         });/**/
 

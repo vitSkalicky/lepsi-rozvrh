@@ -185,6 +185,13 @@
     <string name="widget_autotext">Automatic text color</string>
     <string name="widget_text_color">Text colour</string>
 
+    <string name="donate_title">Become a sponsor</string>
+    <string name="donate_text1">Support app development and get some bonus features:</string>
+    <string name="donate_bonus_features">- Custom widget colour and transparency\n- Black theme\n- Custom themes\n- Any theme you find on the internet\n- You can share your amazing theme on the internet</string>
+    <string name="donate_a_little">Donate a little (%s)</string>
+    <string name="donate_more">Donate more (%s)</string>
+    <string name="donate_text2">Naturally, you get all the bonus features even for a small donation.</string>
+
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->

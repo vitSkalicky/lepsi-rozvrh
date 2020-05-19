@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
@@ -17,7 +19,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.Cyanea;
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
@@ -25,17 +26,18 @@ import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
-import cz.vitskalicky.lepsirozvrh.Sponsoring;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
+import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements PurchaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TAG_TIMER = TAG + "-timer";
 
@@ -155,7 +157,7 @@ public class MainActivity extends BaseActivity {
         });
 
         ibSettings.setOnLongClickListener(v -> {
-            new Sponsoring(context).showDialog(this);
+            new Donations(context,this).showDialog(this);
             return true;
         });/**/
 
@@ -259,6 +261,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        onActivityResultListener.handleActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setInfoText(String text) {
         infoLine.setText(text);
     }
@@ -291,5 +299,17 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    private PurchaseActivity.Listener onActivityResultListener = (requestCode, resultCode, data) -> {};
+
+    @Override
+    public void setActivityResultListener(PurchaseActivity.Listener listener) {
+        this.onActivityResultListener = listener;
+    }
+
+    @Override
+    public void onSponsorChange(boolean newValue) {
+        Toast.makeText(this, "Sponsor is now " + newValue, Toast.LENGTH_LONG).show();
     }
 }

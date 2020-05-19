@@ -192,6 +192,10 @@
     <string name="donate_more">Donate more (%s)</string>
     <string name="donate_text2">Naturally, you get all the bonus features even for a small donation.</string>
 
+    <string name="purchase_cancelled">Purchase cancelled by user</string>
+    <string name="purchase_error">Purchase failed (%s)</string>
+    <string name="error_code">error %s</string>
+
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->

@@ -192,6 +192,10 @@
     <string name="donate_more">Přispět více (%s)</string>
     <string name="donate_text2">Všechny bonusové funkce samozřejmě dostanete i za malý příspěvek.</string>
 
+    <string name="purchase_cancelled">Uživatel nákup zrušil</string>
+    <string name="purchase_error">Nákup selhal (%s)</string>
+    <string name="error_code">chyba %s</string>
+
     <string name="app_updated">Aplikace byla aktualizována</string>
     <string name="whats_new">Co je nového</string>
     <!-- Interesting feature messages-->

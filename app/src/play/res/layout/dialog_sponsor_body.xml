@@ -13,7 +13,6 @@
             android:id="@+id/viewTitleBackground"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="?colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/view3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +27,6 @@
             android:layout_marginEnd="8dp"
             android:text="@string/donate_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="?menuIconColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewTitle"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +36,6 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:tint="?menuIconColor"
             app:layout_constraintBottom_toBottomOf="@+id/textViewTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textViewTitle"

@@ -5,20 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
+import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 
 /**
  * A base class for Widget configuration activities taking care of saving the data, OK, button and spinner.
  */
-public abstract class WidgetConfigActivity extends AppCompatActivity implements WidgetThemeFragment.CallbackListener {
+public abstract class WidgetConfigActivity extends AppCompatActivity implements WidgetThemeFragment.CallbackListener, PurchaseActivity {
     private static final String TAG = WidgetConfigActivity.class.getSimpleName();
 
     protected WidgetThemeFragment widgetThemeFragment;
     protected Button okButton;
+    protected Donations donations;
 
     int widgetID = 0;
     boolean isWidgetIDSet = false;
@@ -29,12 +33,16 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
 
         createContentView();
 
+        donations = new Donations(this, this, this);
+
         if (widgetThemeFragment == null) {
             widgetThemeFragment = (WidgetThemeFragment) getSupportFragmentManager().findFragmentById(R.id.widgetThemeFragment);
             if (widgetThemeFragment == null) {
                 throw new RuntimeException("Layout must contain a WidgetThemeFragment with id \"widgetThemeFragment\" or the protected field \"widgetThemeFragment\" must be set in \"createContentView()\"");
             }
         }
+        widgetThemeFragment.init(donations);
+
         if (okButton == null) {
             okButton = findViewById(R.id.buttonOK);
             if (okButton == null) {
@@ -80,5 +88,30 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
             setResult(RESULT_CANCELED, resultValue);
         }
         finish();
+    }
+
+    protected Listener onActivityResultListener = (requestCode, resultCode, data) -> {};
+    @Override
+    public void setActivityResultListener(Listener listener) {
+        onActivityResultListener = listener;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        onActivityResultListener.handleActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSponsorChange(boolean newValue) {
+        if (widgetThemeFragment != null){
+            widgetThemeFragment.updateSponsor();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        donations.release();
     }
 }

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.preference.DropDownPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
@@ -15,6 +16,7 @@ import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 /**
@@ -22,7 +24,11 @@ import cz.vitskalicky.lepsirozvrh.theme.Theme;
  */
 public class WidgetThemeFragment extends PreferenceFragmentCompat {
 
+    private Donations donations;
+    private boolean isSponsor;
+
     private DropDownPreference themeP;
+    private Preference donateP;
     private ColorPreferenceCompat backgroundP;
     private SeekBarPreference transparencyP;
     private SwitchPreferenceCompat autotextP;
@@ -54,6 +60,11 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
         }
     };
 
+    public void init(Donations donations){
+        this.donations = donations;
+        updateSponsor();
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         if (savedInstanceState != null) {
@@ -75,18 +86,30 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
         }
         setPreferencesFromResource(R.xml.widget_preferences, rootKey);
         themeP = findPreference(getString(R.string.WIDGET_PREF_THEME));
+        donateP = findPreference(getString(R.string.PREFS_DONATE));
         backgroundP = findPreference(getString(R.string.WIDGET_PREF_BG));
         transparencyP = findPreference(getString(R.string.WIDGET_PREF_TRANSPARENCY));
         autotextP = findPreference(getString(R.string.WIDGET_PREF_AUTO_TEXT));
         textColorP = findPreference(getString(R.string.WIDGET_PREF_TEXT));
 
         themeP.setOnPreferenceChangeListener((preference, newValue) -> {
+            int oldTheme = theme;
             theme = Integer.parseInt(newValue.toString());
+            if (theme == 2 && oldTheme != 2){
+                autotext = true;
+            }
             updateTheme();
+            if (theme == 2 && !donations.isSponsor()){
+                donations.showDialog();
+            }
             return true;
         });
         themeP.setSummaryProvider(preference -> ((DropDownPreference) preference).getEntry());
 
+        donateP.setOnPreferenceClickListener(preference -> {
+            donations.showDialog();
+            return true;
+        });
         backgroundP.setOnPreferenceChangeListener((preference, newValue) -> {
             background = (int) newValue;
             callbackListener.setBackground(getBackgroundWithAlpha());
@@ -149,6 +172,7 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
             autotextP.setChecked(true);
             textColorP.saveValue(text);
 
+            donateP.setVisible(false);
             backgroundP.setVisible(false);
             transparencyP.setVisible(false);
             autotextP.setVisible(false);
@@ -163,6 +187,7 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
             autotextP.setVisible(true);
             textColorP.setVisible(!autotext);
         }
+        updateSponsor();
     }
 
     public void setCallbackListener(CallbackListener callbackListener) {
@@ -217,6 +242,31 @@ public class WidgetThemeFragment extends PreferenceFragmentCompat {
         outState.putInt("transparency", transparency);
         outState.putInt("text", text);
         outState.putBoolean("autotext", autotext);
+    }
+
+    public void updateSponsor(){
+        if (donations != null){
+            isSponsor = donations.isSponsor();
+            if (backgroundP != null){
+                if (isSponsor){
+                    donateP.setVisible(false);
+
+                    backgroundP.setEnabled(true);
+                    transparencyP.setEnabled(true);
+                    autotextP.setEnabled(true);
+                    textColorP.setEnabled(true);
+                }else{
+                    if (theme == 2){
+                        donateP.setVisible(true);
+                    }
+
+                    backgroundP.setEnabled(false);
+                    transparencyP.setEnabled(false);
+                    autotextP.setEnabled(false);
+                    textColorP.setEnabled(false);
+                }
+            }
+        }
     }
 
     public static interface CallbackListener {

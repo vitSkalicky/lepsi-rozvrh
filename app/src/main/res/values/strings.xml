@@ -197,6 +197,10 @@
     <string name="donate_text2">Naturally, you get all the bonus features even for a small donation.</string>
     <string name="donate_title_ok">You are a sponsor!</string>
     <string name="donate_text1_ok">You have supported the app development and you have unlocked all the bonus features:</string>
+    <string name="use_promo_code">Redeem code</string>
+    <string name="restore_purchases">Restore purchases</string>
+    <string name="restore_purchases_desc">Checks purchases on your Google account. Use if you did donate, but bonus features are still locked.</string>
+    <string name="purchases_restored">Purchases restored</string>
 
     <string name="purchase_cancelled">Purchase cancelled by user</string>
     <string name="purchase_error">Purchase failed (%s)</string>

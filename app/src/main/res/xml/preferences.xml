@@ -51,6 +51,7 @@
             android:key="@string/PREFS_DONATE"
             android:summary="@string/support_this_app_desc"
             android:icon="@drawable/ic_attach_money_black_24dp"/>
+
         <Preference android:title="@string/source_code"
             android:summary="@string/source_code_desc"
             android:icon="@drawable/ic_web_black_24dp">
@@ -76,6 +77,9 @@
                 android:action="android.intent.action.VIEW"
                 android:data="@string/PRIVACY_POLICY_LINK" />
         </Preference>
+        <Preference android:title="@string/restore_purchases"
+            android:key="@string/PREFS_RESTORE_PURCHASES"
+            android:summary="@string/restore_purchases_desc"/>
         <Preference
             android:title="@string/oss_licences"
             android:summary="@string/oss_licences_desc"

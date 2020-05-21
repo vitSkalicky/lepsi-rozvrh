@@ -74,6 +74,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
 
     private void setupRootListeners() {
         if (settingsFragment != null) {
+            settingsFragment.init(donations);
             settingsFragment.setLogoutListener(() -> {
                 Login.logout(this);
                 finish();
@@ -88,9 +89,6 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                         .replace(R.id.frame_layout, themeSettingsFragment, "themeSettingsFragment")
                         .addToBackStack(null)
                         .commit();
-            });
-            settingsFragment.setDonateListener(() -> {
-                donations.showDialog();
             });
         }
     }

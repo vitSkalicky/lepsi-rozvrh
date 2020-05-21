@@ -1,6 +1,8 @@
 package cz.vitskalicky.lepsirozvrh.donations;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -62,8 +64,12 @@ public class DonateDialogFragment extends DialogFragment {
         donateLittle.setOnClickListener(v -> billing.buySmall(getActivity()));
         donateMore.setOnClickListener(v -> billing.buyBig(getActivity()));
 
-        return new AlertDialog.Builder(getActivity()).setTitle(null).setPositiveButton(R.string.close, (dialogInterface, i) -> {
-        }).setView(body).create();
+        return new AlertDialog.Builder(getActivity()).setTitle(null)
+                .setPositiveButton(R.string.close, (dialogInterface, i) -> {})
+                .setNeutralButton(R.string.use_promo_code, (dialog, which) -> {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/redeem?code="));
+                    startActivity(browserIntent);
+                }).setView(body).create();
     }
 
     public void setIsSponsor(boolean isSponsor){
@@ -74,12 +80,12 @@ public class DonateDialogFragment extends DialogFragment {
                 bgColor = 0xff4CAF50;
                 twTitle.setText(R.string.donate_title_ok);
                 twText1.setText(R.string.donate_text1_ok);
-                iwTitle.setImageResource(R.drawable.ic_check_black_24dp);
+                iwTitle.setImageResource(R.drawable.ic_check_black_48dp);
             }else {
                 bgColor = t.getCPrimary();
                 twTitle.setText(R.string.donate_title);
                 twText1.setText(R.string.donate_text1);
-                iwTitle.setImageResource(R.drawable.ic_monetization_on_black_24dp);
+                iwTitle.setImageResource(R.drawable.ic_monetization_on_black_48dp);
             }
             viewTitleBackground.setBackgroundColor(bgColor);
             twTitle.setTextColor(Theme.Utils.textColorFor(bgColor));

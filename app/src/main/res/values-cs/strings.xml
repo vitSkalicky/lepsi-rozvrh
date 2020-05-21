@@ -166,7 +166,7 @@
     <string name="send_crash_desc">Automaticky odesílat zprávy o chybách vývojářům, aby mohly být opraveny</string>
     <string name="privacy_policy">Zásady ochrany soukromí</string>
     <string name="oss_licences">Open source linence</string>
-    <string name="oss_licences_desc">Zobrzit licence svobodných a open source knihoven</string>
+    <string name="oss_licences_desc">Zobrazit licence svobodných a open source knihoven</string>
     <string name="app_version">Verze aplikace</string>
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
@@ -197,6 +197,10 @@
     <string name="donate_text2">Všechny bonusové funkce samozřejmě dostanete i za malý příspěvek.</string>
     <string name="donate_title_ok">Sponzorujete aplikaci</string>
     <string name="donate_text1_ok">Podporujete vývoj aplikace a máte odemčeny všechny bonusové funkce:</string>
+    <string name="use_promo_code">Použít kód</string>
+    <string name="restore_purchases">Zkontrolovat platby</string>
+    <string name="restore_purchases_desc">Zkontroluje platby na Vašem Google účtě. Použijte v případě, že jste aplikaci již podpořili, ale stále nemáte odemčené bonusové funkce</string>
+    <string name="purchases_restored">Zkontrolováno</string>
 
     <string name="purchase_cancelled">Uživatel nákup zrušil</string>
     <string name="purchase_error">Nákup selhal (%s)</string>

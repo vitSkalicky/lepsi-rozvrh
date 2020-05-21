@@ -14,6 +14,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
@@ -22,6 +23,7 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.LicencesActivity;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
@@ -34,7 +36,8 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     };
 
     private Utils.Listener shownThemeSettingsListener = () -> {};
-    private Utils.Listener donateListener = () -> {};
+
+    private Donations donations;
 
     private boolean supportingEnabled = false;
     private boolean isSponsor = false;
@@ -42,6 +45,10 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+    }
+
+    public void init(Donations donations){
+        this.donations = donations;
     }
 
     @Override
@@ -59,7 +66,12 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         });
 
         findPreference(getString(R.string.PREFS_DONATE)).setOnPreferenceClickListener(preference -> {
-            donateListener.method();
+            donations.showDialog();
+            return true;
+        });
+        findPreference(getString(R.string.PREFS_RESTORE_PURCHASES)).setOnPreferenceClickListener(preference -> {
+            donations.restorePurchases();
+            Snackbar.make(getView(),R.string.purchases_restored, BaseTransientBottomBar.LENGTH_SHORT).show();
             return true;
         });
 
@@ -151,9 +163,6 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         this.logoutListener = listener;
     }
     public void setShownThemeSettingsListener(Utils.Listener listener){this.shownThemeSettingsListener = listener; }
-    public void setDonateListener(Utils.Listener donateListener) {
-        this.donateListener = donateListener;
-    }
 
     @Override
     public void onResume() {
@@ -166,6 +175,7 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         this.supportingEnabled = supportingEnabled;
         if (isResumed()){
             findPreference(getString(R.string.PREFS_DONATE)).setVisible(supportingEnabled);
+            findPreference(getString(R.string.PREFS_RESTORE_PURCHASES)).setVisible(supportingEnabled);
         }
     }
 

@@ -90,7 +90,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                         .commit();
             });
             settingsFragment.setDonateListener(() -> {
-                donations.showDialog(this);
+                donations.showDialog();
             });
         }
     }
@@ -115,6 +115,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                         .addToBackStack(null)
                         .commit();
             });
+            themeSettingsFragment.init(donations);
         }
     }
 
@@ -166,6 +167,9 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
     public void onSponsorChange(boolean newValue) {
         if (settingsFragment != null){
             settingsFragment.setSponsor(newValue);
+        }
+        if (themeSettingsFragment != null){
+            themeSettingsFragment.updateDonationEnability();
         }
     }
 

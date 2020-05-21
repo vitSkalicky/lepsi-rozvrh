@@ -36,6 +36,7 @@ public class DonateDialogFragment extends DialogFragment {
     public void init(Billing billing){
         this.billing = billing;
         billing.addOnIsSponsorChangeListener(onSponsorChangeListener);
+        setIsSponsor(billing.isSponsor());
     }
 
     @NonNull

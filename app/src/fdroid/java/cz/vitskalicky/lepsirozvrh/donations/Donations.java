@@ -27,7 +27,7 @@ public class Donations {
         Toast.makeText(context, "Error (in-app purchases not enabled in " + BuildConfig.FLAVOR + " flavour)", Toast.LENGTH_SHORT).show();
     }
 
-    public void showDialog(AppCompatActivity activity) {
+    public void showDialog() {
         Toast.makeText(context, "Error (no donate dialog in " + BuildConfig.FLAVOR + " flavour)", Toast.LENGTH_SHORT).show();
     }
 

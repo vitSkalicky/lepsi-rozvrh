@@ -10,12 +10,14 @@ public class Donations {
     private Context context;
     private Billing billing;
     private PurchaseActivity pActivity;
+    private AppCompatActivity activity;
 
     private DonateDialogFragment donateDF;
 
     public Donations(Context context, PurchaseActivity pActivity, AppCompatActivity activity) {
         this.context = context;
         this.pActivity = pActivity;
+        this.activity = activity;
         billing = new Billing(context, pActivity);
         FragmentManager fm = activity.getSupportFragmentManager();
         donateDF = (DonateDialogFragment) fm.findFragmentByTag("donateDF");
@@ -36,7 +38,7 @@ public class Donations {
         billing.restorePurchases();
     }
 
-    public void showDialog(AppCompatActivity activity) {
+    public void showDialog() {
         FragmentManager fm = activity.getSupportFragmentManager();
         if (donateDF == null){
             donateDF = new DonateDialogFragment();

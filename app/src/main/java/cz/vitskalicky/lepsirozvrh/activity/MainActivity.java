@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements PurchaseActivity {
 
         //DEBUG
         ibSettings.setOnLongClickListener(v -> {
-            new Donations(context,this,this).showDialog(this);
+            new Donations(context,this,this).showDialog();
             return true;
         });/**/
 

@@ -66,6 +66,8 @@ public class Billing {
             }
         });
         bp.initialize();
+        //DEBUG
+        //setIsSponsor(true);
     }
 
     public void checkPurchases() {

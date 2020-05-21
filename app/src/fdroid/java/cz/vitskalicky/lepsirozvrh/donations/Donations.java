@@ -11,7 +11,7 @@ import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 public class Donations {
     private Context context;
 
-    public Donations(Context context, PurchaseActivity pActivity) {
+    public Donations(Context context, PurchaseActivity pActivity, AppCompatActivity activity) {
         this.context = context;
     }
 
@@ -19,7 +19,7 @@ public class Donations {
         return false;
     }
 
-    public boolean inSponsor() {
+    public boolean isSponsor() {
         return true;
     }
 
@@ -29,5 +29,9 @@ public class Donations {
 
     public void showDialog(AppCompatActivity activity) {
         Toast.makeText(context, "Error (no donate dialog in " + BuildConfig.FLAVOR + " flavour)", Toast.LENGTH_SHORT).show();
+    }
+
+    public void release(){
+
     }
 }

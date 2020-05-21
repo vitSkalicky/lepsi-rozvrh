@@ -10,6 +10,8 @@ import com.anjlab.android.iab.v3.Constants;
 import com.anjlab.android.iab.v3.PurchaseState;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
+import java.util.LinkedList;
+
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 
@@ -27,8 +29,7 @@ public class Billing {
     private PurchaseActivity pActivity;
 
     private boolean isSponsor = false;
-    private Utils.Listener onIsSponsorChangeListener = () -> {
-    };
+    private LinkedList<Utils.Listener> onSponsorChangeListeners = new LinkedList<>();
 
     public Billing(Context context, PurchaseActivity pActivity) {
         this.context = context;
@@ -55,6 +56,8 @@ public class Billing {
                 } else {
                     Toast.makeText(context, String.format(context.getText(R.string.purchase_error).toString(), error == null ? String.format(context.getString(R.string.error_code), Integer.toString(errorCode)) : error.getLocalizedMessage()), Toast.LENGTH_LONG).show();
                 }
+                //DEBUG
+                //setIsSponsor(true);
             }
 
             @Override
@@ -71,8 +74,8 @@ public class Billing {
                 setIsSponsor(true);
             }
         }
-        /*smallPrice = bp.getPurchaseListingDetails(SKU_SMALL_DONATION).priceText;
-        bigPrice = bp.getPurchaseListingDetails(SKU_BIG_DONATION).priceText;*/
+        //smallPrice = bp.getPurchaseListingDetails(SKU_SMALL_DONATION).priceText;
+        //bigPrice = bp.getPurchaseListingDetails(SKU_BIG_DONATION).priceText;
     }
 
     private void setIsSponsor(boolean value) {
@@ -80,7 +83,9 @@ public class Billing {
         isSponsor = value;
         if (old != value) {
             pActivity.onSponsorChange(isSponsor);
-            onIsSponsorChangeListener.method();
+            for (Utils.Listener listener :onSponsorChangeListeners) {
+                listener.method();
+            }
         }
     }
 
@@ -112,11 +117,18 @@ public class Billing {
         return bp;
     }
 
-    public void setOnIsSponsorChangeListener(Utils.Listener onIsSponsorChangeListener) {
-        this.onIsSponsorChangeListener = onIsSponsorChangeListener;
+    public void addOnIsSponsorChangeListener(Utils.Listener onIsSponsorChangeListener) {
+        onSponsorChangeListeners.add(onIsSponsorChangeListener);
+    }
+    public void removeOnIsSponsorChangeListener(Utils.Listener listener){
+        onSponsorChangeListeners.remove(listener);
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         bp.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    public void release(){
+        bp.release();
     }
 }

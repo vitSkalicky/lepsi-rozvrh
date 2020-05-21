@@ -47,6 +47,10 @@
         <Preference android:title="@string/whats_new"
             android:key="@string/PREFS_CHANGELOG"
             android:icon="@drawable/ic_whats_new"/>
+        <Preference android:title="@string/support_this_app"
+            android:key="@string/PREFS_DONATE"
+            android:summary="@string/support_this_app_desc"
+            android:icon="@drawable/ic_attach_money_black_24dp"/>
         <Preference android:title="@string/source_code"
             android:summary="@string/source_code_desc"
             android:icon="@drawable/ic_web_black_24dp">

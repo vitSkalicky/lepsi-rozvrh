@@ -17,6 +17,7 @@
     <string name="PREFS_EXPORT_THEME" translatable="false">prefs-export-theme</string>
     <string name="PREFS_IMPORT_THEME" translatable="false">prefs-import-theme</string>
     <string name="PREFS_SHARE_THEME" translatable="false">prefs-share-theme</string>
+    <string name="PREFS_DONATE" translatable="false">prefs-donate</string>
     <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
     <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>

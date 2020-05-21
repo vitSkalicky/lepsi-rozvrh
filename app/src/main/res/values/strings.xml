@@ -53,13 +53,17 @@
     <string name="switch_to_next_week">Switch to the next week</string>
     <string name="center_to_current_lesson">Center schedule to the current lesson</string>
     <string name="notification">Persistent notification</string>
-    <string name="notification_desc">Shows a silent notification with your next lesson.</string>
+    <string name="notification_desc">Shows a silent notification with your next lesson</string>
     <string name="notification_detials">Persistent notification informs you about your current or next lesson during school. It begins to show the first lesson 1 hour before it starts and then switches to the next one always 10 minutes before the current lesson ends. After the school finishes the notification disappears.\n\nThis feature can be disabled in the settings.</string>
+    <string name="support_this_app">Support developer</string>
+    <string name="support_this_app_desc">Donate to support development of this app</string>
+    <string name="supporting_this_app">You are a sponsor</string>
+    <string name="supporting_this_app_desc">You already donated some money. Thank you!</string>
     <string name="dont_show_again">Don\'t show again</string>
     <string name="something_went_wrong">Something went wrong :(</string>
     <string name="report">Report</string>
 
-    <!-- Theme preferences -->]
+    <!-- Theme preferences -->
     <string name="app_theme_screen">Theme settings</string>
     <string name="app_theme_screen_desc">Customize colours of this app</string>
 
@@ -191,6 +195,8 @@
     <string name="donate_a_little">Donate a little (%s)</string>
     <string name="donate_more">Donate more (%s)</string>
     <string name="donate_text2">Naturally, you get all the bonus features even for a small donation.</string>
+    <string name="donate_title_ok">You are a sponsor!</string>
+    <string name="donate_text1_ok">You have supported the app development and you have unlocked all the bonus features:</string>
 
     <string name="purchase_cancelled">Purchase cancelled by user</string>
     <string name="purchase_error">Purchase failed (%s)</string>

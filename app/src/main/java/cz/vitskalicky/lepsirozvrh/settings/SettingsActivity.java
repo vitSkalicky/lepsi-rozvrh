@@ -17,9 +17,8 @@ import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.BaseActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.donations.Donations;
-import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 
-public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity, PurchaseActivity {
+public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity {
 
     Toolbar toolbar;
     SettingsFragment settingsFragment;
@@ -47,7 +46,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        donations = new Donations(this,this,this);
+        donations = new Donations(this,this, this::sponsorChanged);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -149,22 +148,9 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
             getSupportFragmentManager().putFragment(outState, "importThemeFragment", importThemeFragment);
     }
 
-    private PurchaseActivity.Listener onActivityResultListener = (requestCode, resultCode, data) -> {};
-    @Override
-    public void setActivityResultListener(Listener listener) {
-        this.onActivityResultListener = listener;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        onActivityResultListener.handleActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onSponsorChange(boolean newValue) {
+    public void sponsorChanged() {
         if (settingsFragment != null){
-            settingsFragment.setSponsor(newValue);
+            settingsFragment.setSponsor(donations.isSponsor());
         }
         if (themeSettingsFragment != null){
             themeSettingsFragment.updateDonationEnability();

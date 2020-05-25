@@ -116,5 +116,6 @@ dependencies {
 
     implementation "androidx.paging:paging-runtime:$paging_version"
 
-    playImplementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    playImplementation 'com.android.billingclient:billing:2.2.1'
+
 }

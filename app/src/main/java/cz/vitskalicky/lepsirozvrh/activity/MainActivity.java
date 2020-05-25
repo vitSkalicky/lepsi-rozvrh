@@ -30,14 +30,13 @@ import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
-import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.view.RozvrhTableFragment;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
-public class MainActivity extends BaseActivity implements PurchaseActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String TAG_TIMER = TAG + "-timer";
 
@@ -158,7 +157,7 @@ public class MainActivity extends BaseActivity implements PurchaseActivity {
 
         //DEBUG
         ibSettings.setOnLongClickListener(v -> {
-            new Donations(context,this,this).showDialog();
+            new Donations(context, this, () -> {}).showDialog();
             return true;
         });/**/
 
@@ -199,8 +198,8 @@ public class MainActivity extends BaseActivity implements PurchaseActivity {
     protected void onResume() {
         super.onResume();
 
-        if (SharedPrefs.getBooleanPreference(context, R.string.THEME_CHANGED, false)){
-            SharedPrefs.setBooleanPreference(context, R.string.THEME_CHANGED,false);
+        if (SharedPrefs.getBooleanPreference(context, R.string.THEME_CHANGED, false)) {
+            SharedPrefs.setBooleanPreference(context, R.string.THEME_CHANGED, false);
             recreate();
         }
 
@@ -262,12 +261,6 @@ public class MainActivity extends BaseActivity implements PurchaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        onActivityResultListener.handleActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void setInfoText(String text) {
         infoLine.setText(text);
     }
@@ -300,17 +293,5 @@ public class MainActivity extends BaseActivity implements PurchaseActivity {
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
-    }
-
-    private PurchaseActivity.Listener onActivityResultListener = (requestCode, resultCode, data) -> {};
-
-    @Override
-    public void setActivityResultListener(PurchaseActivity.Listener listener) {
-        this.onActivityResultListener = listener;
-    }
-
-    @Override
-    public void onSponsorChange(boolean newValue) {
-        Toast.makeText(this, "Sponsor is now " + newValue, Toast.LENGTH_LONG).show();
     }
 }

@@ -12,12 +12,11 @@ import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.donations.Donations;
-import cz.vitskalicky.lepsirozvrh.donations.PurchaseActivity;
 
 /**
  * A base class for Widget configuration activities taking care of saving the data, OK, button and spinner.
  */
-public abstract class WidgetConfigActivity extends AppCompatActivity implements WidgetThemeFragment.CallbackListener, PurchaseActivity {
+public abstract class WidgetConfigActivity extends AppCompatActivity implements WidgetThemeFragment.CallbackListener {
     private static final String TAG = WidgetConfigActivity.class.getSimpleName();
 
     protected WidgetThemeFragment widgetThemeFragment;
@@ -33,7 +32,12 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
 
         createContentView();
 
-        donations = new Donations(this, this, this);
+        donations = new Donations(this, this, () -> {
+            //on sponsor change
+            if (widgetThemeFragment != null){
+                widgetThemeFragment.updateSponsor();
+            }
+        });
 
         if (widgetThemeFragment == null) {
             widgetThemeFragment = (WidgetThemeFragment) getSupportFragmentManager().findFragmentById(R.id.widgetThemeFragment);
@@ -88,25 +92,6 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
             setResult(RESULT_CANCELED, resultValue);
         }
         finish();
-    }
-
-    protected Listener onActivityResultListener = (requestCode, resultCode, data) -> {};
-    @Override
-    public void setActivityResultListener(Listener listener) {
-        onActivityResultListener = listener;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        onActivityResultListener.handleActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onSponsorChange(boolean newValue) {
-        if (widgetThemeFragment != null){
-            widgetThemeFragment.updateSponsor();
-        }
     }
 
     @Override

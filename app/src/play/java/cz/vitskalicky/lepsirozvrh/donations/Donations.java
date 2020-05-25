@@ -1,24 +1,24 @@
 package cz.vitskalicky.lepsirozvrh.donations;
 
-import android.app.Activity;
 import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import cz.vitskalicky.lepsirozvrh.Utils;
+
 public class Donations {
     private Context context;
     private Billing billing;
-    private PurchaseActivity pActivity;
     private AppCompatActivity activity;
 
     private DonateDialogFragment donateDF;
 
-    public Donations(Context context, PurchaseActivity pActivity, AppCompatActivity activity) {
+    public Donations(Context context, AppCompatActivity activity, Utils.Listener onPurchaseChangesListener) {
         this.context = context;
-        this.pActivity = pActivity;
         this.activity = activity;
-        billing = new Billing(context, pActivity);
+        billing = new Billing(context);
+        billing.addOnPurchaseChangeListener(onPurchaseChangesListener);
         FragmentManager fm = activity.getSupportFragmentManager();
         donateDF = (DonateDialogFragment) fm.findFragmentByTag("donateDF");
         if (donateDF != null){
@@ -44,7 +44,6 @@ public class Donations {
             donateDF = new DonateDialogFragment();
         }
         donateDF.init(billing);
-        donateDF.setIsSponsor(isSponsor());
         donateDF.show(fm, "donateDF");
     }
 

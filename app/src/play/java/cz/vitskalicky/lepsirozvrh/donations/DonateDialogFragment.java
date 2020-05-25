@@ -8,11 +8,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.Purchase;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
@@ -31,14 +38,14 @@ public class DonateDialogFragment extends DialogFragment {
 
     private boolean isSponsor = false;
 
-    Theme t;
+    private Theme t;
 
-    private Utils.Listener onSponsorChangeListener = () -> setIsSponsor(billing.isSponsor());
+    private Utils.Listener onSponsorChangeListener = this::updatePurchases;
 
     public void init(Billing billing){
         this.billing = billing;
-        billing.addOnIsSponsorChangeListener(onSponsorChangeListener);
-        setIsSponsor(billing.isSponsor());
+        billing.addOnPurchaseChangeListener(onSponsorChangeListener);
+        updatePurchases();
     }
 
     @NonNull
@@ -56,13 +63,26 @@ public class DonateDialogFragment extends DialogFragment {
         donateMore = body.findViewById(R.id.buttonDonateMore);
 
         t = Theme.of(getContext());
-        setIsSponsor(isSponsor);
+        updatePurchases();
 
-        donateLittle.setText(String.format(getText(R.string.donate_a_little).toString(), billing.getSmallPrice()));
-        donateMore.setText(String.format(getText(R.string.donate_more).toString(), billing.getBigPrice()));
+        updatePrizes();
+        billing.addOnInitializedListener(this::updatePrizes);
 
         donateLittle.setOnClickListener(v -> billing.buySmall(getActivity()));
         donateMore.setOnClickListener(v -> billing.buyBig(getActivity()));
+
+        //DEBUG
+        twTitle.setOnClickListener(v -> {
+            Purchase.PurchasesResult result = billing.getBillingClient().queryPurchases(BillingClient.SkuType.INAPP);
+            Toast.makeText(getContext(), "# of purchases: " + result.getPurchasesList().size(), Toast.LENGTH_LONG).show();
+            if (result.getPurchasesList().size() > 0){
+                ConsumeParams consumeParams =
+                        ConsumeParams.newBuilder()
+                                .setPurchaseToken(result.getPurchasesList().get(0).getPurchaseToken())
+                                .build();
+                billing.getBillingClient().consumeAsync(consumeParams, (billingResult1, s) -> {});
+            }
+        });
 
         return new AlertDialog.Builder(getActivity()).setTitle(null)
                 .setPositiveButton(R.string.close, (dialogInterface, i) -> {})
@@ -72,8 +92,8 @@ public class DonateDialogFragment extends DialogFragment {
                 }).setView(body).create();
     }
 
-    public void setIsSponsor(boolean isSponsor){
-        this.isSponsor = isSponsor;
+    public void updatePurchases(){
+        this.isSponsor = billing.isSponsor();
         if (body != null){
             int bgColor;
             if (isSponsor){
@@ -90,12 +110,20 @@ public class DonateDialogFragment extends DialogFragment {
             viewTitleBackground.setBackgroundColor(bgColor);
             twTitle.setTextColor(Theme.Utils.textColorFor(bgColor));
             iwTitle.setColorFilter(Theme.Utils.textColorFor(bgColor));
+
+            donateLittle.setEnabled(!billing.isSmallPurchased());
+            donateMore.setEnabled(!billing.isBigPurchased());
         }
+    }
+
+    public void updatePrizes(){
+        donateLittle.setText(String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()));
+        donateMore.setText(String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()));
     }
 
     @Override
     public void onDestroy() {
-        billing.removeOnIsSponsorChangeListener(onSponsorChangeListener);
+        billing.removeOnPurchaseChangeListener(onSponsorChangeListener);
         super.onDestroy();
     }
 }

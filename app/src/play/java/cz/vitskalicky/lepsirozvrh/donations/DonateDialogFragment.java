@@ -72,7 +72,7 @@ public class DonateDialogFragment extends DialogFragment {
         donateMore.setOnClickListener(v -> billing.buyBig(getActivity()));
 
         //DEBUG
-        twTitle.setOnClickListener(v -> {
+        /*twTitle.setOnClickListener(v -> {
             Purchase.PurchasesResult result = billing.getBillingClient().queryPurchases(BillingClient.SkuType.INAPP);
             Toast.makeText(getContext(), "# of purchases: " + result.getPurchasesList().size(), Toast.LENGTH_LONG).show();
             if (result.getPurchasesList().size() > 0){
@@ -82,7 +82,7 @@ public class DonateDialogFragment extends DialogFragment {
                                 .build();
                 billing.getBillingClient().consumeAsync(consumeParams, (billingResult1, s) -> {});
             }
-        });
+        });*/
 
         return new AlertDialog.Builder(getActivity()).setTitle(null)
                 .setPositiveButton(R.string.close, (dialogInterface, i) -> {})

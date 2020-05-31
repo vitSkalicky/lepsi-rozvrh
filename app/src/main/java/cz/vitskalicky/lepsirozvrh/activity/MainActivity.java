@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity {
         });
 
         //DEBUG
-        ibSettings.setOnLongClickListener(v -> {
+        /*ibSettings.setOnLongClickListener(v -> {
             new Donations(context, this, () -> {}).showDialog();
             return true;
         });/**/

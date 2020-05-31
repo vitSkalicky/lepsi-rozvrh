@@ -26,8 +26,8 @@ import cz.vitskalicky.lepsirozvrh.Utils;
 
 public class Billing implements PurchasesUpdatedListener {
 
-    public static final String SKU_SMALL_DONATION = "android.test.purchased";
-    public static final String SKU_BIG_DONATION = "android.test.canceled";
+    public static final String SKU_SMALL_DONATION = "small_donation";
+    public static final String SKU_BIG_DONATION = "big_donation";
 
     private SkuDetails smallDetails;
     private SkuDetails bigDetails;

@@ -5,29 +5,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
@@ -35,9 +23,9 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.LicencesActivity;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
-import io.sentry.Sentry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,9 +37,18 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
 
     private Utils.Listener shownThemeSettingsListener = () -> {};
 
+    private Donations donations;
+
+    private boolean supportingEnabled = false;
+    private boolean isSponsor = false;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+    }
+
+    public void init(Donations donations){
+        this.donations = donations;
     }
 
     @Override
@@ -65,6 +62,16 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
 
         findPreference(getString(R.string.PREFS_APP_THEME_SCREEN)).setOnPreferenceClickListener(preference -> {
             shownThemeSettingsListener.method();
+            return true;
+        });
+
+        findPreference(getString(R.string.PREFS_DONATE)).setOnPreferenceClickListener(preference -> {
+            donations.showDialog();
+            return true;
+        });
+        findPreference(getString(R.string.PREFS_RESTORE_PURCHASES)).setOnPreferenceClickListener(preference -> {
+            donations.restorePurchases();
+            Snackbar.make(getView(),R.string.purchases_restored, BaseTransientBottomBar.LENGTH_SHORT).show();
             return true;
         });
 
@@ -157,4 +164,32 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     }
     public void setShownThemeSettingsListener(Utils.Listener listener){this.shownThemeSettingsListener = listener; }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setSponsor(isSponsor);
+        setSupportingEnabled(supportingEnabled);
+    }
+
+    public void setSupportingEnabled(boolean supportingEnabled) {
+        this.supportingEnabled = supportingEnabled;
+        if (isResumed()){
+            findPreference(getString(R.string.PREFS_DONATE)).setVisible(supportingEnabled);
+            findPreference(getString(R.string.PREFS_RESTORE_PURCHASES)).setVisible(supportingEnabled);
+        }
+    }
+
+    public void setSponsor(boolean sponsor) {
+        this.isSponsor = sponsor;
+        if (isResumed()){
+            Preference donatePref = findPreference(getString(R.string.PREFS_DONATE));
+            if (sponsor) {
+                donatePref.setTitle(R.string.supporting_this_app);
+                donatePref.setSummary(R.string.supporting_this_app_desc);
+            }else{
+                donatePref.setTitle(R.string.support_this_app);
+                donatePref.setSummary(R.string.support_this_app_desc);
+            }
+        }
+    }
 }

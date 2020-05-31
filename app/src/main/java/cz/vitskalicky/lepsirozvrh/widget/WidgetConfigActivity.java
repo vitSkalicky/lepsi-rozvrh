@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 
 /**
  * A base class for Widget configuration activities taking care of saving the data, OK, button and spinner.
@@ -19,6 +21,7 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
 
     protected WidgetThemeFragment widgetThemeFragment;
     protected Button okButton;
+    protected Donations donations;
 
     int widgetID = 0;
     boolean isWidgetIDSet = false;
@@ -29,12 +32,21 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
 
         createContentView();
 
+        donations = new Donations(this, this, () -> {
+            //on sponsor change
+            if (widgetThemeFragment != null){
+                widgetThemeFragment.updateSponsor();
+            }
+        });
+
         if (widgetThemeFragment == null) {
             widgetThemeFragment = (WidgetThemeFragment) getSupportFragmentManager().findFragmentById(R.id.widgetThemeFragment);
             if (widgetThemeFragment == null) {
                 throw new RuntimeException("Layout must contain a WidgetThemeFragment with id \"widgetThemeFragment\" or the protected field \"widgetThemeFragment\" must be set in \"createContentView()\"");
             }
         }
+        widgetThemeFragment.init(donations);
+
         if (okButton == null) {
             okButton = findViewById(R.id.buttonOK);
             if (okButton == null) {
@@ -80,5 +92,11 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
             setResult(RESULT_CANCELED, resultValue);
         }
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        donations.release();
     }
 }

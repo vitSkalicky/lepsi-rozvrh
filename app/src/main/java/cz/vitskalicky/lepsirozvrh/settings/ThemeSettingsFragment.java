@@ -18,6 +18,7 @@ import com.jaredrummler.cyanea.Cyanea;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import io.sentry.Sentry;
@@ -48,7 +49,9 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     private int detailLevel;
     private Cyanea cyanea;
     private Theme theme;
+    private Donations donations;
 
+    private Preference donatePref;
     private Preference exportPref;
     private Preference importPref;
 
@@ -83,6 +86,11 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     private Utils.Listener importListener = () -> {
     };
 
+    public void init(Donations donations){
+        this.donations = donations;
+        updateDonationEnability();
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.theme_preferences, rootKey);
@@ -116,6 +124,10 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                         theme.setThemeData(DefaultThemes.getDarkTheme());
                         break;
                     case 3:
+                        if (!donations.isSponsor()){
+                            donations.showDialog();
+                            return false;
+                        }
                         theme.setThemeData(DefaultThemes.getBlackTheme());
                         break;
                     default:
@@ -127,6 +139,9 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
             } else {
                 if (detailLevel == 0) {
                     setDetailLevel(2);
+                }
+                if (!donations.isSponsor()) {
+                    donations.showDialog();
                 }
             }
             if (value > 0){
@@ -142,6 +157,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                         ? themePref.getEntries()[index]
                         : null);
 
+        donatePref = findPreference(getString(R.string.PREFS_DONATE));
         exportPref = findPreference(getString(R.string.PREFS_EXPORT_THEME));
         importPref = findPreference(getString(R.string.PREFS_IMPORT_THEME));
 
@@ -174,6 +190,10 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         more = findPreference("p-more");
         less = findPreference("p-less");
 
+        donatePref.setOnPreferenceClickListener(preference -> {
+            donations.showDialog();
+            return true;
+        });
         exportPref.setOnPreferenceClickListener(preference -> {
             Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Exporting theme.").build());
             exportListener.method();
@@ -303,6 +323,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         if (detailLevel < 1) {
             exportPref.setVisible(false);
             importPref.setVisible(false);
+            donatePref.setVisible(false);
             customBasics.setVisible(false);
         } else {
             exportPref.setVisible(true);
@@ -403,6 +424,43 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         if (oldDetaillevel > detailLevel) {
             theme.regenerateColors(detailLevel);
             updateNumberPreferences();
+        }
+        updateDonationEnability();
+    }
+
+    public void updateDonationEnability(){
+        if (donations != null && exportPref != null){
+            if (!donations.isSponsor()){
+                if (detailLevel > 0){
+                    donatePref.setVisible(true);
+                }
+                exportPref.setEnabled(false);
+                importPref.setEnabled(false);
+                customBasics.setEnabled(false);
+                cellsFill.setEnabled(false);
+                other.setEnabled(false);
+                ctgrHeader.setEnabled(false);
+                ctgrNormal.setEnabled(false);
+                ctgrChange.setEnabled(false);
+                ctgrNoSchool.setEnabled(false);
+                ctgrEmpty.setEnabled(false);
+                less.setEnabled(false);
+                more.setEnabled(false);
+            }else {
+                donatePref.setVisible(false);
+                exportPref.setEnabled(true);
+                importPref.setEnabled(true);
+                customBasics.setEnabled(true);
+                cellsFill.setEnabled(true);
+                other.setEnabled(true);
+                ctgrHeader.setEnabled(true);
+                ctgrNormal.setEnabled(true);
+                ctgrChange.setEnabled(true);
+                ctgrNoSchool.setEnabled(true);
+                ctgrEmpty.setEnabled(true);
+                less.setEnabled(true);
+                more.setEnabled(true);
+            }
         }
     }
 

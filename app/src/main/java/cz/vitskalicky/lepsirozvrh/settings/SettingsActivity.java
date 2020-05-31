@@ -6,17 +6,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import com.jaredrummler.cyanea.Cyanea;
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.BaseActivity;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
-import cz.vitskalicky.lepsirozvrh.theme.Theme;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 
 public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity {
 
@@ -26,6 +26,8 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
     ExportThemeFragment exportThemeFragment;
     ImportThemeFragment importThemeFragment;
     View root;
+
+    Donations donations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
         root = findViewById(R.id.root);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        donations = new Donations(this,this, this::sponsorChanged);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -62,11 +66,14 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                     .replace(R.id.frame_layout, settingsFragment, "settingsFragment")
                     .commit();
         }
+        settingsFragment.setSupportingEnabled(donations.isEnabled());
+        settingsFragment.setSponsor(donations.isSponsor());
     }
 
 
     private void setupRootListeners() {
         if (settingsFragment != null) {
+            settingsFragment.init(donations);
             settingsFragment.setLogoutListener(() -> {
                 Login.logout(this);
                 finish();
@@ -105,6 +112,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                         .addToBackStack(null)
                         .commit();
             });
+            themeSettingsFragment.init(donations);
         }
     }
 
@@ -138,5 +146,20 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
             getSupportFragmentManager().putFragment(outState, "exportThemeFragment", exportThemeFragment);
         if (importThemeFragment != null && getSupportFragmentManager().findFragmentByTag("importThemeFragment") != null)
             getSupportFragmentManager().putFragment(outState, "importThemeFragment", importThemeFragment);
+    }
+
+    public void sponsorChanged() {
+        if (settingsFragment != null){
+            settingsFragment.setSponsor(donations.isSponsor());
+        }
+        if (themeSettingsFragment != null){
+            themeSettingsFragment.updateDonationEnability();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        donations.release();
     }
 }

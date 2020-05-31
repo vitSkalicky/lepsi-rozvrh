@@ -53,8 +53,12 @@
     <string name="switch_to_next_week">Přepnout na další týden</string>
     <string name="center_to_current_lesson">Skočit na aktuální hodinu</string>
     <string name="notification">Stálé upozornění</string>
-    <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině.</string>
+    <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině</string>
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
+    <string name="support_this_app">Podpořit vývojáře</string>
+    <string name="support_this_app_desc">Přispějte na vývoj této aplikace</string>
+    <string name="supporting_this_app">Již tuto aplikace podporujete</string>
+    <string name="supporting_this_app_desc">Děkuji</string>
     <string name="dont_show_again">Znovu nezobrazovat</string>
     <string name="something_went_wrong">Něco se nepovedlo :(</string>
     <string name="report">Nahlásit</string>
@@ -162,7 +166,7 @@
     <string name="send_crash_desc">Automaticky odesílat zprávy o chybách vývojářům, aby mohly být opraveny</string>
     <string name="privacy_policy">Zásady ochrany soukromí</string>
     <string name="oss_licences">Open source linence</string>
-    <string name="oss_licences_desc">Zobrzit licence svobodných a open source knihoven</string>
+    <string name="oss_licences_desc">Zobrazit licence svobodných a open source knihoven</string>
     <string name="app_version">Verze aplikace</string>
     <string name="email_message">Zde jsou podrobnosti o verzi aplikace. Prosím, neodstraňujte je - jsou nezbytné k řešení většiny chyb a problémů.</string>
     <string name="send_email">Odeslat email…</string>
@@ -184,6 +188,25 @@
     <string name="widget_transparency">Průhlednost</string>
     <string name="widget_autotext">Automatiká barva textu</string>
     <string name="widget_text_color">Barva textu</string>
+
+    <string name="donate_title">Staňte se sponzorem</string>
+    <string name="donate_text1">Podpořte vývoj aplikace a získáte bonusové funkce:</string>
+    <string name="donate_bonus_features">- Upravitelná barva a průhlednost widgetu\n- Černý motiv\n- Vlastní motivy\n- Jakýkoliv motiv z internetu\n- Možnost sdílet Váš úžasný motiv\n</string>
+    <string name="donate_a_little">Přispět trochu (%s)</string>
+    <string name="donate_a_little_no_price">Přispět trochu</string>
+    <string name="donate_more">Přispět více (%s)</string>
+    <string name="donate_more_no_price">Přispět více</string>
+    <string name="donate_text2">Všechny bonusové funkce samozřejmě dostanete i za malý příspěvek.</string>
+    <string name="donate_title_ok">Sponzorujete aplikaci</string>
+    <string name="donate_text1_ok">Podporujete vývoj aplikace a máte odemčeny všechny bonusové funkce:</string>
+    <string name="use_promo_code">Použít kód</string>
+    <string name="restore_purchases">Zkontrolovat platby</string>
+    <string name="restore_purchases_desc">Zkontroluje platby na Vašem Google účtě. Použijte v případě, že jste aplikaci již podpořili, ale stále nemáte odemčené bonusové funkce</string>
+    <string name="purchases_restored">Zkontrolováno</string>
+
+    <string name="purchase_cancelled">Uživatel nákup zrušil</string>
+    <string name="purchase_error">Nákup selhal (%s)</string>
+    <string name="error_code">chyba %s</string>
 
     <string name="app_updated">Aplikace byla aktualizována</string>
     <string name="whats_new">Co je nového</string>

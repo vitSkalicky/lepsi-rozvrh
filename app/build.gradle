@@ -47,10 +47,19 @@ android {
             dimension "version"
         }
         /**
-         * For official releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
+         * For official fdroid releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
          * Crashes from your testing are not welcome there.
          */
-        official {
+        fdroid {
+            dimension "version"
+            buildConfigField "Boolean", "ALLOW_SENTRY", "true"
+        }
+        /**
+         *  For Google play releases containing google in-app purchases only.
+         *  Allows crash reports using Sentry, which is managed by Vít Skalický.
+         *  Crashes from your testing are not welcome there.
+         */
+        play{
             dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }
@@ -106,4 +115,7 @@ dependencies {
     def paging_version = "2.1.2"
 
     implementation "androidx.paging:paging-runtime:$paging_version"
+
+    playImplementation 'com.android.billingclient:billing:2.2.1'
+
 }

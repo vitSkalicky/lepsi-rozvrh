@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
@@ -17,7 +19,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.Cyanea;
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
@@ -25,6 +26,7 @@ import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
@@ -152,9 +154,10 @@ public class MainActivity extends BaseActivity {
                 progressBar.setVisibility(View.VISIBLE);
             }
         });
-/*
+
+        //DEBUG
         ibSettings.setOnLongClickListener(v -> {
-            SharedPrefs.remove(this, getString(R.string.PREFS_THEME_cHBg));
+            new Donations(context, this, () -> {}).showDialog();
             return true;
         });/**/
 
@@ -195,8 +198,8 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        if (SharedPrefs.getBooleanPreference(context, R.string.THEME_CHANGED, false)){
-            SharedPrefs.setBooleanPreference(context, R.string.THEME_CHANGED,false);
+        if (SharedPrefs.getBooleanPreference(context, R.string.THEME_CHANGED, false)) {
+            SharedPrefs.setBooleanPreference(context, R.string.THEME_CHANGED, false);
             recreate();
         }
 

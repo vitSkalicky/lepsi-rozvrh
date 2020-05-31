@@ -193,7 +193,9 @@
     <string name="donate_text1">Support app development and get some bonus features:</string>
     <string name="donate_bonus_features">- Custom widget colour and transparency\n- Black theme\n- Custom themes\n- Any theme you find on the internet\n- You can share your amazing theme on the internet</string>
     <string name="donate_a_little">Donate a little (%s)</string>
+    <string name="donate_a_little_no_price">Donate a little</string>
     <string name="donate_more">Donate more (%s)</string>
+    <string name="donate_more_no_price">Donate more</string>
     <string name="donate_text2">Naturally, you get all the bonus features even for a small donation.</string>
     <string name="donate_title_ok">You are a sponsor!</string>
     <string name="donate_text1_ok">You have supported the app development and you have unlocked all the bonus features:</string>

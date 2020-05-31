@@ -117,8 +117,8 @@ public class DonateDialogFragment extends DialogFragment {
     }
 
     public void updatePrizes(){
-        donateLittle.setText(String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()));
-        donateMore.setText(String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()));
+        donateLittle.setText(billing.isInitialized() ? String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()) : getText(R.string.donate_a_little_no_price));
+        donateMore.setText(billing.isInitialized() ? String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()) : getText(R.string.donate_more_no_price));
     }
 
     @Override

@@ -42,6 +42,6 @@ Lepší rozvrh je dostupný z několika zdrojů:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%202.png" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%203.png" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" %}
-{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" width_frac="2" %}
+{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" width_frac="2" %}
 </p>

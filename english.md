@@ -40,6 +40,6 @@ Better schedule can be downloaded from several sources:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" lang="en" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%202.png" lang="en" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%203.png" lang="en" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" lang="en" %}
-{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" lang="en" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" lang="en" width_frac="2" %}
+{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" lang="en" width_frac="2" %}
 </p>

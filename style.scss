@@ -28,6 +28,7 @@ body {
   max-width: 740px;
   padding: 0 10px;
   width: 100%;
+  flex-grow: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -120,16 +121,6 @@ img {
   color: $gray;
 }
 
-// Specify the color of the selection
-::-moz-selection {
-  color: $black;
-  background: $lightGray;
-}
-::selection {
-  color: $black;
-  background: $lightGray;
-}
-
 // Nicolas Gallagher's micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .clearfix:before,
@@ -151,7 +142,7 @@ img {
 //
 
 .wrapper-masthead {
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 .masthead {
@@ -307,6 +298,80 @@ footer {
 
 
 // /gallery
+
+// dark theme
+@media (prefers-color-scheme: dark) {
+  body {
+    background: $darkerGray;
+    color: $lightGray;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $white;
+  }
+  
+  h4 {
+    color: $lightGray;
+  }
+  
+  a {
+    color: $blue;
+    &:hover, &:active {
+      color: $blue;
+    }
+  }
+  
+  .date {
+    color: $gray;
+  }
+  
+  .masthead {
+    border-bottom: 1px solid $darkGray;
+  }
+  
+  .site-name {
+    color: $lightGray;
+  }
+  
+  .site-description {
+    color: $lightGray;
+  }
+  
+  nav {
+    a {
+      color: $lightGray;
+      @include mobile {
+        color: $blue;
+      }
+    }
+  }
+  
+  .posts > .post {
+    border-bottom: 1px solid $lightGray;
+  }
+  
+  .post {
+    blockquote {
+      border-left: 2px solid $lightGray;
+      color: $lightGray;
+    }
+  }
+  
+  .wrapper-footer {
+    margin-top: 50px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    background-color: $darkGray;
+  }
+  
+}
+// /dark theme
+
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start

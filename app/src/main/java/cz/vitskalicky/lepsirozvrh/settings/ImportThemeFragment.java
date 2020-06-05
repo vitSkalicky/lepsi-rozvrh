@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.settings;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -100,7 +101,13 @@ public class ImportThemeFragment extends Fragment {
     private void doImport(View v){
         AsyncTask.execute(() -> {
             ThemeData td = null;
-            String input = editTextData.getText().toString().trim();
+            String input = editTextData.getText().toString().replaceAll("\\s",""); //remove all whitespaces
+            if (input.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv-info")){
+                Uri uri = Uri.parse(input);
+                input = uri.getQueryParameter("data");
+            } else if (input.startsWith("lepsi-rozvrh:motiv/")){
+                input = input.substring(19);
+            }
             try {
                 td = ThemeData.parseZipped(input);
             } catch (IOException e) {
@@ -112,7 +119,23 @@ public class ImportThemeFragment extends Fragment {
                     input = input.replace('+','-').replace('/','_');
                     try {
                         td = ThemeData.parseZipped(input);
-                    } catch (IOException ignored) {
+                    } catch (IOException exc) {
+                        //try fixing an url (find the ...data=(data)]
+                        try{
+                            int index = input.indexOf('=');
+                            if (index > -1){
+                                td = ThemeData.parseZipped(input.substring(index + 1));
+                            }
+                        }catch (IOException exce) {
+                            //try fixing an url in another way (find the ...motiv/(data)]
+                            try{
+                                int index = input.indexOf("motiv/");
+                                if (index > -1){
+                                    td = ThemeData.parseZipped(input.substring(index + 6));
+                                }
+                            }catch (IOException ignored) {
+                            }
+                        }
                     }
                 }
             }
@@ -121,6 +144,7 @@ public class ImportThemeFragment extends Fragment {
                 if (ftd != null) {
                     Theme.of(getContext()).setThemeData(ftd);
                     SharedPrefs.setIntPreference(getContext(), R.string.PREFS_DETAIL_LEVEL, 3);
+                    SharedPrefs.setStringPreference(getContext(),R.string.PREFS_APP_THEME, "4");
 
                     Activity activity = getActivity();
                     if (activity instanceof Utils.RecreateWithAnimationActivity) {

@@ -88,7 +88,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
             String dataString = intent.getDataString();
             if (dataString != null){
                 String data = "";
-                if (dataString.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv")){
+                if (dataString.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv-info")){
                     Uri uri = Uri.parse(dataString);
                     data = uri.getQueryParameter("data");
                 } else if (dataString.startsWith("lepsi-rozvrh:motiv/")){

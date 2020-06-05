@@ -93,7 +93,7 @@ public class ExportThemeFragment extends Fragment {
             if (showRaw){
                 data = td.toJsonString();
             }else {
-                data = td.toZippedString();
+                data = "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=" + td.toZippedString();
             }
             new Handler(Looper.getMainLooper()).post(() -> {
                 textViewData.setText(data);

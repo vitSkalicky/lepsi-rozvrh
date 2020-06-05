@@ -71,7 +71,7 @@
     <string name="app_theme">Motiv aplikace</string>
     <string name="export_theme">Exportovat motiv</string>
     <string name="export_theme_desc">Vytvoří speciální text, který obasuje aktuální motiv</string>
-    <string name="export_theme_detail">Text níže obsahuje všechna data aktuáního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
+    <string name="export_theme_detail">Text níže obsahuje všechna data aktuálního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
     <string name="import_theme">Importovat motiv</string>
     <string name="import_theme_desc">Naimportuje motiv ze speciálního textu vytvořeného tlačítkem výše</string>
     <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na <a href="https://vitskalicky.github.io/lepsi-rozvrh/motivy">https://vitskalicky.github.io/lepsi-rozvrh/motivy</a></string>
@@ -80,7 +80,7 @@
     <string name="paste_from_clipboard">Vložit ze schránky</string>
     <string name="share">Sdílet</string>
     <string name="share_subject">Můj motiv Lepšího rozvrhu</string>
-    <string name="share_instructions">Pro použití motivu vložte následující text do \"Lepší rozvrh &gt; Nastavení &gt; Motiv &gt; Importovat motiv\" a ujistěte se, že jste ho zkopírovali přesně.</string>
+    <string name="share_instructions">Koukej na můj úžasný motiv pro Lepší rozvrh! Pro jeho použití ťukni na odkaz níže nebo ho celý zkopíruj do \"Lepší rozvrh &gt; Nastavení &gt; Motiv &gt; Importovat motiv\". (Ujisti se, že jsi ho zkopíroval celý)</string>
     <string name="share_via">Sdílet…</string>
     <string name="import_button">Importovat</string>
     <string name="import_clear">Vymazat</string>

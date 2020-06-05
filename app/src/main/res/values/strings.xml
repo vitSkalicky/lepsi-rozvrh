@@ -80,7 +80,7 @@
     <string name="paste_from_clipboard">Paste from clipboard</string>
     <string name="share">Share</string>
     <string name="share_subject">My Better Schedule theme</string>
-    <string name="share_instructions">Paste the following block of text (make sure you paste it all) into \'Better Schedule &gt; Settings &gt; Theme settings &gt; Import theme\' to apply this theme.</string>
+    <string name="share_instructions">I made this amazing theme for Better Schedule! Use the link below or paste it (make sure you paste the whole link) into \'Better Schedule &gt; Settings &gt; Theme settings &gt; Import theme\' to apply this theme.</string>
     <string name="share_via">Share…</string>
     <string name="import_button">Import</string>
     <string name="import_clear">Clear</string>

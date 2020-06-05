@@ -4,6 +4,7 @@
 */
 package cz.vitskalicky.lepsirozvrh.items;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.joda.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import cz.vitskalicky.lepsirozvrh.DebugUtils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 
 @Root(name = "rozvrh", strict = false)
@@ -85,10 +87,10 @@ public class Rozvrh {
     }
 
     /**
-     * @see #getHighlightLesson(boolean)
+     * @see #getHighlightLesson(boolean, Context)
      */
-    public GetNLreturnValues getHighlightLesson() {
-        return getHighlightLesson(false);
+    public GetNLreturnValues getHighlightLesson(Context context) {
+        return getHighlightLesson(false, context);
     }
 
     /**
@@ -96,9 +98,14 @@ public class Rozvrh {
      * if the school is over or this is not the current week.
      * @param forNotification If true, the first lesson won't be highlighted up until one hour before its start
      */
-    public GetNLreturnValues getHighlightLesson(boolean forNotification) {
+    public GetNLreturnValues getHighlightLesson(boolean forNotification, Context context) {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
+
+        if (DebugUtils.getInstance(context).isDemoMode()){
+            nowDate = DebugUtils.getInstance(context).getDemoDate();
+            nowTime = DebugUtils.getInstance(context).getDemoTime();
+        }
 
         RozvrhDen dneska = null;
         int denIndex = 0;

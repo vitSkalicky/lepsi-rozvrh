@@ -87,7 +87,7 @@ public class RozvrhCache {
 
                 Serializer serializer = new Persister();
                 root = serializer.read(RozvrhRoot.class, inputStream);
-
+                root.checkDemoMode(context);
 
             } catch (FileNotFoundException e) {
                 if (sureMonday != null)

@@ -23,6 +23,7 @@ import com.jaredrummler.cyanea.utils.ColorUtils;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
+import cz.vitskalicky.lepsirozvrh.DebugUtils;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
@@ -156,9 +157,14 @@ public class MainActivity extends BaseActivity {
         });
 
         //DEBUG
-        /*ibSettings.setOnLongClickListener(v -> {
-            new Donations(context, this, () -> {}).showDialog();
-            return true;
+        ibSettings.setOnLongClickListener(v -> {
+            if (BuildConfig.DEBUG){
+                DebugUtils.getInstance(context).setDemoMode(!DebugUtils.getInstance(context).isDemoMode());
+                Toast.makeText(context, "Demo mode changed",Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                return false;
+            }
         });/**/
 
         rtFragment.createViews();

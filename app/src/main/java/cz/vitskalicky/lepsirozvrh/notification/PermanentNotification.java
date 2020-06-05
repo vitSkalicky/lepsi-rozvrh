@@ -62,7 +62,7 @@ public class PermanentNotification {
             return;
         }
         if (rozvrh != null){
-            Rozvrh.GetNLreturnValues nextLessonInfo = rozvrh.getHighlightLesson(true);
+            Rozvrh.GetNLreturnValues nextLessonInfo = rozvrh.getHighlightLesson(true, context);
             int offset = application.getNotificationState().getOffset();
             RozvrhHodina rozvrhHodina = nextLessonInfo == null ? null : nextLessonInfo.rozvrhHodina;
             if (rozvrhHodina == null){

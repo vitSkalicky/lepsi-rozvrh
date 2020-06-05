@@ -136,6 +136,7 @@ public class RozvrhRequest extends Request<RozvrhRequest.Result> {
             } else {
                 Serializer serializer = new Persister();
                 RozvrhRoot rozvrhRoot = serializer.read(RozvrhRoot.class, responseString);
+                if (rozvrhRoot != null) rozvrhRoot.checkDemoMode(context);
                 if (rozvrhRoot == null || rozvrhRoot.getRozvrh() == null){
                     return Response.success(new Result(null,responseString,UNEXPECTED_RESPONSE), HttpHeaderParser.parseCacheHeaders(response));
                 }else {

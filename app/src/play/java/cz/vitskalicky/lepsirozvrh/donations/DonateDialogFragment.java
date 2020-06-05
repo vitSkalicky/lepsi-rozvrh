@@ -82,7 +82,7 @@ public class DonateDialogFragment extends DialogFragment {
                                 .build();
                 billing.getBillingClient().consumeAsync(consumeParams, (billingResult1, s) -> {});
             }
-        });*/
+        });/**/
 
         return new AlertDialog.Builder(getActivity()).setTitle(null)
                 .setPositiveButton(R.string.close, (dialogInterface, i) -> {})

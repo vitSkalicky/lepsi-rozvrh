@@ -1,6 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.settings;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +21,14 @@ import cz.vitskalicky.lepsirozvrh.donations.Donations;
 
 public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity {
 
-    Toolbar toolbar;
-    SettingsFragment settingsFragment;
-    ThemeSettingsFragment themeSettingsFragment;
-    ExportThemeFragment exportThemeFragment;
-    ImportThemeFragment importThemeFragment;
-    View root;
+    private Toolbar toolbar;
+    private SettingsFragment settingsFragment;
+    private ThemeSettingsFragment themeSettingsFragment;
+    private ExportThemeFragment exportThemeFragment;
+    private ImportThemeFragment importThemeFragment;
+    private View root;
 
-    Donations donations;
+    private Donations donations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,9 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
             importThemeFragment = (ImportThemeFragment) fm.getFragment(savedInstanceState, "importThemeFragment");
             setupRootListeners();
             setupThemeListeners();
+            if (importThemeFragment != null){
+                importThemeFragment.init(donations);
+            }
         }
 
         if (settingsFragment == null) {
@@ -68,8 +72,81 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
         }
         settingsFragment.setSupportingEnabled(donations.isEnabled());
         settingsFragment.setSponsor(donations.isSponsor());
+
+        handleIntent(getIntent());
+
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent){
+        if (!intent.getBooleanExtra("ignore",false)){
+            String dataString = intent.getDataString();
+            if (dataString != null){
+                String data = "";
+                if (dataString.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv")){
+                    Uri uri = Uri.parse(dataString);
+                    data = uri.getQueryParameter("data");
+                } else if (dataString.startsWith("lepsi-rozvrh:motiv/")){
+                    data = dataString.substring(19);
+                }
+                clearBackstack();
+                showThemeSettings();
+                showImportFragment();
+                if (!donations.isSponsor()){
+                    donations.showDialog();
+                }
+                importThemeFragment.setString(data);
+                intent.putExtra("ignore",true);
+            }
+        }
+    }
+
+    public void clearBackstack() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                    0);
+            getSupportFragmentManager().popBackStack(entry.getId(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        }
+    }
+
+    private void showThemeSettings(){
+        if (themeSettingsFragment == null) {
+            themeSettingsFragment = new ThemeSettingsFragment();
+            setupThemeListeners();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout, themeSettingsFragment, "themeSettingsFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showImportFragment(){
+        if (importThemeFragment == null) {
+            importThemeFragment = new ImportThemeFragment();
+            importThemeFragment.init(donations);
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout, importThemeFragment, "importThemeFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showExportFragment(){
+        if (exportThemeFragment == null) {
+            exportThemeFragment = new ExportThemeFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout, exportThemeFragment, "exportThemeFragment")
+                .addToBackStack(null)
+                .commit();
+    }
 
     private void setupRootListeners() {
         if (settingsFragment != null) {
@@ -79,39 +156,14 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
                 finish();
                 return;
             });
-            settingsFragment.setShownThemeSettingsListener(() -> {
-                if (themeSettingsFragment == null) {
-                    themeSettingsFragment = new ThemeSettingsFragment();
-                    setupThemeListeners();
-                }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, themeSettingsFragment, "themeSettingsFragment")
-                        .addToBackStack(null)
-                        .commit();
-            });
+            settingsFragment.setShownThemeSettingsListener(this::showThemeSettings);
         }
     }
 
     private void setupThemeListeners() {
         if (themeSettingsFragment != null) {
-            themeSettingsFragment.setExportListener(() -> {
-                if (exportThemeFragment == null) {
-                    exportThemeFragment = new ExportThemeFragment();
-                }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, exportThemeFragment, "exportThemeFragment")
-                        .addToBackStack(null)
-                        .commit();
-            });
-            themeSettingsFragment.setImportListener(() -> {
-                if (importThemeFragment == null) {
-                    importThemeFragment = new ImportThemeFragment();
-                }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, importThemeFragment, "importThemeFragment")
-                        .addToBackStack(null)
-                        .commit();
-            });
+            themeSettingsFragment.setExportListener(this::showExportFragment);
+            themeSettingsFragment.setImportListener(this::showImportFragment);
             themeSettingsFragment.init(donations);
         }
     }
@@ -154,6 +206,9 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
         }
         if (themeSettingsFragment != null){
             themeSettingsFragment.updateDonationEnability();
+        }
+        if (importThemeFragment != null){
+            importThemeFragment.updateDonationsStatus();
         }
     }
 

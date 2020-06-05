@@ -275,6 +275,14 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                 return false;
             }
         });
+
+        prefcEmptyBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcABg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcHBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcChngBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcHeaderBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcInfolineText.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+
         more.setOnPreferenceClickListener(preference -> {
             setDetailLevel(detailLevel + 1);
             return true;

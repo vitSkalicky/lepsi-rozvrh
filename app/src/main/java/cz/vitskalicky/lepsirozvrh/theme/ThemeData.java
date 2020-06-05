@@ -336,7 +336,7 @@ public class ThemeData {
      * @throws IOException if it fails
      */
     public void toZippedString(@Nullable OutputStream os) throws IOException{
-        Base64OutputStream bos = new Base64OutputStream(os, Base64.NO_WRAP);
+        Base64OutputStream bos = new Base64OutputStream(os, Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE);
         GZIPOutputStream gzos = new GZIPOutputStream(bos);
         toJsonString(gzos);
     }
@@ -393,7 +393,7 @@ public class ThemeData {
      * @return Deserialized ThemeData
      */
     public static ThemeData parseZipped(InputStream is) throws IOException{
-        Base64InputStream bis = new Base64InputStream(is, Base64.NO_WRAP);
+        Base64InputStream bis = new Base64InputStream(is, Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE);
         GZIPInputStream gzis = new GZIPInputStream(bis);
         return parseJson(gzis);
     }
@@ -408,4 +408,5 @@ public class ThemeData {
         ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
         return parseZipped(bais);
     }
+
 }

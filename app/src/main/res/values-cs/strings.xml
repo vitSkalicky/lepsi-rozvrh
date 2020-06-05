@@ -14,7 +14,7 @@
     <string name="username">Přihlašovací jméno</string>
     <string name="password">Heslo</string>
     <string name="bakalari_server_adress">Adresa Vašeho serveru Bakaláři</string>
-    <string name="choose_school">Vybrat školu</string>
+    <string name="choose_school">Seznam škol…</string>
     <string name="login_button">Přihlásit se</string>
     <string name="login_message">Přihlaste se do systému Bakláři</string>
     <string name="invalid_username">Neplatné uživatelské jméno</string>
@@ -74,7 +74,7 @@
     <string name="export_theme_detail">Text níže obsahuje všechna data aktuáního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
     <string name="import_theme">Importovat motiv</string>
     <string name="import_theme_desc">Naimportuje motiv ze speciálního textu vytvořeného tlačítkem výše</string>
-    <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na (tady má být odkaz)</string>
+    <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na <a href="https://vitskalicky.github.io/lepsi-rozvrh/motivy">https://vitskalicky.github.io/lepsi-rozvrh/motivy</a></string>
     <string name="import_invalid">Neplatná data. Ujistěte se, že nevytratily žádné znaky na začátku ani na konci.</string>
     <string name="copy_to_clipboard">Kopírovat</string>
     <string name="paste_from_clipboard">Vložit ze schránky</string>

@@ -75,6 +75,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
     private ColorPreferenceCompat prefcHBg;
     private ColorPreferenceCompat prefcChngBg;
     private ColorPreferenceCompat prefcHeaderBg;
+    private ColorPreferenceCompat prefcInfolineBg;
     private ColorPreferenceCompat prefcInfolineText;
     private EditTextPreference dpDividerWidth;
     private EditTextPreference dpHighlightWidth;
@@ -180,6 +181,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         prefcChngBg = findPreference(getString(R.string.PREFS_THEME_cChngBg));
         prefcHeaderBg = findPreference(getString(R.string.PREFS_THEME_cHeaderBg));
 
+        prefcInfolineBg = findPreference(getString(R.string.PREFS_THEME_cInfolineBg));
         prefcInfolineText = findPreference(getString(R.string.PREFS_THEME_cInfolineText));
 
         dpDividerWidth = findPreference("etp-dpDividerWidth");
@@ -281,6 +283,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         prefcHBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
         prefcChngBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
         prefcHeaderBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
+        prefcInfolineBg.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
         prefcInfolineText.setOnPreferenceChangeListener((preference, newValue) -> {theme.regenerateColors(detailLevel); return true;});
 
         more.setOnPreferenceClickListener(preference -> {

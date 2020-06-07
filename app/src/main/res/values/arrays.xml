@@ -13,5 +13,25 @@
     <string-array name="widget_style_entries">
         <item>Light</item>
         <item>Dark</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="widget_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="themes_entries">
+        <item>Follow system theme</item>
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Black</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="themes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 </resources>

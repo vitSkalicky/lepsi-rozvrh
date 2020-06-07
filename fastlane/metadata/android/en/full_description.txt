@@ -10,8 +10,5 @@ Main features:
 • Persistent notification — You don't have to open the app to see next lesson any more.
 • Beautiful widget — The next lesson or overview of the entire day always on your home screen.
 • Simple interface — Easy switching between weeks.
+• Themes — light, dark or your very own custom theme.
 • Free and open source software — No ads, no spying, free, forever.
-
-Coming soon:
-• More themes (dark, black & white, ...)
-• Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues

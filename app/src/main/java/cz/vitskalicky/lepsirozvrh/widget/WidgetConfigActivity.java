@@ -1,54 +1,58 @@
 package cz.vitskalicky.lepsirozvrh.widget;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.donations.Donations;
 
 /**
  * A base class for Widget configuration activities taking care of saving the data, OK, button and spinner.
- * A subclass should override {@link #setupContentView()} to provide content view and
- * {@link #onStyleSet(int)} to change the appearance of displayed preview.
  */
-public class WidgetConfigActivity extends AppCompatActivity {
+public abstract class WidgetConfigActivity extends AppCompatActivity implements WidgetThemeFragment.CallbackListener {
     private static final String TAG = WidgetConfigActivity.class.getSimpleName();
 
-    Spinner spinner;
-    Button buttonOK;
+    protected WidgetThemeFragment widgetThemeFragment;
+    protected Button okButton;
+    protected Donations donations;
 
     int widgetID = 0;
     boolean isWidgetIDSet = false;
-
-    int style = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupContentView();
+        createContentView();
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setStyle(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+        donations = new Donations(this, this, () -> {
+            //on sponsor change
+            if (widgetThemeFragment != null){
+                widgetThemeFragment.updateSponsor();
             }
         });
+
+        if (widgetThemeFragment == null) {
+            widgetThemeFragment = (WidgetThemeFragment) getSupportFragmentManager().findFragmentById(R.id.widgetThemeFragment);
+            if (widgetThemeFragment == null) {
+                throw new RuntimeException("Layout must contain a WidgetThemeFragment with id \"widgetThemeFragment\" or the protected field \"widgetThemeFragment\" must be set in \"createContentView()\"");
+            }
+        }
+        widgetThemeFragment.init(donations);
+
+        if (okButton == null) {
+            okButton = findViewById(R.id.buttonOK);
+            if (okButton == null) {
+                throw new RuntimeException("Layout must contain a Button with id \"okButton\" or the protected field \"okButton\" must be set in \"createContentView()\"");
+            }
+        }
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -57,43 +61,32 @@ public class WidgetConfigActivity extends AppCompatActivity {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             isWidgetIDSet = true;
+            widgetThemeFragment.setWidgetID(widgetID);
         }
 
-        buttonOK.setOnClickListener(v -> {
-            saveConfig();
+        okButton.setOnClickListener(v -> {
+            widgetThemeFragment.saveConfig();
             if (isWidgetIDSet) {
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
                 setResult(RESULT_OK, resultValue);
                 AppSingleton.getInstance(this).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-                    WidgetProvider.update(widgetID, rozvrhWrapper.getRozvrh() == null ? null : rozvrhWrapper.getRozvrh().getWidgetDiaplayValues(5), this);
+                    WidgetProvider.update(widgetID, rozvrhWrapper.getRozvrh() == null ? null : rozvrhWrapper.getRozvrh().getWidgetDiaplayValues(5, this), this);
                     finish();
                 });
             } else {
                 finish();
             }
-
         });
 
+        widgetThemeFragment.setCallbackListener(this);
     }
 
-    /**
-     * A subclass should override this and set the {@link #spinner} and {@link #buttonOK}.
-     */
-    protected void setupContentView(){
-        //This is just a fail-safe
-        // !! THIS CODE SHOULD NOT BE EXECUTED !!
-        setContentView(R.layout.activity_small_widget_config);
-
-        spinner = findViewById(R.id.spinner);
-        buttonOK = findViewById(R.id.buttonOK);
-
-        Log.e(TAG, "Hey, someone forgot to override WidgetConfig#setupContentView !");
-    }
+    protected abstract void createContentView();
 
     @Override
     public void onBackPressed() {
-        if (isWidgetIDSet){
+        if (isWidgetIDSet) {
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
             setResult(RESULT_CANCELED, resultValue);
@@ -101,45 +94,9 @@ public class WidgetConfigActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     *
-     * @param style 0 = light; 1 = dark
-     */
-    public void setStyle(int style){
-        this.style = style;
-        onStyleSet(style);
-    }
-
-    /**
-     * Override this to change the appearance of preview.
-     */
-    protected void onStyleSet(int style){
-
-    }
-
-    public void saveConfig(){
-        if (isWidgetIDSet){
-            WidgetsSettings.Widget ws = new WidgetsSettings.Widget();
-
-            ws.primaryTextSize = getResources().getDimension(R.dimen.widgetTextPrimary) / getResources().getDisplayMetrics().scaledDensity;
-            ws.secondaryTextSize = getResources().getDimension(R.dimen.widgetTextSecondary) / getResources().getDisplayMetrics().scaledDensity;
-
-            if (style == 0){
-                ws.primaryTextColor = ContextCompat.getColor(this, R.color.widgetLightPrimaryText);
-                ws.secondaryTextColor = ContextCompat.getColor(this, R.color.widgetLightSecondaryText);
-                ws.backgroundColor = ContextCompat.getColor(this, R.color.widgetLightBackground);
-            } else {
-                ws.primaryTextColor = ContextCompat.getColor(this, R.color.widgetDarkPrimaryText);
-                ws.secondaryTextColor = ContextCompat.getColor(this, R.color.widgetDarkSecondaryText);
-                ws.backgroundColor = ContextCompat.getColor(this, R.color.widgetDarkBackground);
-            }
-
-            AppSingleton appSingleton = AppSingleton.getInstance(this);
-
-            appSingleton.getWidgetsSettings().widgetIds.add(widgetID);
-            appSingleton.getWidgetsSettings().widgets.put(widgetID, ws);
-
-            appSingleton.saveWidgetsSettings();
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        donations.release();
     }
 }

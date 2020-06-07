@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:title="@string/theme_general_settings">
+        <ListPreference
+            android:title="@string/app_theme"
+            android:key="@string/PREFS_APP_THEME"
+            android:entries="@array/themes_entries"
+            android:entryValues="@array/themes_values"
+            android:icon="@drawable/ic_palette_black_24dp"/>
+        <Preference android:title="@string/support_this_app"
+            android:key="@string/PREFS_DONATE"
+            android:summary="@string/support_this_app_desc"
+            android:icon="@drawable/ic_attach_money_black_24dp"/>
+        <Preference
+            android:title="@string/export_theme"
+            android:summary="@string/export_theme_desc"
+            android:key="@string/PREFS_EXPORT_THEME"
+            android:icon="@drawable/ic_share_black_24dp"/>
+        <Preference
+            android:title="@string/import_theme"
+            android:summary="@string/import_theme_desc"
+            android:key="@string/PREFS_IMPORT_THEME"
+            android:icon="@drawable/ic_import_black_24dp"/>
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-custom-basic"
+        android:title="@string/theme_custom_settings">
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="cpc-color-primary"
+            android:title="@string/primary_color"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="cpc-color-accent"
+            android:title="@string/accent_color"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="cpc-color-background"
+            android:title="@string/background_color"/>
+
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-cells-fill"
+        android:title="@string/cells_background">
+
+        <!--
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHeaderBg"
+            android:title="@string/type_header"
+            android:summary="@string/type_header_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHBg"
+            android:title="@string/type_normal_lesson"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cChngBg"
+            android:title="@string/type_chage"
+            android:summary="@string/type_chage_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cABg"
+            android:title="@string/type_no_school"
+            android:summary="@string/type_no_school_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cEmptyBg"
+            android:title="@string/type_empty"/>
+        -->
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-normal-lesson"
+        android:title="@string/type_normal_lesson">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHBg"
+            android:title="@string/background_color" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHPrimaryText"
+            android:title="@string/cell_primary_t"
+            android:summary="@string/cell_primary_t_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHSecondaryText"
+            android:title="@string/cell_secondary_t"
+            android:summary="@string/cell_secondary_t_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHRoomText"
+            android:title="@string/cell_room_t"
+            android:summary="@string/cell_room_t_desc"/>
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-change"
+        android:title="@string/type_change"
+        android:summary="@string/type_change_desc">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cChngBg"
+            android:title="@string/background_color" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cChngPrimaryText"
+            android:title="@string/cell_primary_t"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cChngSecondaryText"
+            android:title="@string/cell_secondary_t"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cChngRoomText"
+            android:title="@string/cell_room_t"/>
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-no-school"
+        android:title="@string/type_no_school"
+        android:summary="@string/type_no_school_desc">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cABg"
+            android:title="@string/background_color" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cAPrimaryText"
+            android:title="@string/cell_primary_t"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cASecondaryText"
+            android:title="@string/cell_secondary_t"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cARoomText"
+            android:title="@string/cell_room_t"/>
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-empty"
+        android:title="@string/type_empty">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cEmptyBg"
+            android:title="@string/background_color" />
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-header"
+        android:title="@string/type_header"
+        android:summary="@string/type_header_desc">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHeaderBg"
+            android:title="@string/background_color" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHeaderPrimaryText"
+            android:title="@string/cell_primary_t"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHeaderSecondaryText"
+            android:title="@string/cell_secondary_t"/>
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+
+    <cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory
+        android:key="ctgr-other"
+        android:title="@string/other">
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cDivider"
+            android:title="@string/divider_color"/>
+        <EditTextPreference
+            android:key="etp-dpDividerWidth"
+            android:title="@string/divider_width" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHighlight"
+            android:title="@string/highlight_color"
+            android:summary="@string/highlight_color_desc"/>
+        <EditTextPreference
+            android:key="etp-dpHighlightWidth"
+            android:title="@string/highlight_width"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cHomework"
+            android:title="@string/homework_color"
+            android:summary="@string/homework_color_desc"/>
+        <EditTextPreference
+            android:key="etp-dpHomework"
+            android:title="@string/homework_size" />
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cInfolineBg"
+            android:title="@string/infoline_fill"
+            android:summary="@string/infoline_fill_desc"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="@string/PREFS_THEME_cInfolineText"
+            android:title="@string/infoline_text_color"/>
+        <EditTextPreference
+            android:key="etp-spInfolineTextSize"
+            android:title="@string/infoline_text_size"/>
+
+    </cz.vitskalicky.lepsirozvrh.settings.CustomPreferenceCategory>
+
+    <Preference
+        android:key="p-less"
+        android:title="@string/customize_less"
+        android:summary="@string/customize_less_desc"
+        android:icon="@drawable/ic_prev_black_24"/>
+    <Preference
+        android:key="p-more"
+        android:title="@string/customize_more"
+        android:summary="@string/customize_more_desc"
+        android:icon="@drawable/ic_next_black_24"/>
+
+</PreferenceScreen>

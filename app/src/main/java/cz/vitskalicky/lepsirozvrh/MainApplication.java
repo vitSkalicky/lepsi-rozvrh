@@ -1,7 +1,6 @@
 package cz.vitskalicky.lepsirozvrh;
 
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,6 +13,9 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.multidex.MultiDexApplication;
+
+import com.jaredrummler.cyanea.Cyanea;
 
 import org.joda.time.LocalDateTime;
 
@@ -24,13 +26,15 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 import io.sentry.event.User;
 
 
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
     private static final String TAG = MainApplication.class.getSimpleName();
 
     private NotificationState notificationState = null;
@@ -41,6 +45,10 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Initialize Cyanea theme engine
+        Cyanea.init(this, getResources());
+
         // Initialize the Sentry (crash report) client
         if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_SEND_CRASH_REPORTS)) {
             enableSentry();
@@ -87,9 +95,18 @@ public class MainApplication extends Application {
 
         currentWeekLivedata = rozvrhAPI.getCurrentWeekLiveData();
         currentWeekLivedata.observeForever(currentWeekObserver);
+
+        if (!SharedPrefs.containsPreference(this, R.string.PREFS_THEME_cHBg)) {
+            //theme not initialized yet (first start or after update from pre-themes version)
+            SharedPrefs.setStringPreference(this, R.string.PREFS_APP_THEME, "0");
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_FOLLOW_SYSTEM_THEME, true);
+            SharedPrefs.setBooleanPreference(this, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
+            Theme.of(this).setThemeData(DefaultThemes.getLightTheme());
+            Theme.of(this).checkSystemTheme();
+        }
     }
 
-    public void scheduleUpdate(LocalDateTime triggerTime){
+    public void scheduleUpdate(LocalDateTime triggerTime) {
         if (triggerTime == null) {
             triggerTime = LocalDateTime.now().plusHours(6);
         }
@@ -111,15 +128,16 @@ public class MainApplication extends Application {
 
     /**
      * Updates the widget and notification update time using the data from the given Rozvrh. !!! Use {@link #updateUpdateTime(Utils.Listener)}, because that one accounts for week shift during weekend !!!
+     *
      * @return true if updated, false if the update time could not be determined from the given rozvrh.
      */
     private boolean updateUpdateTime(Rozvrh rozvrh) {
-        if (rozvrh == null){
+        if (rozvrh == null) {
             return false;
         }
         Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
 
-        if (values.errCode != 0 || values.localDateTime == null){
+        if (values.errCode != 0 || values.localDateTime == null) {
             return false;
         }
 
@@ -131,7 +149,7 @@ public class MainApplication extends Application {
 
     public void updateUpdateTime(Utils.Listener onFinished) {
         AppSingleton.getInstance(this).getRozvrhAPI().getNextCurrentLessonChangeTime(updateTime1 -> {
-            if (updateTime1 != null && (updateTime == null || (updateTime.isAfter(updateTime1)) || updateTime.isBefore(LocalDateTime.now()))){
+            if (updateTime1 != null && (updateTime == null || (updateTime.isAfter(updateTime1)) || updateTime.isBefore(LocalDateTime.now()))) {
                 scheduleUpdate(updateTime1);
             }
             onFinished.method();
@@ -140,7 +158,7 @@ public class MainApplication extends Application {
 
     public void enableNotification() {
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), true);
-        if (currentWeekLivedata != null){
+        if (currentWeekLivedata != null) {
             PermanentNotification.update(currentWeekLivedata.getValue() == null ? null : currentWeekLivedata.getValue().getRozvrh(), this);
         }
     }

@@ -10,8 +10,5 @@ Hlavní funkce:
 • Trvalé upozornění — Kvůli další hodině už aplikaci ani nemusíte otevírat.
 • Stylový widget — Další hodina nebo přehled celého dne vždy na domovské obrazovce.
 • Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny.
+• Motivy — světlý, tmavý nebo Váš vlastní.
 • Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
-
-Připravované funkce:
-• Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
-• Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues

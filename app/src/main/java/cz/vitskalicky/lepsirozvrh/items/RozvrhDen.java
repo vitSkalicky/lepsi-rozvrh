@@ -61,6 +61,10 @@ public class RozvrhDen {
         }
     }
 
+    public void setDatum(String datum) {
+        this.datum = datum;
+    }
+
     public String getDay() { return Utils.parseDate(datum, "yyyyMMdd", "d"); }
 
     public List<RozvrhHodina> getHodiny() { return hodiny; }

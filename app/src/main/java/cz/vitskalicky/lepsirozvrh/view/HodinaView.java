@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class HodinaView extends CellView {
 
@@ -27,8 +28,10 @@ public class HodinaView extends CellView {
     private Paint mistPaint;
     private Paint highlightPaint;
     private Paint highlightedDividerPaint;
+    private Paint homeworkPaint;
 
     private int highlightWidth;
+    private int homeworkSize;
 
     private boolean topHighlighted, leftHighlighted, cornerHighlighted;
     private boolean entireHighlighted; //the highlighting is thicker
@@ -37,19 +40,24 @@ public class HodinaView extends CellView {
         super(context, attrs);
 
         mistPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mistPaint.setColor(a.getColor(R.styleable.Rozvrh_textRoomColor, Color.BLACK));
+        mistPaint.setColor(t.getCHRoomText());
         mistPaint.setTextSize(secondaryTextSize);
         mistPaint.setTypeface(Typeface.DEFAULT);
         mistPaint.setTextAlign(Paint.Align.LEFT);
 
         highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        highlightPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
-        highlightWidth = a.getDimensionPixelSize(R.styleable.Rozvrh_dividerHighlightWidth, 2);
+        highlightPaint.setColor(t.getCHighlight());
+        highlightWidth = t.getPxHighlightWidth();
         highlightPaint.setStrokeWidth(highlightWidth);
 
         highlightedDividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        highlightedDividerPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerHighlightColor, Color.BLACK));
+        highlightedDividerPaint.setColor(t.getCHighlight());
         highlightedDividerPaint.setStrokeWidth(dividerWidth);
+
+        homeworkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        homeworkPaint.setColor(t.getCHomework());
+
+        homeworkSize = t.getPxHomework();
 
         setOnClickListener(v -> showDetailDialog());
         setDrawDividers(true, true, true);
@@ -122,15 +130,30 @@ public class HodinaView extends CellView {
         this.perm = perm;
 
         if (hodina == null) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
+            backgroundPaint.setColor(t.getCEmptyBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.CHANGED) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundChng, Color.RED));
+            backgroundPaint.setColor(t.getCChngBg());
+            primaryTextPaint.setColor(t.getCChngPrimaryText());
+            secondaryTextPaint.setColor(t.getCChngSecondaryText());
+            mistPaint.setColor(t.getCChngRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundA, Color.RED));
+            backgroundPaint.setColor(t.getCABg());
+            primaryTextPaint.setColor(t.getCAPrimaryText());
+            secondaryTextPaint.setColor(t.getCASecondaryText());
+            mistPaint.setColor(t.getCARoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.NONE) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundH, Color.WHITE));
+            backgroundPaint.setColor(t.getCHBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         } else if (hodina.getHighlight() == RozvrhHodina.EMPTY) {
-            backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
+            backgroundPaint.setColor(t.getCEmptyBg());
+            primaryTextPaint.setColor(t.getCHPrimaryText());
+            secondaryTextPaint.setColor(t.getCHSecondaryText());
+            mistPaint.setColor(t.getCHRoomText());
         }
 
         invalidate();
@@ -262,6 +285,15 @@ public class HodinaView extends CellView {
             secondaryTextPaint.setTextAlign(Paint.Align.LEFT);
             canvas.drawText(zkruc, zkrucStart + xStart, secondaryBaseline + yStart, secondaryTextPaint);
 
+            //draw little dot if there is a homework
+            if (!hodina.getUkolodevzdat().isEmpty()) {
+                Paint use = homeworkPaint;
+                if (!Theme.Utils.isLegible(homeworkPaint.getColor(), backgroundPaint.getColor(), 1.5)) {
+                    use = primaryTextPaint;
+                }
+                canvas.drawCircle(xEnd - homeworkSize, yStart + homeworkSize, homeworkSize, use);
+            }
+
             /*// draw cycle
             if (perm && hodina.getCycle() != null && !hodina.getCycle().isEmpty()){
                 float cycleBaseline = zkrprBaseline - primaryTextSize - textPadding;
@@ -272,7 +304,7 @@ public class HodinaView extends CellView {
     }
 
     private boolean addField(TableLayout layout, int resId, String fieldText) {
-        if (fieldText != null && !fieldText.trim().equals("")) {
+        if (fieldText != null && !fieldText.isEmpty()) {
             TableRow tr = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.lesson_details_dialog_row, null);
             TextView tw1 = tr.findViewById(R.id.textViewKey);
             TextView tw2 = tr.findViewById(R.id.textViewValue);
@@ -305,6 +337,7 @@ public class HodinaView extends CellView {
         int density = (int) getContext().getResources().getDisplayMetrics().density;
         tableLayout.setPadding(24 * density, 16 * density, 24 * density, 0);
 
+        addField(tableLayout, R.string.homework, hodina.getUkolodevzdat());
         addField(tableLayout, R.string.notice, hodina.getNotice());
         if (perm) {
             addField(tableLayout, R.string.cycle, hodina.getCycle());

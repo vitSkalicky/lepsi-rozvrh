@@ -1,0 +1,6 @@
+ 
+- Improved app look
+- Added themes
+- Widget now has customizable color and transparency
+- Homework is now highlighted in the schedule.
+- You can now support the developer through Google Play purchases

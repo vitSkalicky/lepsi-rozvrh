@@ -12,11 +12,14 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import cz.vitskalicky.lepsirozvrh.R;
+import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 /**
  * A superclass for views in Rozvrh, taking care of the background, dividers and padding
  */
 public class CellView extends View {
+    protected Theme t;
+
     protected Paint backgroundPaint;
     protected Paint dividerPaint;
     protected int dividerWidth;
@@ -28,8 +31,6 @@ public class CellView extends View {
 
     protected int paddingTop, paddingRight, paddingBottom, paddingLeft, textPadding;
 
-    protected TypedArray a;
-
     protected boolean drawDividerTop, drawDividerCorner, drawDividerLeft;
 
     public CellView(Context context) {
@@ -39,36 +40,33 @@ public class CellView extends View {
     public CellView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        a = context.getTheme().obtainStyledAttributes(
-                attrs,
-                R.styleable.Rozvrh,
-                0, R.style.AppTheme);
+        t = new Theme(context);
 
         backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backgroundPaint.setColor(a.getColor(R.styleable.Rozvrh_backgroundEmpty, Color.WHITE));
+        backgroundPaint.setColor(t.getCEmptyBg());
 
         dividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        dividerPaint.setColor(a.getColor(R.styleable.Rozvrh_dividerColor, Color.BLACK));
-        dividerWidth = a.getDimensionPixelSize(R.styleable.Rozvrh_dividerWidth, 1);
+        dividerPaint.setColor(t.getCDivider());
+        dividerWidth = t.getPxDividerWidth();
         dividerPaint.setStrokeWidth(dividerWidth);
 
         primaryTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        primaryTextPaint.setColor(a.getColor(R.styleable.Rozvrh_textPrimaryColor, Color.BLACK));
-        primaryTextSize = a.getDimensionPixelSize(R.styleable.Rozvrh_textPrimarySize, 10);
+        primaryTextPaint.setColor(Theme.FALLBACK_COLOR);
+        primaryTextSize = t.getPxPrimaryText();
         primaryTextPaint.setTextSize(primaryTextSize);
         primaryTextPaint.setTypeface(Typeface.DEFAULT);
 
         secondaryTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        secondaryTextPaint.setColor(a.getColor(R.styleable.Rozvrh_textSecondaryColor, Color.BLACK));
-        secondaryTextSize = a.getDimensionPixelSize(R.styleable.Rozvrh_textSecondarySize, 10);
+        secondaryTextPaint.setColor(Theme.FALLBACK_COLOR);
+        secondaryTextSize = t.getPxSecondaryText();
         secondaryTextPaint.setTextSize(secondaryTextSize);
         secondaryTextPaint.setTypeface(Typeface.DEFAULT);
 
-        paddingLeft = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingLeft, 2);
-        paddingTop = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingTop, 1);
-        paddingRight = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingRight, 2);
-        paddingBottom = a.getDimensionPixelSize(R.styleable.Rozvrh_paddingBottom, 1);
-        textPadding = a.getDimensionPixelSize(R.styleable.Rozvrh_textPadding,1);
+        paddingLeft = t.getPxPaddingLeft();
+        paddingTop = t.getPxPaddingTop();
+        paddingRight = t.getPxPaddingRight();
+        paddingBottom = t.getPxPaddingBottom();
+        textPadding = t.getPxTextPadding();
 
         setDrawDividers(true, true, true);
     }

@@ -15,8 +15,8 @@ android {
         applicationId "cz.vitskalicky.lepsirozvrh"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 15
-        versionName "1.7-pre1"
+        versionCode 16
+        versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         /**

@@ -211,7 +211,7 @@
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->
-    <string name="interesting_widget">Widget is finally here!</string>
+    <string name="interesting_themes">Customize this app using themes!</string>
 
     <string name="wtf_rozvrh_title">An error occurred</string>
     <string name="wtf_rozvrh_message">Your schedule could not be rendered correctly! Would you like to report this issue via email now? The problematic schedule will be included in the report.</string>

@@ -175,8 +175,8 @@ public class MainActivity extends BaseActivity {
             showedNotiInfo = savedInstanceState.getBoolean(STATE_SHOWE_NOTI_INFO, false);
         }
 
-        int lastInterestingFeatureVersion = 12;
-        String lastInterestingFeatureMessage = getString(R.string.interesting_widget);
+        int lastInterestingFeatureVersion = 16;
+        String lastInterestingFeatureMessage = getString(R.string.interesting_themes);
 
         if (!SharedPrefs.contains(this, SharedPrefs.LAST_VERSION_SEEN) || (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < lastInterestingFeatureVersion)) {
             Snackbar snackbar = Snackbar.make(infoLine, lastInterestingFeatureMessage, Snackbar.LENGTH_INDEFINITE);

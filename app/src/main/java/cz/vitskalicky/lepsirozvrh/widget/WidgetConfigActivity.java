@@ -71,7 +71,7 @@ public abstract class WidgetConfigActivity extends AppCompatActivity implements 
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
                 setResult(RESULT_OK, resultValue);
                 AppSingleton.getInstance(this).getRozvrhAPI().getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-                    WidgetProvider.update(widgetID, rozvrhWrapper.getRozvrh() == null ? null : rozvrhWrapper.getRozvrh().getWidgetDiaplayValues(5), this);
+                    WidgetProvider.update(widgetID, rozvrhWrapper.getRozvrh() == null ? null : rozvrhWrapper.getRozvrh().getWidgetDiaplayValues(5, this), this);
                     finish();
                 });
             } else {

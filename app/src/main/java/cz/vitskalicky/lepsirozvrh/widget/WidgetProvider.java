@@ -35,7 +35,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
     public static void updateAll(Rozvrh rozvrh, Context context) {
         WidgetsSettings widgetsSettings = AppSingleton.getInstance(context).getWidgetsSettings();
 
-        RozvrhHodina[] hodiny = rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5);
+        RozvrhHodina[] hodiny = rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5, context);
 
         HashSet<Integer> widgetIds = widgetsSettings.widgetIds;
         for (int id : widgetIds) {

@@ -19,12 +19,8 @@ aplikace.
 - Trvalé upozornění — Kvůli další hodině už aplikaci ani nemusíte otevírat.
 - Stylový widget — Další hodina nebo přehled celého dne vždy na domovské obrazovce.
 - Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny.
+- Motivy - světlý, tmavý nebo Váš vlastní.
 - Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
-
-## Připravované funkce
-
-- Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
-- Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
 ## Testovací server
 
@@ -57,12 +53,8 @@ because I am annoyed by the slowness of the the official app.
 - Persistent notification — You don't have to open the app to see next lesson any more.
 - Beautiful widget — The next lesson or overview of the entire day always on your home screen.
 - Simple interface — Easy switching between weeks.
+- Themes - light, dark or your very own custom theme.
 - Free and open source software — No ads, no spying, free, forever.
-
-## Coming soon
-
-- More themes (dark, black & white, ...)
-- Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
 ## Testing server
 

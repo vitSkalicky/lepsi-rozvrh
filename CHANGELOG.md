@@ -1,5 +1,21 @@
 # Seznam změn / Changelog
 
+## 1.7 (7. 6. 2020)
+
+- Vylepšen vzhled
+- Přidány motivy
+- Widget nyní může mít jakoukoliv barvu a průhlednost
+- V rozvrhu jsou zvýrazněny domácí úkoly
+- Můžete podpořit vývojáře prostřednictvím plateb Google Play.
+
+---
+
+- Improved app look
+- Added themes
+- Widget now has customizable color and transparency
+- Homework is now highlighted in the schedule.
+- You can now support the developer through Google Play purchases
+
 ## 1.6.1 (9. 3. 2020)
 
 - Opravy chyb

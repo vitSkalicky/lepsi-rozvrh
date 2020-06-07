@@ -1,6 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.donations;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -116,14 +117,29 @@ public class DonateDialogFragment extends DialogFragment {
         }
     }
 
+    private boolean updatePrizesQueued = false;
     public void updatePrizes(){
-        donateLittle.setText(billing.isInitialized() ? String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()) : getText(R.string.donate_a_little_no_price));
-        donateMore.setText(billing.isInitialized() ? String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()) : getText(R.string.donate_more_no_price));
+        //fail-safe
+        if (!isDetached()) {
+            donateLittle.setText(billing.isInitialized() ? String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()) : getText(R.string.donate_a_little_no_price));
+            donateMore.setText(billing.isInitialized() ? String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()) : getText(R.string.donate_more_no_price));
+        }else {
+            updatePrizesQueued = true;
+        }
     }
 
     @Override
-    public void onDestroy() {
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (updatePrizesQueued){
+            updatePrizes();
+            updatePrizesQueued = false;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
         billing.removeOnPurchaseChangeListener(onSponsorChangeListener);
-        super.onDestroy();
+        super.onDestroyView();
     }
 }

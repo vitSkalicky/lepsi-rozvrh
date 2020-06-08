@@ -20,6 +20,7 @@ Better schedule can be downloaded from several sources:
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-en.png" alt="Get it on F-Droid" height="80px">
 </a>
 <a href="https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/{{ site.git-tag }}"><i class="svg-icon github" style="height: 80px; width: 80px; background-size: cover;"></i></a>
+
 ## Main features
 
 - Very fast schedule loading — Combines offline and online data to display schedule within a second.
@@ -27,12 +28,8 @@ Better schedule can be downloaded from several sources:
 - Persistent notification — You don't have to open the app to see next lesson any more.
 - Beautiful widget — The next lesson or overview of the entire day always on your home screen.
 - Simple interface — Easy switching between weeks.
+- Themes - light, dark or your very own custom theme.
 - Free and open source software — No ads, no spying, free, forever.
-
-## Coming soon
-
-- More themes (dark, black & white, ...)
-- Your suggestions on GitHub — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
 ## Screenshots
 
@@ -40,6 +37,6 @@ Better schedule can be downloaded from several sources:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" lang="en" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%202.png" lang="en" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%203.png" lang="en" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" lang="en" width_frac="2" %}
-{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" lang="en" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%207.png" class="half" lang="en" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%208.png" class="half" lang="en" width_frac="2" %}
 </p>

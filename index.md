@@ -29,12 +29,8 @@ Lepší rozvrh je dostupný z několika zdrojů:
 - Trvalé upozornění — Kvůli další hodině už aplikaci ani nemusíte otevírat.
 - Stylový widget — Další hodina nebo přehled celého dne vždy na domovské obrazovce.
 - Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny.
+- Motivy - světlý, tmavý nebo Váš vlastní.
 - Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
-
-## Připravované funkce
-
-- Další motivy (tmavý, černobílý, růžovo-fialový s červenými puntíky)
-- Vaše návrhy na GitHubu — https://github.com/vitSkalicky/lepsi-rozvrh/issues
 
 # Snímky obrazovky
 
@@ -42,6 +38,6 @@ Lepší rozvrh je dostupný z několika zdrojů:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%202.png" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%203.png" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%204.png" class="half" width_frac="2" %}
-{% include screenshot-gallery-image.html image="tenInchScreenshots/screenshot%204.png" class="half" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%207.png" class="half" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%208.png" class="half" width_frac="2" %}
 </p>

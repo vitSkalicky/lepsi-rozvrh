@@ -11,7 +11,7 @@ description: Rychlejší aplikace pro rozvrh systému Bakaláři
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://raw.githubusercontent.com/vitSkalicky/lepsi-rozvrh/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
-git-tag: v1.6.1
+git-tag: v1.7
 
 #
 # Flags below are optional

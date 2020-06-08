@@ -101,12 +101,16 @@ public class ImportThemeFragment extends Fragment {
     private void doImport(View v){
         AsyncTask.execute(() -> {
             ThemeData td = null;
-            String input = editTextData.getText().toString().replaceAll("\\s",""); //remove all whitespaces
+            String original = editTextData.getText().toString().replaceAll("\\s",""); //remove all whitespaces
+            String input = original;
             if (input.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv-info")){
                 Uri uri = Uri.parse(input);
                 input = uri.getQueryParameter("data");
             } else if (input.startsWith("lepsi-rozvrh:motiv/")){
                 input = input.substring(19);
+            }
+            if (input == null || input.isEmpty()){
+                input = original;
             }
             try {
                 td = ThemeData.parseZipped(input);
@@ -120,21 +124,13 @@ public class ImportThemeFragment extends Fragment {
                     try {
                         td = ThemeData.parseZipped(input);
                     } catch (IOException exc) {
-                        //try fixing an url (find the ...data=(data)]
+                        //try fixing the data (find the magic number (+compression method - always same) of gzip: H4s)
                         try{
-                            int index = input.indexOf('=');
+                            int index = input.indexOf("H4s");
                             if (index > -1){
-                                td = ThemeData.parseZipped(input.substring(index + 1));
+                                td = ThemeData.parseZipped(input.substring(index));
                             }
-                        }catch (IOException exce) {
-                            //try fixing an url in another way (find the ...motiv/(data)]
-                            try{
-                                int index = input.indexOf("motiv/");
-                                if (index > -1){
-                                    td = ThemeData.parseZipped(input.substring(index + 6));
-                                }
-                            }catch (IOException ignored) {
-                            }
+                        }catch (IOException ignored) {
                         }
                     }
                 }

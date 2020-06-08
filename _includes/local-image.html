@@ -4,5 +4,5 @@
     {% assign divider = 3 %}
 {% endif %}
 <a {% if include.class %} class="{{ include.class }}" {% endif %} href="{{ site.url }}/images/{{include.image}}">
-    <img srcset="https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 740 | divided_by: divider }}&output=jpg&q=65 740w, https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 500 | divided_by: divider }}&output=jpg&q=65 500w, https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 300 | divided_by: divider }}&output=jpg&q=65 300w" src="{{ site.url }}/images/{{ include.image }}" >
+    <img srcset="https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 740 | divided_by: divider }}&output=jpg&q=80 740w, https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 500 | divided_by: divider }}&output=jpg&q=80 500w, https:////images.weserv.nl/?url={{ site.url }}/images/{{ include.image }}&w={{ 300 | divided_by: divider }}&output=jpg&q=80 300w" src="{{ site.url }}/images/{{ include.image }}" >
 </a>

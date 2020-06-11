@@ -12,8 +12,10 @@ title: Podrobnosti motivu
     </p>
     <a class="big-button copy-button" role="button" href="javascript:kopirovat()" >Kopírovat</a><span> </span>
     <a class="big-button import-button" role="button" href="javascript:alert('Něco se nepovedlo. Kontaktujte prosím vývojáře na lepsi-rozvrh@email.cz')">Importovat do Lepšího rovrhu</a>
+    <a class="big-button qr-button" role="button">qcode</a>
 </section>
 
+<script src="{{ site.baseurl }}/js/qrcode.js"></script>
 <script type="text/javascript">
 
     function getParameterByName(name, url) {
@@ -28,6 +30,8 @@ title: Podrobnosti motivu
 
     var text = getParameterByName("data");
     text =text.split('<').join('').split('>').join();
-    document.querySelector(".theme-string").innerHTML = text;    
+    document.querySelector(".theme-string").innerHTML = text;
+
+    
 </script>
 <script src="{{ site.baseurl }}/js/copy-button.js"></script>

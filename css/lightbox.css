@@ -75,6 +75,8 @@ transform-origin: 50% 50%;
 -ms-transform: rotate(-45deg);
 /* Opera */
 -o-transform: rotate(-45deg);
+
+transform: rotate(-45deg);
 }
 #lightbox #close:after {
 /* Safari */
@@ -85,6 +87,7 @@ transform-origin: 50% 50%;
 -ms-transform: rotate(45deg);
 /* Opera */
 -o-transform: rotate(45deg);
+transform: rotate(45deg);
 }
 #lightbox, #lightbox * {
     -webkit-user-select: none;  

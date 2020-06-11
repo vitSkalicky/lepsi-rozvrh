@@ -40,3 +40,9 @@ Better schedule can be downloaded from several sources:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%207.png" class="half" lang="en" width_frac="2" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%208.png" class="half" lang="en" width_frac="2" %}
 </p>
+
+## Licence and source code
+
+Better schedule is a [free and open source software](https://en.wikipedia.org/wiki/Free_software) licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) licence. This means that you can study the source code, modify and further share your modified version of this app. You can find the source code on [GitHub](https://github.com/vitSkalicky/lepsi-rozvrh).
+
+The text on this website and screenshots are available under [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) licence.

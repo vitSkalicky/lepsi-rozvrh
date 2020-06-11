@@ -32,7 +32,7 @@ Lepší rozvrh je dostupný z několika zdrojů:
 - Motivy - světlý, tmavý nebo Váš vlastní.
 - Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
 
-# Snímky obrazovky
+## Snímky obrazovky
 
 <p class="gallery-box clearfix">
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" %}
@@ -41,3 +41,9 @@ Lepší rozvrh je dostupný z několika zdrojů:
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%207.png" class="half" width_frac="2" %}
 {% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%208.png" class="half" width_frac="2" %}
 </p>
+
+## Licence a zdrojový kód
+
+Lepší rozvrh je svobodný sofware s otevřeným zdrojovým kódem dostupný pod licencí [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). To znamená, že jej můžete libovolně studovat, upravovat a vylepšené verze dále šířit (ale musíte zachovat licenci). Zdrojový kód naleznete na [GitHubu](https://github.com/vitSkalicky/lepsi-rozvrh).
+
+Text stránek a snímky obrazovky jsou k dispozici pod licencí [Creative Commons Uveďte původ-Zachovejte licenci 4.0 Mezinárodní](https://creativecommons.org/licenses/by-sa/4.0/deed.cs).

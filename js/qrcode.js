@@ -613,8 +613,8 @@ var QRCode;
 	QRCode.CorrectLevel = QRErrorCorrectLevel;
 })();
 
+//add action an copy qr code buttons
 document.addEventListener("DOMContentLoaded", function() {
-
 
     //create lightbox div in the footer
     var newdiv = document.createElement("div");
@@ -627,7 +627,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	var qrcode = new QRCode("qr-img", {
 		text: "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=null",
 		width: velikost,
-		height: velikost
+		height: velikost,
+		correctLevel : QRCode.CorrectLevel.H
 	});
 
     //add classes to links to be able to initiate lightboxes

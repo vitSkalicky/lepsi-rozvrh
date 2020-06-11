@@ -13,31 +13,18 @@
 
 #qrcodebox .qr-img {
     position: relative;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    max-width: 100%;
-    max-height: 100%;
+    display: grid;
+    height: 100%;
 }
 
-#qrcodebox .qr-img img {
+.qr-img img, .qr-img canvas {
     /*opacity: 0;/**/
     pointer-events: none;
     width: auto;
-}
-
-@media screen and (min-width: 1200px) {
-    #qrcodebox .qr-img {
-        max-width: 1200px;
-    }
-}
-
-@media screen and (min-height: 1200px) {
-    #qrcodebox .qr-img {
-        max-height: 1200px;
-    }
+    max-width: 100%;
+    max-height: 100vh;
+    margin: auto;
+    border: 5px solid white;
 }
 
 #qrcodebox #qr-close {
@@ -92,5 +79,3 @@
     -ms-user-select: none;
     user-select: none;
 }
-
-.qr-img img {padding: 5px; background-color: white;}

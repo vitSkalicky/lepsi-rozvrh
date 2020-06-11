@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{% if page.lang %}{{ page.lang }}{% else %}cs{% endif %}">
   <head>
     <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
 
@@ -22,7 +22,7 @@
       <div class="wrapper-masthead">
         <div class="container">
           <header class="masthead clearfix">
-            <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" /></a>
+            <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.avatar }}" alt="Logo"/></a>
 
             <div class="site-info">
               <h1 class="site-name"><a href="{{ site.baseurl }}/">{{ site.name }}</a></h1>

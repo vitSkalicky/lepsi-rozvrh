@@ -1,6 +1,7 @@
 ---
 layout: default
 permalink: /en/
+lang: en
 gallery: true
 ---
 

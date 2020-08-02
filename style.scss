@@ -318,6 +318,13 @@ footer {
 // /gallery
 
 // qrcode
+#qr-code {
+  border: solid 5px white;
+  margin: 1em auto;
+}
+#qr-code img {
+  width: 100%;
+}
 // /qrcode
 
 // button

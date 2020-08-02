@@ -613,18 +613,18 @@ var QRCode;
 	QRCode.CorrectLevel = QRErrorCorrectLevel;
 })();
 
-var qrcode;
+let qrcode;
 
 //add action an copy qr code buttons
 document.addEventListener("DOMContentLoaded", function() {
 
     //create lightbox div in the footer
-    var newdiv = document.createElement("div");
+    let newdiv = document.createElement("div");
 	newdiv.setAttribute('id',"qrcodebox");
 	newdiv.innerHTML = '<a id="qr-close"></a><div class="qr-img" id="qr-img" title="qr code" ></div>';
 	document.body.appendChild(newdiv);
 
-	let velikost = Math.min(window.innerWidth,window.innerHeight) - 40;
+	let velikost = Math.min(document.getElementsByClassName("entry")[0].offsetWidth || window.innerWidth,window.innerHeight) - 40;
 	
 	qrcode = new QRCode("qr-img", {
 		text: "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=null",
@@ -634,7 +634,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
     //add classes to links to be able to initiate lightboxes
-    var elements = document.querySelectorAll('.qr-button');
+    let elements = document.querySelectorAll('.qr-button');
     elements.forEach(element => {
         element.setAttribute("href","javascript:showQR('" + 'https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=' + element.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim() + "')");
     });
@@ -642,7 +642,8 @@ document.addEventListener("DOMContentLoaded", function() {
     //remove the clicked lightbox
     document.getElementById('qrcodebox').addEventListener("click", function(event) {
         document.getElementById('qrcodebox').style.display = 'none';
-    });
+	});
+
 });
 
 function showQR(data){

@@ -6,14 +6,16 @@ qr-button: true
 
 <section>
     <p>
-        Text níže obsahuje data motivu. Můžete ho buťo vložit do Lepší rozvrh &gt; Nastavení &gt; Motiv &gt; Vlastní motiv &gt; Importovat motiv nebo použijte tlačítko "Importovat do Lepšího rovrhu" (funguje jen pokud je aplikace nainstalovaná).
+        Text níže obsahuje data motivu. Můžete ho buďto vložit do <i>Lepší rozvrh &gt; Nastavení &gt; Motiv &gt; Vlastní motiv &gt; Importovat motiv</i> nebo použijte tlačítko níže <i>Importovat do Lepšího rovrhu</i> (funguje jen pokud je aplikace nainstalovaná).
     </p>
     <p class="theme-string">
 
     </p>
     <a class="big-button copy-button" role="button" href="javascript:kopirovat()" >Kopírovat</a><span> </span>
     <a class="big-button import-button" role="button" href="javascript:alert('Něco se nepovedlo. Kontaktujte prosím vývojáře na lepsi-rozvrh@email.cz')">Importovat do Lepšího rovrhu</a>
-    <a class="big-button qr-button" role="button">Zobrazit QR kód</a>
+    <h3>QR kód</h3>
+    <p>Jste na počítači? Nevadí - naskenujte tento QR kód mobilem, na kterém máte Lepší rozvrh nainstalovaný.</p>
+    <div id="qr-code"></div>
 </section>
 <script type="text/javascript">
 
@@ -31,6 +33,16 @@ qr-button: true
     text =text.split('<').join('').split('>').join();
     document.querySelector(".theme-string").innerHTML = text;
 
-    
+    document.addEventListener("DOMContentLoaded", function() {
+
+        let velikost = Math.min(document.getElementsByClassName("entry")[0].offsetWidth,window.innerHeight) - 40;
+
+        let myQrcode = new QRCode("qr-code", {
+            text: "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=" + text,
+            width: velikost,
+            height: velikost,
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    })
 </script>
 <script src="{{ site.baseurl }}/js/copy-button.js"></script>

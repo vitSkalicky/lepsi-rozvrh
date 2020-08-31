@@ -13,8 +13,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
@@ -42,6 +45,10 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRequest;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Login {
     private static String TAG = Login.class.getSimpleName();
@@ -50,154 +57,96 @@ public class Login {
      * ResponseListener for returning login data.
      */
     public static interface Listener{
-        public void onResponse(int code, String data);
+        public void onResponse(int code);
     }
 
     public static final int SUCCESS = 0; // data: token
-    public static final int WRONG_USERNAME = 1; // data: response
-    public static final int WRONG_PASSWORD = 2; // data: response
+    public static final int WRONG_LOGIN = 1; // data: response
     public static final int UNEXPECTER_RESPONSE = 3; // data: response
     public static final int SERVER_UNREACHABLE = 4; // data: message
     public static final int ROZVRH_DISABLED = 5; // data: response
 
-
     /**
-     * Logs in user and returns its token through listener. Credentials are saved (if login successful).
-     * when finished {@link Listener#onResponse(int, String)} is called with {@code code} being one of constants above
-     * (in this class) and {@code data} being either token, server response or error message (see constants comments)
-     * @param url Bakaláři login site url
+     * Logs in user and returns status through listener. Credentials are saved (if login successful).
+     * when finished {@link Listener#onResponse(int)} is called with {@code code} being one of constants above
+     * (in this class).
+     * @param url Bakaláři base url (eg. https://bakalari.gpisnicka.cz/bakaweb/)
      * @param username user's username
      * @param password user's password
-     * @param listener listener for returning data
+     * @param listener listener for returning status
      * @param context app context
      */
     public static void login(String url, String username, String password, Listener listener, Context context){
-        RequestQueue queue = Volley.newRequestQueue(context);
+        SharedPrefs.setString(context, SharedPrefs.URL, url);
+        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
 
-        if (username.equals("")){
-            listener.onResponse(WRONG_USERNAME, null);
-            return;
-        }
+        LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
-        //URL encode username
-        String s = username;
-        try {
-            s = URLEncoder.encode(username, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String enUsername = s;
+        apiInterface.firstLogin("ANDR", "password", username, password).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()){
+                    String refreshToken = response.body().refresh_token;
+                    String accessToken = response.body().access_token;
 
-        String uniUrl = unifyUrl(url);
+                    SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, refreshToken);
+                    SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, accessToken);
+                    SharedPrefs.setString(context, SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.body().expires_in).toString(ISODateTimeFormat.dateTime()));
 
-        //get salts, etc.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, uniUrl + "?gethx=" + enUsername, response -> {
+                    apiInterface.getUser().enqueue(new Callback<UserResponse>() {
+                        @Override
+                        public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                            if(response.isSuccessful()){
+                                SharedPrefs.setString(context, SharedPrefs.NAME, response.body().fullName);
+                                SharedPrefs.setString(context, SharedPrefs.TYPE, response.body().UserType);
+                                listener.onResponse(SUCCESS);
+                            }else {
+                                Log.e(TAG, "Unexpected user login response: " + response.toString());
+                                listener.onResponse(UNEXPECTER_RESPONSE);
+                            }
+                        }
 
-            //request successful
-            try {
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(new ByteArrayInputStream(response.getBytes()));
+                        @Override
+                        public void onFailure(Call<UserResponse> call, Throwable t) {
+                            Log.e(TAG, t.toString());
+                            t.printStackTrace();
+                            listener.onResponse(SERVER_UNREACHABLE);
+                        }
+                    });
+                }else {
+                    Log.e(TAG, "Login failed: " + response.toString());
+                    listener.onResponse(WRONG_LOGIN);
 
-                Element root = doc.getDocumentElement();
-                root.normalize();
-                int res = Integer.parseInt(doc.getElementsByTagName("res").item(0).getTextContent());
-
-                if (res == 2){ //wrong username
-                    Log.i(TAG, "Login failed: wrong username - username: " + username + " url: " + uniUrl + "?gethx=" + enUsername + " response:\n" + response);
-                    listener.onResponse(WRONG_USERNAME, response);
-                    return;
                 }
-
-                String typ = root.getElementsByTagName("typ").item(0).getTextContent();
-                String ikod = root.getElementsByTagName("ikod").item(0).getTextContent();
-                String salt = root.getElementsByTagName("salt").item(0).getTextContent();
-
-                String passwordHash = calculatePasswordHash(salt,ikod,typ,password);
-                String token = calculateToken(username, passwordHash);
-
-                // password check - make empty request
-
-                StringRequest passwordCheck = new StringRequest(Request.Method.GET, uniUrl + "?hx=" + token + "&pm=login", response1 -> {
-
-                    try {
-                        DocumentBuilderFactory dbFactory1 = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder dBuilder1 = dbFactory1.newDocumentBuilder();
-                        Document doc1 = dBuilder1.parse(new ByteArrayInputStream(response1.getBytes()));
-
-                        Element root1 = doc1.getDocumentElement();
-                        root1.normalize();
-                        Node resultNode = doc1.getElementsByTagName("result").item(0);
-                        int result = 0;
-                        if (resultNode != null){
-                            result = Integer.parseInt(resultNode.getTextContent());
-                        }
-
-                        if (result == -1) {
-                            //password incorrect
-                            Log.i(TAG, "Login failed: wrong password - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
-                            listener.onResponse(WRONG_PASSWORD, response1);
-                            return;
-                        }else {
-                            //password correct (hopefully)
-
-                            String modules = doc1.getElementsByTagName("moduly").item(0).getTextContent();
-                            if (!(modules.contains("rozvrh") || modules.contains("ucitelrozvrh"))){
-                                // Rozvrh module not enabled
-                                Log.i(TAG, "Login failed: rozvrh not enabled - username: " + username + " url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
-                                listener.onResponse(ROZVRH_DISABLED,response1);
-                                return;
-                            }
-
-                            String name = "";
-                            String type = "";
-                            try {
-                                name = doc1.getElementsByTagName("jmeno").item(0).getTextContent();
-                                type = doc1.getElementsByTagName("typ").item(0).getTextContent();
-                            }catch (Exception e){
-                                Log.e(TAG, "Login failed: user's name not found, setting to \"\". response:\n" + response1);
-                            }
-
-                            // save credentials
-                            SharedPrefs.setString(context,SharedPrefs.USERNAME, username);
-                            SharedPrefs.setString(context, SharedPrefs.PASSWORD_HASH, passwordHash);
-                            SharedPrefs.setString(context, SharedPrefs.URL, uniUrl);
-                            SharedPrefs.setString(context,SharedPrefs.NAME, name);
-                            SharedPrefs.setString(context, SharedPrefs.TYPE, type);
-
-                            listener.onResponse(SUCCESS,token);
-                            return;
-                        }
-
-                    } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                        Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?hx=<token>" + "&pm=login" + " response:\n" + response1);
-                        e.printStackTrace();
-                        listener.onResponse(UNEXPECTER_RESPONSE, response1);
-                    }
-                }, error -> {
-                    Log.i(TAG, "Login failed: connection error: url: " + uniUrl + "?hx=<token>" + " error message: " + error.getMessage());
-                    error.printStackTrace();
-                    listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
-                });
-
-                passwordCheck.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
-                passwordCheck.setShouldCache(false);
-                queue.add(passwordCheck);
-
-            } catch (ParserConfigurationException | IOException | SAXException | NullPointerException | NumberFormatException e) {
-                Log.e(TAG, "Login failed: unexpected server response. url: " + uniUrl + "?gethx=" + enUsername + " response:\n" + response);
-                e.printStackTrace();
-                listener.onResponse(UNEXPECTER_RESPONSE, response);
             }
-        }, error -> {
-            Log.i(TAG,"Login failed: connection error: url: " + uniUrl + "?gethx=" + enUsername + " error message: " + error.getMessage());
-            error.printStackTrace();
-            listener.onResponse(SERVER_UNREACHABLE, error.getMessage());
-        });
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(RozvrhRequest.TIMEOUT, 1, 1f));
-        stringRequest.setShouldCache(false);
 
-        queue.add(stringRequest);
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.e(TAG, t.toString());
+                t.printStackTrace();
+                listener.onResponse(SERVER_UNREACHABLE);
+            }
+        });
+    }
+
+    /**
+     * refreshes login token
+     * */
+    public static void refreshToken(Listener listener, Context context){
+
+    }
+
+    /**
+     * Returns a valid access token or an empty string.
+     */
+    public static String getAccessToken(Context context){
+        String expiresStr = SharedPrefs.getString(context, SharedPrefs.ACCESS_EXPIRES);
+        if (expiresStr.isEmpty())
+            return "";
+        LocalDateTime expires = LocalDateTime.parse(expiresStr, ISODateTimeFormat.dateTimeParser());
+        if (expires.isBefore(LocalDateTime.now()))
+            return "";
+        return SharedPrefs.getString(context, SharedPrefs.ACCEESS_TOKEN);
     }
 
     /**
@@ -205,7 +154,9 @@ public class Login {
      */
     public static void logout(Context context){
         SharedPrefs.remove(context, SharedPrefs.USERNAME);
-        SharedPrefs.remove(context, SharedPrefs.PASSWORD_HASH);
+        SharedPrefs.remove(context, SharedPrefs.REFRESH_TOKEN);
+        SharedPrefs.remove(context, SharedPrefs.ACCEESS_TOKEN);
+        SharedPrefs.remove(context, SharedPrefs.ACCESS_EXPIRES);
         SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
         RozvrhCache.clearCache(context);
@@ -248,12 +199,12 @@ public class Login {
      * Calculates token from saved credentials. !!! returns empty string if the user is not logged in !!!
      */
     public static String getToken(Context context){
-        if (!SharedPrefs.contains(context, SharedPrefs.USERNAME) || !SharedPrefs.contains(context, SharedPrefs.PASSWORD_HASH)){
+        if (!SharedPrefs.contains(context, SharedPrefs.USERNAME) || !SharedPrefs.contains(context, SharedPrefs.REFRESH_TOKEN)){
             //not logged in
             Log.w(TAG, "Getting token failed: lot logged in - returning \"\"");
             return "";
         }
-        return calculateToken(SharedPrefs.getString(context,SharedPrefs.USERNAME), SharedPrefs.getString(context, SharedPrefs.PASSWORD_HASH));
+        return calculateToken(SharedPrefs.getString(context,SharedPrefs.USERNAME), SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN));
     }
 
     /**
@@ -281,6 +232,7 @@ public class Login {
      * @return {@code true} if the user logged in is a teacher or {@code false} if not (then it is a student or a parent)
      */
     public static boolean isTeacher(Context context){
+        //todo user type has changed
         String type = SharedPrefs.getString(context, SharedPrefs.TYPE);
         if (type.equals("U")){
             return true;

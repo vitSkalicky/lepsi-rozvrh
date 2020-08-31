@@ -115,6 +115,7 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         Preference userInfo = findPreference(getString(R.string.PREFS_USER));
         userInfo.setTitle(SharedPrefs.getString(getContext(), SharedPrefs.NAME));
         String type = SharedPrefs.getString(getContext(), SharedPrefs.TYPE);
+        //todo user type name has changed
         switch (type) {
             case "Z":
                 userInfo.setSummary(R.string.student);

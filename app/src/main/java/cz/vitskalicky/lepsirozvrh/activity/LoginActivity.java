@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code, data) -> {
+        Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code) -> {
             if (code == Login.SUCCESS) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -112,11 +112,8 @@ public class LoginActivity extends BaseActivity {
             }
             bLogin.setEnabled(true);
             progressBar.setVisibility(View.GONE);
-            if (code == Login.WRONG_USERNAME) {
-                tilUsername.setError(getText(R.string.invalid_username));
-            }
-            if (code == Login.WRONG_PASSWORD) {
-                tilPassword.setError(getText(R.string.invalid_password));
+            if (code == Login.WRONG_LOGIN) {
+                tilUsername.setError(getText(R.string.invalid_login));
             }
             if (code == Login.SERVER_UNREACHABLE) {
                 twMessage.setText(R.string.unreachable);

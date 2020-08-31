@@ -77,7 +77,7 @@ public class Login {
      * @param context app context
      */
     public static void login(String url, String username, String password, Listener listener, Context context){
-        SharedPrefs.setString(context, SharedPrefs.URL, url);
+        SharedPrefs.setString(context, SharedPrefs.URL, unifyUrl(url));
         Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
 
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
@@ -133,7 +133,41 @@ public class Login {
      * refreshes login token
      * */
     public static void refreshToken(Listener listener, Context context){
+        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
+        LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
+        apiInterface.refreshLogin("ANDR", "refresh_token", SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN)).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()){
+                    String refreshToken = response.body().refresh_token;
+                    String accessToken = response.body().access_token;
+
+                    SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, refreshToken);
+                    SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, accessToken);
+                    SharedPrefs.setString(context, SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.body().expires_in).toString(ISODateTimeFormat.dateTime()));
+
+                    listener.onResponse(SUCCESS);
+                }else {
+                    Log.e(TAG, "Refresh failed: " + response.toString());
+                    listener.onResponse(WRONG_LOGIN);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.e(TAG, t.toString());
+                t.printStackTrace();
+                listener.onResponse(SERVER_UNREACHABLE);
+            }
+        });
+    }
+
+    public static void refreshTokenIfNeeded(Listener listener, Context context){
+        if (getAccessToken(context).isEmpty()){
+            refreshToken(listener, context);
+        }
     }
 
     /**
@@ -174,7 +208,7 @@ public class Login {
      */
     public static Class<? extends Activity> checkLogin(Activity currentActivity){
         Context ctx = currentActivity;
-        boolean isLoggedIn = !getToken(ctx).isEmpty();
+        boolean isLoggedIn = !SharedPrefs.getString(currentActivity, SharedPrefs.REFRESH_TOKEN).isEmpty();
         boolean seenWelcome = SharedPrefs.containsPreference(ctx, R.string.PREFS_SEND_CRASH_REPORTS);
 
         if (!seenWelcome && !(currentActivity instanceof WelcomeActivity)){
@@ -196,45 +230,12 @@ public class Login {
     }
 
     /**
-     * Calculates token from saved credentials. !!! returns empty string if the user is not logged in !!!
-     */
-    public static String getToken(Context context){
-        if (!SharedPrefs.contains(context, SharedPrefs.USERNAME) || !SharedPrefs.contains(context, SharedPrefs.REFRESH_TOKEN)){
-            //not logged in
-            Log.w(TAG, "Getting token failed: lot logged in - returning \"\"");
-            return "";
-        }
-        return calculateToken(SharedPrefs.getString(context,SharedPrefs.USERNAME), SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN));
-    }
-
-    /**
-     * Calculates token valid for current day for Bakaláři API
-     */
-    public static String calculateToken(String username, String passwordHash){
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
-        String strDate = dtf.print(today);
-        String token = sha512("*login*" + username + "*pwd*" + passwordHash + "*sgn*ANDR" + strDate);
-        token = token.replace("/", "_");
-        token = token.replace("+", "-");
-        return token;
-    }
-
-    /**
-     * Calculates password hash for Bakaláři API
-     */
-    public static String calculatePasswordHash(String salt, String ikod, String typ, String password){
-        return sha512(salt + ikod + typ + password);
-    }
-
-    /**
      * Whether to show teacher's or students rozvrh (each is fetched and displayed slightly differently)
      * @return {@code true} if the user logged in is a teacher or {@code false} if not (then it is a student or a parent)
      */
     public static boolean isTeacher(Context context){
-        //todo user type has changed
         String type = SharedPrefs.getString(context, SharedPrefs.TYPE);
-        if (type.equals("U")){
+        if (type.equals("teacher")){
             return true;
         }else {
             return false;
@@ -242,33 +243,18 @@ public class Login {
     }
 
     /**
-     * Unifies school url to http(s)://xxx.school.cz/yyy/login.aspx
-     *
-     * https://bakalari.school.cz -> https://bakalari.school.cz/login.aspx
-     * https://bakalari.school.cz/bakaweb/login.aspx -> https://bakalari.school.cz/bakaweb/login.aspx (no change)
+     * Removes /next/login.aspx
      */
     private static String unifyUrl(String url){
-        if (url.endsWith("/login.aspx"))
-            return url;
-        else if (url.endsWith("/"))
-            return url + "login.aspx";
-        else
-            return url + "/login.aspx";
-    }
-
-    /**
-     * Calculates SHA-512 Base64 encoded hash of given string
-     */
-    private static String sha512(String text){
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(text.getBytes());
-            byte[] bytes = md.digest();
-            return Base64.encodeToString(bytes, Base64.NO_WRAP);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getCause());
+        if (url.endsWith(".aspx"))
+            url = url.substring(0, url.length() - 5);
+        if (url.endsWith("login")){
+            url = url.substring(0, url.length() - 5);
+            if (url.endsWith("next/"))
+                url = url.substring(0, url.length() - 5);
         }
-
+        if (!url.endsWith("/"))
+            url += "/";
+        return url;
     }
 }

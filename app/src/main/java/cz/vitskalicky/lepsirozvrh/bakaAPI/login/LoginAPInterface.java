@@ -1,4 +1,4 @@
-package cz.vitskalicky.lepsirozvrh.bakaAPI;
+package cz.vitskalicky.lepsirozvrh.bakaAPI.login;
 
 import retrofit2.Call;
 import retrofit2.http.Field;

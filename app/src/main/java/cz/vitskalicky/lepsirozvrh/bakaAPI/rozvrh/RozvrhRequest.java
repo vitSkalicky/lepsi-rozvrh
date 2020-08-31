@@ -8,7 +8,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.joda.time.LocalDate;
@@ -26,7 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 

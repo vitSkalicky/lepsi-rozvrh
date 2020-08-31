@@ -2,7 +2,6 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -16,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 

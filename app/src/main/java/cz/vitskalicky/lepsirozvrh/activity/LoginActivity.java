@@ -11,11 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class LoginActivity extends BaseActivity {

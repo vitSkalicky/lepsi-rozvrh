@@ -18,7 +18,7 @@ import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
 

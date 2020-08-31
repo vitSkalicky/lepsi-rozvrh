@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
@@ -27,8 +26,7 @@ import cz.vitskalicky.lepsirozvrh.DebugUtils;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
-import cz.vitskalicky.lepsirozvrh.donations.Donations;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;

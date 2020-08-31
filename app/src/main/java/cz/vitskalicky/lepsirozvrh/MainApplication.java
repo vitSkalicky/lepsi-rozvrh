@@ -22,7 +22,7 @@ import org.joda.time.LocalDateTime;
 import java.io.IOException;
 import java.util.Random;
 
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;

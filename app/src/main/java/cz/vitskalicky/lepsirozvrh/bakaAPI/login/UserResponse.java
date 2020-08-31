@@ -1,4 +1,4 @@
-package cz.vitskalicky.lepsirozvrh.bakaAPI;
+package cz.vitskalicky.lepsirozvrh.bakaAPI.login;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

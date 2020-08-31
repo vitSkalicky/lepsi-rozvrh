@@ -1,37 +1,12 @@
-package cz.vitskalicky.lepsirozvrh.bakaAPI;
+package cz.vitskalicky.lepsirozvrh.bakaAPI.login;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Base64;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
@@ -40,9 +15,7 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.activity.LoginActivity;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
 import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRequest;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import retrofit2.Call;

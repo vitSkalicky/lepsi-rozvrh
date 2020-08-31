@@ -9,13 +9,11 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
-
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 
 public class WelcomeActivity extends BaseActivity {
 

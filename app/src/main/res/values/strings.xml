@@ -16,8 +16,7 @@
     <string name="choose_school">Schools list…</string>
     <string name="login_button">Login</string>
     <string name="login_message">Log in to Bakaláři, please</string>
-    <string name="invalid_username">Invalid username</string>
-    <string name="invalid_password">Wrong password</string>
+    <string name="invalid_login">Invalid username or password</string>
     <string name="schedule_disabled">Schedule is disabled on this server</string>
     <string name="unexpected_response">Unexpected response from server (check address)</string>
     <string name="unreachable">Server unreachable (check your internet connection and address)</string>
@@ -62,6 +61,14 @@
     <string name="dont_show_again">Don\'t show again</string>
     <string name="something_went_wrong">Something went wrong :(</string>
     <string name="report">Report</string>
+
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
 
     <!-- Theme preferences -->
     <string name="app_theme_screen">Theme settings</string>

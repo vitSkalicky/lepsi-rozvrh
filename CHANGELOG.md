@@ -1,5 +1,15 @@
 # Seznam změn / Changelog
 
+## 1.7.1 (1. 9. 2020)
+
+- Provedena bleskurychlá oprava pro nové API v3 (protože staré přestalo fungovat)
+- Zbytečné prázdné hodiny na začátku a na konci dne jsou nyní automaticky odstraněny.
+
+---
+
+- Very quick hotfix for the new API v3 (as the old API stopped working)
+- Redundant empty lessons at the start of day are now automatically removed.
+
 ## 1.7 (7. 6. 2020)
 
 - Vylepšen vzhled

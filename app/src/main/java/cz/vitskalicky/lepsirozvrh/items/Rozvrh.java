@@ -25,30 +25,26 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 @Root(name = "rozvrh", strict = false)
 public class Rozvrh {
     public static final String TAG = Rozvrh.class.getSimpleName();
+    @Element(required = false)
+    protected String typ = "";
+    @ElementList(required = false)
+    protected List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
+    @ElementList(required = false)
+    protected List<RozvrhDen> dny = new LinkedList<>();
+    @Element(required = false)
+    protected String nazevcyklu = "";
+    @Element(required = false)
+    protected String zkratkacyklu = "";
 
     public Rozvrh() {
         super();
     }
 
-    @Element(required = false)
-    private String typ = "";
-
-    @ElementList(required = false)
-    private List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
-
-    @ElementList(required = false)
-    private List<RozvrhDen> dny = new LinkedList<>();
-
-    @Element(required = false)
-    private String nazevcyklu = "";
-
-    @Element(required = false)
-    private String zkratkacyklu = "";
-
     @Commit
-    private void onCommit() {
+    public void onCommit() {
         deleteNullDays();
         deleteNullCaptions();
+        fillEmptyLessons();
         deleteRedundantLessons();
     }
 
@@ -69,6 +65,53 @@ public class Rozvrh {
                 iteratorCaption.remove();
         }
     }
+    private void fillEmptyLessons(){
+        for (RozvrhDen den :dny) {
+            LinkedList<RozvrhHodina> newHodiny = new LinkedList();
+            int hodinaIndex = 0;
+            int captionIndex = 0;
+            boolean lastOk = false;
+            while (hodinaIndex < den.getHodiny().size() && captionIndex < hodiny.size()){
+                String captionId = (hodiny.get(captionIndex).getCaption());
+                String hodinaCaptionId = den.getHodiny().get(hodinaIndex).getCaption();
+
+                if (captionId.equals(hodinaCaptionId)){
+                    newHodiny.add(den.getHodiny().get(hodinaIndex));
+                    hodinaIndex++;
+                    lastOk = true;
+                }else if(lastOk){
+                    lastOk = false;
+                    captionIndex++;
+                }else {
+                    RozvrhHodina empty = new RozvrhHodina();
+                    empty.setTyp("X");
+                    empty.setUkolodevzdat("");
+                    empty.setNotice("");
+                    empty.setSkup("");
+                    empty.setAbs("");
+                    empty.setMist("");
+                    empty.setChng("");
+                    empty.setZkrskup("");
+                    empty.setZkrpr("");
+                    empty.setPr("");
+                    empty.setZkruc("");
+                    empty.setUc("");
+                    empty.setZkrmist("");
+                    empty.setTema("");
+                    empty.setCaption(captionId);
+                    empty.setZkratka("");
+                    empty.setNazev("");
+                    empty.setCycle("");
+                    empty.commit();
+
+                    newHodiny.add(empty);
+                    captionIndex++;
+                }
+            }
+
+            den.setHodiny(newHodiny);
+        }
+    }
 
     private void deleteRedundantLessons() {
         //we also call fixTimes here for each day to assign begintime and endtime
@@ -84,6 +127,58 @@ public class Rozvrh {
                 i.remove();
             }
         }
+        // remove excess empty lessons at the start and end of each day (empty 0th lessons,..)
+        // todo: test o some more real schedules (it is holiday by the time I am developing this)
+
+        boolean[] removable = new boolean[getHodiny().size()];
+
+        for (int i = 0; i < getHodiny().size(); i++) {
+            boolean empty = true;
+            for (int j = 0; j < getDny().size(); j++) {
+                if (i < getDny().get(j).getHodiny().size()) {
+                    RozvrhHodina hodina = getDny().get(j).getHodiny().get(i);
+                    empty = empty && (hodina == null || hodina.getHighlight() == RozvrhHodina.NO_LESSON || hodina.getHighlight() == RozvrhHodina.EMPTY);
+                }
+            }
+            removable[i] = empty;
+        }
+
+        int removeStart = 0;
+        for (int i = 0; i < removable.length; i++) {
+            if (removable[i]) {
+                removeStart++;
+            } else {
+                break;
+            }
+        }
+        int removeEnd = 0;
+        for (int i = removable.length - 1; i >= 0; i--) {
+            if (removable[i]) {
+                removeEnd++;
+            } else {
+                break;
+            }
+        }
+
+        //It might happen, that the whole week is holiday. I that case we don't want to remove anything.
+        if (removeEnd + removeStart < removable.length) {
+            for (int i = 0; i < removeStart; i++) {
+                getHodiny().remove(0);
+                for (RozvrhDen item : getDny()) {
+                    item.getHodiny().remove(0);
+                }
+            }
+            //we want to leave 1 empty lessons at the end
+            for (int i = 0; i < removeEnd - 1; i++) {
+                int lessonIndex = getHodiny().size() - 1;
+                getHodiny().remove(lessonIndex);
+                for (RozvrhDen item : getDny()) {
+                    if (lessonIndex < item.getHodiny().size())
+                    item.getHodiny().remove(lessonIndex);
+                }
+            }
+
+        }
     }
 
     /**
@@ -96,13 +191,14 @@ public class Rozvrh {
     /**
      * returns the lesson, which should be highlighted to the user as next or current lesson, or null
      * if the school is over or this is not the current week.
+     *
      * @param forNotification If true, the first lesson won't be highlighted up until one hour before its start
      */
     public GetNLreturnValues getHighlightLesson(boolean forNotification, Context context) {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
 
-        if (DebugUtils.getInstance(context).isDemoMode()){
+        if (DebugUtils.getInstance(context).isDemoMode()) {
             nowDate = DebugUtils.getInstance(context).getDemoDate();
             nowTime = DebugUtils.getInstance(context).getDemoTime();
         }
@@ -127,8 +223,8 @@ public class Rozvrh {
         int hodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
             RozvrhHodina item = dneska.getHodiny().get(i);
-            if (item.getTyp().equals("H") || !prvni){
-                if (forNotification && prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))){//do not highlight
+            if (item.getTyp().equals("H") || !prvni) {
+                if (forNotification && prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))) {//do not highlight
                     return null;
                 }
                 if (nowTime.isBefore(item.getParsedEndtime().minusMinutes(10))) {
@@ -153,15 +249,9 @@ public class Rozvrh {
         return ret;
     }
 
-    public static class GetNLreturnValues {
-        public RozvrhHodina rozvrhHodina;
-        public int dayIndex;
-        public int lessonIndex;
-    }
-
     /**
      * Prefer {@link cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI#getNextCurrentLessonChangeTime(RozvrhAPI.TimeListener)} because that one also checks the next week if the time cannot be determine from the current one.
-     *
+     * <p>
      * Returns the time, when the notification or widget should be updated, or empty {@link GetNCLCTreturnValues} with error code if this is
      * a permanent schedule ({@link GetNCLCTreturnValues#errCode} = 1), old schedule ({@link GetNCLCTreturnValues#errCode} = 2) or there was a different problem ({@link GetNCLCTreturnValues#errCode} = 3)
      */
@@ -172,12 +262,12 @@ public class Rozvrh {
         int denIndex = 0;
 
         RozvrhDen den = null;
-        if (dny.size() < 1){
+        if (dny.size() < 1) {
             return new GetNCLCTreturnValues(null, null, 3);
-        }else if (dny.get(0).getParsedDatum() == null) {
-            return new GetNCLCTreturnValues(null,null,1);
+        } else if (dny.get(0).getParsedDatum() == null) {
+            return new GetNCLCTreturnValues(null, null, 1);
         } else if (nowDate.isAfter(dny.get(dny.size() - 1).getParsedDatum())) {
-            return new GetNCLCTreturnValues(null,null,2);
+            return new GetNCLCTreturnValues(null, null, 2);
         } else if (nowDate.isBefore(dny.get(0).getParsedDatum())) {
             den = dny.get(0);
         } else {
@@ -191,9 +281,9 @@ public class Rozvrh {
         }
 
         if (den == null) //current timetable check
-            return new GetNCLCTreturnValues(null,null,2);
+            return new GetNCLCTreturnValues(null, null, 2);
 
-        if (nowDate.isBefore(den.getParsedDatum())){
+        if (nowDate.isBefore(den.getParsedDatum())) {
             nowTime = LocalTime.fromMillisOfDay(0);
         }
 
@@ -202,8 +292,8 @@ public class Rozvrh {
         boolean prvni = true;
         for (int i = 0; i < den.getHodiny().size(); i++) {
             RozvrhHodina item = den.getHodiny().get(i);
-            if (!item.isEmpty()){
-                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))){
+            if (!item.isEmpty()) {
+                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))) {
                     cas = item.getParsedBegintime().minusHours(1);
                     hodina = item;
                     break;
@@ -219,8 +309,8 @@ public class Rozvrh {
 
         for (int i = 1; cas == null; i++) {
             //after school
-            if (denIndex >= dny.size() - i){
-                return new GetNCLCTreturnValues(null,null,2);
+            if (denIndex >= dny.size() - i) {
+                return new GetNCLCTreturnValues(null, null, 2);
             }
             den = dny.get(denIndex + i);
             nowTime = LocalTime.fromMillisOfDay(0);
@@ -245,35 +335,17 @@ public class Rozvrh {
         return ret;
     }
 
-    public static class GetNCLCTreturnValues {
-        public RozvrhHodina rozvrhHodina;
-        public LocalDateTime localDateTime;
-        /**
-         * 0 not error; 1 permanent schedule; 2 old schedule; 3 other
-         */
-        public int errCode;
-
-        public GetNCLCTreturnValues() {
-        }
-
-        public GetNCLCTreturnValues(RozvrhHodina rozvrhHodina, LocalDateTime localDateTime, int errCode) {
-            this.rozvrhHodina = rozvrhHodina;
-            this.localDateTime = localDateTime;
-            this.errCode = errCode;
-        }
-    }
-
     /**
      * Returns lessons that should be displayed on a widget.
      *
      * @param lenght how many lessons does the widget display - determines the length of the returned array.
      * @return {@code null} if this is not a current week or it is not school-time now.
      */
-    public RozvrhHodina[] getWidgetDiaplayValues(int lenght, Context context){
+    public RozvrhHodina[] getWidgetDiaplayValues(int lenght, Context context) {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
 
-        if (DebugUtils.getInstance(context).isDemoMode()){
+        if (DebugUtils.getInstance(context).isDemoMode()) {
             nowDate = DebugUtils.getInstance(context).getDemoDate();
             nowTime = DebugUtils.getInstance(context).getDemoTime();
         }
@@ -297,8 +369,8 @@ public class Rozvrh {
         int currentHodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
             RozvrhHodina item = dneska.getHodiny().get(i);
-            if (!item.getTyp().equals("X") || !prvni){
-                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(3))){
+            if (!item.getTyp().equals("X") || !prvni) {
+                if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(3))) {
                     return null;
                 }
                 if (nowTime.isBefore(item.getParsedEndtime().minusMinutes(10))) {
@@ -313,7 +385,7 @@ public class Rozvrh {
             ret[i] = dneska.getHodiny().get(i + currentHodinaIndex);
         }
 
-       return ret;
+        return ret;
     }
 
     public List<RozvrhHodinaCaption> getHodiny() {
@@ -357,12 +429,12 @@ public class Rozvrh {
             for (RozvrhDen item : dny) {
                 sb.append(item.getZkratka()).append("; ")
                         .append(item.getHodiny().size()).append("; ");
-                if (item.getHodiny().size() > 0){
+                if (item.getHodiny().size() > 0) {
                     sb.append(item.getHodiny().get(0).getCaption()).append("; ")
                             .append(item.getHodiny().get(0).getBegintime()).append("; ")
                             .append(item.getHodiny().get(item.getHodiny().size() - 1).getCaption()).append("; ")
                             .append(item.getHodiny().get(item.getHodiny().size() - 1).getEndtime()).append(";\n");
-                }else {
+                } else {
                     sb.append("empty;\n");
                 }
 
@@ -371,5 +443,57 @@ public class Rozvrh {
             Log.e(TAG, "Creating rozvrh structure failed", e);
         }
         return sb.toString();
+    }
+
+    public static class GetNLreturnValues {
+        public RozvrhHodina rozvrhHodina;
+        public int dayIndex;
+        public int lessonIndex;
+    }
+
+    public static class GetNCLCTreturnValues {
+        public RozvrhHodina rozvrhHodina;
+        public LocalDateTime localDateTime;
+        /**
+         * 0 not error; 1 permanent schedule; 2 old schedule; 3 other
+         */
+        public int errCode;
+
+        public GetNCLCTreturnValues() {
+        }
+
+        public GetNCLCTreturnValues(RozvrhHodina rozvrhHodina, LocalDateTime localDateTime, int errCode) {
+            this.rozvrhHodina = rozvrhHodina;
+            this.localDateTime = localDateTime;
+            this.errCode = errCode;
+        }
+    }
+
+    public static class MutableRozvrh extends Rozvrh{
+
+        public void setTyp(String typ) {
+            this.typ = typ;
+        }
+
+        public void setHodiny(List<RozvrhHodinaCaption> hodiny) {
+            this.hodiny = hodiny;
+        }
+
+        public void setDny(List<RozvrhDen> dny) {
+            this.dny = dny;
+        }
+
+        public void setNazevcyklu(String nazevcyklu) {
+            this.nazevcyklu = nazevcyklu;
+        }
+
+        public void setZkratkacyklu(String zkratkacyklu) {
+            this.zkratkacyklu = zkratkacyklu;
+        }
+
+
+        public Rozvrh build(){
+            return (Rozvrh)this;
+        }
     }
 }

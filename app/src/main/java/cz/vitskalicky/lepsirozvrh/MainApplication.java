@@ -15,12 +15,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.multidex.MultiDexApplication;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaredrummler.cyanea.Cyanea;
 
 import org.joda.time.LocalDateTime;
 
+import java.io.IOException;
 import java.util.Random;
 
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
@@ -32,15 +36,70 @@ import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 import io.sentry.event.User;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 
 public class MainApplication extends MultiDexApplication {
     private static final String TAG = MainApplication.class.getSimpleName();
 
+    private MainApplication tohle = this;
+
     private NotificationState notificationState = null;
     private LocalDateTime updateTime = null;
     private LiveData<RozvrhWrapper> currentWeekLivedata = null;
     private Observer<RozvrhWrapper> currentWeekObserver = null;
+
+    private Retrofit retrofit = null;
+
+    public Retrofit getRetrofit() {
+        if (SharedPrefs.contains(this, SharedPrefs.URL)){
+
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            Interceptor loginInterceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    if (!getLogin().getAccessToken(tohle).isEmpty()){
+                        Request newRequest  = chain.request().newBuilder()
+                                .addHeader("Authorization", "Bearer " + getLogin().getAccessToken(tohle))
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                    return chain.proceed(chain.request());
+                }
+            };
+
+            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(loginInterceptor).build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
+                    .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                    .client(client)
+                    .build();
+
+            return retrofit;
+        }
+            return null;
+    }
+
+    private Login login = null;
+
+    public Login getLogin() {
+        if (login == null){
+            login = new Login(this.getApplicationContext());
+        }
+        return login;
+    }
 
     @Override
     public void onCreate() {

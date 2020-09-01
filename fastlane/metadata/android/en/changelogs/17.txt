@@ -1,0 +1,3 @@
+ 
+- Very quick hotfix for the new API v3 (as the old API stopped working)
+- Redundant empty lessons at the start of day are now automatically removed.

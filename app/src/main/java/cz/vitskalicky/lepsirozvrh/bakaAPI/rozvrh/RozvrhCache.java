@@ -6,6 +6,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.joda.time.LocalDate;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -18,6 +21,8 @@ import java.io.FilenameFilter;
 import java.nio.channels.FileLock;
 
 import cz.vitskalicky.lepsirozvrh.Utils;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.NO_CACHE;
@@ -85,8 +90,10 @@ public class RozvrhCache {
             RozvrhRoot root;
             try (FileInputStream inputStream = context.openFileInput(filename)) {
 
-                Serializer serializer = new Persister();
-                root = serializer.read(RozvrhRoot.class, inputStream);
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+
+                root = RozvrhConverter.convert(objectMapper.readValue(inputStream, Rozvrh3.class), monday == null,context);
                 root.checkDemoMode(context);
 
             } catch (FileNotFoundException e) {

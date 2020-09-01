@@ -117,13 +117,13 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         String type = SharedPrefs.getString(getContext(), SharedPrefs.TYPE);
         //todo user type name has changed
         switch (type) {
-            case "Z":
+            case "student":
                 userInfo.setSummary(R.string.student);
                 break;
-            case "R":
+            case "parents":
                 userInfo.setSummary(R.string.parent);
                 break;
-            case "U":
+            case "teacher":
                 userInfo.setSummary(R.string.teacher);
                 break;
         }

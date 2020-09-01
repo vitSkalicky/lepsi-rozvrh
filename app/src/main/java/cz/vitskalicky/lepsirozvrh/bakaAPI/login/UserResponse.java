@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
-    String fullName;
-    String UserTypeText;
-    String UserType;
+    public String fullName;
+    public String UserTypeText;
+    public String UserType;
 }

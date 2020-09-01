@@ -92,6 +92,30 @@ public class MainApplication extends MultiDexApplication {
             return null;
     }
 
+    private Retrofit loginRetrofit = null;
+
+    public Retrofit getLoginRetrofit() {
+        if (SharedPrefs.contains(this, SharedPrefs.URL)){
+
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
+                    .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                    .client(client)
+                    .build();
+
+            return retrofit;
+        }
+        return null;
+    }
+
     private Login login = null;
 
     public Login getLogin() {

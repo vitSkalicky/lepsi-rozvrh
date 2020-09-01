@@ -41,7 +41,7 @@ public class Rozvrh {
     }
 
     @Commit
-    private void onCommit() {
+    public void onCommit() {
         deleteNullDays();
         deleteNullCaptions();
         deleteRedundantLessons();

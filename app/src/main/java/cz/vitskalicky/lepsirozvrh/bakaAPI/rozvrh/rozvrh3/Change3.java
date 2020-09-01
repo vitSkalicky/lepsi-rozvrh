@@ -1,12 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3;
 
 public class Change3 {
-    String changeSubject;
-    String day;
-    String hours;
-    String changeType;
-    String description;
-    String time;
-    String typeAbbrev;
-    String typeName;
+    public String changeSubject;
+    public String day;
+    public String hours;
+    public String changeType;
+    public String description;
+    public String time;
+    public String typeAbbrev;
+    public String typeName;
 }

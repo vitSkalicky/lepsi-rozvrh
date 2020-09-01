@@ -1,8 +1,8 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3;
 
 public class Hour3 {
-    int id;
-    String caption;
-    String beginTime;
-    String endTime;
+    public int id;
+    public String caption;
+    public String beginTime;
+    public String endTime;
 }

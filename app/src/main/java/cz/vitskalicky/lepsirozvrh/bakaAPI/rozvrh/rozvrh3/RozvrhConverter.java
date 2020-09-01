@@ -33,9 +33,9 @@ public class RozvrhConverter {
         }
         rozvrh.setHodiny(captions);
 
-        HashMap<Integer, Hour3> hours = new HashMap<>();
+        HashMap<String, Hour3> hours = new HashMap<>();
         for (Hour3 item :rozvrh3.hours) {
-            hours.put(item.id, item);
+            hours.put(item.id + "", item);
         }
         HashMap<String, Class3> classes = new HashMap<>();
         for (Class3 item :rozvrh3.classes) {
@@ -75,7 +75,7 @@ public class RozvrhConverter {
         ArrayList<RozvrhDen> days = new ArrayList<>();
         for (Day3 item :rozvrh3.days) {
             RozvrhDen newDen = new RozvrhDen();
-            LocalDate date = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssXXX").parseLocalDate(item.date);
+            LocalDate date = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ").parseLocalDate(item.date);
             newDen.setDatum(date.toString(RozvrhDen.DATE_FORMATTER));
 
             newDen.setZkratka(daysOfWeek[item.dayOfWeek - 1]);
@@ -114,15 +114,27 @@ public class RozvrhConverter {
                 newHodina.setCycle(zkrSkupSb.toString());
 
                 newHodina.setChng(atom.change == null ? "" : atom.change.description);
+                if (atom.change != null){
+                    if (newHodina.getZkrpr().isEmpty()){
+                        newHodina.setZkrpr(atom.change.typeAbbrev);
+                    }
+                    if (newHodina.getPr().isEmpty()){
+                        newHodina.setPr(atom.change.typeName);
+                    }
+                }
+
                 newHodina.setUkolodevzdat(atom.homeworkIds.length > 0 ? Integer.toString(atom.homeworkIds.length) : "");
+
+                newHodina.commit();
 
                 lessons.add(newHodina);
             }
+            newDen.setHodiny(lessons);
             days.add(newDen);
         }
 
         rozvrh.setDny(days);
-
+        rozvrh.onCommit();
         RozvrhRoot rozvrhRoot = new RozvrhRoot();
         rozvrhRoot.setRozvrh(rozvrh);
 

@@ -1,18 +1,16 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Rozvrh of the Bakaláři API v3
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rozvrh3 {
-    Hour3[] hours;
-    Day3[] days;
-    Class3[] classes;
-    Group3[] groups;
-    Subject3[] subjects;
-    Teacher3[] teachers;
-    Room3[] rooms;
-    Cycle3[] cycles;
+    public Hour3[] hours;
+    public Day3[] days;
+    public Class3[] classes;
+    public Group3[] groups;
+    public Subject3[] subjects;
+    public Teacher3[] teachers;
+    public Room3[] rooms;
+    public Cycle3[] cycles;
 }

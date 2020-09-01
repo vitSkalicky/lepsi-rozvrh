@@ -62,7 +62,7 @@ public class Login {
      */
     public void login(String url, String username, String password, Listener listener){
         SharedPrefs.setString(context, SharedPrefs.URL, unifyUrl(url));
-        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
+        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getLoginRetrofit();
 
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
@@ -122,7 +122,7 @@ public class Login {
      * refreshes login token
      * */
     public void refreshToken(Listener listener){
-        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
+        Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getLoginRetrofit();
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
         refreshQueue.add(listener);

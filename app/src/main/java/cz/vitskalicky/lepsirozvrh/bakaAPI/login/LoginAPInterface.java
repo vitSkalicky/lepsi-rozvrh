@@ -14,7 +14,7 @@ public interface LoginAPInterface {
 
     @FormUrlEncoded
     @POST("api/login")
-    Call<LoginResponse> refreshLogin(@Field("client_id") String clientId, @Field("grent_type") String grantType, @Field("refresh_token") String refreshToken);
+    Call<LoginResponse> refreshLogin(@Field("client_id") String clientId, @Field("grant_type") String grantType, @Field("refresh_token") String refreshToken);
 
     @GET("api/3/user")
     Call<UserResponse> getUser();

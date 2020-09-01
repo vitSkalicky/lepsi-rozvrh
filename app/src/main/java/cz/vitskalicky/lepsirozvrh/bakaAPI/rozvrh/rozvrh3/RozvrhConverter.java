@@ -111,7 +111,7 @@ public class RozvrhConverter {
                 for (int i = 0; i < atom.cycleIds.length; i++) {
                     cycleSb.append(cycles.get(atom.cycleIds[i]).abbrev);
                 }
-                newHodina.setCycle(zkrSkupSb.toString());
+                newHodina.setCycle(cycleSb.toString());
 
                 newHodina.setChng(atom.change == null ? "" : atom.change.description);
                 if (atom.change != null){
@@ -120,6 +120,9 @@ public class RozvrhConverter {
                     }
                     if (newHodina.getPr().isEmpty()){
                         newHodina.setPr(atom.change.typeName);
+                    }
+                    if (atom.change.changeType.equals("Canceled")){
+                        newHodina.setTyp("A");
                     }
                 }
 

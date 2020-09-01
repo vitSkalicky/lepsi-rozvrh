@@ -85,18 +85,16 @@ public class RozvrhHodina {
     @Commit
     public void commit() {
         if (chng == null) chng = "";
-        if (!chng.equals("")) {
-            highlight = CHANGED;
-        } else if (typ.equals("A")) {
+        if (typ.equals("A")) {
             highlight = NO_LESSON;
+        } else if (!chng.equals("")) {
+            highlight = CHANGED;
         } else if (typ.equals("X")) { //sometimes, there are just empty hours with X and no change
             highlight = EMPTY;
         } else {
             highlight = NONE;
         }
     }
-
-    private boolean expanded;
 
     public String getBegintime() {
         return begintime;
@@ -176,10 +174,6 @@ public class RozvrhHodina {
         return nazev;
     }
 
-    public boolean isExpanded() {
-        return expanded;
-    }
-
     public String getChng() {
         return chng;
     }
@@ -234,10 +228,6 @@ public class RozvrhHodina {
 
     public void setZkrskup(String zkrskup) {
         this.zkrskup = zkrskup;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public void setTyp(String typ) {

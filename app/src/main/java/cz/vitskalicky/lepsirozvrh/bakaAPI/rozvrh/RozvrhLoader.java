@@ -24,6 +24,7 @@ import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class RozvrhLoader {
     public static final String TAG = RozvrhLoader.class.getSimpleName();
@@ -48,7 +49,17 @@ public class RozvrhLoader {
         }
         if (!requestInProcess.contains(monday) || isRetry){
 
-            RozvrhAPIInterface apiInterface = ((MainApplication)context.getApplicationContext()).getRetrofit().create(RozvrhAPIInterface.class);
+            Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
+            if (retrofit == null){
+                Result result = new Result();
+                result.code = ResponseCode.LOGIN_FAILED;
+                result.raw = "no url";
+                result.rozvrh = null;
+                invokeListeners(monday, result);
+                return;
+            }
+
+            RozvrhAPIInterface apiInterface = retrofit.create(RozvrhAPIInterface.class);
 
             boolean perm = monday == null;
             Call<Rozvrh3> call;

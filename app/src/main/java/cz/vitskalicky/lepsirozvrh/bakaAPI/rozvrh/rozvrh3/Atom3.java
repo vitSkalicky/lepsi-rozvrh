@@ -7,7 +7,7 @@ public class Atom3 {
     String teacherId;
     String roomId;
     String[] cycleIds;
-    String change;
+    Change3 change;
     String[] homeworkIds;
     String theme;
 }

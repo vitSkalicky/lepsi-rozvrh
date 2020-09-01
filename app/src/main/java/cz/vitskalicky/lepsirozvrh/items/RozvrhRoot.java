@@ -24,6 +24,10 @@ public class RozvrhRoot {
         return rozvrh;
     }
 
+    public void setRozvrh(Rozvrh rozvrh) {
+        this.rozvrh = rozvrh;
+    }
+
     /**
      * checks if demonstration mode is enabled, if so it sets itself to demonstration Rozvrh
      */

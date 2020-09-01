@@ -26,15 +26,15 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 public class Rozvrh {
     public static final String TAG = Rozvrh.class.getSimpleName();
     @Element(required = false)
-    private String typ = "";
+    protected String typ = "";
     @ElementList(required = false)
-    private List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
+    protected List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
     @ElementList(required = false)
-    private List<RozvrhDen> dny = new LinkedList<>();
+    protected List<RozvrhDen> dny = new LinkedList<>();
     @Element(required = false)
-    private String nazevcyklu = "";
+    protected String nazevcyklu = "";
     @Element(required = false)
-    private String zkratkacyklu = "";
+    protected String zkratkacyklu = "";
 
     public Rozvrh() {
         super();
@@ -418,6 +418,34 @@ public class Rozvrh {
             this.rozvrhHodina = rozvrhHodina;
             this.localDateTime = localDateTime;
             this.errCode = errCode;
+        }
+    }
+
+    public static class MutableRozvrh extends Rozvrh{
+
+        public void setTyp(String typ) {
+            this.typ = typ;
+        }
+
+        public void setHodiny(List<RozvrhHodinaCaption> hodiny) {
+            this.hodiny = hodiny;
+        }
+
+        public void setDny(List<RozvrhDen> dny) {
+            this.dny = dny;
+        }
+
+        public void setNazevcyklu(String nazevcyklu) {
+            this.nazevcyklu = nazevcyklu;
+        }
+
+        public void setZkratkacyklu(String zkratkacyklu) {
+            this.zkratkacyklu = zkratkacyklu;
+        }
+
+
+        public Rozvrh build(){
+            return (Rozvrh)this;
         }
     }
 }

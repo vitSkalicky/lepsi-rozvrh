@@ -15,6 +15,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.multidex.MultiDexApplication;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaredrummler.cyanea.Cyanea;
 
 import org.joda.time.LocalDateTime;
@@ -53,7 +55,7 @@ public class MainApplication extends MultiDexApplication {
     private LiveData<RozvrhWrapper> currentWeekLivedata = null;
     private Observer<RozvrhWrapper> currentWeekObserver = null;
 
-    private static Retrofit retrofit = null;
+    private Retrofit retrofit = null;
 
     public Retrofit getRetrofit() {
         if (SharedPrefs.contains(this, SharedPrefs.URL)){
@@ -64,9 +66,9 @@ public class MainApplication extends MultiDexApplication {
             Interceptor loginInterceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
-                    if (!Login.getAccessToken(tohle).isEmpty()){
+                    if (!getLogin().getAccessToken(tohle).isEmpty()){
                         Request newRequest  = chain.request().newBuilder()
-                                .addHeader("Authorization", "Bearer " + Login.getAccessToken(tohle))
+                                .addHeader("Authorization", "Bearer " + getLogin().getAccessToken(tohle))
                                 .build();
                         return chain.proceed(newRequest);
                     }
@@ -76,16 +78,27 @@ public class MainApplication extends MultiDexApplication {
 
             OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(loginInterceptor).build();
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
-                    .addConverterFactory(JacksonConverterFactory.create())
+                    .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                     .client(client)
                     .build();
 
             return retrofit;
         }
             return null;
+    }
+
+    private Login login = null;
+
+    public Login getLogin() {
+        if (login == null){
+            login = new Login(this.getApplicationContext());
+        }
+        return login;
     }
 
     @Override

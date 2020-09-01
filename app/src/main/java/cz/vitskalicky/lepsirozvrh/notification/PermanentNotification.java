@@ -75,7 +75,7 @@ public class PermanentNotification {
                 update(rozvrhHodina, offset, context);
             }
         } else {
-            if (Login.getToken(context).isEmpty()){
+            if (!((MainApplication)context.getApplicationContext()).getLogin().isLoggedIn()){
                 update(null,0, context);
             }
         }
@@ -88,7 +88,7 @@ public class PermanentNotification {
      */
     public static void update(RozvrhHodina hodina,int offset, Context context) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        boolean isTeacher = Login.isTeacher(context);
+        boolean isTeacher = ((MainApplication)context.getApplicationContext()).getLogin().isTeacher();
 
         if ((hodina == null && offset == 0) || !SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
             notificationManager.cancel(PERMANENT_NOTIFICATION_ID);

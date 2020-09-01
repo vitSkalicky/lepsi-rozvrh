@@ -8,6 +8,8 @@ import android.util.Log;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.ISODateTimeFormat;
 
+import java.util.ArrayList;
+
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
@@ -25,6 +27,16 @@ import retrofit2.Retrofit;
 
 public class Login {
     private static String TAG = Login.class.getSimpleName();
+
+    private Context context;
+
+    /**
+     * Use
+     * @param context
+     */
+    public Login(Context context) {
+        this.context = context;
+    }
 
     /**
      * ResponseListener for returning login data.
@@ -47,9 +59,8 @@ public class Login {
      * @param username user's username
      * @param password user's password
      * @param listener listener for returning status
-     * @param context app context
      */
-    public static void login(String url, String username, String password, Listener listener, Context context){
+    public void login(String url, String username, String password, Listener listener){
         SharedPrefs.setString(context, SharedPrefs.URL, unifyUrl(url));
         Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
 
@@ -103,50 +114,68 @@ public class Login {
     }
 
     /**
+     * listeners waiting for refresh response
+     */
+    private ArrayList<Listener> refreshQueue = new ArrayList<>();
+
+    /**
      * refreshes login token
      * */
-    public static void refreshToken(Listener listener, Context context){
+    public void refreshToken(Listener listener){
         Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
-        apiInterface.refreshLogin("ANDR", "refresh_token", SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN)).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()){
-                    String refreshToken = response.body().refresh_token;
-                    String accessToken = response.body().access_token;
+        refreshQueue.add(listener);
 
-                    SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, refreshToken);
-                    SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, accessToken);
-                    SharedPrefs.setString(context, SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.body().expires_in).toString(ISODateTimeFormat.dateTime()));
+        if (refreshQueue.size() == 1){
+            apiInterface.refreshLogin("ANDR", "refresh_token", SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN)).enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if (response.isSuccessful()){
+                        String refreshToken = response.body().refresh_token;
+                        String accessToken = response.body().access_token;
 
-                    listener.onResponse(SUCCESS);
-                }else {
-                    Log.e(TAG, "Refresh failed: " + response.toString());
-                    listener.onResponse(WRONG_LOGIN);
+                        SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, refreshToken);
+                        SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, accessToken);
+                        SharedPrefs.setString(context, SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.body().expires_in).toString(ISODateTimeFormat.dateTime()));
 
+                        notifyRefreshQueue(SUCCESS);
+                    }else {
+                        Log.e(TAG, "Refresh failed: " + response.toString());
+                        notifyRefreshQueue(WRONG_LOGIN);
+
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.e(TAG, t.toString());
-                t.printStackTrace();
-                listener.onResponse(SERVER_UNREACHABLE);
-            }
-        });
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.e(TAG, t.toString());
+                    t.printStackTrace();
+                    notifyRefreshQueue(SERVER_UNREACHABLE);
+                }
+            });
+        }
     }
 
-    public static void refreshTokenIfNeeded(Listener listener, Context context){
+    private void notifyRefreshQueue(int code){
+        ArrayList<Listener> copy = new ArrayList<>(refreshQueue);
+        refreshQueue.clear();
+
+        for (Listener item :copy) {
+            item.onResponse(code);
+        }
+    }
+
+    public void refreshTokenIfNeeded(Listener listener){
         if (getAccessToken(context).isEmpty()){
-            refreshToken(listener, context);
+            refreshToken(listener);
         }
     }
 
     /**
      * Returns a valid access token or an empty string.
      */
-    public static String getAccessToken(Context context){
+    public String getAccessToken(Context context){
         String expiresStr = SharedPrefs.getString(context, SharedPrefs.ACCESS_EXPIRES);
         if (expiresStr.isEmpty())
             return "";
@@ -159,7 +188,7 @@ public class Login {
     /**
      * Logs out user (deletes credentials)
      */
-    public static void logout(Context context){
+    public void logout(){
         SharedPrefs.remove(context, SharedPrefs.USERNAME);
         SharedPrefs.remove(context, SharedPrefs.REFRESH_TOKEN);
         SharedPrefs.remove(context, SharedPrefs.ACCEESS_TOKEN);
@@ -206,7 +235,7 @@ public class Login {
      * Whether to show teacher's or students rozvrh (each is fetched and displayed slightly differently)
      * @return {@code true} if the user logged in is a teacher or {@code false} if not (then it is a student or a parent)
      */
-    public static boolean isTeacher(Context context){
+    public boolean isTeacher(){
         String type = SharedPrefs.getString(context, SharedPrefs.TYPE);
         if (type.equals("teacher")){
             return true;
@@ -215,10 +244,14 @@ public class Login {
         }
     }
 
+    public boolean isLoggedIn(){
+        return !SharedPrefs.getString(context, SharedPrefs.REFRESH_TOKEN).isEmpty();
+    }
+
     /**
      * Removes /next/login.aspx
      */
-    private static String unifyUrl(String url){
+    private String unifyUrl(String url){
         if (url.endsWith(".aspx"))
             url = url.substring(0, url.length() - 5);
         if (url.endsWith("login")){

@@ -15,6 +15,7 @@ import androidx.core.text.HtmlCompat;
 import java.util.HashSet;
 
 import cz.vitskalicky.lepsirozvrh.AppSingleton;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
@@ -50,7 +51,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         boolean loggedOut = false;
 
         // check login
-        if (Login.getToken(context).isEmpty()){
+        if (!((MainApplication)context.getApplicationContext()).getLogin().isLoggedIn()){
             //logged out
             loggedOut = true;
         }
@@ -155,7 +156,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
             String zkruc = hodina.getZkruc();
             if (zkruc == null)
                 zkruc = "";
-            if (Login.isTeacher(context)) {
+            if (((MainApplication)context.getApplicationContext()).getLogin().isTeacher()) {
                 // to teacher's we want to show the class, not the teacher
                 // the class name is saved in zkrskup and skup
                 zkruc = hodina.getZkrskup();

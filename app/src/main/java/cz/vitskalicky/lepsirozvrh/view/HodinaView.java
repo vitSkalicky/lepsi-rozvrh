@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
@@ -76,7 +77,7 @@ public class HodinaView extends CellView {
             String zkruc = hodina.getZkruc();
             if (zkruc == null)
                 zkruc = "";
-            if (Login.isTeacher(getContext())){
+            if (((MainApplication)getContext().getApplicationContext()).getLogin().isTeacher()){
                 // to teacher's we want to show the class, not the teacher
                 // the class name is saved in zkrskup and skup
                 zkruc = hodina.getZkrskup();
@@ -229,7 +230,7 @@ public class HodinaView extends CellView {
             String zkruc = hodina.getZkruc();
             if (zkruc == null)
                 zkruc = "";
-            if (Login.isTeacher(getContext())){
+            if (((MainApplication)getContext().getApplicationContext()).getLogin().isTeacher()){
                 // to teacher's we want to show the class, not the teacher
                 // the class name is saved in zkrskup and skup
                 zkruc = hodina.getZkrskup();

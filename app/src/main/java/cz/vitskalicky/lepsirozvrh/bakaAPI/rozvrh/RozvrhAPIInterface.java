@@ -8,11 +8,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface RozvrhAPIInterface {
-    @FormUrlEncoded
     @GET("api/3/timetable/actual?")
     public Call<Rozvrh3> getActualSchedule(@Query("date") String date);
 
-    @FormUrlEncoded
     @GET("api/3/timetable/permanent")
     public Call<Rozvrh3> getPermanentSchedule();
 }

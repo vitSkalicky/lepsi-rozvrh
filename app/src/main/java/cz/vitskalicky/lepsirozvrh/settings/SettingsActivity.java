@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.jaredrummler.cyanea.Cyanea;
 
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.BaseActivity;
@@ -151,7 +152,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
         if (settingsFragment != null) {
             settingsFragment.init(donations);
             settingsFragment.setLogoutListener(() -> {
-                Login.logout(this);
+                ((MainApplication)getApplicationContext()).getLogin().logout();
                 finish();
                 return;
             });

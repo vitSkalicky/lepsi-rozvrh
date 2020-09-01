@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
@@ -60,7 +61,7 @@ public class LoginActivity extends BaseActivity {
         if (tilURL.getEditText().getText().toString().isEmpty())
             tilURL.getEditText().setText(SharedPrefs.getString(this, SharedPrefs.URL));
 
-        Login.logout(this);
+        ((MainApplication)getApplicationContext()).getLogin().logout();
 
         bChooseSchool.setOnClickListener(v -> {
             Intent intent = new Intent(this, SchoolsListActivity.class);
@@ -102,7 +103,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        Login.login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code) -> {
+        ((MainApplication)getApplicationContext()).getLogin().login(tilURL.getEditText().getText().toString(), tilUsername.getEditText().getText().toString(), tilPassword.getEditText().getText().toString(), (code) -> {
             if (code == Login.SUCCESS) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -127,7 +128,7 @@ public class LoginActivity extends BaseActivity {
                 twMessage.setText(R.string.schedule_disabled);
             }
 
-        }, this);
+        });
     }
 
     public void showUnsecureConnectionWanrning() {

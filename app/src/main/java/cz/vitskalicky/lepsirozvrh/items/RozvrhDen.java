@@ -50,12 +50,13 @@ public class RozvrhDen {
         return datum;
     }
 
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyyMMdd");
+
     public LocalDate getParsedDatum(){
         if (datum == null || datum.isEmpty())
             return null;
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
         try{
-            return formatter.parseLocalDate(datum);
+            return DATE_FORMATTER.parseLocalDate(datum);
         }catch (IllegalArgumentException e){
             return null;
         }
@@ -63,6 +64,14 @@ public class RozvrhDen {
 
     public void setDatum(String datum) {
         this.datum = datum;
+    }
+
+    public void setZkratka(String zkratka) {
+        this.zkratka = zkratka;
+    }
+
+    public void setHodiny(List<RozvrhHodina> hodiny) {
+        this.hodiny = hodiny;
     }
 
     public String getDay() { return Utils.parseDate(datum, "yyyyMMdd", "d"); }

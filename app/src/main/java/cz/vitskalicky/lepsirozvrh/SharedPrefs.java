@@ -7,6 +7,8 @@ import androidx.preference.PreferenceManager;
 
 import com.android.volley.toolbox.StringRequest;
 
+import org.joda.time.format.ISODateTimeFormat;
+
 /**
  * Utilities for shared preferences
  */
@@ -15,7 +17,13 @@ public class SharedPrefs {
     //key constants (do not change in future)
     public static final String URL = "url";
     public static final String USERNAME = "username";
-    public static final String PASSWORD_HASH = "passwordHash";
+    public static final String ACCEESS_TOKEN = "access_token";
+    public static final String REFRESH_TOKEN = "refresh_token";
+    /**
+     * ISO formatted date time on which access token expires.
+     * @see ISODateTimeFormat#dateTime()
+     */
+    public static final String ACCESS_EXPIRES = "access_expires";
     public static final String NAME = "name";
     public static final String TYPE = "type";
     public static final String SENTRY_ID = "sentry_id";

@@ -1,6 +1,5 @@
 package cz.vitskalicky.lepsirozvrh.notification;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,14 +24,12 @@ import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
-import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
-import io.sentry.util.Util;
 
 public class PermanentNotification {
     public static final int PERMANENT_NOTIFICATION_ID = 7055713;
@@ -78,7 +75,7 @@ public class PermanentNotification {
                 update(rozvrhHodina, offset, context);
             }
         } else {
-            if (Login.getToken(context).isEmpty()){
+            if (!((MainApplication)context.getApplicationContext()).getLogin().isLoggedIn()){
                 update(null,0, context);
             }
         }
@@ -91,7 +88,7 @@ public class PermanentNotification {
      */
     public static void update(RozvrhHodina hodina,int offset, Context context) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        boolean isTeacher = Login.isTeacher(context);
+        boolean isTeacher = ((MainApplication)context.getApplicationContext()).getLogin().isTeacher();
 
         if ((hodina == null && offset == 0) || !SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
             notificationManager.cancel(PERMANENT_NOTIFICATION_ID);

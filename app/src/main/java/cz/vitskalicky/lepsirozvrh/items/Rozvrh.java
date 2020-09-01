@@ -26,24 +26,25 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 public class Rozvrh {
     public static final String TAG = Rozvrh.class.getSimpleName();
     @Element(required = false)
-    private String typ = "";
+    protected String typ = "";
     @ElementList(required = false)
-    private List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
+    protected List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
     @ElementList(required = false)
-    private List<RozvrhDen> dny = new LinkedList<>();
+    protected List<RozvrhDen> dny = new LinkedList<>();
     @Element(required = false)
-    private String nazevcyklu = "";
+    protected String nazevcyklu = "";
     @Element(required = false)
-    private String zkratkacyklu = "";
+    protected String zkratkacyklu = "";
 
     public Rozvrh() {
         super();
     }
 
     @Commit
-    private void onCommit() {
+    public void onCommit() {
         deleteNullDays();
         deleteNullCaptions();
+        fillEmptyLessons();
         deleteRedundantLessons();
     }
 
@@ -62,6 +63,53 @@ public class Rozvrh {
             RozvrhHodinaCaption caption = iteratorCaption.next();
             if (caption.getBegintime().isEmpty() || caption.getEndtime().isEmpty())
                 iteratorCaption.remove();
+        }
+    }
+    private void fillEmptyLessons(){
+        for (RozvrhDen den :dny) {
+            LinkedList<RozvrhHodina> newHodiny = new LinkedList();
+            int hodinaIndex = 0;
+            int captionIndex = 0;
+            boolean lastOk = false;
+            while (hodinaIndex < den.getHodiny().size() && captionIndex < hodiny.size()){
+                String captionId = (hodiny.get(captionIndex).getCaption());
+                String hodinaCaptionId = den.getHodiny().get(hodinaIndex).getCaption();
+
+                if (captionId.equals(hodinaCaptionId)){
+                    newHodiny.add(den.getHodiny().get(hodinaIndex));
+                    hodinaIndex++;
+                    lastOk = true;
+                }else if(lastOk){
+                    lastOk = false;
+                    captionIndex++;
+                }else {
+                    RozvrhHodina empty = new RozvrhHodina();
+                    empty.setTyp("X");
+                    empty.setUkolodevzdat("");
+                    empty.setNotice("");
+                    empty.setSkup("");
+                    empty.setAbs("");
+                    empty.setMist("");
+                    empty.setChng("");
+                    empty.setZkrskup("");
+                    empty.setZkrpr("");
+                    empty.setPr("");
+                    empty.setZkruc("");
+                    empty.setUc("");
+                    empty.setZkrmist("");
+                    empty.setTema("");
+                    empty.setCaption(captionId);
+                    empty.setZkratka("");
+                    empty.setNazev("");
+                    empty.setCycle("");
+                    empty.commit();
+
+                    newHodiny.add(empty);
+                    captionIndex++;
+                }
+            }
+
+            den.setHodiny(newHodiny);
         }
     }
 
@@ -418,6 +466,34 @@ public class Rozvrh {
             this.rozvrhHodina = rozvrhHodina;
             this.localDateTime = localDateTime;
             this.errCode = errCode;
+        }
+    }
+
+    public static class MutableRozvrh extends Rozvrh{
+
+        public void setTyp(String typ) {
+            this.typ = typ;
+        }
+
+        public void setHodiny(List<RozvrhHodinaCaption> hodiny) {
+            this.hodiny = hodiny;
+        }
+
+        public void setDny(List<RozvrhDen> dny) {
+            this.dny = dny;
+        }
+
+        public void setNazevcyklu(String nazevcyklu) {
+            this.nazevcyklu = nazevcyklu;
+        }
+
+        public void setZkratkacyklu(String zkratkacyklu) {
+            this.zkratkacyklu = zkratkacyklu;
+        }
+
+
+        public Rozvrh build(){
+            return (Rozvrh)this;
         }
     }
 }

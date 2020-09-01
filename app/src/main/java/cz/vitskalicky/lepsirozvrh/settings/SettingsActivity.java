@@ -7,16 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import com.jaredrummler.cyanea.Cyanea;
 
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.BaseActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.Login;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.donations.Donations;
 
 public class SettingsActivity extends BaseActivity implements Utils.RecreateWithAnimationActivity {
@@ -152,7 +152,7 @@ public class SettingsActivity extends BaseActivity implements Utils.RecreateWith
         if (settingsFragment != null) {
             settingsFragment.init(donations);
             settingsFragment.setLogoutListener(() -> {
-                Login.logout(this);
+                ((MainApplication)getApplicationContext()).getLogin().logout();
                 finish();
                 return;
             });

@@ -17,8 +17,7 @@
     <string name="choose_school">Seznam škol…</string>
     <string name="login_button">Přihlásit se</string>
     <string name="login_message">Přihlaste se do systému Bakláři</string>
-    <string name="invalid_username">Neplatné uživatelské jméno</string>
-    <string name="invalid_password">Špatné heslo</string>
+    <string name="invalid_login">Neplatné uživatelské jméno nebo heslo</string>
     <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
     <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
     <string name="unreachable">Server nedostupný (zkotrolujte internetové připojení a adresu serveru)</string>
@@ -62,6 +61,14 @@
     <string name="dont_show_again">Znovu nezobrazovat</string>
     <string name="something_went_wrong">Něco se nepovedlo :(</string>
     <string name="report">Nahlásit</string>
+
+    <string name="monday">Po</string>
+    <string name="tuesday">Út</string>
+    <string name="wednesday">St</string>
+    <string name="thursday">Čt</string>
+    <string name="friday">Pá</string>
+    <string name="saturday">So</string>
+    <string name="sunday">Ne</string>
 
     <!-- Theme preferences -->]
     <string name="app_theme_screen">Motiv</string>

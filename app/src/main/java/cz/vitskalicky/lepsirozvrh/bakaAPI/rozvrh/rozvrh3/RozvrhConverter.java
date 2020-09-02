@@ -105,7 +105,7 @@ public class RozvrhConverter {
                     skupSb.append(groups.get(atom.groupIds[i]).name);
                 }
                 newHodina.setZkrskup(zkrSkupSb.toString());
-                newHodina.setZkrskup(skupSb.toString());
+                newHodina.setSkup(skupSb.toString());
 
                 StringBuilder cycleSb = new StringBuilder();
                 for (int i = 0; i < atom.cycleIds.length; i++) {

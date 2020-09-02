@@ -20,8 +20,8 @@ public class RozvrhConverter {
         Rozvrh.MutableRozvrh rozvrh = new Rozvrh.MutableRozvrh();
         rozvrh.setTyp(perm ? "perm" : "akt");
 
-        rozvrh.setNazevcyklu(rozvrh3.cycles[0].name);
-        rozvrh.setZkratkacyklu(rozvrh3.cycles[0].abbrev);
+        rozvrh.setNazevcyklu(rozvrh3.cycles.length > 0 ? rozvrh3.cycles[0].name : "");
+        rozvrh.setZkratkacyklu(rozvrh3.cycles.length > 0 ? rozvrh3.cycles[0].abbrev : "");
 
         ArrayList<RozvrhHodinaCaption> captions = new ArrayList<>();
         for (Hour3 item :rozvrh3.hours) {

@@ -54,11 +54,14 @@ public class SchoolsViewModel extends ViewModel {
     }
 
     public void setQuery(String queryString){
+        //todo proper sanitization
         queryString = Normalizer.normalize(queryString, Normalizer.Form.NFD);
         queryString = queryString.replaceAll("[^\\p{ASCII}]", "");
         queryString = queryString.replace(" ", "* ");
         if (!queryString.isEmpty())
             queryString = queryString + "*";
+        queryString = queryString.replaceAll("\"", "");
+        queryString = queryString.replaceAll("\'", "");
         query.setValue(queryString);
     }
 

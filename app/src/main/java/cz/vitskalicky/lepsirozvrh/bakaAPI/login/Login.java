@@ -261,6 +261,9 @@ public class Login {
         }
         if (!url.endsWith("/"))
             url += "/";
+        if (!(url.startsWith("http://") || url.startsWith("https://"))){
+            url = "https://" + url;
+        }
         return url;
     }
 }

@@ -1,5 +1,13 @@
 # Seznam změn / Changelog
 
+## 1.7.2 (2. 9. 2020)
+
+- Opravy chyb
+
+---
+
+- Bug fixes
+
 ## 1.7.1 (1. 9. 2020)
 
 - Provedena bleskurychlá oprava pro nové API v3 (protože staré přestalo fungovat)

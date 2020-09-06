@@ -133,15 +133,17 @@ public class RozvrhConverter {
 
                 newHodina.setChng(atom.change == null ? "" : atom.change.description);
                 if (atom.change != null){
+                    if (atom.change.changeType.equals("Canceled") || atom.change.changeType.equals("Removed")){
+                        newHodina.setTyp("X");
+                    }
                     if (newHodina.getZkrpr().isEmpty()){
                         newHodina.setZkrpr(atom.change.typeAbbrev);
+                        newHodina.setTyp("A");
                     }
                     if (newHodina.getPr().isEmpty()){
                         newHodina.setPr(atom.change.typeName);
                     }
-                    if (atom.change.changeType.equals("Canceled")){
-                        newHodina.setTyp("A");
-                    }
+
                 }
 
                 newHodina.setUkolodevzdat(atom.homeworkIds.length > 0 ? Integer.toString(atom.homeworkIds.length) : "");

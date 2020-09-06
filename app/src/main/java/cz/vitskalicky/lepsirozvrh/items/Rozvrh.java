@@ -137,7 +137,7 @@ public class Rozvrh {
             for (int j = 0; j < getDny().size(); j++) {
                 if (i < getDny().get(j).getHodiny().size()) {
                     RozvrhHodina hodina = getDny().get(j).getHodiny().get(i);
-                    empty = empty && (hodina == null || hodina.getHighlight() == RozvrhHodina.NO_LESSON || hodina.getHighlight() == RozvrhHodina.EMPTY);
+                    empty = empty && (hodina == null);
                 }
             }
             removable[i] = empty;
@@ -165,7 +165,9 @@ public class Rozvrh {
             for (int i = 0; i < removeStart; i++) {
                 getHodiny().remove(0);
                 for (RozvrhDen item : getDny()) {
-                    item.getHodiny().remove(0);
+                    if (item.getHodiny().size() > 0) {
+                        item.getHodiny().remove(0);
+                    }
                 }
             }
             //we want to leave 1 empty lessons at the end

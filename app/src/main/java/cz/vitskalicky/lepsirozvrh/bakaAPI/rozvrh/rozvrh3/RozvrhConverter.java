@@ -83,33 +83,51 @@ public class RozvrhConverter {
             ArrayList<RozvrhHodina> lessons = new ArrayList<>();
             for (Atom3 atom :item.atoms) {
                 RozvrhHodina newHodina = new RozvrhHodina();
-                newHodina.setCaption(hours.get(atom.hourId).caption);
+                Hour3 caption = hours.get(atom.hourId);
+                newHodina.setCaption(caption == null ? "" : caption.caption);
                 newHodina.setTyp(atom.subjectId == null ? "X" : "H");
-                newHodina.setZkrpr(atom.subjectId != null ? subjects.get(atom.subjectId).abbrev : "");
-                newHodina.setPr(atom.subjectId != null ? subjects.get(atom.subjectId).name : "");
-                newHodina.setZkruc(atom.teacherId != null ? teachers.get(atom.teacherId).abbrev : "");
-                newHodina.setUc(atom.teacherId != null ? teachers.get(atom.teacherId).name : "");
-                newHodina.setZkrmist(atom.roomId != null ? rooms.get(atom.roomId).abbrev : "");
-                newHodina.setMist(atom.roomId != null ? rooms.get(atom.roomId).name : "");
+
+                Subject3 subject = atom.subjectId != null ? subjects.get(atom.subjectId) : null;
+                newHodina.setZkrpr(subject != null ? subject.abbrev : "");
+                newHodina.setPr(subject != null ? subject.name : "");
+
+                Teacher3 teacher = atom.teacherId != null ? teachers.get(atom.teacherId) : null;
+                newHodina.setZkruc(teacher != null ? teacher.abbrev : "");
+                newHodina.setUc(teacher != null ? teacher.name : "");
+
+                Room3 room = atom.roomId != null ? rooms.get(atom.roomId) : null;
+                newHodina.setZkrmist(room != null ? room.abbrev : "");
+                newHodina.setMist(room != null ? room.name : "");
+
                 newHodina.setAbs(""); //ignored
                 newHodina.setTema(atom.theme);
 
                 StringBuilder zkrSkupSb = new StringBuilder();
                 StringBuilder skupSb = new StringBuilder();
-                for (int i = 0; i < atom.groupIds.length; i++) {
-                    if (i > 0){
-                        zkrSkupSb.append(", ");
-                        skupSb.append(", ");
+                boolean first = true;
+                if (atom.groupIds != null){
+                    for (int i = 0; i < atom.groupIds.length; i++) {
+                        Group3 group = groups.get(atom.groupIds[i]);
+                        if (group != null){
+                            if (!first){
+                                zkrSkupSb.append(", ");
+                                skupSb.append(", ");
+                            }
+                            first = false;
+                            zkrSkupSb.append(group.abbrev);
+                            skupSb.append(group.name);
+                        }
                     }
-                    zkrSkupSb.append(groups.get(atom.groupIds[i]).abbrev);
-                    skupSb.append(groups.get(atom.groupIds[i]).name);
                 }
                 newHodina.setZkrskup(zkrSkupSb.toString());
                 newHodina.setSkup(skupSb.toString());
 
                 StringBuilder cycleSb = new StringBuilder();
-                for (int i = 0; i < atom.cycleIds.length; i++) {
-                    cycleSb.append(cycles.get(atom.cycleIds[i]).abbrev);
+                if (atom.cycleIds != null) {
+                    for (int i = 0; i < atom.cycleIds.length; i++) {
+                        Cycle3 cycle = cycles.get(atom.cycleIds[i]);
+                        cycleSb.append(cycle != null ? cycle.abbrev : "");
+                    }
                 }
                 newHodina.setCycle(cycleSb.toString());
 

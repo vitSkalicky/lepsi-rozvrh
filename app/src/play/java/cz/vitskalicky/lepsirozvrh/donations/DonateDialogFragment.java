@@ -120,7 +120,7 @@ public class DonateDialogFragment extends DialogFragment {
     private boolean updatePrizesQueued = false;
     public void updatePrizes(){
         //fail-safe
-        if (!isDetached()) {
+        if (isAdded()) {
             donateLittle.setText(billing.isInitialized() && billing.getSmallDetails() != null ? String.format(getText(R.string.donate_a_little).toString(), billing.getSmallDetails().getPrice()) : getText(R.string.donate_a_little_no_price));
             donateMore.setText(billing.isInitialized() && billing.getBigDetails() != null  ? String.format(getText(R.string.donate_more).toString(), billing.getBigDetails().getPrice()) : getText(R.string.donate_more_no_price));
         }else {

@@ -64,6 +64,11 @@ public class Login {
         SharedPrefs.setString(context, SharedPrefs.URL, unifyUrl(url));
         Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
 
+        if (retrofit == null){
+            listener.onResponse(SERVER_UNREACHABLE);
+            return;
+        }
+
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
         apiInterface.firstLogin("ANDR", "password", username, password).enqueue(new Callback<LoginResponse>() {

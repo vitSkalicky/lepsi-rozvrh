@@ -81,11 +81,15 @@ public class MainApplication extends MultiDexApplication {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
-                    .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                    .client(client)
-                    .build();
+            try {
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
+                        .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                        .client(client)
+                        .build();
+            }catch (IllegalArgumentException e){
+                return null;
+            }
 
             return retrofit;
         }

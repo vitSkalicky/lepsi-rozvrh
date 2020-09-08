@@ -121,8 +121,10 @@ public class Billing implements PurchasesUpdatedListener {
         boolean oldbig = bigPurchased;
 
         Purchase.PurchasesResult purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
-        for (Purchase item : purchases.getPurchasesList()) {
-            handlePurchase(item);
+        if (purchases.getPurchasesList() != null) {
+            for (Purchase item : purchases.getPurchasesList()) {
+                handlePurchase(item);
+            }
         }
         if (oldsmall != isSmallPurchased() || oldbig != isBigPurchased()){
             notifyOnPurchaseListeners();

@@ -73,6 +73,10 @@ public class RozvrhLoader {
             call.enqueue(new Callback<Rozvrh3>() {
                 @Override
                 public void onResponse(Call<Rozvrh3> call, Response<Rozvrh3> response) {
+                    if(!((MainApplication)context.getApplicationContext()).getLogin().isLoggedIn()) {
+                        // in case the user has meanwhile logged out
+                        return;
+                    }
                     if (response.isSuccessful()){
                         Result result = new Result();
                         result.code = ResponseCode.SUCCESS;

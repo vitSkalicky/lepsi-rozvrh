@@ -31,6 +31,7 @@ import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
+import cz.vitskalicky.lepsirozvrh.theme.SystemTheme;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider;
 import io.sentry.Sentry;
@@ -166,6 +167,39 @@ public class MainApplication extends MultiDexApplication {
             SharedPrefs.setBooleanPreference(this, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
             Theme.of(this).setThemeData(DefaultThemes.getLightTheme());
             Theme.of(this).checkSystemTheme();
+        }
+
+        if (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < BuildConfig.VERSION_CODE){
+            //a new version is here
+            // LAST_VERSION_SEEN is set by MainActivity
+
+            //reapply default theme in case it changed
+            int themeNumber = 4;
+            try {
+                themeNumber = Integer.parseInt(SharedPrefs.getStringPreference(this, R.string.PREFS_APP_THEME));
+            }catch (NumberFormatException | NullPointerException ignored){}
+
+            Theme theme = Theme.of(this);
+            switch (themeNumber) {
+                case 0:
+                    boolean systemIsDark = SystemTheme.isDarkTheme(this);
+                    if (systemIsDark){
+                        theme.setThemeData(DefaultThemes.getDarkTheme());
+                    }else {
+                        theme.setThemeData(DefaultThemes.getLightTheme());
+                    }
+                    SharedPrefs.setBooleanPreference(this, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, systemIsDark);
+                    break;
+                case 1:
+                    theme.setThemeData(DefaultThemes.getLightTheme());
+                    break;
+                case 2:
+                    theme.setThemeData(DefaultThemes.getDarkTheme());
+                    break;
+                case 3:
+                    theme.setThemeData(DefaultThemes.getBlackTheme());
+                    break;
+            }
         }
     }
 

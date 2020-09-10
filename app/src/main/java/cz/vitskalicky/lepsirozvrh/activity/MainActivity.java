@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity {
             } else {
                 return false;
             }
-        });/**/
+        });
 
         rtFragment.createViews();
         if (savedInstanceState == null) {

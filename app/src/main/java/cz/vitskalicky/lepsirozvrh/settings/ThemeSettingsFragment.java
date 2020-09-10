@@ -118,6 +118,7 @@ public class ThemeSettingsFragment extends MyCyaneaPreferenceFragmentCompat {
                         theme.setThemeData(DefaultThemes.getLightTheme());
                         SharedPrefs.setBooleanPreference(getContext(), R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false);
                         theme.checkSystemTheme();
+                        break;
                     case 1:
                         theme.setThemeData(DefaultThemes.getLightTheme());
                         break;

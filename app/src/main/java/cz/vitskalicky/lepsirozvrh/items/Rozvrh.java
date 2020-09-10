@@ -137,7 +137,8 @@ public class Rozvrh {
             for (int j = 0; j < getDny().size(); j++) {
                 if (i < getDny().get(j).getHodiny().size()) {
                     RozvrhHodina hodina = getDny().get(j).getHodiny().get(i);
-                    empty = empty && (hodina == null);
+                    empty = empty && (hodina == null || hodina.getHighlight() == RozvrhHodina.NO_LESSON || hodina.getHighlight() == RozvrhHodina.EMPTY);
+
                 }
             }
             removable[i] = empty;

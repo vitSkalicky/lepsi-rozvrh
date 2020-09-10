@@ -40,11 +40,13 @@ public class Donations {
 
     public void showDialog() {
         FragmentManager fm = activity.getSupportFragmentManager();
-        if (donateDF == null){
-            donateDF = new DonateDialogFragment();
+        if (fm.findFragmentByTag("donateDF") == null) {
+            if (donateDF == null) {
+                donateDF = new DonateDialogFragment();
+            }
+            donateDF.init(billing);
+            donateDF.show(fm, "donateDF");
         }
-        donateDF.init(billing);
-        donateDF.show(fm, "donateDF");
     }
 
     public void release(){

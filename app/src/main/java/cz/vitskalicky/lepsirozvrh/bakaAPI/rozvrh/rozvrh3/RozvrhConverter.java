@@ -136,11 +136,9 @@ public class RozvrhConverter {
                     if (atom.change.changeType.equals("Canceled") || atom.change.changeType.equals("Removed")){
                         newHodina.setTyp("X");
                     }
-                    if (newHodina.getZkrpr().isEmpty()){
-                        newHodina.setZkrpr(atom.change.typeAbbrev);
+                    if (atom.change.typeAbbrev != null){
                         newHodina.setTyp("A");
-                    }
-                    if (newHodina.getPr().isEmpty()){
+                        newHodina.setZkrpr(atom.change.typeAbbrev);
                         newHodina.setPr(atom.change.typeName);
                     }
 

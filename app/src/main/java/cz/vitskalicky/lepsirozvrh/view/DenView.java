@@ -90,7 +90,7 @@ public class DenView extends CellView {
         this.rozvrhDen = rozvrhDen;
         if (rozvrhDen != null){
             denText = rozvrhDen.getZkratka();
-            if (rozvrhDen.getDatum().isEmpty()){
+            if (rozvrhDen.getDatum() == null || rozvrhDen.getDatum().isEmpty()){
                 datumText = "";
             }else{
                 DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");

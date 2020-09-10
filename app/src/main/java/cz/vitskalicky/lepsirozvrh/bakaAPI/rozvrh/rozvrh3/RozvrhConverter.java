@@ -75,9 +75,12 @@ public class RozvrhConverter {
         ArrayList<RozvrhDen> days = new ArrayList<>();
         for (Day3 item :rozvrh3.days) {
             RozvrhDen newDen = new RozvrhDen();
-            LocalDate date = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ").parseLocalDate(item.date);
-            newDen.setDatum(date.toString(RozvrhDen.DATE_FORMATTER));
-
+            if (!perm) {
+                LocalDate date = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ").parseLocalDate(item.date);
+                newDen.setDatum(date.toString(RozvrhDen.DATE_FORMATTER));
+            }else {
+                newDen.setDatum("");
+            }
             newDen.setZkratka(daysOfWeek[item.dayOfWeek - 1]);
 
             ArrayList<RozvrhHodina> lessons = new ArrayList<>();

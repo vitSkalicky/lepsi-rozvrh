@@ -128,6 +128,11 @@ public class Login {
      * */
     public void refreshToken(Listener listener){
         Retrofit retrofit = ((MainApplication)context.getApplicationContext()).getRetrofit();
+        if (retrofit == null){
+            listener.onResponse(SERVER_UNREACHABLE);
+            return;
+        }
+
         LoginAPInterface apiInterface = retrofit.create(LoginAPInterface.class);
 
         refreshQueue.add(listener);

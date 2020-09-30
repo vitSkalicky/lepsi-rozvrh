@@ -114,7 +114,7 @@
     <string name="type_no_school_desc">Školní výlet, ředitelské volno, atd.</string>
     <string name="type_empty">Prázdná buňka</string>
     <string name="type_header">Hlavička</string>
-    <string name="type_header_desc">Duňky se dnem nebo číslem hodiny</string>
+    <string name="type_header_desc">Buňky se dnem nebo číslem hodiny</string>
     <string name="other">Ostatní</string>
     <string name="divider_color">Barva mřížky</string>
     <string name="divider_width">Tloušťka mřížky</string>

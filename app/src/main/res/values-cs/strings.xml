@@ -16,11 +16,11 @@
     <string name="bakalari_server_adress">Adresa Vašeho serveru Bakaláři</string>
     <string name="choose_school">Seznam škol…</string>
     <string name="login_button">Přihlásit se</string>
-    <string name="login_message">Přihlaste se do systému Bakláři</string>
+    <string name="login_message">Přihlaste se do systému Bakaláři</string>
     <string name="invalid_login">Neplatné uživatelské jméno nebo heslo</string>
     <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
     <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
-    <string name="unreachable">Server nedostupný (zkotrolujte internetové připojení a adresu serveru)</string>
+    <string name="unreachable">Server nedostupný (zkontrolujte internetové připojení a adresu serveru)</string>
     <string name="enter_username">Zadejte Vaše přihlašovací jméno</string>
     <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
@@ -37,7 +37,7 @@
     <string name="info_login_failed">Přihlášení selhalo</string>
     <string name="info_unexpected_response">Chyba - neočekávaná odpověď serveru</string>
     <string name="unsecure_connectio_title">Spojení není zabezpečené!</string>
-    <string name="unsecure_connectio">Vaše škola neumožňuje zabezpečené spojení se serverem. Přenášná data tedy <b>nejsou šifrována</b> a kdokoliv ve stejné síti je může <b>odposlouchávat</b> nebo dokonce i měnit. <b>Nebezpečí</b> je obzvlášť vysoké <b>na veřejných wi-fi sítích</b>.\nOpravdu se chcete přihlásit?</string>
+    <string name="unsecure_connectio">Vaše škola neumožňuje zabezpečené spojení se serverem. Přenášená data tedy <b>nejsou šifrována</b> a kdokoliv ve stejné síti je může <b>odposlouchávat</b> nebo dokonce i měnit. <b>Nebezpečí</b> je obzvlášť vysoké <b>na veřejných wi-fi sítích</b>.\nOpravdu se chcete přihlásit?</string>
     <string name="unsecure_connection_connect">Přesto se přihlásit</string>
     <string name="unsecure_connection_cancel">Zrušit</string>
 
@@ -53,7 +53,7 @@
     <string name="center_to_current_lesson">Skočit na aktuální hodinu</string>
     <string name="notification">Stálé upozornění</string>
     <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině</string>
-    <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo nasledující hodinu. První hodinu začne zobrzovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
+    <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo následující hodinu. První hodinu začne zobrazovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="support_this_app">Podpořit vývojáře</string>
     <string name="support_this_app_desc">Přispějte na vývoj této aplikace</string>
     <string name="supporting_this_app">Již tuto aplikace podporujete</string>
@@ -77,7 +77,7 @@
     <string name="theme_general_settings">Obecné nastavení</string>
     <string name="app_theme">Motiv aplikace</string>
     <string name="export_theme">Exportovat motiv</string>
-    <string name="export_theme_desc">Vytvoří speciální text, který obasuje aktuální motiv</string>
+    <string name="export_theme_desc">Vytvoří speciální text, který obsahuje aktuální motiv</string>
     <string name="export_theme_detail">Text níže obsahuje všechna data aktuálního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
     <string name="import_theme">Importovat motiv</string>
     <string name="import_theme_desc">Naimportuje motiv ze speciálního textu vytvořeného tlačítkem výše</string>
@@ -109,7 +109,7 @@
     <string name="cell_room_t_desc"></string>
     <string name="type_normal_lesson">Normální hodina</string>
     <string name="type_change">Změna</string>
-    <string name="type_change_desc">Zrušná či přesunutá hodina, atd.</string>
+    <string name="type_change_desc">Zrušená či přesunutá hodina, atd.</string>
     <string name="type_no_school">Vyučování zrušeno</string>
     <string name="type_no_school_desc">Školní výlet, ředitelské volno, atd.</string>
     <string name="type_empty">Prázdná buňka</string>
@@ -131,7 +131,7 @@
     <string name="customize_more_desc">Vše bude podle vás</string>
     <string name="not_a_float_error">Zadejte číslo, třeba 4.2</string>
     <string name="homework_color">Barva tečky domácího úkolu</string>
-    <string name="homework_color_desc">Barva té malé tečky, která značí, že na danou hodinu má být hotov nějaký domácí úkol</string>
+    <string name="homework_color_desc">Barva té malé tečky, která značí, že na danou hodinu má být hotový nějaký domácí úkol</string>
     <string name="homework_size">Velikost tečky domácího úkolu</string>
 
     <!--These are shown in the lesson details dialog-->
@@ -161,14 +161,14 @@
     <string name="ok">OK</string>
 
     <!-- Send Crash Reports -->
-    <string name="scr_dialog">Odesísal zprávy o chybách?</string>
+    <string name="scr_dialog">Odesílat zprávy o chybách?</string>
     <string name="scr_body">Bez automatických zpráv o chybách nebudeme moci opravit případné chyby, protože se o nich ani nedozvíme! Přejete automaticky odesílat zprávy o chybách?</string>
 
     <string name="about">O aplikaci</string>
     <string name="source_code">Zdrojový kód</string>
     <string name="source_code_desc">Navštivte stránku aplikace na GitHubu</string>
     <string name="feedback">Napsat autorovi</string>
-    <string name="feedback_desc">Nahlašte chybu, zeptejte se na něco, atd.</string>
+    <string name="feedback_desc">Nahlaste chybu, zeptejte se na něco, atd.</string>
     <string name="send_crash">Odesílat zprávy o chybách</string>
     <string name="send_crash_desc">Automaticky odesílat zprávy o chybách vývojářům, aby mohly být opraveny</string>
     <string name="privacy_policy">Zásady ochrany soukromí</string>
@@ -193,12 +193,12 @@
     <string name="widget_logged_out">Uživatel odhlášen</string>
     <string name="widget_background">Pozadí</string>
     <string name="widget_transparency">Průhlednost</string>
-    <string name="widget_autotext">Automatiká barva textu</string>
+    <string name="widget_autotext">Automatická barva textu</string>
     <string name="widget_text_color">Barva textu</string>
 
     <string name="donate_title">Staňte se sponzorem</string>
     <string name="donate_text1">Podpořte vývoj aplikace a získáte bonusové funkce:</string>
-    <string name="donate_bonus_features">- Upravitelná barva a průhlednost widgetu\n- Černý motiv\n- Vlastní motivy\n- Jakýkoliv motiv z internetu\n- Možnost sdílet Váš úžasný motiv\n</string>
+    <string name="donate_bonus_features">- Libovolná barva a průhlednost widgetu\n- Černý motiv\n- Vlastní motivy\n- Jakýkoliv motiv z internetu\n- Možnost sdílet Váš úžasný motiv\n</string>
     <string name="donate_a_little">Přispět trochu (%s)</string>
     <string name="donate_a_little_no_price">Přispět trochu</string>
     <string name="donate_more">Přispět více (%s)</string>

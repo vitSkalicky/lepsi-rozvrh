@@ -21,7 +21,7 @@
     <string name="unexpected_response">Unexpected response from server (check address)</string>
     <string name="unreachable">Server unreachable (check your internet connection and address)</string>
     <string name="enter_username">Enter your username</string>
-    <string name="enter_url">Enter url of your Bakaláři server or tap \'choose school\'</string>
+    <string name="enter_url">Enter URL of your Bakaláři server or tap \'choose school\'</string>
     <string name="search">Search…</string>
     <string name="connection_failed">Could not connect to server</string>
     <string name="loading_schools_info">Loading schools info…</string>
@@ -193,7 +193,7 @@
     <string name="widget_logged_out">Logged out</string>
     <string name="widget_background">Background</string>
     <string name="widget_transparency">Transparency</string>
-    <string name="widget_autotext">Automatic text color</string>
+    <string name="widget_autotext">Automatic text colour</string>
     <string name="widget_text_color">Text colour</string>
 
     <string name="donate_title">Become a sponsor</string>

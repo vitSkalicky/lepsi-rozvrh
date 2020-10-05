@@ -147,7 +147,20 @@ public class RozvrhConverter {
 
                 }
 
-                newHodina.setUkolodevzdat(atom.homeworkIds.length > 0 ? Integer.toString(atom.homeworkIds.length) : "");
+                int validHomework = 0;
+                for (String hmwrk :atom.homeworkIds) {
+                    //the first 2 characters of homework id are the class id and the third adn forth character are group id
+                    //it might happen, that the homework is for another group, so we have to check the id
+                    String id= hmwrk.substring(2,4);
+                    for (String grp: atom.groupIds){
+                        if (grp.equals(id)){
+                            validHomework++;
+                            break;
+                        }
+                    }
+                }
+
+                newHodina.setUkolodevzdat(validHomework > 0 ? Integer.toString(validHomework) : "");
 
                 newHodina.commit();
 

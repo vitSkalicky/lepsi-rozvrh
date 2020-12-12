@@ -160,10 +160,6 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
 
-    <!-- Send Crash Reports -->
-    <string name="scr_dialog">Send crash reports?</string>
-    <string name="scr_body">Without automatic crash reports we won\'t be able to fix any issues you may have because we won\'t even know about them! Do you wish to send automatic crash reports?</string>
-
     <string name="about">About</string>
     <string name="source_code">Source code</string>
     <string name="source_code_desc">Visit GitHub page</string>

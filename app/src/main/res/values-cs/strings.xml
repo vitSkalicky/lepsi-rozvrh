@@ -160,10 +160,6 @@
     <string name="no">Ne</string>
     <string name="ok">OK</string>
 
-    <!-- Send Crash Reports -->
-    <string name="scr_dialog">Odesílat zprávy o chybách?</string>
-    <string name="scr_body">Bez automatických zpráv o chybách nebudeme moci opravit případné chyby, protože se o nich ani nedozvíme! Přejete automaticky odesílat zprávy o chybách?</string>
-
     <string name="about">O aplikaci</string>
     <string name="source_code">Zdrojový kód</string>
     <string name="source_code_desc">Navštivte stránku aplikace na GitHubu</string>

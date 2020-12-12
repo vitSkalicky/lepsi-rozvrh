@@ -27,18 +27,18 @@ public class WelcomeActivity extends BaseActivity {
 
         buttonStart.setOnClickListener(v -> {
             boolean sendReports = checkBox.isChecked();
-            if (!sendReports && BuildConfig.ALLOW_SENTRY) {
-                //show confirmation dialog
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.scr_dialog)
-                        .setMessage(R.string.scr_body)
-                        .setPositiveButton(R.string.yes, (dialog1, which) -> onButtonPressed(true))
-                        .setNegativeButton(R.string.no, (dialog1, which) -> onButtonPressed(false))
-                        .create();
-                dialog.show();
-            } else {
-                onButtonPressed(true);
+            SharedPrefs.setInt(this, SharedPrefs.LAST_VERSION_SEEN, BuildConfig.VERSION_CODE);
+
+            SharedPrefs.setBoolean(this, getString(R.string.PREFS_SEND_CRASH_REPORTS), sendReports);
+            if (getApplication() instanceof MainApplication) {
+                if (sendReports) {
+                    ((MainApplication) getApplication()).enableSentry();
+                } else {
+                    ((MainApplication) getApplication()).diableSentry();
+                }
             }
+            Login.checkLogin(this);
+            finish();
         });
 
         buttonPrivacyPolicy.setOnClickListener(v -> {
@@ -53,20 +53,5 @@ public class WelcomeActivity extends BaseActivity {
         if (!BuildConfig.ALLOW_SENTRY) {
             checkBox.setVisibility(View.GONE);
         }
-    }
-
-    private void onButtonPressed(boolean sendReports) {
-        SharedPrefs.setInt(this, SharedPrefs.LAST_VERSION_SEEN, BuildConfig.VERSION_CODE);
-
-        SharedPrefs.setBoolean(this, getString(R.string.PREFS_SEND_CRASH_REPORTS), sendReports);
-        if (getApplication() instanceof MainApplication) {
-            if (sendReports) {
-                ((MainApplication) getApplication()).enableSentry();
-            } else {
-                ((MainApplication) getApplication()).diableSentry();
-            }
-        }
-        Login.checkLogin(this);
-        finish();
     }
 }

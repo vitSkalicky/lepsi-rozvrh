@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.joda.time.LocalDate;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,7 +91,7 @@ public class RozvrhCache {
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 
-                root = RozvrhConverter.convert(objectMapper.readValue(inputStream, Rozvrh3.class), monday == null,context);
+                root = RozvrhConverter.convertOld(objectMapper.readValue(inputStream, Rozvrh3.class), monday == null,context);
                 root.checkDemoMode(context);
 
             } catch (FileNotFoundException e) {

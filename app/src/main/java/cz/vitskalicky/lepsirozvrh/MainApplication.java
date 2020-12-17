@@ -17,6 +17,9 @@ import androidx.multidex.MultiDexApplication;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import com.jaredrummler.cyanea.Cyanea;
 
 import org.joda.time.LocalDateTime;
@@ -104,6 +107,18 @@ public class MainApplication extends MultiDexApplication {
             login = new Login(this.getApplicationContext());
         }
         return login;
+    }
+
+    private static ObjectMapper jacksonObjectMapper = null;
+    public static ObjectMapper getJacksonObjectMapper(){
+        if (jacksonObjectMapper == null){
+            jacksonObjectMapper = new ObjectMapper();
+            jacksonObjectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+            jacksonObjectMapper.registerModule(new JodaModule());
+            jacksonObjectMapper.registerModule(new KotlinModule());
+            jacksonObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        }
+        return jacksonObjectMapper;
     }
 
     @Override

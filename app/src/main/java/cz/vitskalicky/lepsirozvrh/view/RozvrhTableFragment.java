@@ -6,30 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
-import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 
@@ -123,7 +112,7 @@ public class RozvrhTableFragment extends Fragment {
             liveData.removeObservers(this);
         liveData = rozvrhAPI.getLiveData(week);
         RozvrhWrapper rw = liveData.getValue();
-        Rozvrh item = rw == null ? null : liveData.getValue().getRozvrh();
+        OldRozvrh item = rw == null ? null : liveData.getValue().getOldRozvrh();
         if (item != null) {
             rozvrhLayout.setRozvrh(item, !redisplayed && scrollToCurrentLesson);
             redisplayed = true;
@@ -140,16 +129,16 @@ public class RozvrhTableFragment extends Fragment {
 
         liveData.observe(this, rozvrhWrapper -> {
             if (rozvrhWrapper.getSource() == RozvrhWrapper.SOURCE_CACHE){
-                onCacheResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getRozvrh(), finalWeek);
+                onCacheResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getOldRozvrh(), finalWeek);
             }else if (rozvrhWrapper.getSource() == RozvrhWrapper.SOURCE_NET){
-                onNetResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getRozvrh(), finalWeek);
+                onNetResponse(rozvrhWrapper.getCode(), rozvrhWrapper.getOldRozvrh(), finalWeek);
             }
         });
 
         //debug timing: Log.d(TAG_TIMER, "displayWeek end " + Utils.getDebugTime());
     }
 
-    private void onNetResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek) {
+    private void onNetResponse(int code, OldRozvrh oldRozvrh, final LocalDate finalWeek) {
         //check if fragment was not removed while loading
         if (getContext() == null) {
             return;
@@ -157,8 +146,8 @@ public class RozvrhTableFragment extends Fragment {
         if (week != finalWeek) {
             return;
         }
-        if (rozvrh != null) {
-            rozvrhLayout.setRozvrh(rozvrh, !redisplayed && scrollToCurrentLesson);
+        if (oldRozvrh != null) {
+            rozvrhLayout.setRozvrh(oldRozvrh, !redisplayed && scrollToCurrentLesson);
             redisplayed = true;
         }
         //onNetLoaded
@@ -213,7 +202,7 @@ public class RozvrhTableFragment extends Fragment {
         }
     }
 
-    private void onCacheResponse(int code, Rozvrh rozvrh, final LocalDate finalWeek) {
+    private void onCacheResponse(int code, OldRozvrh oldRozvrh, final LocalDate finalWeek) {
         //check if fragment was not removed while loading
         if (getContext() == null) {
             return;
@@ -223,7 +212,7 @@ public class RozvrhTableFragment extends Fragment {
         }
         if (code == SUCCESS) {
             cacheSuccessful = true;
-            rozvrhLayout.setRozvrh(rozvrh, !redisplayed && scrollToCurrentLesson);
+            rozvrhLayout.setRozvrh(oldRozvrh, !redisplayed && scrollToCurrentLesson);
             redisplayed = true;
         }
     }
@@ -237,7 +226,7 @@ public class RozvrhTableFragment extends Fragment {
             /*if (rw.getCode() != SUCCESS){
                 displayWeek(weekIndex, false);
             }else {*/
-                onNetResponse(rw.getCode(), rw.getRozvrh(), finalWeek);
+                onNetResponse(rw.getCode(), rw.getOldRozvrh(), finalWeek);
             /*}*/
         });
     }

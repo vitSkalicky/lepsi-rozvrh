@@ -26,10 +26,9 @@ import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
 
 public class PermanentNotification {
     public static final int PERMANENT_NOTIFICATION_ID = 7055713;
@@ -44,35 +43,35 @@ public class PermanentNotification {
             return;
         }
         rozvrhAPI.getRozvrh(Utils.getDisplayWeekMonday(context), rozvrhWrapper -> {
-            update(rozvrhWrapper.getRozvrh(), application);
+            update(rozvrhWrapper.getOldRozvrh(), application);
             onFinished.method();
         });
     }
 
     /**
-     * Same as {@link #update(RozvrhHodina, int, Context)}, but gets the RozvrhHodina for you.
+     * Same as {@link #update(OldRozvrhHodina, int, Context)}, but gets the RozvrhHodina for you.
      */
-    public static void update(Rozvrh rozvrh, MainApplication application){
+    public static void update(OldRozvrh oldRozvrh, MainApplication application){
         Context context = application;
         if (!SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)){
             update(null,0, context);
             return;
         }
-        if (rozvrh != null){
-            Rozvrh.GetNLreturnValues nextLessonInfo = rozvrh.getHighlightLesson(true, context);
+        if (oldRozvrh != null){
+            OldRozvrh.GetNLreturnValues nextLessonInfo = oldRozvrh.getHighlightLesson(true, context);
             int offset = application.getNotificationState().getOffset();
-            RozvrhHodina rozvrhHodina = nextLessonInfo == null ? null : nextLessonInfo.rozvrhHodina;
-            if (rozvrhHodina == null){
+            OldRozvrhHodina oldRozvrhHodina = nextLessonInfo == null ? null : nextLessonInfo.oldRozvrhHodina;
+            if (oldRozvrhHodina == null){
                 update(null,0, context);
             }else {
-                List<RozvrhHodina> hodiny = rozvrh.getDny().get(nextLessonInfo.dayIndex).getHodiny();
+                List<OldRozvrhHodina> hodiny = oldRozvrh.getDny().get(nextLessonInfo.dayIndex).getHodiny();
                 int hodinaIndex = nextLessonInfo.lessonIndex + offset;
                 if (hodinaIndex < 0 || hodinaIndex > hodiny.size() - 1){
-                    rozvrhHodina = null;
+                    oldRozvrhHodina = null;
                 }else {
-                    rozvrhHodina = hodiny.get(hodinaIndex);
+                    oldRozvrhHodina = hodiny.get(hodinaIndex);
                 }
-                update(rozvrhHodina, offset, context);
+                update(oldRozvrhHodina, offset, context);
             }
         } else {
             if (!((MainApplication)context.getApplicationContext()).getLogin().isLoggedIn()){
@@ -86,7 +85,7 @@ public class PermanentNotification {
      * Updates the notification with the data of supplied RozvrhHodina. (Notification is hidden if
      * RozvrhHodina is null)
      */
-    public static void update(RozvrhHodina hodina,int offset, Context context) {
+    public static void update(OldRozvrhHodina hodina, int offset, Context context) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         boolean isTeacher = ((MainApplication)context.getApplicationContext()).getLogin().isTeacher();
 
@@ -115,9 +114,9 @@ public class PermanentNotification {
                 predmet = "";
 
             if (predmet.isEmpty()){
-                if(hodina.getHighlight() == RozvrhHodina.CHANGED){
+                if(hodina.getHighlight() == OldRozvrhHodina.CHANGED){
                     predmet = context.getString(R.string.lesson_cancelled);
-                }else if (hodina.getHighlight() != RozvrhHodina.NONE){
+                }else if (hodina.getHighlight() != OldRozvrhHodina.NONE){
                     predmet = context.getString(R.string.nothing);
                 }
             }

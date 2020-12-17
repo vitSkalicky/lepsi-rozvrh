@@ -27,7 +27,7 @@ import java.util.Random;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.theme.DefaultThemes;
@@ -146,14 +146,14 @@ public class MainApplication extends MultiDexApplication {
 
         RozvrhAPI rozvrhAPI = AppSingleton.getInstance(this).getRozvrhAPI();
         currentWeekObserver = rozvrhWrapper -> {
-            if (rozvrhWrapper.getRozvrh() != null) {
-                WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), this);
+            if (rozvrhWrapper.getOldRozvrh() != null) {
+                WidgetProvider.updateAll(rozvrhWrapper.getOldRozvrh(), this);
                 if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
-                    PermanentNotification.update(rozvrhWrapper.getRozvrh(), this);
+                    PermanentNotification.update(rozvrhWrapper.getOldRozvrh(), this);
                 }
             }
 
-            updateUpdateTime(rozvrhWrapper.getRozvrh());
+            updateUpdateTime(rozvrhWrapper.getOldRozvrh());
 
         };
 
@@ -228,11 +228,11 @@ public class MainApplication extends MultiDexApplication {
      *
      * @return true if updated, false if the update time could not be determined from the given rozvrh.
      */
-    private boolean updateUpdateTime(Rozvrh rozvrh) {
-        if (rozvrh == null) {
+    private boolean updateUpdateTime(OldRozvrh oldRozvrh) {
+        if (oldRozvrh == null) {
             return false;
         }
-        Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
+        OldRozvrh.GetNCLCTreturnValues values = oldRozvrh.getNextCurrentLessonChangeTime();
 
         if (values.errCode != 0 || values.localDateTime == null) {
             return false;
@@ -256,7 +256,7 @@ public class MainApplication extends MultiDexApplication {
     public void enableNotification() {
         SharedPrefs.setBoolean(this, getString(R.string.PREFS_NOTIFICATION), true);
         if (currentWeekLivedata != null) {
-            PermanentNotification.update(currentWeekLivedata.getValue() == null ? null : currentWeekLivedata.getValue().getRozvrh(), this);
+            PermanentNotification.update(currentWeekLivedata.getValue() == null ? null : currentWeekLivedata.getValue().getOldRozvrh(), this);
         }
     }
 

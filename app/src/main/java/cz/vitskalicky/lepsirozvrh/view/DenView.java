@@ -2,7 +2,6 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
@@ -11,11 +10,10 @@ import androidx.annotation.Nullable;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhDen;
 
 public class DenView extends CellView {
-    private RozvrhDen rozvrhDen = null;
+    private OldRozvrhDen oldRozvrhDen = null;
     private String denText = "";
     private String datumText = "";
 
@@ -82,19 +80,19 @@ public class DenView extends CellView {
         canvas.drawText(datumText, middle + xStart, secondaryBaseline + yStart, secondaryTextPaint);
     }
 
-    public RozvrhDen getRozvrhDen() {
-        return rozvrhDen;
+    public OldRozvrhDen getOldRozvrhDen() {
+        return oldRozvrhDen;
     }
 
-    public void setRozvrhDen(RozvrhDen rozvrhDen) {
-        this.rozvrhDen = rozvrhDen;
-        if (rozvrhDen != null){
-            denText = rozvrhDen.getZkratka();
-            if (rozvrhDen.getDatum() == null || rozvrhDen.getDatum().isEmpty()){
+    public void setOldRozvrhDen(OldRozvrhDen oldRozvrhDen) {
+        this.oldRozvrhDen = oldRozvrhDen;
+        if (oldRozvrhDen != null){
+            denText = oldRozvrhDen.getZkratka();
+            if (oldRozvrhDen.getDatum() == null || oldRozvrhDen.getDatum().isEmpty()){
                 datumText = "";
             }else{
                 DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");
-                datumText = dtf.print(rozvrhDen.getParsedDatum());
+                datumText = dtf.print(oldRozvrhDen.getParsedDatum());
             }
         }else {
             denText = "";

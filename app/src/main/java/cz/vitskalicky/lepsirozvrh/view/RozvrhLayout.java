@@ -16,9 +16,9 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhDen;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
 import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
@@ -29,7 +29,7 @@ public class RozvrhLayout extends ViewGroup {
     private int childHeightWhenCalculatingNaturalCellWidth = -1;
 
     private Context context;
-    private Rozvrh rozvrh;
+    private OldRozvrh oldRozvrh;
     private boolean perm;
 
     private int rows = 0; //only actual lessons - add 1 to calculate with captions as well
@@ -274,24 +274,24 @@ public class RozvrhLayout extends ViewGroup {
         //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
     }
 
-    public void setRozvrh(Rozvrh rozvrh, boolean centerToCurrentlesson) {
+    public void setRozvrh(OldRozvrh oldRozvrh, boolean centerToCurrentlesson) {
         //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
-        if (rozvrh != null) {
-            Sentry.getContext().addExtra("rozvrh", rozvrh.getStructure());
-            Log.d(TAG, "Rozvrh structure:\n" + rozvrh.getStructure());
+        if (oldRozvrh != null) {
+            Sentry.getContext().addExtra("rozvrh", oldRozvrh.getStructure());
+            Log.d(TAG, "Rozvrh structure:\n" + oldRozvrh.getStructure());
         } else {
             Sentry.getContext().addExtra("rozvrh", "null");
             Log.d(TAG, "Rozvrh structure:\n" + "null");
         }
-        this.rozvrh = rozvrh;
-        if (rozvrh == null){
+        this.oldRozvrh = oldRozvrh;
+        if (oldRozvrh == null){
             empty();
             return;
         }
 
-        rows = rozvrh.getDny().size();
-        columns = rozvrh.getHodiny().size();
-        perm = rozvrh.getTyp().equals("perm");
+        rows = oldRozvrh.getDny().size();
+        columns = oldRozvrh.getHodiny().size();
+        perm = oldRozvrh.getTyp().equals("perm");
         columnSizes = new int[columns + 1];
         createViews();
 
@@ -299,7 +299,7 @@ public class RozvrhLayout extends ViewGroup {
         RozvrhAPI.rememberColumns(context, columns);
 
         //populate
-        cornerView.setText(rozvrh.getNazevcyklu());
+        cornerView.setText(oldRozvrh.getNazevcyklu());
         for (int i = 0; i < columns; i++) {
             CaptionView item = captionViews[i];
             if (item == null) {
@@ -307,24 +307,24 @@ public class RozvrhLayout extends ViewGroup {
                 captionViews[i] = item;
                 addView(item);
             }
-            item.setCaption(rozvrh.getHodiny().get(i));
+            item.setCaption(oldRozvrh.getHodiny().get(i));
         }
 
         for (int i = 0; i < rows; i++) {
-            RozvrhDen den = rozvrh.getDny().get(i);
+            OldRozvrhDen den = oldRozvrh.getDny().get(i);
             DenView denCell = denViews[i];
             if (denCell == null) {
                 denCell = new DenView(context, null);
                 denViews[i] = denCell;
                 addView(denCell);
             }
-            denViews[i].setRozvrhDen(den);
+            denViews[i].setOldRozvrhDen(den);
 
             String prevCaption = "";
             int captionIndex = 0;
             int j = 0;
             for (; j < den.getHodiny().size(); j++) {
-                RozvrhHodina item = den.getHodiny().get(j);
+                OldRozvrhHodina item = den.getHodiny().get(j);
 
                 HodinaView view = hodinaViewRecycler.retrieve();
                 view.setHodina(item, perm);
@@ -366,14 +366,14 @@ public class RozvrhLayout extends ViewGroup {
     boolean displayingWtfRozvrhDialog = false;
 
     public void highlightCurrentLesson() {
-        if (rozvrh == null){
+        if (oldRozvrh == null){
             nextHodinaView = null;
             nextHodinaViewRight = null;
             nextHodinaViewBottom = null;
             nextHodinaViewCorner = null;
             return;
         }
-        Rozvrh.GetNLreturnValues values = rozvrh.getHighlightLesson(context);
+        OldRozvrh.GetNLreturnValues values = oldRozvrh.getHighlightLesson(context);
 
 
         //unhighlight
@@ -396,11 +396,11 @@ public class RozvrhLayout extends ViewGroup {
         nextHodinaViewRight = null;
         nextHodinaViewBottom = null;
         nextHodinaViewCorner = null;
-        if (values == null || values.rozvrhHodina == null) {
+        if (values == null || values.oldRozvrhHodina == null) {
             return;
         }
 
-        RozvrhHodina hodina = values.rozvrhHodina;
+        OldRozvrhHodina hodina = values.oldRozvrhHodina;
         int denIndex = values.dayIndex;
         int hodinaIndex = values.lessonIndex;
 
@@ -412,7 +412,7 @@ public class RozvrhLayout extends ViewGroup {
 
             if (!displayingWtfRozvrhDialog){
                 try {
-                    Utils.wtfRozvrh(context, this, rozvrh.getDny().get(0).getParsedDatum());
+                    Utils.wtfRozvrh(context, this, oldRozvrh.getDny().get(0).getParsedDatum());
                     displayingWtfRozvrhDialog = true;
                 }catch (Exception e){
                     Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
@@ -474,16 +474,16 @@ public class RozvrhLayout extends ViewGroup {
         }
     }
 
-    private static int calcucateSpread(Rozvrh rozvrh) {
+    private static int calcucateSpread(OldRozvrh oldRozvrh) {
         //debug timing: Log.d(TAG_TIMER, "calculateSpread start " + Utils.getDebugTime());
         int mostSpread = 1;
-        for (int i = 0; i < rozvrh.getDny().size(); i++) {
-            RozvrhDen item = rozvrh.getDny().get(i);
+        for (int i = 0; i < oldRozvrh.getDny().size(); i++) {
+            OldRozvrhDen item = oldRozvrh.getDny().get(i);
 
             String lastCaption = "";
             int captionsInRow = 1;
             for (int j = 0; j < item.getHodiny().size(); j++) {
-                RozvrhHodina item2 = item.getHodiny().get(j);
+                OldRozvrhHodina item2 = item.getHodiny().get(j);
 
                 if (item2.getCaption() == null || item2.getCaption().equals("")) {
                     captionsInRow = 1;
@@ -504,7 +504,7 @@ public class RozvrhLayout extends ViewGroup {
      * Empty the table when loading to prevent confusion
      */
     public void empty() {
-        this.rozvrh = null;
+        this.oldRozvrh = null;
         rows = RozvrhAPI.getRememberedRows(getContext());
         columns = RozvrhAPI.getRememberedColumns(getContext());
         perm = false;
@@ -530,7 +530,7 @@ public class RozvrhLayout extends ViewGroup {
                 denViews[i] = denCell;
                 addView(denCell);
             }
-            denViews[i].setRozvrhDen(null);
+            denViews[i].setOldRozvrhDen(null);
         }
 
         //fill the empty space with empty cells

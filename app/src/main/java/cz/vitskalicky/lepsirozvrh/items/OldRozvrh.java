@@ -23,20 +23,20 @@ import cz.vitskalicky.lepsirozvrh.DebugUtils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 
 @Root(name = "rozvrh", strict = false)
-public class Rozvrh {
-    public static final String TAG = Rozvrh.class.getSimpleName();
+public class OldRozvrh {
+    public static final String TAG = OldRozvrh.class.getSimpleName();
     @Element(required = false)
     protected String typ = "";
     @ElementList(required = false)
-    protected List<RozvrhHodinaCaption> hodiny = new LinkedList<>();
+    protected List<OldRozvrhHodinaCaption> hodiny = new LinkedList<>();
     @ElementList(required = false)
-    protected List<RozvrhDen> dny = new LinkedList<>();
+    protected List<OldRozvrhDen> dny = new LinkedList<>();
     @Element(required = false)
     protected String nazevcyklu = "";
     @Element(required = false)
     protected String zkratkacyklu = "";
 
-    public Rozvrh() {
+    public OldRozvrh() {
         super();
     }
 
@@ -49,25 +49,25 @@ public class Rozvrh {
     }
 
     private void deleteNullDays() {
-        ListIterator<RozvrhDen> iteratorDen = dny.listIterator(0);
+        ListIterator<OldRozvrhDen> iteratorDen = dny.listIterator(0);
         while (iteratorDen.hasNext()) {
-            RozvrhDen den = iteratorDen.next();
+            OldRozvrhDen den = iteratorDen.next();
             if (den.getHodiny().isEmpty())
                 iteratorDen.remove();
         }
     }
 
     private void deleteNullCaptions() {
-        ListIterator<RozvrhHodinaCaption> iteratorCaption = hodiny.listIterator(0);
+        ListIterator<OldRozvrhHodinaCaption> iteratorCaption = hodiny.listIterator(0);
         while (iteratorCaption.hasNext()) {
-            RozvrhHodinaCaption caption = iteratorCaption.next();
+            OldRozvrhHodinaCaption caption = iteratorCaption.next();
             if (caption.getBegintime().isEmpty() || caption.getEndtime().isEmpty())
                 iteratorCaption.remove();
         }
     }
     private void fillEmptyLessons(){
-        for (RozvrhDen den :dny) {
-            LinkedList<RozvrhHodina> newHodiny = new LinkedList();
+        for (OldRozvrhDen den :dny) {
+            LinkedList<OldRozvrhHodina> newHodiny = new LinkedList();
             int hodinaIndex = 0;
             int captionIndex = 0;
             boolean lastOk = false;
@@ -83,7 +83,7 @@ public class Rozvrh {
                     lastOk = false;
                     captionIndex++;
                 }else {
-                    RozvrhHodina empty = new RozvrhHodina();
+                    OldRozvrhHodina empty = new OldRozvrhHodina();
                     empty.setTyp("X");
                     empty.setUkolodevzdat("");
                     empty.setNotice("");
@@ -115,13 +115,13 @@ public class Rozvrh {
 
     private void deleteRedundantLessons() {
         //we also call fixTimes here for each day to assign begintime and endtime
-        for (RozvrhDen den : dny) {
+        for (OldRozvrhDen den : dny) {
             den.fixTimes(hodiny);
-            List<RozvrhHodina> denHodiny = den.getHodiny();
-            ListIterator<RozvrhHodina> i = denHodiny.listIterator(denHodiny.size());
+            List<OldRozvrhHodina> denHodiny = den.getHodiny();
+            ListIterator<OldRozvrhHodina> i = denHodiny.listIterator(denHodiny.size());
             while (i.hasPrevious()) {
-                RozvrhHodina hodina = i.previous();
-                if (!(hodina.getHighlight() == RozvrhHodina.EMPTY))
+                OldRozvrhHodina hodina = i.previous();
+                if (!(hodina.getHighlight() == OldRozvrhHodina.EMPTY))
                     break;
 
                 i.remove();
@@ -136,8 +136,8 @@ public class Rozvrh {
             boolean empty = true;
             for (int j = 0; j < getDny().size(); j++) {
                 if (i < getDny().get(j).getHodiny().size()) {
-                    RozvrhHodina hodina = getDny().get(j).getHodiny().get(i);
-                    empty = empty && (hodina == null || hodina.getHighlight() == RozvrhHodina.NO_LESSON || hodina.getHighlight() == RozvrhHodina.EMPTY);
+                    OldRozvrhHodina hodina = getDny().get(j).getHodiny().get(i);
+                    empty = empty && (hodina == null || hodina.getHighlight() == OldRozvrhHodina.NO_LESSON || hodina.getHighlight() == OldRozvrhHodina.EMPTY);
 
                 }
             }
@@ -165,7 +165,7 @@ public class Rozvrh {
         if (removeEnd + removeStart < removable.length) {
             for (int i = 0; i < removeStart; i++) {
                 getHodiny().remove(0);
-                for (RozvrhDen item : getDny()) {
+                for (OldRozvrhDen item : getDny()) {
                     if (item.getHodiny().size() > 0) {
                         item.getHodiny().remove(0);
                     }
@@ -175,7 +175,7 @@ public class Rozvrh {
             for (int i = 0; i < removeEnd - 1; i++) {
                 int lessonIndex = getHodiny().size() - 1;
                 getHodiny().remove(lessonIndex);
-                for (RozvrhDen item : getDny()) {
+                for (OldRozvrhDen item : getDny()) {
                     if (lessonIndex < item.getHodiny().size())
                     item.getHodiny().remove(lessonIndex);
                 }
@@ -206,9 +206,9 @@ public class Rozvrh {
             nowTime = DebugUtils.getInstance(context).getDemoTime();
         }
 
-        RozvrhDen dneska = null;
+        OldRozvrhDen dneska = null;
         int denIndex = 0;
-        for (RozvrhDen item : dny) {
+        for (OldRozvrhDen item : dny) {
             if (item.getParsedDatum() == null) //permanent timetable check
                 return null;
             if (item.getParsedDatum().isEqual(nowDate)) {
@@ -221,11 +221,11 @@ public class Rozvrh {
         if (dneska == null) //current timetable check
             return null;
 
-        RozvrhHodina dalsi = null;
+        OldRozvrhHodina dalsi = null;
         boolean prvni = true;
         int hodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
-            RozvrhHodina item = dneska.getHodiny().get(i);
+            OldRozvrhHodina item = dneska.getHodiny().get(i);
             if (item.getTyp().equals("H") || !prvni) {
                 if (forNotification && prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))) {//do not highlight
                     return null;
@@ -245,7 +245,7 @@ public class Rozvrh {
         }
 
         GetNLreturnValues ret = new GetNLreturnValues();
-        ret.rozvrhHodina = dalsi;
+        ret.oldRozvrhHodina = dalsi;
         ret.dayIndex = denIndex;
         ret.lessonIndex = hodinaIndex;
 
@@ -264,7 +264,7 @@ public class Rozvrh {
 
         int denIndex = 0;
 
-        RozvrhDen den = null;
+        OldRozvrhDen den = null;
         if (dny.size() < 1) {
             return new GetNCLCTreturnValues(null, null, 3);
         } else if (dny.get(0).getParsedDatum() == null) {
@@ -274,7 +274,7 @@ public class Rozvrh {
         } else if (nowDate.isBefore(dny.get(0).getParsedDatum())) {
             den = dny.get(0);
         } else {
-            for (RozvrhDen item : dny) {
+            for (OldRozvrhDen item : dny) {
                 if (item.getParsedDatum().isEqual(nowDate)) {
                     den = item;
                     break;
@@ -291,10 +291,10 @@ public class Rozvrh {
         }
 
         LocalTime cas = null;
-        RozvrhHodina hodina = null;
+        OldRozvrhHodina hodina = null;
         boolean prvni = true;
         for (int i = 0; i < den.getHodiny().size(); i++) {
-            RozvrhHodina item = den.getHodiny().get(i);
+            OldRozvrhHodina item = den.getHodiny().get(i);
             if (!item.isEmpty()) {
                 if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(1))) {
                     cas = item.getParsedBegintime().minusHours(1);
@@ -319,7 +319,7 @@ public class Rozvrh {
             nowTime = LocalTime.fromMillisOfDay(0);
 
             for (int j = 0; j < den.getHodiny().size(); j++) {
-                RozvrhHodina item = den.getHodiny().get(j);
+                OldRozvrhHodina item = den.getHodiny().get(j);
                 if (item.getTyp().equals("H")) {
                     cas = item.getParsedBegintime().minusHours(1);
                     hodina = item;
@@ -331,7 +331,7 @@ public class Rozvrh {
         LocalDateTime dateTime = den.getParsedDatum().toLocalDateTime(cas);
 
         GetNCLCTreturnValues ret = new GetNCLCTreturnValues();
-        ret.rozvrhHodina = hodina;
+        ret.oldRozvrhHodina = hodina;
         ret.localDateTime = dateTime;
         ret.errCode = 0;
 
@@ -344,7 +344,7 @@ public class Rozvrh {
      * @param lenght how many lessons does the widget display - determines the length of the returned array.
      * @return {@code null} if this is not a current week or it is not school-time now.
      */
-    public RozvrhHodina[] getWidgetDiaplayValues(int lenght, Context context) {
+    public OldRozvrhHodina[] getWidgetDiaplayValues(int lenght, Context context) {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
 
@@ -353,8 +353,8 @@ public class Rozvrh {
             nowTime = DebugUtils.getInstance(context).getDemoTime();
         }
 
-        RozvrhDen dneska = null;
-        for (RozvrhDen item : dny) {
+        OldRozvrhDen dneska = null;
+        for (OldRozvrhDen item : dny) {
             if (item.getParsedDatum() == null) //permanent timetable check
                 return null;
             if (item.getParsedDatum().isEqual(nowDate)) {
@@ -366,12 +366,12 @@ public class Rozvrh {
         if (dneska == null) //current timetable check
             return null;
 
-        RozvrhHodina[] ret = new RozvrhHodina[lenght];
+        OldRozvrhHodina[] ret = new OldRozvrhHodina[lenght];
 
         boolean prvni = true;
         int currentHodinaIndex = 0;
         for (int i = 0; i < dneska.getHodiny().size(); i++) {
-            RozvrhHodina item = dneska.getHodiny().get(i);
+            OldRozvrhHodina item = dneska.getHodiny().get(i);
             if (!item.getTyp().equals("X") || !prvni) {
                 if (prvni && nowTime.isBefore(item.getParsedBegintime().minusHours(3))) {
                     return null;
@@ -391,11 +391,11 @@ public class Rozvrh {
         return ret;
     }
 
-    public List<RozvrhHodinaCaption> getHodiny() {
+    public List<OldRozvrhHodinaCaption> getHodiny() {
         return hodiny;
     }
 
-    public List<RozvrhDen> getDny() {
+    public List<OldRozvrhDen> getDny() {
         return dny;
     }
 
@@ -429,7 +429,7 @@ public class Rozvrh {
                     .append(hodiny.size()).append("; ")
                     .append(hodiny.get(0).getBegintime()).append("; ")
                     .append(hodiny.get(hodiny.size() - 1).getEndtime()).append(";\n");
-            for (RozvrhDen item : dny) {
+            for (OldRozvrhDen item : dny) {
                 sb.append(item.getZkratka()).append("; ")
                         .append(item.getHodiny().size()).append("; ");
                 if (item.getHodiny().size() > 0) {
@@ -449,13 +449,13 @@ public class Rozvrh {
     }
 
     public static class GetNLreturnValues {
-        public RozvrhHodina rozvrhHodina;
+        public OldRozvrhHodina oldRozvrhHodina;
         public int dayIndex;
         public int lessonIndex;
     }
 
     public static class GetNCLCTreturnValues {
-        public RozvrhHodina rozvrhHodina;
+        public OldRozvrhHodina oldRozvrhHodina;
         public LocalDateTime localDateTime;
         /**
          * 0 not error; 1 permanent schedule; 2 old schedule; 3 other
@@ -465,24 +465,24 @@ public class Rozvrh {
         public GetNCLCTreturnValues() {
         }
 
-        public GetNCLCTreturnValues(RozvrhHodina rozvrhHodina, LocalDateTime localDateTime, int errCode) {
-            this.rozvrhHodina = rozvrhHodina;
+        public GetNCLCTreturnValues(OldRozvrhHodina oldRozvrhHodina, LocalDateTime localDateTime, int errCode) {
+            this.oldRozvrhHodina = oldRozvrhHodina;
             this.localDateTime = localDateTime;
             this.errCode = errCode;
         }
     }
 
-    public static class MutableRozvrh extends Rozvrh{
+    public static class MutableOldRozvrh extends OldRozvrh {
 
         public void setTyp(String typ) {
             this.typ = typ;
         }
 
-        public void setHodiny(List<RozvrhHodinaCaption> hodiny) {
+        public void setHodiny(List<OldRozvrhHodinaCaption> hodiny) {
             this.hodiny = hodiny;
         }
 
-        public void setDny(List<RozvrhDen> dny) {
+        public void setDny(List<OldRozvrhDen> dny) {
             this.dny = dny;
         }
 
@@ -495,8 +495,8 @@ public class Rozvrh {
         }
 
 
-        public Rozvrh build(){
-            return (Rozvrh)this;
+        public OldRozvrh build(){
+            return (OldRozvrh)this;
         }
     }
 }

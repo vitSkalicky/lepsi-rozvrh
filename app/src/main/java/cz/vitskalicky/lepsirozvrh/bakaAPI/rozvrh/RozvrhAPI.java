@@ -12,13 +12,12 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cz.vitskalicky.lepsirozvrh.Mutable;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.Utils;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.NO_CACHE;
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.SUCCESS;
@@ -62,7 +61,7 @@ public class RozvrhAPI {
         SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_COLUMNS, columns);
     }
 
-    private HashMap<LocalDate, Rozvrh> saved = new HashMap<>();
+    private HashMap<LocalDate, OldRozvrh> saved = new HashMap<>();
     private Context context;
     private Map<LocalDate, LocalTime> lastUpdated = new HashMap<>();
     private HashMap<LocalDate, MutableLiveData<RozvrhWrapper>> liveDatas = new HashMap<>();
@@ -95,9 +94,9 @@ public class RozvrhAPI {
         final MutableLiveData<RozvrhWrapper> fld = ld;
 
         //update live data
-        Rozvrh rozvrh = getFromMemory(monday);
+        OldRozvrh oldRozvrh = getFromMemory(monday);
         // if the rozvrh is already in memory, don't fetch anything from net
-        if (rozvrh == null) {
+        if (oldRozvrh == null) {
             final Mutable<Boolean> netFinishedSucessfully = new Mutable<>(false);
             getFromCacheAndSave(monday, rozvrhWrapper -> {
                 if (!netFinishedSucessfully.getValue()) {
@@ -109,13 +108,13 @@ public class RozvrhAPI {
                     updateLiveData(monday, rozvrhWrapper);
                     netFinishedSucessfully.setValue(true);
                 } else {
-                    Rozvrh prevRozvrh = fld.getValue() == null ? null : fld.getValue().getRozvrh();
-                    updateLiveData(monday, new RozvrhWrapper(prevRozvrh, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
+                    OldRozvrh prevOldRozvrh = fld.getValue() == null ? null : fld.getValue().getOldRozvrh();
+                    updateLiveData(monday, new RozvrhWrapper(prevOldRozvrh, rozvrhWrapper.getCode(), RozvrhWrapper.SOURCE_NET));
                 }
             });
             updateLiveData(monday, new RozvrhWrapper(null, NO_CACHE, RozvrhWrapper.SOURCE_MEMORY));
         } else {
-            updateLiveData(monday, new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
+            updateLiveData(monday, new RozvrhWrapper(oldRozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
 
         cacheCNPP();
@@ -126,7 +125,7 @@ public class RozvrhAPI {
     private void getFromCacheAndSave(LocalDate monday, RozvrhListener listener) {
         RozvrhCache.loadRozvrh(monday, rozvrhWrapper -> {
             // cache is always 'righter' than memory
-            putToMemory(monday, rozvrhWrapper.getRozvrh());
+            putToMemory(monday, rozvrhWrapper.getOldRozvrh());
             updateLiveData(monday, rozvrhWrapper);
             listener.method(rozvrhWrapper);
         }, context);
@@ -137,10 +136,10 @@ public class RozvrhAPI {
      */
     private void getFromNetAndSave(LocalDate monday, RozvrhListener listener) {
         rozvrhLoader.loadRozvrh(monday, result -> {
-            RozvrhWrapper rw = new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET);
+            RozvrhWrapper rw = new RozvrhWrapper(result.oldRozvrh, result.code, RozvrhWrapper.SOURCE_NET);
             if (result.code == SUCCESS) {
                 RozvrhCache.saveRawRozvrh(monday, result.raw, context);
-                putToMemory(monday, result.rozvrh);
+                putToMemory(monday, result.oldRozvrh);
                 updateLiveData(monday, rw);
             }
             listener.method(rw);
@@ -168,8 +167,8 @@ public class RozvrhAPI {
         Mutable<RozvrhWrapper> cacheResult = new Mutable<>(null);
         //just to be sure
         Mutable<Boolean> wasInMemory = new Mutable<>(false);
-        Rozvrh rozvrh = getFromMemory(monday);
-        if (rozvrh == null) {
+        OldRozvrh oldRozvrh = getFromMemory(monday);
+        if (oldRozvrh == null) {
             getFromCacheAndSave(monday, rozvrhWrapper -> {
                 if (wasInMemory.getValue()) {
                     return;
@@ -198,9 +197,9 @@ public class RozvrhAPI {
                 theOther.setValue(true);
             });
         }
-        wasInMemory.setValue(rozvrh != null);
-        if (rozvrh != null) {
-            listener.method(new RozvrhWrapper(rozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
+        wasInMemory.setValue(oldRozvrh != null);
+        if (oldRozvrh != null) {
+            listener.method(new RozvrhWrapper(oldRozvrh, SUCCESS, RozvrhWrapper.SOURCE_MEMORY));
         }
     }
 
@@ -252,7 +251,7 @@ public class RozvrhAPI {
     /**
      * Puts a rozvrh into object's memory. Also prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
-    private Rozvrh putToMemory(LocalDate date, Rozvrh item) {
+    private OldRozvrh putToMemory(LocalDate date, OldRozvrh item) {
         lastUpdated.put(date, LocalTime.now());
         return saved.put(date, item);
     }
@@ -260,7 +259,7 @@ public class RozvrhAPI {
     /**
      * Prevents rozvrhs from being in memory for too long and therefore forces them to be refreshed from net after 3 hours
      */
-    private Rozvrh getFromMemory(LocalDate date) {
+    private OldRozvrh getFromMemory(LocalDate date) {
         LocalTime updateTime = lastUpdated.get(date);
         if (updateTime == null || updateTime.isAfter(LocalTime.now().minusHours(3))) {
             return saved.get(date);
@@ -305,10 +304,10 @@ public class RozvrhAPI {
                 RozvrhCache.saveRawRozvrh(monday, result.raw, context);
                 cacheCNPP();
                 cacheNP(monday);
-                putToMemory(monday, result.rozvrh);
-                updateLiveData(monday, new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
+                putToMemory(monday, result.oldRozvrh);
+                updateLiveData(monday, new RozvrhWrapper(result.oldRozvrh, result.code, RozvrhWrapper.SOURCE_NET));
             }
-            onLoaded.method(new RozvrhWrapper(result.rozvrh, result.code, RozvrhWrapper.SOURCE_NET));
+            onLoaded.method(new RozvrhWrapper(result.oldRozvrh, result.code, RozvrhWrapper.SOURCE_NET));
         });
     }
 
@@ -319,11 +318,11 @@ public class RozvrhAPI {
     public void getNextCurrentLessonChangeTime(TimeListener listener) {
         getRozvrh(Utils.getCurrentMonday(), (rozvrhWrapper) -> {
             int code = rozvrhWrapper.getCode();
-            Rozvrh rozvrh = rozvrhWrapper.getRozvrh();
+            OldRozvrh oldRozvrh = rozvrhWrapper.getOldRozvrh();
             LocalDateTime updateTime = null;
             int code1 = 0;
-            if (rozvrh != null) {
-                Rozvrh.GetNCLCTreturnValues values = rozvrh.getNextCurrentLessonChangeTime();
+            if (oldRozvrh != null) {
+                OldRozvrh.GetNCLCTreturnValues values = oldRozvrh.getNextCurrentLessonChangeTime();
                 updateTime = values.localDateTime;
                 code1 = values.errCode;
             }
@@ -332,8 +331,8 @@ public class RozvrhAPI {
             } else if (code1 == 2) {
                 //old schedule -> try the next week
                 getRozvrh(Utils.getCurrentMonday().plusWeeks(1), (rozvrhWrapper2) -> {
-                    Rozvrh rozvrh1 = rozvrhWrapper2.getRozvrh();
-                    listener.method(rozvrh1 == null ? null : rozvrh1.getNextCurrentLessonChangeTime().localDateTime);
+                    OldRozvrh oldRozvrh1 = rozvrhWrapper2.getOldRozvrh();
+                    listener.method(oldRozvrh1 == null ? null : oldRozvrh1.getNextCurrentLessonChangeTime().localDateTime);
                 });
             } else {
                 listener.method(null);

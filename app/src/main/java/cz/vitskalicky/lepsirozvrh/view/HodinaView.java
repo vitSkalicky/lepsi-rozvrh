@@ -16,13 +16,12 @@ import androidx.appcompat.app.AlertDialog;
 
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 
 public class HodinaView extends CellView {
 
-    private RozvrhHodina hodina;
+    private OldRozvrhHodina hodina;
     private boolean perm;
 
     private Paint mistPaint;
@@ -125,7 +124,7 @@ public class HodinaView extends CellView {
     /**
      * Updates the content
      */
-    public void setHodina(RozvrhHodina hodina, boolean perm) {
+    public void setHodina(OldRozvrhHodina hodina, boolean perm) {
         this.hodina = hodina;
         this.perm = perm;
 
@@ -134,22 +133,22 @@ public class HodinaView extends CellView {
             primaryTextPaint.setColor(t.getCHPrimaryText());
             secondaryTextPaint.setColor(t.getCHSecondaryText());
             mistPaint.setColor(t.getCHRoomText());
-        } else if (hodina.getHighlight() == RozvrhHodina.CHANGED) {
+        } else if (hodina.getHighlight() == OldRozvrhHodina.CHANGED) {
             backgroundPaint.setColor(t.getCChngBg());
             primaryTextPaint.setColor(t.getCChngPrimaryText());
             secondaryTextPaint.setColor(t.getCChngSecondaryText());
             mistPaint.setColor(t.getCChngRoomText());
-        } else if (hodina.getHighlight() == RozvrhHodina.NO_LESSON) {
+        } else if (hodina.getHighlight() == OldRozvrhHodina.NO_LESSON) {
             backgroundPaint.setColor(t.getCABg());
             primaryTextPaint.setColor(t.getCAPrimaryText());
             secondaryTextPaint.setColor(t.getCASecondaryText());
             mistPaint.setColor(t.getCARoomText());
-        } else if (hodina.getHighlight() == RozvrhHodina.NONE) {
+        } else if (hodina.getHighlight() == OldRozvrhHodina.NONE) {
             backgroundPaint.setColor(t.getCHBg());
             primaryTextPaint.setColor(t.getCHPrimaryText());
             secondaryTextPaint.setColor(t.getCHSecondaryText());
             mistPaint.setColor(t.getCHRoomText());
-        } else if (hodina.getHighlight() == RozvrhHodina.EMPTY) {
+        } else if (hodina.getHighlight() == OldRozvrhHodina.EMPTY) {
             backgroundPaint.setColor(t.getCEmptyBg());
             primaryTextPaint.setColor(t.getCHPrimaryText());
             secondaryTextPaint.setColor(t.getCHSecondaryText());
@@ -160,7 +159,7 @@ public class HodinaView extends CellView {
         requestLayout();
     }
 
-    public RozvrhHodina getHodina() {
+    public OldRozvrhHodina getHodina() {
         return hodina;
     }
 

@@ -26,10 +26,10 @@ import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
 @Root(name = "den", strict = false)
-public class RozvrhDen {
-    public static final String TAG = RozvrhDen.class.getSimpleName();
+public class OldRozvrhDen {
+    public static final String TAG = OldRozvrhDen.class.getSimpleName();
 
-    public RozvrhDen() {
+    public OldRozvrhDen() {
         super();
     }
 
@@ -40,7 +40,7 @@ public class RozvrhDen {
     private String datum = "";
 
     @ElementList(required = false)
-    private List<RozvrhHodina> hodiny = new LinkedList<>();
+    private List<OldRozvrhHodina> hodiny = new LinkedList<>();
 
     public String getZkratka() {
         return zkratka;
@@ -70,20 +70,20 @@ public class RozvrhDen {
         this.zkratka = zkratka;
     }
 
-    public void setHodiny(List<RozvrhHodina> hodiny) {
+    public void setHodiny(List<OldRozvrhHodina> hodiny) {
         this.hodiny = hodiny;
     }
 
     public String getDay() { return Utils.parseDate(datum, "yyyyMMdd", "d"); }
 
-    public List<RozvrhHodina> getHodiny() { return hodiny; }
+    public List<OldRozvrhHodina> getHodiny() { return hodiny; }
 
-    public void fixTimes(List<RozvrhHodinaCaption> captionsList) {
+    public void fixTimes(List<OldRozvrhHodinaCaption> captionsList) {
         int position = 0;
-        RozvrhHodinaCaption mRozvrhHodinaCaption = null;
-        for(RozvrhHodina hodina : hodiny){
+        OldRozvrhHodinaCaption mOldRozvrhHodinaCaption = null;
+        for(OldRozvrhHodina hodina : hodiny){
             // V jednom caption může být víc hodin (ve stálém rozvrhu - něco sudý týden, něco jiného lichý)
-            if (mRozvrhHodinaCaption == null || hodina.getCaption() == null || hodina.getCaption().isEmpty() || !mRozvrhHodinaCaption.getCaption().equals(hodina.getCaption())){
+            if (mOldRozvrhHodinaCaption == null || hodina.getCaption() == null || hodina.getCaption().isEmpty() || !mOldRozvrhHodinaCaption.getCaption().equals(hodina.getCaption())){
                 if (position >= captionsList.size()){
                     //I've seen a weird schedule where there were more lessons than captions (lessons were outside of any caption)
                     //this is a fail-safe
@@ -91,8 +91,8 @@ public class RozvrhDen {
                     Log.w(TAG, "Schedule is having more lessons than there are captions");
                     Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder().setMessage("Schedule is having more lessons than there are captions").build());
 
-                    RozvrhHodinaCaption caption = new RozvrhHodinaCaption();
-                    RozvrhHodinaCaption lastCaption = captionsList.get(captionsList.size() - 1);
+                    OldRozvrhHodinaCaption caption = new OldRozvrhHodinaCaption();
+                    OldRozvrhHodinaCaption lastCaption = captionsList.get(captionsList.size() - 1);
                     int lastCaptionNumber = -1;
                     try {
                         lastCaptionNumber = Integer.parseInt(lastCaption.getCaption());
@@ -112,18 +112,18 @@ public class RozvrhDen {
                     caption.setEndtime(formatter.print(thisEnd));
                     captionsList.add(caption);
                 }
-                mRozvrhHodinaCaption = captionsList.get(position);
+                mOldRozvrhHodinaCaption = captionsList.get(position);
                 position++;
             }
 
-            hodina.setBegintime(mRozvrhHodinaCaption.getBegintime());
-            hodina.setEndtime(mRozvrhHodinaCaption.getEndtime());
+            hodina.setBegintime(mOldRozvrhHodinaCaption.getBegintime());
+            hodina.setEndtime(mOldRozvrhHodinaCaption.getEndtime());
         }
     }
 
     public int getCurrentLessonInt(){
         String currentTime = new SimpleDateFormat("H:m", Locale.US).format(new Date());
-        ListIterator<RozvrhHodina> i = hodiny.listIterator();
+        ListIterator<OldRozvrhHodina> i = hodiny.listIterator();
         while (i.hasNext()) {
             if (Utils.minutesOfDay(i.next().getBegintime()) > Utils.minutesOfDay(currentTime))
                 break;

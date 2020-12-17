@@ -9,23 +9,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhDen;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodinaCaption;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhDen;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodinaCaption;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 public class RozvrhConverter {
     public static RozvrhRoot convert(Rozvrh3 rozvrh3, boolean perm, Context context){
-        Rozvrh.MutableRozvrh rozvrh = new Rozvrh.MutableRozvrh();
+        OldRozvrh.MutableOldRozvrh rozvrh = new OldRozvrh.MutableOldRozvrh();
         rozvrh.setTyp(perm ? "perm" : "akt");
 
         rozvrh.setNazevcyklu(rozvrh3.cycles.length > 0 ? rozvrh3.cycles[0].name : "");
         rozvrh.setZkratkacyklu(rozvrh3.cycles.length > 0 ? rozvrh3.cycles[0].abbrev : "");
 
-        ArrayList<RozvrhHodinaCaption> captions = new ArrayList<>();
+        ArrayList<OldRozvrhHodinaCaption> captions = new ArrayList<>();
         for (Hour3 item :rozvrh3.hours) {
-            RozvrhHodinaCaption nev = new RozvrhHodinaCaption();
+            OldRozvrhHodinaCaption nev = new OldRozvrhHodinaCaption();
             nev.setCaption(item.caption);
             nev.setBegintime(item.beginTime);
             nev.setEndtime(item.endTime);
@@ -72,20 +72,20 @@ public class RozvrhConverter {
                 context.getString(R.string.sunday)
         };
 
-        ArrayList<RozvrhDen> days = new ArrayList<>();
+        ArrayList<OldRozvrhDen> days = new ArrayList<>();
         for (Day3 item :rozvrh3.days) {
-            RozvrhDen newDen = new RozvrhDen();
+            OldRozvrhDen newDen = new OldRozvrhDen();
             if (!perm) {
                 LocalDate date = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ").parseLocalDate(item.date);
-                newDen.setDatum(date.toString(RozvrhDen.DATE_FORMATTER));
+                newDen.setDatum(date.toString(OldRozvrhDen.DATE_FORMATTER));
             }else {
                 newDen.setDatum("");
             }
             newDen.setZkratka(daysOfWeek[item.dayOfWeek - 1]);
 
-            ArrayList<RozvrhHodina> lessons = new ArrayList<>();
+            ArrayList<OldRozvrhHodina> lessons = new ArrayList<>();
             for (Atom3 atom :item.atoms) {
-                RozvrhHodina newHodina = new RozvrhHodina();
+                OldRozvrhHodina newHodina = new OldRozvrhHodina();
                 Hour3 caption = hours.get(atom.hourId);
                 newHodina.setCaption(caption == null ? "" : caption.caption);
                 newHodina.setTyp(atom.subjectId == null ? "X" : "H");

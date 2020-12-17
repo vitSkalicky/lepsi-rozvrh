@@ -8,9 +8,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 @Root(name = "hod", strict = false)
-public class RozvrhHodinaCaption {
+public class OldRozvrhHodinaCaption {
 
-    public RozvrhHodinaCaption() {
+    public OldRozvrhHodinaCaption() {
         super();
     }
 

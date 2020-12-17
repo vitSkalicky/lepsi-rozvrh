@@ -18,14 +18,14 @@ public class RozvrhRoot {
     }
 
     @Element(required = false)
-    private Rozvrh rozvrh;
+    private OldRozvrh rozvrh;
 
-    public Rozvrh getRozvrh() {
+    public OldRozvrh getRozvrh() {
         return rozvrh;
     }
 
-    public void setRozvrh(Rozvrh rozvrh) {
-        this.rozvrh = rozvrh;
+    public void setRozvrh(OldRozvrh oldRozvrh) {
+        this.rozvrh = oldRozvrh;
     }
 
     /**
@@ -33,7 +33,7 @@ public class RozvrhRoot {
      */
     public void checkDemoMode(Context context){
         if (DebugUtils.getInstance(context).isDemoMode()){
-            rozvrh = DebugUtils.getInstance(context).getDemoRozvrh();
+            rozvrh = DebugUtils.getInstance(context).getDemoOldRozvrh();
         }
     }
 }

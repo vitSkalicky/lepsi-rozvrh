@@ -4,12 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 public class DebugUtils {
@@ -30,7 +29,7 @@ public class DebugUtils {
     }
 
     //demonstration mode
-    private Rozvrh demoRozvrh = null;
+    private OldRozvrh demoOldRozvrh = null;
 
     public boolean isDemoMode() {
         return SharedPrefs.getBoolean(context, "demo-mode") && BuildConfig.DEBUG;
@@ -40,20 +39,20 @@ public class DebugUtils {
         SharedPrefs.setBoolean(context, "demo-mode", newDemoMode);
     }
 
-    public Rozvrh getDemoRozvrh(){
-        if (demoRozvrh == null){
+    public OldRozvrh getDemoOldRozvrh(){
+        if (demoOldRozvrh == null){
             Serializer serializer = new Persister();
             try {
-                demoRozvrh = serializer.read(RozvrhRoot.class, demoRozvrhSource).getRozvrh();
+                demoOldRozvrh = serializer.read(RozvrhRoot.class, demoRozvrhSource).getRozvrh();
             } catch (Exception e) {
                 Log.wtf(TAG, "Failed to load demo rozvrh", e);
             }
             LocalDate monday = Utils.getCurrentMonday();
-            for (int i = 0; i < demoRozvrh.getDny().size(); i++) {
-                demoRozvrh.getDny().get(i).setDatum(monday.plusDays(i).toString("yyyyMMdd"));
+            for (int i = 0; i < demoOldRozvrh.getDny().size(); i++) {
+                demoOldRozvrh.getDny().get(i).setDatum(monday.plusDays(i).toString("yyyyMMdd"));
             }
         }
-        return demoRozvrh;
+        return demoOldRozvrh;
     }
 
     public LocalTime getDemoTime(){

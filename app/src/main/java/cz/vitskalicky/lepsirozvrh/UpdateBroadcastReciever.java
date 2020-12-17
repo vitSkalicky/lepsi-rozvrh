@@ -41,8 +41,8 @@ public class UpdateBroadcastReciever extends BroadcastReceiver {
         }
 
         rozvrhAPI.getRozvrh(Utils.getCurrentMonday(), rozvrhWrapper -> {
-            PermanentNotification.update(rozvrhWrapper.getRozvrh(), application);
-            WidgetProvider.updateAll(rozvrhWrapper.getRozvrh(), context);
+            PermanentNotification.update(rozvrhWrapper.getOldRozvrh(), application);
+            WidgetProvider.updateAll(rozvrhWrapper.getOldRozvrh(), context);
 
             application.updateUpdateTime(pendingResult::finish);
         });

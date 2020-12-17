@@ -12,8 +12,8 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Commit;
 
 @Root(name = "hod", strict = false)
-public class RozvrhHodina {
-    public RozvrhHodina() {
+public class OldRozvrhHodina {
+    public OldRozvrhHodina() {
         super();
     }
 

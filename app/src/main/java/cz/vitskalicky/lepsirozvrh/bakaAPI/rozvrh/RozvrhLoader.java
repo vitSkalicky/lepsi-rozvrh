@@ -19,7 +19,7 @@ import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +54,7 @@ public class RozvrhLoader {
                 Result result = new Result();
                 result.code = ResponseCode.LOGIN_FAILED;
                 result.raw = "no url";
-                result.rozvrh = null;
+                result.oldRozvrh = null;
                 invokeListeners(monday, result);
                 return;
             }
@@ -87,7 +87,7 @@ public class RozvrhLoader {
                         }
                         RozvrhRoot root = RozvrhConverter.convert(response.body(),perm, context);
                         root.checkDemoMode(context);
-                        result.rozvrh = root.getRozvrh();
+                        result.oldRozvrh = root.getRozvrh();
                         invokeListeners(monday, result);
                     }else {
                         if (response.code() == 401 /*Unauthorized*/){
@@ -104,7 +104,7 @@ public class RozvrhLoader {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                result.rozvrh = null;
+                                result.oldRozvrh = null;
                                 invokeListeners(monday, result);
                             }
                         }else {
@@ -115,7 +115,7 @@ public class RozvrhLoader {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            result.rozvrh = null;
+                            result.oldRozvrh = null;
                             invokeListeners(monday, result);
                         }
                     }
@@ -126,7 +126,7 @@ public class RozvrhLoader {
                     Result result = new Result();
                     result.code = ResponseCode.UNREACHABLE;
                     result.raw = t.getMessage();
-                    result.rozvrh = null;
+                    result.oldRozvrh = null;
                     t.printStackTrace();
                     invokeListeners(monday, result);
                 }
@@ -175,7 +175,7 @@ public class RozvrhLoader {
         /**
          * {@code null} when error
          */
-        Rozvrh rozvrh;
+        OldRozvrh oldRozvrh;
         /**
          * Raw rozvrh xml when success, raw response when error
          */
@@ -185,8 +185,8 @@ public class RozvrhLoader {
          */
         int code;
 
-        public Result(Rozvrh rozvrh, String raw, int code) {
-            this.rozvrh = rozvrh;
+        public Result(OldRozvrh oldRozvrh, String raw, int code) {
+            this.oldRozvrh = oldRozvrh;
             this.raw = raw;
             this.code = code;
         }

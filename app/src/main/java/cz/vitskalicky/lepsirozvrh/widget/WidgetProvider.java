@@ -19,9 +19,8 @@ import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.UpdateBroadcastReciever;
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
-import cz.vitskalicky.lepsirozvrh.items.Rozvrh;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodina;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
+import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
 
 public class WidgetProvider extends android.appwidget.AppWidgetProvider {
 
@@ -33,10 +32,10 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
-    public static void updateAll(Rozvrh rozvrh, Context context) {
+    public static void updateAll(OldRozvrh oldRozvrh, Context context) {
         WidgetsSettings widgetsSettings = AppSingleton.getInstance(context).getWidgetsSettings();
 
-        RozvrhHodina[] hodiny = rozvrh == null ? null : rozvrh.getWidgetDiaplayValues(5, context);
+        OldRozvrhHodina[] hodiny = oldRozvrh == null ? null : oldRozvrh.getWidgetDiaplayValues(5, context);
 
         HashSet<Integer> widgetIds = widgetsSettings.widgetIds;
         for (int id : widgetIds) {
@@ -44,7 +43,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         }
     }
 
-    public static void update(int widgetID, RozvrhHodina[] hodiny, Context context) {
+    public static void update(int widgetID, OldRozvrhHodina[] hodiny, Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         WidgetsSettings.Widget widgetSettings = AppSingleton.getInstance(context).getWidgetsSettings().widgets.get(widgetID);
 
@@ -66,7 +65,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         if (hodiny == null) {
             allEmpty = true;
         } else {
-            for (RozvrhHodina item : hodiny) {
+            for (OldRozvrhHodina item : hodiny) {
                 if (item != null && !item.isEmpty()) {
                     allEmpty = false;
                     break;
@@ -93,8 +92,8 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         } else if (width < 250 || allEmpty) {
             views = new RemoteViews(context.getPackageName(), R.layout.small_widget);
 
-            RozvrhHodina hodina;
-            if (allEmpty || hodiny.length < 1 || hodiny[0] == null || hodiny[0].getHighlight() == RozvrhHodina.EMPTY) {
+            OldRozvrhHodina hodina;
+            if (allEmpty || hodiny.length < 1 || hodiny[0] == null || hodiny[0].getHighlight() == OldRozvrhHodina.EMPTY) {
                 hodina = null;
             } else {
                 hodina = hodiny[0];
@@ -105,7 +104,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
             views = new RemoteViews(context.getPackageName(), R.layout.wide_widget);
 
             if (hodiny.length < 5) {
-                RozvrhHodina[] tmp = new RozvrhHodina[5];
+                OldRozvrhHodina[] tmp = new OldRozvrhHodina[5];
                 //noinspection ManualArrayCopy
                 for (int i = 0; i < hodiny.length; i++) {
                     tmp[i] = hodiny[i];
@@ -135,7 +134,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetID, views);
     }
 
-    private static void updateCell(RemoteViews views, int primaryTextId, int secondaryTextId, RozvrhHodina hodina, WidgetsSettings.Widget settings, boolean allowEmpty, Context context) {
+    private static void updateCell(RemoteViews views, int primaryTextId, int secondaryTextId, OldRozvrhHodina hodina, WidgetsSettings.Widget settings, boolean allowEmpty, Context context) {
         if (hodina == null) {
             views.setTextViewText(primaryTextId, "");
             views.setViewVisibility(primaryTextId, View.GONE);
@@ -168,7 +167,7 @@ public class WidgetProvider extends android.appwidget.AppWidgetProvider {
                 }
             }
 
-            if (zkrpr.isEmpty() && zkruc.isEmpty() && hodina.getHighlight() == RozvrhHodina.CHANGED) {
+            if (zkrpr.isEmpty() && zkruc.isEmpty() && hodina.getHighlight() == OldRozvrhHodina.CHANGED) {
                 views.setTextViewText(primaryTextId, "");
                 views.setViewVisibility(primaryTextId, View.GONE);
                 views.setTextViewText(secondaryTextId, context.getString(R.string.lesson_cancelled));

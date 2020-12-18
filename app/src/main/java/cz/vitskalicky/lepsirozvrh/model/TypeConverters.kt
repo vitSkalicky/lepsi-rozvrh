@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.model
 import androidx.room.TypeConverter
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormatter
@@ -39,6 +40,24 @@ object LocalTimeConverters {
     @JvmStatic
     fun fromLocalTime(time: LocalTime?): Int? {
         return time?.millisOfDay
+    }
+}
+
+object DateTimeConverters {
+    val dateTimeFormatter: DateTimeFormatter = ISODateTimeFormat.dateTime()
+
+    @TypeConverter
+    @JvmStatic
+    fun toDateTime(value: String?): DateTime? {
+        return value?.let {
+            return DateTimeConverters.dateTimeFormatter.parseDateTime(value)
+        }
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromDateTime(date: DateTime?): String? {
+        return date?.toString(DateTimeConverters.dateTimeFormatter)
     }
 }
 

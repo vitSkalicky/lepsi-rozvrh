@@ -5,7 +5,7 @@ import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
+import org.joda.time.LocalDate
 
 @Dao
 abstract class CaptionDao {
@@ -20,7 +20,7 @@ abstract class CaptionDao {
     abstract suspend fun updateCaption(vararg captions: RozvrhCaption)
 
     @Query("SELECT * FROM RozvrhCaption WHERE id = :id")
-    abstract suspend fun loadCaption(id: LocalDate): Flow<RozvrhCaption>
+    abstract fun loadCaption(id: LocalDate): Flow<RozvrhCaption>
 
 
 }

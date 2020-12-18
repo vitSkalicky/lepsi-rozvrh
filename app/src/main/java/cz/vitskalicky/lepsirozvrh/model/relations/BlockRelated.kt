@@ -1,6 +1,7 @@
 package cz.vitskalicky.lepsirozvrh.model.relations
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhBlock
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
@@ -10,9 +11,9 @@ data class BlockRelated(
     @Embedded val block: RozvrhBlock,
 
     @Relation(
-            entity = RozvrhCaption::class,
-            parentColumn = "id",
-            entityColumn = "caption"
+            parentColumn = "caption",
+            entityColumn = "id",
+            entity = RozvrhCaption::class
     )
     val caption: RozvrhCaption
 

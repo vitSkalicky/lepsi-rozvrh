@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh.model.rozvrh
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import org.joda.time.LocalDate
 
 @Entity(
@@ -23,7 +24,9 @@ import org.joda.time.LocalDate
                 onUpdate = ForeignKey.CASCADE,
                 deferred = true
             )
-        ]
+        ],
+        indices = [Index("day"), Index("caption")]
+
 )
 data class RozvrhBlock(
         val day: LocalDate,

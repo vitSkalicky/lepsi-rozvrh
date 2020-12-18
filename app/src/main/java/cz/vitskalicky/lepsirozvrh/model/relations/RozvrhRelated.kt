@@ -1,24 +1,26 @@
 package cz.vitskalicky.lepsirozvrh.model.relations
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay
 
 data class RozvrhRelated(
         @Embedded val rozvrh: Rozvrh,
 
         @Relation(
-                entity = RozvrhCaption::class,
                 parentColumn = "id",
-                entityColumn = "rozvrh"
+                entityColumn = "rozvrh",
+                entity = RozvrhCaption::class
         )
         val captions: List<RozvrhCaption>,
 
         @Relation(
-                entity = DayRelated::class,
                 parentColumn = "id",
-                entityColumn = "rozvrh"
+                entityColumn = "rozvrh",
+                entity = RozvrhDay::class
         )
         val days: List<DayRelated>
 )

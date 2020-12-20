@@ -20,7 +20,7 @@ import java.nio.channels.FileLock;
 
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.OldRozvrhConverter;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.NO_CACHE;
@@ -91,7 +91,7 @@ public class RozvrhCache {
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 
-                root = RozvrhConverter.convertOld(objectMapper.readValue(inputStream, Rozvrh3.class), monday == null,context);
+                root = OldRozvrhConverter.convertOld(objectMapper.readValue(inputStream, Rozvrh3.class), monday == null,context);
                 root.checkDemoMode(context);
 
             } catch (FileNotFoundException e) {

@@ -18,7 +18,7 @@ import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter;
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.OldRozvrhConverter;
 import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 import retrofit2.Call;
@@ -85,7 +85,7 @@ public class RozvrhLoader {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        RozvrhRoot root = RozvrhConverter.convert(response.body(),perm, context);
+                        RozvrhRoot root = OldRozvrhConverter.convertOld(response.body(),perm, context);
                         root.checkDemoMode(context);
                         result.oldRozvrh = root.getRozvrh();
                         invokeListeners(monday, result);

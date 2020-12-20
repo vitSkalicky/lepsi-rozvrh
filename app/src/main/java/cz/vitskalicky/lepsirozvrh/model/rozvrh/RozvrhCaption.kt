@@ -24,7 +24,7 @@ data class RozvrhCaption(
         @PrimaryKey
         val id: String,
         val name: String,
-        val startTime: LocalTime,
+        val beginTime: LocalTime,
         val endTime: LocalTime,
         //index of caption in the day
         val index: Int

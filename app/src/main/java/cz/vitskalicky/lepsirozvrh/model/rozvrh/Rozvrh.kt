@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
 import org.joda.time.LocalDate
 
 @Entity
@@ -16,9 +17,9 @@ data class Rozvrh(
         val lastUpdate: DateTime,
         val permanent: Boolean,
         @Embedded(prefix = "cycle_")
-        val cycle: RozvrhCycle
+        val cycle: RozvrhCycle?
 ){
         companion object{
-                val PERM = LocalDate.parse("0000-01-01")
+                val PERM = LocalDate.parse("0000-01-01").plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY)
         }
 }

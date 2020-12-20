@@ -15,8 +15,8 @@ import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina;
 import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodinaCaption;
 import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot;
 
-public class RozvrhConverter {
-    public static RozvrhRoot convert(Rozvrh3 rozvrh3, boolean perm, Context context){
+public class OldRozvrhConverter {
+    public static RozvrhRoot convertOld(Rozvrh3 rozvrh3, boolean perm, Context context){
         OldRozvrh.MutableOldRozvrh rozvrh = new OldRozvrh.MutableOldRozvrh();
         rozvrh.setTyp(perm ? "perm" : "akt");
 

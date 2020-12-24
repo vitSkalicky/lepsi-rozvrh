@@ -10,10 +10,11 @@ import androidx.annotation.Nullable;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import cz.vitskalicky.lepsirozvrh.items.OldRozvrhDen;
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh;
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay;
 
 public class DenView extends CellView {
-    private OldRozvrhDen oldRozvrhDen = null;
+    private RozvrhDay rozvrhDay = null;
     private String denText = "";
     private String datumText = "";
 
@@ -80,19 +81,20 @@ public class DenView extends CellView {
         canvas.drawText(datumText, middle + xStart, secondaryBaseline + yStart, secondaryTextPaint);
     }
 
-    public OldRozvrhDen getOldRozvrhDen() {
-        return oldRozvrhDen;
+    public RozvrhDay getRozvrhDay() {
+        return rozvrhDay;
     }
 
-    public void setOldRozvrhDen(OldRozvrhDen oldRozvrhDen) {
-        this.oldRozvrhDen = oldRozvrhDen;
-        if (oldRozvrhDen != null){
-            denText = oldRozvrhDen.getZkratka();
-            if (oldRozvrhDen.getDatum() == null || oldRozvrhDen.getDatum().isEmpty()){
+    public void setRozvrhDay(RozvrhDay rozvrhDay) {
+        this.rozvrhDay = rozvrhDay;
+        if (rozvrhDay != null){
+            //Parse date to day of week
+            denText = rozvrhDay.getDate().toString("E");
+            if (rozvrhDay.getRozvrh() == Rozvrh.Companion.getPERM()){
                 datumText = "";
             }else{
                 DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");
-                datumText = dtf.print(oldRozvrhDen.getParsedDatum());
+                datumText = dtf.print(rozvrhDay.getDate());
             }
         }else {
             denText = "";

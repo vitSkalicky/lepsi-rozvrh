@@ -7,7 +7,10 @@ import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
 import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
+import org.joda.time.LocalTime
 
 data class RozvrhRelated(
     @Embedded val rozvrh: Rozvrh,
@@ -32,6 +35,13 @@ data class RozvrhRelated(
      */
     val days: List<DayRelated>
 ) {
+
+    /**
+     * returns the lesson block, which should be highlighted to the user as next or current lesson, or null
+     * if the school is over or this is not the week.
+     *
+     * @param forNotification If true, the first lesson won't be highlighted up until one hour before its start
+     */
     fun getHighlightBlock(forNotification: Boolean): BlockRelated? {
         return days.firstOrNull { it.day.date == LocalDate.now() }?.getHighlightBlock(forNotification)
     }
@@ -53,5 +63,46 @@ data class RozvrhRelated(
             return null
         }
         return days.firstOrNull { it.day.date == LocalDate.now() }?.getWidgetDisplayBlocks(length) ?: Pair(emptyList(), null)
+    }
+
+    /**
+     * Return time when the notification and widget should be updated or `null` if this week is already over.
+     */
+    fun getUpdateDisplayedDataTime(): LocalDateTime?{
+        val nowDate = LocalDate.now()
+        val nowTime = LocalTime.now()
+
+        var updateTime: LocalDateTime? = null;
+
+        val futureDays: List<DayRelated> = days.filter { !it.day.date.isBefore(nowDate) }
+        var index = 0;
+
+        while (updateTime == null && index < futureDays.size) {
+
+            val day: DayRelated = futureDays[index]
+
+            var first = true
+
+            for (i in day.blocks.indices) {
+                val item: BlockRelated = day.blocks[i]
+                val lesson: RozvrhLesson? = item.block.lessons.getOrNull(0)
+                if (lesson != null || !first) {
+                    if (nowTime.isBefore(item.caption.endTime.minusMinutes(10))) {
+                        if (first && nowTime.isBefore(item.caption.beginTime.minusHours(3))) {
+                            updateTime = day.day.date.toLocalDateTime(item.caption.beginTime.minusHours(3));
+                        } else if (first && nowTime.isBefore(item.caption.beginTime.minusHours(1))) {
+                            updateTime = day.day.date.toLocalDateTime(item.caption.beginTime.minusHours(1));
+                        } else {
+                            updateTime = day.day.date.toLocalDateTime(item.caption.endTime.minusMinutes(10));
+                        }
+                        break
+                    }
+                    first = false
+                }
+            }
+            index++;
+        }
+
+        return updateTime
     }
 }

@@ -72,6 +72,7 @@ data class DayRelated(
     fun getWidgetDisplayBlocks(length: Int): Pair<List<BlockRelated>?,String?>?{
         val nowDate = LocalDate.now()
         val nowTime = LocalTime.now()
+
         if (nowDate != day.date){
             return null
         }

@@ -1,5 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.model.relations.DayRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
@@ -21,7 +22,7 @@ abstract class BlockDao {
     abstract suspend fun updateRozvrhBlock(vararg blocks: RozvrhBlock)
 
     @Query("SELECT * FROM rozvrhblock WHERE day = :day AND caption == :caption")
-    abstract fun loadRozvrhBlock(day: LocalDate, caption: String): Flow<RozvrhBlock>
+    abstract fun loadRozvrhBlock(day: LocalDate, caption: String): LiveData<RozvrhBlock>
 
     /*@Transaction
     @Query("SELECT * FROM rozvrhblock WHERE day = :day AND caption == :caption")

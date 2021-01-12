@@ -1,5 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
@@ -18,9 +19,16 @@ abstract class RozvrhDao {
     abstract suspend fun updateRozvrh(vararg rozvrhs: Rozvrh)
 
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
-    abstract fun loadRozvrh(monday: LocalDate): Flow<Rozvrh>
+    abstract fun loadRozvrhLive(monday: LocalDate): LiveData<Rozvrh>
 
     @Transaction
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
-    abstract fun loadRozvrhRelated(monday: LocalDate): Flow<RozvrhRelated>
+    abstract fun loadRozvrhRelatedLive(monday: LocalDate): LiveData<RozvrhRelated>
+
+    @Query("SELECT * FROM rozvrh WHERE id = :monday")
+    abstract suspend fun loadRozvrh(monday: LocalDate): Rozvrh?
+
+    @Transaction
+    @Query("SELECT * FROM rozvrh WHERE id = :monday")
+    abstract suspend fun loadRozvrhRelated(monday: LocalDate): RozvrhRelated?
 }

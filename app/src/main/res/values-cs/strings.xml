@@ -147,7 +147,7 @@
     <string name="cycle">Cyklus:</string>
     <string name="homework">Domácí úkol:</string>
 
-    <string name="group_in_notification">skupina: </string>
+    <string name="group_in_notification">skupina: %1$s</string>
     <string name="in">v</string>
 
     <string name="next_lesson">Další hodina</string>

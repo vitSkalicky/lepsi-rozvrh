@@ -18,7 +18,6 @@ import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.Utils;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper;
-import cz.vitskalicky.lepsirozvrh.items.OldRozvrh;
 
 import static cz.vitskalicky.lepsirozvrh.bakaAPI.ResponseCode.*;
 

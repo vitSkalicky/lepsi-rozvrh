@@ -38,9 +38,11 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh;
 import io.sentry.Sentry;
 
 public class Utils {
@@ -68,6 +70,7 @@ public class Utils {
 
     public static LocalDate getWeekMonday(LocalDate date) {
         if (date == null) return null;
+        if (date == Rozvrh.Companion.getPERM()) return date;
         return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
 
     }
@@ -135,6 +138,19 @@ public class Utils {
 
     public static interface Listener{
         public void method();
+    }
+    public static String join(List<Object> list, String separator){
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for (Object item :list) {
+            if (!first){
+                sb.append(separator);
+            }
+            first = false;
+            sb.append(item);
+        }
+        return sb.toString();
     }
 
     /**

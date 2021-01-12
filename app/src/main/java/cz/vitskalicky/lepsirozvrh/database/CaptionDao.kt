@@ -1,5 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
@@ -20,7 +21,7 @@ abstract class CaptionDao {
     abstract suspend fun updateCaption(vararg captions: RozvrhCaption)
 
     @Query("SELECT * FROM RozvrhCaption WHERE id = :id")
-    abstract fun loadCaption(id: LocalDate): Flow<RozvrhCaption>
+    abstract fun loadCaption(id: LocalDate): LiveData<RozvrhCaption>
 
 
 }

@@ -147,7 +147,7 @@
     <string name="cycle">Cycle:</string>
     <string name="homework">Homework:</string>
 
-    <string name="group_in_notification">group: </string>
+    <string name="group_in_notification">group: %1$s</string>
     <string name="in">in</string>
 
     <string name="next_lesson">Next lesson</string>

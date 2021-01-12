@@ -1,5 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.model.relations.DayRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
@@ -20,11 +21,11 @@ abstract class DayDao {
     abstract suspend fun updateRozvrhDay(vararg days: RozvrhDay)
 
     @Query("SELECT * FROM rozvrhday WHERE date = :date")
-    abstract fun loadRozvrhDay(date: LocalDate): Flow<RozvrhDay>
+    abstract fun loadRozvrhDay(date: LocalDate): LiveData<RozvrhDay>
 
     @Transaction
     @Query("SELECT * FROM rozvrhday WHERE date = :date")
-    abstract fun loadDayRelated(date: LocalDate): Flow<DayRelated>
+    abstract fun loadDayRelated(date: LocalDate): LiveData<DayRelated>
 
 
 }

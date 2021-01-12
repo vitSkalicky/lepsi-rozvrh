@@ -20,6 +20,6 @@ data class Rozvrh(
         val cycle: RozvrhCycle?
 ){
         companion object{
-                val PERM = LocalDate.parse("0000-01-01").plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY)
+                val PERM: LocalDate = LocalDate.parse("0000-01-01").plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY)
         }
 }

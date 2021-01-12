@@ -206,8 +206,8 @@ public class Login {
         SharedPrefs.remove(context, SharedPrefs.URL);
         SharedPrefs.remove(context, SharedPrefs.NAME);
         RozvrhCache.clearCache(context);
-        PermanentNotification.update(null, 0, context);
-        WidgetProvider.updateAll(null, context);
+        PermanentNotification.INSTANCE.update(null, 0, context);
+        WidgetProvider.Companion.updateAll(null, context);
         AppSingleton.getInstance(context).getRozvrhAPI().clearMemory();
     }
 

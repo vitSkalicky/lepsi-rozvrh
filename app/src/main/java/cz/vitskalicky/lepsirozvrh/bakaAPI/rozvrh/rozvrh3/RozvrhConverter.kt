@@ -16,6 +16,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object RozvrhConverter {
+    @Throws(RozvrhConversionException::class)
     fun convert(rozvrh3: Rozvrh3, date: LocalDate?): RozvrhRelated{
         val monday : LocalDate = date?.let { Utils.getWeekMonday(date) } ?: Rozvrh.PERM
         val cycle: RozvrhCycle? = if (date == null){
@@ -103,7 +104,7 @@ object RozvrhConverter {
             for (atom in item.atoms) {
                 val caption: RozvrhCaption = captionsMap[atom.hourId] ?:
                 //report problem
-                throw RuntimeException("Failed to parse Rozvrh3 to Rozvrh: Could not find a caption for an atom: searched for '${atom.hourId}' available caption ids: ${captionsMap.keys}")
+                throw RozvrhConversionException("Failed to parse Rozvrh3 to Rozvrh: Could not find a caption for an atom: searched for '${atom.hourId}' available caption ids: ${captionsMap.keys}")
 
                 val captionId: String = caption.id
 
@@ -206,4 +207,6 @@ object RozvrhConverter {
         
         return RozvrhRelated(rozvrh, captions, days)
     }
+
+    class RozvrhConversionException(message: String): RuntimeException(message)
 }

@@ -28,7 +28,7 @@ class RozvrhViewModel(
     var weekPosition: Int = 0
     set(value) {
         field = value;
-        monday = if(value == Int.MIN_VALUE) {
+        monday = if(value == PERM) {
             Rozvrh.PERM
         }else{
             Utils.getCurrentMonday().plusWeeks(value)
@@ -38,6 +38,10 @@ class RozvrhViewModel(
             displayLD.removeSource(it)
         }
         displayLD.addSource(repository.getRozvrhLive(monday)) {displayLD.value = it}
+    }
+
+    companion object{
+        const val PERM: Int = Int.MIN_VALUE
     }
 }
 

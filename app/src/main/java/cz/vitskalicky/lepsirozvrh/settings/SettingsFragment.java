@@ -134,7 +134,7 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         SwitchPreferenceCompat notificationPreference = findPreference(getString(R.string.PREFS_NOTIFICATION));
         notificationPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             if ((Boolean) newValue) {
-                PermanentNotification.showInfoDialog(getContext(), false);
+                PermanentNotification.INSTANCE.showInfoDialog(getContext(), false);
                 ((MainApplication) getContext().getApplicationContext()).enableNotification();
             } else {
                 ((MainApplication) getContext().getApplicationContext()).disableNotification();

@@ -330,7 +330,7 @@ class RozvrhLayout : ViewGroup {
             denIndex = Math.min(denIndex, hodinasByCaptions[hodinaIndex].length - 1)
         }*/
 
-        nextHodinaView = hodinasByCaptions[caption.index][dayIndex].firstOrNull() ?: return //todo report error. this should not have happened
+        nextHodinaView = hodinasByCaptions[caption.index][dayIndex].firstOrNull() ?: return //todo report error. this should not happen
 
         nextHodinaView?.hightlightEdges(true, true, true)
         nextHodinaView?.highlightEntire(true)

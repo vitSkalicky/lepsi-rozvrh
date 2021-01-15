@@ -53,7 +53,7 @@ data class RozvrhRelated(
      * If this is not the current week, the pair is `null`.
      *
      * @param length how many lessons does the widget display - determines the length of the returned list.
-     * @return a [Pair] of nullable list and nullable string or `null` if this is the current week.
+     * @return a [Pair] of nullable list and nullable string or `null` if this is not the current week.
      * The first parameter is list of lessons which should be displayed or empty list if all the lessons
      * are already over or `null` if there is an event on that day. The second parameter is the description of current event or `null`
      * if there is no event on that day.

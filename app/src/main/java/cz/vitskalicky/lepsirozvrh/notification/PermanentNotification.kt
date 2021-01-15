@@ -25,19 +25,17 @@ object PermanentNotification {
     const val PERMANENT_NOTIFICATION_ID = 7055713
     const val PERMANENT_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".permanentNotificationChannel"
     const val PREF_DONT_SHOW_INFO_DIALOG = "dont-show-notification-info-dialog-again"
-    val EXTRA_NOTIFICATION = PermanentNotification::class.java.canonicalName + "-extra-notification"
-    //todo this
-    /*fun update(rozvrhAPI: RozvrhAPI, application: MainApplication, onFinished: Utils.Listener) {
-        val context: Context = application
-        if (!SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
-            update(null, 0, context)
+    public val EXTRA_NOTIFICATION = PermanentNotification::class.java.canonicalName + "-extra-notification"
+
+    suspend fun update(application: MainApplication) {
+        if (!SharedPrefs.getBooleanPreference(application, R.string.PREFS_NOTIFICATION, true)) {
+            update(null, 0, application)
             return
         }
-        rozvrhAPI.getRozvrh(Utils.getDisplayWeekMonday(context)) { rozvrhWrapper: RozvrhWrapper ->
-            update(rozvrhWrapper.oldRozvrh, application)
-            onFinished.method()
+        application.repository.getRozvrh(Utils.getCurrentMonday()).let {
+            update(it, application)
         }
-    }*/
+    }
 
     /**
      * Same as [update], but gets the RozvrhHodina for you.

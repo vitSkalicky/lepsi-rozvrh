@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.Utils
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter
 import cz.vitskalicky.lepsirozvrh.database.RozvrhDatabase
@@ -13,12 +14,12 @@ import kotlinx.coroutines.*
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
+import retrofit2.HttpException
 import java.io.IOException
 import kotlin.Exception
 
 class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
     private val application: MainApplication = context.applicationContext as MainApplication
-    private var webservice: RozvrhWebservice? = application.webservice
     private val db: RozvrhDatabase = application.rozvrhDb
     private val scope: CoroutineScope = scope ?: application.mainScope
 
@@ -96,11 +97,21 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
      * Fetches from network and saves to database.
      * @throws IOException on network error
      * @throws RozvrhConverter.RozvrhConversionException on rozvrh conversion failure
+     * @throws HttpException (probably) on [Rozvrh3] parsing failure
+     * @throws LoginRequiredException if authentication fails
      * @throws Exception on other error such as parse error
      */
     @Throws(Exception::class)
     private suspend fun fetchAndCache(rozvrhId: LocalDate): RozvrhRelated {
-        val rozvrh3: Rozvrh3 = webservice?.getSchedule(rozvrhId) ?: throw IOException("Webservice not ready")
+        val rozvrh3: Rozvrh3 = try {
+            application.webservice?.getSchedule(rozvrhId) ?: throw IOException("Webservice not ready")
+        }catch (e: HttpException){
+            if (e.code() == 401) //unauthorized
+                throw LoginRequiredException()
+            else
+                throw e
+        }
+
         val rozvrh = withContext(Dispatchers.IO){ RozvrhConverter.convert(rozvrh3, rozvrhId) }
         db.insertRozvrhRelated(rozvrh)
         if (rozvrh.rozvrh.id == Utils.getCurrentMonday()){
@@ -117,6 +128,12 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
             is RozvrhConverter.RozvrhConversionException -> {
                 //conversion failed
                 //todo report
+            }
+            is LoginRequiredException ->{
+                //todo solve login problem
+            }
+            is HttpException -> {
+                //todo unexpected resoponse, probably
             }
             else -> {
                 //other reasons

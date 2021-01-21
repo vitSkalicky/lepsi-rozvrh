@@ -26,6 +26,12 @@ public class SharedPrefs {
     public static final String ACCESS_EXPIRES = "access_expires";
     public static final String NAME = "name";
     public static final String TYPE = "type";
+    public static final String TYPE_TEXT = "type_text";
+    /**
+     * ISO formatted date time when the semester ends and when it is a good idea to refresh user info.
+     * @see ISODateTimeFormat#dateTime()
+     */
+    public static final String SEMESTER_END = "semester_end";
     public static final String SENTRY_ID = "sentry_id";
 
     public static final String REMEMBERED_ROWS = "remembered_rows";

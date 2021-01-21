@@ -65,24 +65,24 @@ object LessonConverters {
     @TypeConverter
     @JvmStatic
     fun toLesson(value: String): RozvrhLesson {
-        return MainApplication.jacksonObjectMapper.readValue<RozvrhLesson>(value, RozvrhLesson::class.java)
+        return MainApplication.objectMapper.readValue<RozvrhLesson>(value, RozvrhLesson::class.java)
     }
 
     @TypeConverter
     @JvmStatic
     fun fromLesson(value: RozvrhLesson): String {
-        return MainApplication.jacksonObjectMapper.writeValueAsString(value)
+        return MainApplication.objectMapper.writeValueAsString(value)
     }
 
     @TypeConverter
     @JvmStatic
     fun toLessons(value: String): List<RozvrhLesson> {
-        return MainApplication.jacksonObjectMapper.readValue(value, ArrayList<RozvrhLesson>()::class.java)
+        return MainApplication.objectMapper.readValue(value, ArrayList<RozvrhLesson>()::class.java)
     }
 
     @TypeConverter
     @JvmStatic
     fun fromLessons(value: List<RozvrhLesson>): String {
-        return MainApplication.jacksonObjectMapper.writeValueAsString(value)
+        return MainApplication.objectMapper.writeValueAsString(value)
     }
 }

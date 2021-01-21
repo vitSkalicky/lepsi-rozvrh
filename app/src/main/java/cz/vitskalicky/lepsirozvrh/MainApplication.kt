@@ -46,6 +46,19 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.*
 
 class MainApplication : MultiDexApplication() {
+
+    companion object {
+        private val TAG = MainApplication::class.java.simpleName
+        //private var _jacksonObjectMapper: ObjectMapper? = null
+        public val objectMapper: ObjectMapper by lazy {
+            val objectMapper = ObjectMapper()
+            objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+            objectMapper.registerModule(JodaModule())
+            objectMapper.registerModule(KotlinModule())
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        }
+    }
+
     private val tohle = this
     public val mainScope = MainScope()
     lateinit var notificationState: NotificationState
@@ -54,13 +67,9 @@ class MainApplication : MultiDexApplication() {
     private lateinit var currentWeekLivedata: LiveData<RozvrhRelated>
     private lateinit var currentWeekObserver: Observer<RozvrhRelated>
 
-    val objectMapper: ObjectMapper by lazy {
-        val objectMapper = ObjectMapper()
-        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-        objectMapper.registerKotlinModule()
-        return@lazy objectMapper
-    }
-
+    /**
+     * Warning: never keep an instance! Always get one using [MainApplication.retrofit] to make sure it uses the current URL even after logout.
+     */
     var retrofit: Retrofit? = null
         get() {
             if (SharedPrefs.contains(this, SharedPrefs.URL)) {
@@ -89,6 +98,7 @@ class MainApplication : MultiDexApplication() {
 
     /**
      * note: this retrofit is bound to the url, but does not authenticate
+     * Warning: never keep an instance! Always get one using [MainApplication.noAuthRetrofit] to make sure it uses the current URL even after logout.
      */
     var noAuthRetrofit: Retrofit? = null
         get() {
@@ -115,6 +125,9 @@ class MainApplication : MultiDexApplication() {
         ).build()
     }
 
+    /**
+     * Warning: never keep an instance! Always get one using [MainApplication.retrofit] to make sure it uses the current URL even after logout.
+     */
     var webservice: RozvrhWebservice? = null
         get() = field ?: retrofit?.create(RozvrhWebservice::class.java)
         private set
@@ -292,26 +305,19 @@ class MainApplication : MultiDexApplication() {
         Sentry.close()
     }
 
+    /**
+     * Call this after logout to clear all objects that might have saved url and credentials
+     */
+    fun clearObjects(){
+        retrofit = null;
+        webservice = null;
+        noAuthRetrofit = null;
+    }
+
     override fun onTerminate() {
         //prevent leaks
         currentWeekLivedata.removeObserver(currentWeekObserver)
         mainScope.cancel()
         super.onTerminate()
-    }
-
-    companion object {
-        private val TAG = MainApplication::class.java.simpleName
-        private var _jacksonObjectMapper: ObjectMapper? = null
-        public val jacksonObjectMapper: ObjectMapper
-            get() {
-                if (_jacksonObjectMapper == null){
-                    _jacksonObjectMapper = ObjectMapper()
-                    _jacksonObjectMapper!!.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-                    _jacksonObjectMapper!!.registerModule(JodaModule())
-                    _jacksonObjectMapper!!.registerModule(KotlinModule())
-                    _jacksonObjectMapper!!.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                }
-                return _jacksonObjectMapper!!
-            }
     }
 }

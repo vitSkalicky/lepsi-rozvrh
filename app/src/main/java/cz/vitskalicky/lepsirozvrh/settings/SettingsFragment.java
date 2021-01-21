@@ -115,18 +115,7 @@ public class SettingsFragment extends MyCyaneaPreferenceFragmentCompat {
         Preference userInfo = findPreference(getString(R.string.PREFS_USER));
         userInfo.setTitle(SharedPrefs.getString(getContext(), SharedPrefs.NAME));
         String type = SharedPrefs.getString(getContext(), SharedPrefs.TYPE);
-        //todo user type name has changed
-        switch (type) {
-            case "student":
-                userInfo.setSummary(R.string.student);
-                break;
-            case "parents":
-                userInfo.setSummary(R.string.parent);
-                break;
-            case "teacher":
-                userInfo.setSummary(R.string.teacher);
-                break;
-        }
+        userInfo.setSummary(SharedPrefs.getString(getContext(), SharedPrefs.TYPE_TEXT));
 
         ListPreference switchToNextWeek = findPreference(getString(R.string.PREFS_SWITCH_TO_NEXT_WEEK));
         switchToNextWeek.setSummaryProvider(ListPreference.SimpleSummaryProvider.getInstance());

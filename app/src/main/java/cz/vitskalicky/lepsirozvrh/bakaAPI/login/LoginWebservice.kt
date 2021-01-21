@@ -14,7 +14,4 @@ interface LoginWebservice {
     @FormUrlEncoded
     @POST("api/login")
     suspend fun refreshLogin(@Field("refresh_token") refreshToken: String, @Field("client_id") clientId: String = "ANDR", @Field("grant_type") grantType: String = "refresh_token"): LoginResponse
-
-    @GET("api/3/user")
-    suspend fun getUser(): UserResponse
 }

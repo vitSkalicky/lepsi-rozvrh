@@ -58,7 +58,7 @@ object PermanentNotification {
                 update(newBlock, offset, context)
             }
         } else {
-            if (!(context.applicationContext as MainApplication).login!!.isLoggedIn) {
+            if (!(context.applicationContext as MainApplication).login.isLoggedIn()) {
                 update(null, 0, context)
             }
         }
@@ -69,7 +69,7 @@ object PermanentNotification {
      */
     fun update(block: BlockRelated?, offset: Int, context: Context) {
         val notificationManager = NotificationManagerCompat.from(context)
-        val isTeacher = (context.applicationContext as MainApplication).login?.isTeacher == true
+        val isTeacher = (context.applicationContext as MainApplication).login.isTeacher()
         if (block == null && offset == 0 || !SharedPrefs.getBooleanPreference(context, R.string.PREFS_NOTIFICATION, true)) {
             notificationManager.cancel(PERMANENT_NOTIFICATION_ID)
             return

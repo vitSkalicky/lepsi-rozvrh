@@ -95,7 +95,7 @@ open class WidgetProvider : AppWidgetProvider() {
         fun update(context: Context, widgetID: Int, hodiny: List<BlockRelated>?, event: String? = null) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             var widgetSettings = AppSingleton.getInstance(context).widgetsSettings.widgets[widgetID]
-            var loggedIn: Boolean = (context.applicationContext as MainApplication).login!!.isLoggedIn
+            var loggedIn: Boolean = (context.applicationContext as MainApplication).login.isLoggedIn()
 
             // failsafe
             if (widgetSettings == null) {
@@ -163,7 +163,7 @@ open class WidgetProvider : AppWidgetProvider() {
                     }
                 } else {
                     var tchr = hodina.teacherAbbrev
-                    if ((context.applicationContext as MainApplication).login!!.isTeacher) {
+                    if ((context.applicationContext as MainApplication).login.isTeacher()) {
                         // to teacher's we want to show the class, not the teacher
                         // the class name is saved in zkrskup and skup
                         tchr = hodina.groups.joinToString(", ") { it.abbrev }

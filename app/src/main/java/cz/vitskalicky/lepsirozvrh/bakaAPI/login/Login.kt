@@ -1,22 +1,19 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.login
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
 import com.fasterxml.jackson.module.kotlin.readValue
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.SharedPrefs
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login.LoginResult.*
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification
-import cz.vitskalicky.lepsirozvrh.stringLiveData
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
+import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
 import retrofit2.HttpException
@@ -28,8 +25,6 @@ class Login(val app: MainApplication) {
 
     private val sprefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(app)
 
-    public val accessTokenLD: LiveData<String?> by lazy { sprefs.stringLiveData(SharedPrefs.ACCEESS_TOKEN, null) }
-
     /**
      * Returns a new retrofit which does not inject login token.
      */
@@ -40,7 +35,7 @@ class Login(val app: MainApplication) {
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(JacksonConverterFactory.create(app.objectMapper))
+                .addConverterFactory(JacksonConverterFactory.create(MainApplication.objectMapper))
                 .client(client)
                 .build()
 
@@ -77,7 +72,7 @@ class Login(val app: MainApplication) {
         }
     }
 
-    suspend fun handleException(e: Exception): LoginResult{
+    suspend fun handleException(e: Exception, whichAPI: String): LoginResult{
         when (e) {
             is HttpException -> {
                 //probably could not parse the response
@@ -90,7 +85,7 @@ class Login(val app: MainApplication) {
                         try {
                             val str = it.string()
                             rawBody = str
-                            app.objectMapper.readValue(str)
+                            MainApplication.objectMapper.readValue(str)
                         } catch (e: IOException) {
                             parseException = e
                             null
@@ -102,7 +97,7 @@ class Login(val app: MainApplication) {
                     return WRONG_LOGIN
                 }
                 //unexpected - report
-                Sentry.capture(IOException("Unexpected login API response. Raw response: \'${rawBody}\' Message of exception while parsing (which is also set as cause of this exception): \'${parseException?.message}\'", parseException))
+                Sentry.capture(IOException("Unexpected $whichAPI API response. Raw response: \'${rawBody}\' Message of exception while parsing (which is also set as cause of this exception): \'${parseException?.message}\'", parseException))
                 return UNEXPECTED_RESPONSE
             }
             is IOException ->
@@ -116,8 +111,7 @@ class Login(val app: MainApplication) {
     suspend fun refreshToken(): LoginResult {
         val refreshToken: String = sprefs.getString(SharedPrefs.REFRESH_TOKEN, null)?.takeUnless { it.isBlank() } ?: return WRONG_LOGIN
 
-        val retrofit: Retrofit = app.retrofit ?: getUnloggedRetrofit(sprefs.getString(SharedPrefs.URL, null)?.takeUnless { it.isBlank() }
-                ?: return WRONG_LOGIN)
+        val retrofit: Retrofit = app.noAuthRetrofit!!
         val webservice: LoginWebservice = retrofit.create(LoginWebservice::class.java)
 
         try {
@@ -128,11 +122,18 @@ class Login(val app: MainApplication) {
                 putString(SharedPrefs.ACCEESS_TOKEN, response.access_token)
                 putString(SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.expires_in).toString(ISODateTimeFormat.dateTime()))
             }.apply()
+
+            //check if user info should be refreshed
+            val semesterEnd: DateTime? = sprefs.getString(SharedPrefs.SEMESTER_END,null)?.let {ISODateTimeFormat.dateTime().parseDateTime(it)}
+            if (semesterEnd == null || semesterEnd.isBeforeNow){
+                refreshUserInfo()
+            }
+
             return SUCCESS
         }catch (e: HttpException){
-            return handleException(e)
+            return handleException(e, "login")
         }catch (e: IOException){
-            return handleException(e)
+            return handleException(e, "login")
         }
     }
 
@@ -150,11 +151,41 @@ class Login(val app: MainApplication) {
                 putString(SharedPrefs.ACCESS_EXPIRES, LocalDateTime.now().plusSeconds(response.expires_in).toString(ISODateTimeFormat.dateTime()))
                 putString(SharedPrefs.URL, url)
             }.apply()
+
+            refreshUserInfo()
+
             return SUCCESS
         }catch (e: HttpException){
-            return handleException(e)
+            return handleException(e, "login")
         }catch (e: IOException){
-            return handleException(e)
+            return handleException(e, "login")
+        }
+    }
+
+    suspend fun refreshUserInfo(): LoginResult{
+
+        val userWebservice: UserWebservice = app.retrofit?.create(UserWebservice::class.java)!!
+        try {
+            val user: UserResponse = userWebservice.getUser()
+
+            sprefs.edit().apply {
+                putString(SharedPrefs.NAME, user.fullName ?: "")
+                putString(SharedPrefs.TYPE, user.userType ?: "")
+                putString(SharedPrefs.TYPE_TEXT, user.userTypeText ?: "")
+                val semesterEnd: DateTime? = user.settingModules?.common?.actualSemester?.to?.let {
+                    try {
+                        ISODateTimeFormat.dateTime().parseDateTime(it)
+                    }catch (e: IllegalArgumentException){
+                        null
+                    }
+                }
+                putString(SharedPrefs.SEMESTER_END, if (semesterEnd == null) "" else ISODateTimeFormat.dateTime().print(semesterEnd))
+            }.apply()
+            return SUCCESS
+        }catch (e: HttpException){
+            return handleException(e, "user")
+        }catch (e: IOException){
+            return handleException(e, "user")
         }
     }
 
@@ -163,21 +194,32 @@ class Login(val app: MainApplication) {
      */
     fun logout() {
         sprefs.edit().apply {
-            remove(SharedPrefs.USERNAME)
             remove(SharedPrefs.REFRESH_TOKEN)
             remove(SharedPrefs.ACCEESS_TOKEN)
             remove(SharedPrefs.ACCESS_EXPIRES)
             remove(SharedPrefs.URL)
             remove(SharedPrefs.NAME)
             remove(SharedPrefs.TYPE)
+            remove(SharedPrefs.TYPE_TEXT)
+            remove(SharedPrefs.SEMESTER_END)
         }.apply()
         app.rozvrhDb.clearAllTables()
+        app.clearObjects()
         PermanentNotification.update(null, 0, app)
         WidgetProvider.updateAll(null, app)
     }
 
     fun isLoggedIn(): Boolean {
         return ! sprefs.getString(SharedPrefs.REFRESH_TOKEN, "").isNullOrBlank()
+    }
+
+    /**
+     * Whether to show teacher's or students rozvrh (each is fetched and displayed slightly differently)
+     * @return `true` if the user logged in is a teacher or `false` if not (then it is a student or a parent)
+     */
+    fun isTeacher(): Boolean {
+        val type = sprefs.getString(SharedPrefs.TYPE, "")
+        return type == "teacher"
     }
 
     companion object{

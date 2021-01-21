@@ -1,10 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.login
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.preference.PreferenceManager
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.SharedPrefs
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login.LoginResult.*
+import io.sentry.Sentry
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 
@@ -14,7 +16,7 @@ class TokenAuthenticator(val app: MainApplication) : Authenticator, Interceptor 
     override fun authenticate(route: Route?, response: Response): Request? {
         val origRequest: Request = response.request()
         val retried: Int = origRequest.tag(Retried::class.java)?.count ?: 0
-        if (retried > 2) {
+        if (retried > 1) {
             return null
         }
         val usedAccessToken: String? = origRequest.header("Authorization")?.removePrefix("Bearer ")
@@ -61,6 +63,8 @@ class TokenAuthenticator(val app: MainApplication) : Authenticator, Interceptor 
                     .addHeader("Authorization", "Bearer " + token)
                     .build()
             return chain.proceed(newRequest)
+        }else{
+            Log.w(TokenAuthenticator::class.simpleName, "Interceptor could not insert authentication header! access token is blank or empty")
         }
         return chain.proceed(chain.request())
     }

@@ -2,6 +2,7 @@ package cz.vitskalicky.lepsirozvrh
 
 import android.app.*
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
@@ -15,8 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.jaredrummler.cyanea.Cyanea
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
+import cz.vitskalicky.lepsirozvrh.bakaAPI.login.TokenAuthenticator
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRepository
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWebservice
 import cz.vitskalicky.lepsirozvrh.database.RozvrhDatabase
@@ -49,23 +53,25 @@ class MainApplication : MultiDexApplication() {
     private var updateTime: LocalDateTime? = null
     private lateinit var currentWeekLivedata: LiveData<RozvrhRelated>
     private lateinit var currentWeekObserver: Observer<RozvrhRelated>
+
+    val objectMapper: ObjectMapper by lazy {
+        val objectMapper = ObjectMapper()
+        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+        objectMapper.registerKotlinModule()
+        return@lazy objectMapper
+    }
+
     var retrofit: Retrofit? = null
         get() {
             if (SharedPrefs.contains(this, SharedPrefs.URL)) {
                 val interceptor = HttpLoggingInterceptor()
                 interceptor.level = HttpLoggingInterceptor.Level.BODY
-                val loginInterceptor = Interceptor { chain ->
-                    if (!login.getAccessToken(tohle).isEmpty()) {
-                        val newRequest = chain.request().newBuilder()
-                                .addHeader("Authorization", "Bearer " + login.getAccessToken(tohle))
-                                .build()
-                        return@Interceptor chain.proceed(newRequest)
-                    }
-                    chain.proceed(chain.request())
-                }
-                val client = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(loginInterceptor).build()
-                val objectMapper = ObjectMapper()
-                objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                val tokenAuthenticator = TokenAuthenticator(this)
+                val client = OkHttpClient.Builder()
+                        .addInterceptor(interceptor)
+                        .addInterceptor(tokenAuthenticator)
+                        .authenticator(tokenAuthenticator)
+                        .build()
                 field = try {
                     Retrofit.Builder()
                             .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
@@ -79,7 +85,28 @@ class MainApplication : MultiDexApplication() {
             }
             return null
         }
-        private set
+    private set
+
+    /**
+     * note: this retrofit is bound to the url, but does not authenticate
+     */
+    var noAuthRetrofit: Retrofit? = null
+        get() {
+            if (field != null)
+                return field
+
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            val client = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
+            field = Retrofit.Builder()
+                        .baseUrl(SharedPrefs.getString(this, SharedPrefs.URL))
+                        .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                        .client(client)
+                        .build()
+
+            return field
+        }
+    private set
 
     val rozvrhDb: RozvrhDatabase by lazy {
         Room.databaseBuilder(
@@ -97,7 +124,7 @@ class MainApplication : MultiDexApplication() {
     }
 
     val login: Login by lazy {
-        Login(this.applicationContext)
+        Login(this)
     }
 
     override fun onCreate() {

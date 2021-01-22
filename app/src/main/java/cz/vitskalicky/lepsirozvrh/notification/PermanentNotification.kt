@@ -14,8 +14,6 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.text.HtmlCompat
 import cz.vitskalicky.lepsirozvrh.*
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper
 import cz.vitskalicky.lepsirozvrh.model.relations.BlockRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson

@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,7 +88,7 @@ public class SchoolsDatabaseAPI {
      * @return RequestQueue used for requests.
      */
     public static RequestQueue getAllSchools(Context context, Listener listener, SchoolsDatabse database, ProgressBar progressBar) {
-        final RequestQueue requestQueue = AppSingleton.getInstance(context).getRequestQueue();
+        final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         AsyncTask.execute(() -> {
             SchoolDAO dao = database.schoolDAO();

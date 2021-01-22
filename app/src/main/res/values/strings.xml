@@ -18,7 +18,7 @@
     <string name="login_message">Log in to Bakaláři, please</string>
     <string name="invalid_login">Invalid username or password</string>
     <string name="schedule_disabled">Schedule is disabled on this server</string>
-    <string name="unexpected_response">Unexpected response from server (check address)</string>
+    <string name="unexpected_response">Unexpected response from server. Please check the server address.</string>
     <string name="unreachable">Server unreachable (check your internet connection and address)</string>
     <string name="enter_username">Enter your username</string>
     <string name="enter_url">Enter URL of your Bakaláři server or tap \'choose school\'</string>

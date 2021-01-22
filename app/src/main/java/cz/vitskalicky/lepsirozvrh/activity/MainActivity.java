@@ -24,11 +24,10 @@ import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
 import cz.vitskalicky.lepsirozvrh.DebugUtils;
 import cz.vitskalicky.lepsirozvrh.DisplayInfo;
+import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhCache;
 import cz.vitskalicky.lepsirozvrh.fragment.RozvrhFragment;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
@@ -107,11 +106,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void checkLogin() {
-        if (Login.checkLogin(this) != null) {
-            //todo wipe data
-            /*if (rozvrhAPI != null) {
-                rozvrhAPI.clearMemory();
-            }*/
+        Login login = ((MainApplication)getApplication()).getLogin();
+        if (login.checkLogin(this) != null) {
+            login.logout();
             finish();
         }
     }

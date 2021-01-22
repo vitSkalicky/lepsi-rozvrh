@@ -4,9 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhListener
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWrapper
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification.update
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider

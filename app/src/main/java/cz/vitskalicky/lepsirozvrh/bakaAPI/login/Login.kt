@@ -1,10 +1,17 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.login
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.fasterxml.jackson.module.kotlin.readValue
 import cz.vitskalicky.lepsirozvrh.MainApplication
+import cz.vitskalicky.lepsirozvrh.R
 import cz.vitskalicky.lepsirozvrh.SharedPrefs
+import cz.vitskalicky.lepsirozvrh.activity.LoginActivity
+import cz.vitskalicky.lepsirozvrh.activity.MainActivity
+import cz.vitskalicky.lepsirozvrh.activity.WelcomeActivity
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login.LoginResult.*
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider
@@ -20,6 +27,8 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.IOException
+import kotlin.reflect.KClass
+
 
 class Login(val app: MainApplication) {
 
@@ -124,7 +133,7 @@ class Login(val app: MainApplication) {
             }.apply()
 
             //check if user info should be refreshed
-            val semesterEnd: DateTime? = sprefs.getString(SharedPrefs.SEMESTER_END,null)?.let {ISODateTimeFormat.dateTime().parseDateTime(it)}
+            val semesterEnd: DateTime? = sprefs.getString(SharedPrefs.SEMESTER_END, null)?.let {ISODateTimeFormat.dateTime().parseDateTime(it)}
             if (semesterEnd == null || semesterEnd.isBeforeNow){
                 refreshUserInfo()
             }
@@ -197,7 +206,6 @@ class Login(val app: MainApplication) {
             remove(SharedPrefs.REFRESH_TOKEN)
             remove(SharedPrefs.ACCEESS_TOKEN)
             remove(SharedPrefs.ACCESS_EXPIRES)
-            remove(SharedPrefs.URL)
             remove(SharedPrefs.NAME)
             remove(SharedPrefs.TYPE)
             remove(SharedPrefs.TYPE_TEXT)
@@ -220,6 +228,33 @@ class Login(val app: MainApplication) {
     fun isTeacher(): Boolean {
         val type = sprefs.getString(SharedPrefs.TYPE, "")
         return type == "teacher"
+    }
+
+    /**
+     * Checks if user is logged in or has seen the welcome screen (where crash reports are
+     * enabled/disabled), the starts the corresponding activity (if it isn't already started).
+     * `finish()` **won't** be called on the current activity.
+     *
+     * @return An activity which is being started or `null` if no activity will be started.
+     */
+    fun checkLogin(currentActivity: Activity): KClass<out Activity>? {
+        val seenWelcome = SharedPrefs.containsPreference(app, R.string.PREFS_SEND_CRASH_REPORTS)
+        if (!seenWelcome && currentActivity !is WelcomeActivity) {
+            val intent = Intent(app, WelcomeActivity::class.java)
+            app.startActivity(intent)
+            return WelcomeActivity::class
+        }
+        if (!isLoggedIn() && currentActivity !is LoginActivity) {
+            val intent = Intent(app, LoginActivity::class.java)
+            app.startActivity(intent)
+            return LoginActivity::class
+        }
+        if (currentActivity !is MainActivity) {
+            val intent = Intent(app, MainActivity::class.java)
+            app.startActivity(intent)
+            return MainActivity::class
+        }
+        return null
     }
 
     companion object{

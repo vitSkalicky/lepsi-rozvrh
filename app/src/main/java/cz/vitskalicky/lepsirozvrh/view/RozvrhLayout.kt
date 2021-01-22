@@ -2,24 +2,16 @@ package cz.vitskalicky.lepsirozvrh.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.HorizontalScrollView
-import android.widget.Toast
 import cz.vitskalicky.lepsirozvrh.R
 import cz.vitskalicky.lepsirozvrh.SharedPrefs
-import cz.vitskalicky.lepsirozvrh.Utils
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI
 import cz.vitskalicky.lepsirozvrh.model.relations.BlockRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.DayRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhBlock
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
-import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay
-import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
 import org.joda.time.LocalDate
 
 class RozvrhLayout : ViewGroup {
@@ -181,8 +173,8 @@ class RozvrhLayout : ViewGroup {
     fun createViews() {
         //debug timing: Log.d(TAG_TIMER, "createViews start " + Utils.getDebugTime());
         if (rows == 0 && columns == 0) {
-            rows = RozvrhAPI.getRememberedRows(context)
-            columns = RozvrhAPI.getRememberedColumns(context)
+            rows = getRememberedRows()
+            columns = getRememberedColumns()
         }
         for (i in hodinasByCaptions.indices) {
             for (j in hodinasByCaptions[i].indices) {
@@ -220,6 +212,23 @@ class RozvrhLayout : ViewGroup {
         //debug timing: Log.d(TAG_TIMER, "createViews end " + Utils.getDebugTime());
     }
 
+
+    fun getRememberedRows(): Int {
+        return if (!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_ROWS)) 0 else SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_ROWS)
+    }
+
+    fun getRememberedColumns(): Int {
+        return if (!SharedPrefs.contains(context, SharedPrefs.REMEMBERED_COLUMNS)) 0 else SharedPrefs.getInt(context, SharedPrefs.REMEMBERED_COLUMNS)
+    }
+
+    fun rememberRows( rows: Int) {
+        SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_ROWS, rows)
+    }
+
+    fun rememberColumns( columns: Int) {
+        SharedPrefs.setInt(context, SharedPrefs.REMEMBERED_COLUMNS, columns)
+    }
+
     fun setRozvrh(rozvrh: RozvrhRelated?, centerToCurrentlesson: Boolean) {
         //debug timing: Log.d(TAG_TIMER, "populate start " + Utils.getDebugTime());
         //todo sentry extra
@@ -246,8 +255,8 @@ class RozvrhLayout : ViewGroup {
         perm = rozvrh.rozvrh.permanent
         columnSizes = IntArray(columns + 1)
         createViews()
-        RozvrhAPI.rememberRows(context, rows)
-        RozvrhAPI.rememberColumns(context, columns)
+        rememberRows(rows)
+        rememberColumns(columns)
 
         //populate
         cornerView?.text = rozvrh.rozvrh.cycle?.name ?: ""

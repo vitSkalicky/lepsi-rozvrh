@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import cz.vitskalicky.lepsirozvrh.DebugUtils;
-import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhAPI;
 
 @Root(name = "rozvrh", strict = false)
 public class OldRozvrh {

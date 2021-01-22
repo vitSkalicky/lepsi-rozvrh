@@ -19,7 +19,7 @@
     <string name="login_message">Přihlaste se do systému Bakaláři</string>
     <string name="invalid_login">Neplatné uživatelské jméno nebo heslo</string>
     <string name="schedule_disabled">Rozvrh není povolen na tomto serveru</string>
-    <string name="unexpected_response">Neočekávané odpověď serveru (zkontrolujte adresu)</string>
+    <string name="unexpected_response">Neočekávaná odpověď serveru. Prosím, zkontrolujte zadanou adresu serveru.</string>
     <string name="unreachable">Server nedostupný (zkontrolujte internetové připojení a adresu serveru)</string>
     <string name="enter_username">Zadejte Vaše přihlašovací jméno</string>
     <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>

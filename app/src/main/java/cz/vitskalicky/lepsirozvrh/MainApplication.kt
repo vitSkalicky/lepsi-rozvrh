@@ -168,13 +168,6 @@ class MainApplication : MultiDexApplication() {
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
-        notificationState = NotificationState(this)
-        if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
-            enableNotification()
-        } else {
-            disableNotification()
-        }
-        val rozvrhAPI = AppSingleton.getInstance(this).rozvrhAPI
         currentWeekObserver = Observer { rozvrh: RozvrhRelated ->
             /*if (rozvrhWrapper!!.oldRozvrh != null) {
                 WidgetProvider.updateAll(rozvrhWrapper.oldRozvrh, this)
@@ -199,6 +192,12 @@ class MainApplication : MultiDexApplication() {
             SharedPrefs.setBooleanPreference(this, R.string.PREFS_IS_DARK_THEME_FOR_SYSTEM_APPLIED, false)
             Theme.of(this).themeData = DefaultThemes.getLightTheme()
             Theme.of(this).checkSystemTheme()
+        }
+        notificationState = NotificationState(this)
+        if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
+            enableNotification()
+        } else {
+            disableNotification()
         }
         if (SharedPrefs.getInt(this, SharedPrefs.LAST_VERSION_SEEN) < BuildConfig.VERSION_CODE) {
             //a new version is here

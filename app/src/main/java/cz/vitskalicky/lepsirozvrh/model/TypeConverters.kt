@@ -1,6 +1,10 @@
 package cz.vitskalicky.lepsirozvrh.model
 
 import androidx.room.TypeConverter
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.type.CollectionType
+import com.fasterxml.jackson.databind.type.SimpleType
+import com.fasterxml.jackson.databind.type.TypeFactory
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
 import org.joda.time.DateTime
@@ -77,7 +81,8 @@ object LessonConverters {
     @TypeConverter
     @JvmStatic
     fun toLessons(value: String): List<RozvrhLesson> {
-        return MainApplication.objectMapper.readValue(value, ArrayList<RozvrhLesson>()::class.java)
+        val arr: Array<RozvrhLesson> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhLesson::class.java))
+        return arr.toList()
     }
 
     @TypeConverter

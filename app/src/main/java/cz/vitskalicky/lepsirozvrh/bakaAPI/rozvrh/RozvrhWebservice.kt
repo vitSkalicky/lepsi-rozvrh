@@ -13,19 +13,23 @@ interface RozvrhWebservice {
     companion object{
         var datePatter = "YYYY-MM-dd"
 
+        /**
+         * fetches the schedule for given monday or permanent if [monday] is [Rozvrh.PERM].
+         */
+        suspend fun RozvrhWebservice.getSchedule(monday: LocalDate): Rozvrh3{
+            if (monday == Rozvrh.PERM)
+                return getPermanentSchedule()
+            else
+                return getActualSchedule(Utils.getWeekMonday(monday))
+        }
+
+        suspend fun RozvrhWebservice.getActualSchedule(date: LocalDate): Rozvrh3{
+            return getActualSchedule(date.toString(datePatter))
+        }
     }
 
     @GET("api/3/timetable/actual?")
     suspend fun getActualSchedule(@Query("date") date: String?): Rozvrh3
-
-    suspend fun getActualSchedule(date: LocalDate): Rozvrh3{
-        return getActualSchedule(date.toString(datePatter))
-    }
-
-    /**
-     * fetches the schedule for given monday or permanent if [monday] is [Rozvrh.PERM].
-     */
-    suspend fun getSchedule(monday: LocalDate) = if (monday == Rozvrh.PERM) getPermanentSchedule() else getActualSchedule(Utils.getWeekMonday(monday))
 
     @GET("api/3/timetable/permanent")
     suspend fun getPermanentSchedule(): Rozvrh3

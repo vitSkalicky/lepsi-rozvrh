@@ -21,14 +21,12 @@ abstract class RozvrhDao {
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
     abstract fun loadRozvrhLive(monday: LocalDate): LiveData<Rozvrh>
 
-    @Transaction
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
     abstract fun loadRozvrhRelatedLive(monday: LocalDate): LiveData<RozvrhRelated>
 
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
     abstract suspend fun loadRozvrh(monday: LocalDate): Rozvrh?
 
-    @Transaction
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
     abstract suspend fun loadRozvrhRelated(monday: LocalDate): RozvrhRelated?
 }

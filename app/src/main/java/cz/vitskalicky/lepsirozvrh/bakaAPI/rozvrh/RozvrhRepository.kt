@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
+import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWebservice.Companion.getSchedule
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter
 import cz.vitskalicky.lepsirozvrh.database.RozvrhDatabase
@@ -46,6 +47,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
                 try{
                     fetchAndCache(rozvrhMonday)
                 }catch (e: Exception){
+                    e.printStackTrace()
                     reportError(e)
                 }
             }
@@ -136,6 +138,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
                 //todo unexpected resoponse, probably
             }
             else -> {
+                throw e
                 //other reasons
                 //todo report parse error
             }

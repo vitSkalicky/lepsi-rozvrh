@@ -16,6 +16,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.distinctUntilChanged
 import com.jaredrummler.cyanea.Cyanea
 import cz.vitskalicky.lepsirozvrh.*
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
@@ -98,6 +99,9 @@ class RozvrhFragment : Fragment() {
         ibRefresh = rootView.findViewById<ImageButton>(R.id.refresh)
         progressBar = rootView.findViewById<ProgressBar>(R.id.progressBar)
 
+        //todo display status
+        progressBar.visibility = View.GONE
+
         rozvrhLayout.createViews()
 
         ibSettings.setOnClickListener { view: View? ->
@@ -166,8 +170,9 @@ class RozvrhFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getDisplayLD().observe(viewLifecycleOwner){
+        viewModel.getDisplayLD().distinctUntilChanged().observe(viewLifecycleOwner){
             rozvrhLayout.setRozvrh(it, centerToCurrentLesson)
+            //reset center to current lesson once it happened
             if (it != null){
                 centerToCurrentLesson = false
             }

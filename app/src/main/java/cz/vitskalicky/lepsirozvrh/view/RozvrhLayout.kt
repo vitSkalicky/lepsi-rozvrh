@@ -32,8 +32,8 @@ class RozvrhLayout : ViewGroup {
     private var childHeightWhenCalculatingNaturalCellWidth = -1
     private var rozvrh: RozvrhRelated? = null
     private var perm = false
-    private var rows = 0 //only actual lessons - add 1 to calculate with captions as well
-    private var columns = 0 //only actual lessons - add 1 to calculate with day cells as well
+    private var rows = -1 //only actual lessons - add 1 to calculate with captions as well
+    private var columns = -1 //only actual lessons - add 1 to calculate with day cells as well
     private var childHeight = 0
     private var cornerView: CornerView? = null
     private var denViews = ArrayList<DenView>(0)
@@ -172,7 +172,7 @@ class RozvrhLayout : ViewGroup {
 
     fun createViews() {
         //debug timing: Log.d(TAG_TIMER, "createViews start " + Utils.getDebugTime());
-        if (rows == 0 && columns == 0) {
+        if (rows == -1 && columns == -1) {
             rows = getRememberedRows()
             columns = getRememberedColumns()
         }
@@ -193,6 +193,7 @@ class RozvrhLayout : ViewGroup {
         denViews = ArrayList()
         captionViews = ArrayList()
         hodinasByCaptions = Array<Array<ArrayList<HodinaView>>>(columns) { Array(rows){ ArrayList() } }
+        columnSizes = IntArray(columns + 1)
 
         if (cornerView == null) {
             cornerView = CornerView(context, null)
@@ -253,7 +254,6 @@ class RozvrhLayout : ViewGroup {
         rows = rozvrh.days.size
         columns = rozvrh.captions.size
         perm = rozvrh.rozvrh.permanent
-        columnSizes = IntArray(columns + 1)
         createViews()
         rememberRows(rows)
         rememberColumns(columns)

@@ -8,14 +8,18 @@
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/infoLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <cz.vitskalicky.lepsirozvrh.view.RozvrhLayout
             android:id="@+id/rozvrhLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fillViewport="true"/>
+            android:fillViewport="true" />
     </HorizontalScrollView>
 
     <View

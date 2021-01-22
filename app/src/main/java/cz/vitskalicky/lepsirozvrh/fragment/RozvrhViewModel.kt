@@ -37,7 +37,8 @@ class RozvrhViewModel(
         currentlyUsedLD?.let {
             displayLD.removeSource(it)
         }
-        displayLD.addSource(repository.getRozvrhLive(monday)) {displayLD.value = it}
+        currentlyUsedLD = repository.getRozvrhLive(monday)
+        displayLD.addSource(currentlyUsedLD!!) {displayLD.value = it}
     }
 
     companion object{

@@ -17,6 +17,8 @@ import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -211,7 +213,9 @@ class Login(val app: MainApplication) {
             remove(SharedPrefs.TYPE_TEXT)
             remove(SharedPrefs.SEMESTER_END)
         }.apply()
-        app.rozvrhDb.clearAllTables()
+        GlobalScope.launch {
+            app.rozvrhDb.clearAllTables()
+        }
         app.clearObjects()
         PermanentNotification.update(null, 0, app)
         WidgetProvider.updateAll(null, app)
@@ -238,20 +242,21 @@ class Login(val app: MainApplication) {
      * @return An activity which is being started or `null` if no activity will be started.
      */
     fun checkLogin(currentActivity: Activity): KClass<out Activity>? {
+        val ctx = currentActivity
         val seenWelcome = SharedPrefs.containsPreference(app, R.string.PREFS_SEND_CRASH_REPORTS)
         if (!seenWelcome && currentActivity !is WelcomeActivity) {
-            val intent = Intent(app, WelcomeActivity::class.java)
-            app.startActivity(intent)
+            val intent = Intent(ctx, WelcomeActivity::class.java)
+            ctx.startActivity(intent)
             return WelcomeActivity::class
         }
         if (!isLoggedIn() && currentActivity !is LoginActivity) {
-            val intent = Intent(app, LoginActivity::class.java)
-            app.startActivity(intent)
+            val intent = Intent(ctx, LoginActivity::class.java)
+            ctx.startActivity(intent)
             return LoginActivity::class
         }
         if (currentActivity !is MainActivity) {
-            val intent = Intent(app, MainActivity::class.java)
-            app.startActivity(intent)
+            val intent = Intent(ctx, MainActivity::class.java)
+            ctx.startActivity(intent)
             return MainActivity::class
         }
         return null

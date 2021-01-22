@@ -1,8 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.model.DateTimeConverters
 import cz.vitskalicky.lepsirozvrh.model.LessonConverters
 import cz.vitskalicky.lepsirozvrh.model.LocalDateConverters
@@ -36,11 +34,13 @@ abstract class RozvrhDatabase : RoomDatabase() {
             }
         }
 
-        rozvrhDao().deleteRozvrh(*rozvrhs.map{ it.rozvrh }.toTypedArray())
-        rozvrhDao().insertRozvrh(*rozvrhs.map{ it.rozvrh }.toTypedArray())
+        withTransaction {
+            rozvrhDao().deleteRozvrh(*rozvrhs.map{ it.rozvrh }.toTypedArray())
+            rozvrhDao().insertRozvrh(*rozvrhs.map{ it.rozvrh }.toTypedArray())
 
-        captionDao().insertCaption(*captions.toTypedArray())
-        dayDao().insertRozvrhDay(*days.toTypedArray())
-        blockDao().insertRozvrhBlock(*blocks.toTypedArray())
+            captionDao().insertCaption(*captions.toTypedArray())
+            dayDao().insertRozvrhDay(*days.toTypedArray())
+            blockDao().insertRozvrhBlock(*blocks.toTypedArray())
+        }
     }
 }

@@ -80,7 +80,7 @@ data class DayRelated(
             return Pair(null, day.event)
         }
         var nowIndex = 0;
-        while (blocks[nowIndex].caption.endTime.minusMinutes(10).isBefore(nowTime) && nowIndex < blocks.size){
+        while ( nowIndex < blocks.size && blocks[nowIndex].caption.endTime.minusMinutes(10).isBefore(nowTime)){
             nowIndex++
         }
         val ret = ArrayList<BlockRelated>()

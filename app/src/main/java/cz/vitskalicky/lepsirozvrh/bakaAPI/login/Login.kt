@@ -135,7 +135,7 @@ class Login(val app: MainApplication) {
             }.apply()
 
             //check if user info should be refreshed
-            val semesterEnd: DateTime? = sprefs.getString(SharedPrefs.SEMESTER_END, null)?.let {ISODateTimeFormat.dateTime().parseDateTime(it)}
+            val semesterEnd: DateTime? = sprefs.getString(SharedPrefs.SEMESTER_END, null)?.takeUnless { it.isBlank() }?.let {ISODateTimeFormat.dateTime().parseDateTime(it)}
             if (semesterEnd == null || semesterEnd.isBeforeNow){
                 refreshUserInfo()
             }
@@ -216,6 +216,7 @@ class Login(val app: MainApplication) {
         GlobalScope.launch {
             app.rozvrhDb.clearAllTables()
         }
+        app.rozvrhStatusStore.clear()
         app.clearObjects()
         PermanentNotification.update(null, 0, app)
         WidgetProvider.updateAll(null, app)

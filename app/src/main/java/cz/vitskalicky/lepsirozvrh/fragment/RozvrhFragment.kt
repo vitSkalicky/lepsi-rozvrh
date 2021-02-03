@@ -45,6 +45,9 @@ class RozvrhFragment : Fragment() {
      * if set to true, the scroll view will jump to to the current lesson next time a valid schedule is loaded. Then this variable is reset to false.
      */
     var centerToCurrentLesson = false
+    public set(value) {
+        field = value
+    }
 
     private lateinit var  infoLine: TextView
     //private lateinit var  displayInfo: DisplayInfo
@@ -151,9 +154,6 @@ class RozvrhFragment : Fragment() {
             }
         }*/
 
-        //DEBUG
-
-        //DEBUG
         ibSettings.setOnLongClickListener { v: View? ->
             if (BuildConfig.DEBUG) {
                 DebugUtils.getInstance(context).isDemoMode = !DebugUtils.getInstance(context).isDemoMode
@@ -185,6 +185,11 @@ class RozvrhFragment : Fragment() {
             infoLine.visibility = View.VISIBLE
         } else {
             infoLine.visibility = View.GONE
+        }
+
+        if (centerToCurrentLesson && viewModel.getDisplayLD().value != null){
+            rozvrhLayout.centerToCurrentLesson()
+            centerToCurrentLesson = false
         }
 
 

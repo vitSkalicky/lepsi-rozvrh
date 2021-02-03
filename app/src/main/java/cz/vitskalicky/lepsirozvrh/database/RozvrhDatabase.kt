@@ -14,7 +14,6 @@ import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay
 @Database(entities = [Rozvrh::class, RozvrhBlock::class, RozvrhCaption::class, RozvrhDay::class], version = 1)
 @TypeConverters(*[LocalDateConverters::class, LocalTimeConverters::class, DateTimeConverters::class,LessonConverters::class])
 abstract class RozvrhDatabase : RoomDatabase() {
-    @TypeConverters(*[LocalDateConverters::class, LocalTimeConverters::class, DateTimeConverters::class, LessonConverters::class])
     abstract fun rozvrhDao(): RozvrhDao
     abstract fun blockDao(): BlockDao
     abstract fun dayDao(): DayDao

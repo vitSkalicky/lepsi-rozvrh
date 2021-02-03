@@ -23,6 +23,7 @@ abstract class DayDao {
     @Query("SELECT * FROM rozvrhday WHERE date = :date")
     abstract fun loadRozvrhDay(date: LocalDate): LiveData<RozvrhDay>
 
+    @Transaction
     @Query("SELECT * FROM rozvrhday WHERE date = :date")
     abstract fun loadDayRelated(date: LocalDate): LiveData<DayRelated>
 

@@ -24,6 +24,7 @@ import cz.vitskalicky.lepsirozvrh.bakaAPI.login.TokenAuthenticator
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRepository
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWebservice
 import cz.vitskalicky.lepsirozvrh.database.RozvrhDatabase
+import cz.vitskalicky.lepsirozvrh.model.RozvrhStatusStore
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.notification.NotificationState
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification
@@ -138,6 +139,10 @@ class MainApplication : MultiDexApplication() {
 
     val login: Login by lazy {
         Login(this)
+    }
+
+    val rozvrhStatusStore: RozvrhStatusStore by lazy {
+        RozvrhStatusStore()
     }
 
     override fun onCreate() {

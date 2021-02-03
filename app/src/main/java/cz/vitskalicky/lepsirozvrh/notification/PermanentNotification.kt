@@ -30,7 +30,7 @@ object PermanentNotification {
             update(null, 0, application)
             return
         }
-        application.repository.getRozvrh(Utils.getCurrentMonday()).let {
+        application.repository.getRozvrh(Utils.getCurrentMonday(), false).let {
             update(it, application)
         }
     }

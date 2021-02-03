@@ -293,13 +293,6 @@ class RozvrhLayout : ViewGroup {
 
     var displayingWtfRozvrhDialog = false
     fun highlightCurrentLesson() {
-        if (rozvrh == null) {
-            nextHodinaView = null
-            nextHodinaViewRight = null
-            nextHodinaViewBottom = null
-            nextHodinaViewCorner = null
-            return
-        }
         val toHighlight: BlockRelated? = rozvrh?.getHighlightBlock(false)
 
 
@@ -367,7 +360,8 @@ class RozvrhLayout : ViewGroup {
             val viewTreeObserver = hsvParent.viewTreeObserver
             viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    if (viewTreeObserver.isAlive)
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
                     if (nextHodinaView != null) {
                         val parentWidth = hsvParent.width
                         hsvParent.smoothScrollTo(nextHodinaView!!.x.toInt() - parentWidth / 2 + nextHodinaView!!.width / 2, 0)
@@ -397,6 +391,7 @@ class RozvrhLayout : ViewGroup {
                 hodinasByCaptions[i][j].forEach { it.setHodina(null, perm) }
             }
         }
+        highlightCurrentLesson()
         invalidate()
         requestLayout()
         //debug timing: Log.d(TAG_TIMER, "populate end " + Utils.getDebugTime());

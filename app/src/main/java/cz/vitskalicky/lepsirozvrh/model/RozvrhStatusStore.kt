@@ -8,6 +8,7 @@ import org.joda.time.LocalDate
 class RozvrhStatusStore {
     private val map = HashMap<LocalDate, RozvrhStatus>()
     private val liveDatas = HashMap<LocalDate, MutableLiveData<RozvrhStatus>>()
+    val isOffline = MutableLiveData<Boolean>(true)
 
     fun getLiveData(key: LocalDate): LiveData<RozvrhStatus> = liveDatas.getOrPut(key) {
         val ld = MutableLiveData<RozvrhStatus>()

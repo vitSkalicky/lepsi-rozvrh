@@ -19,10 +19,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import com.jaredrummler.cyanea.Cyanea
 import cz.vitskalicky.lepsirozvrh.*
+import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity
 import cz.vitskalicky.lepsirozvrh.theme.Theme
 import cz.vitskalicky.lepsirozvrh.view.RozvrhLayout
+import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus.Status.*
 
 class RozvrhFragment : Fragment() {
 
@@ -53,15 +55,6 @@ class RozvrhFragment : Fragment() {
     //private lateinit var  displayInfo: DisplayInfo
 
     var showedNotiInfo = false
-
-    var rozvhrLiveData: LiveData<RozvrhRelated>? = null
-    set(value) {
-        field?.removeObservers(this)
-        field = value
-        field?.observe(this){
-            rozvrhLayout.setRozvrh(it, false)
-        }
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -138,21 +131,7 @@ class RozvrhFragment : Fragment() {
             viewModel.weekPosition = RozvrhViewModel.PERM
             showHideButtons()
         }
-        //ibRefresh.setOnClickListener { v: View? -> rtFragment.refresh() }
-        /*displayInfo.addOnLoadingStateChangeListener { oldState: Int, newState: Int ->
-            if (newState == DisplayInfo.LOADED) {
-                ibRefresh.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                ibRefresh.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_refresh_black_24))
-            } else if (newState == DisplayInfo.ERROR) {
-                ibRefresh.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                ibRefresh.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_refresh_problem_black_24dp))
-            } else if (newState == DisplayInfo.LOADING) {
-                ibRefresh.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
-            }
-        }*/
+        ibRefresh.setOnClickListener { v: View? -> viewModel.forceRefresh() }
 
         ibSettings.setOnLongClickListener { v: View? ->
             if (BuildConfig.DEBUG) {
@@ -176,6 +155,31 @@ class RozvrhFragment : Fragment() {
             if (it != null){
                 centerToCurrentLesson = false
             }
+            updateInfoLine()
+        }
+        viewModel.getStatusLD().observe(viewLifecycleOwner){
+            when(it.status){
+                SUCCESS, UNKNOWN -> {
+                    progressBar.visibility = View.GONE
+                    ibRefresh.visibility = View.VISIBLE
+                    ibRefresh.setImageDrawable(context?.getDrawable(R.drawable.ic_refresh_black_24))
+                    TooltipCompat.setTooltipText(ibRefresh, getText(R.string.refresh))
+                }
+                ERROR -> {
+                    progressBar.visibility = View.GONE
+                    ibRefresh.visibility = View.VISIBLE
+                    ibRefresh.setImageDrawable(context?.getDrawable(R.drawable.ic_refresh_problem_black_24dp))
+                    TooltipCompat.setTooltipText(ibRefresh, getText(it.errMessage ?: R.string.refresh))
+                }
+                LOADING -> {
+                    progressBar.visibility = View.VISIBLE
+                    ibRefresh.visibility = View.GONE
+                }
+            }
+            updateInfoLine()
+        }
+        viewModel.isOfflineLD.observe(viewLifecycleOwner) {
+            updateInfoLine()
         }
     }
 
@@ -206,6 +210,31 @@ class RozvrhFragment : Fragment() {
         infoLine.textSize = t.spInfolineTextSize
         infoLine.setTextColor(t.cInfolineText)
         bottomAppBar.setBackgroundColor(Cyanea.instance.primary)
+    }
+
+    /**
+     * Does not care about error
+     */
+    private fun updateInfoLine(){
+        infoLine.text = viewModel.weekPosition.let {
+                    when{
+                        it == RozvrhViewModel.PERM -> getString(R.string.info_permanent)
+                        it == 0 -> getString(R.string.info_this_week)
+                        it == 1 -> getString(R.string.info_next_week)
+                        it == -1 -> getString(R.string.info_last_week)
+                        it < -1 -> resources.getQuantityString(R.plurals.info_weeks_back, -it, -it)
+                        it > 1 -> resources.getQuantityString(R.plurals.info_weeks_forward, it, it)
+                        else -> ""
+                    }
+                }
+        val status: RozvrhStatus = viewModel.getStatusLD().value ?: RozvrhStatus.unknown()
+        if (viewModel.isOfflineLD.value != false){
+            if ((viewModel.showError || viewModel.getDisplayLD().value == null) && status.errMessage != null){
+                infoLine.text = getString(status.errMessage)
+            }else{
+                infoLine.text = getString(R.string.info_offline, infoLine.text)
+            }
+        }
     }
 
     fun jumpToWeek(week: Int){

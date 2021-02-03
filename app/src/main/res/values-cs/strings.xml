@@ -32,10 +32,10 @@
     <string name="info_next_week">Příští týden</string>
     <string name="info_permanent">Stálý rozvrh</string>
 
-    <string name="info_offline">offline</string>
-    <string name="info_unreachable">Chyba - server nedostupný</string>
-    <string name="info_login_failed">Přihlášení selhalo</string>
-    <string name="info_unexpected_response">Chyba - neočekávaná odpověď serveru</string>
+    <string name="info_offline">%1$s (offline)</string>
+    <string name="info_unreachable">Chyba: nepodařilo se připojit</string>
+    <string name="info_login_failed">Chyba: přihlášení selhalo</string>
+    <string name="info_unexpected_response">Chyba: neočekávaná odpověď serveru</string>
     <string name="unsecure_connectio_title">Spojení není zabezpečené!</string>
     <string name="unsecure_connectio">Vaše škola neumožňuje zabezpečené spojení se serverem. Přenášená data tedy <b>nejsou šifrována</b> a kdokoliv ve stejné síti je může <b>odposlouchávat</b> nebo dokonce i měnit. <b>Nebezpečí</b> je obzvlášť vysoké <b>na veřejných wi-fi sítích</b>.\nOpravdu se chcete přihlásit?</string>
     <string name="unsecure_connection_connect">Přesto se přihlásit</string>

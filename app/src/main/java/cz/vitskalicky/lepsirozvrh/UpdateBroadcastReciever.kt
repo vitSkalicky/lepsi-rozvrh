@@ -26,7 +26,7 @@ class UpdateBroadcastReciever : BroadcastReceiver() {
             application.scheduleUpdate(application.notificationState.offsetResetTime)
         }
         GlobalScope.launch {
-            val rozvrh: RozvrhRelated? = application.repository.getRozvrh(Utils.getCurrentMonday())
+            val rozvrh: RozvrhRelated? = application.repository.getRozvrh(Utils.getCurrentMonday(), false)
             update(rozvrh,application)
             WidgetProvider.updateAll(rozvrh, context)
             application.updateUpdateTime()

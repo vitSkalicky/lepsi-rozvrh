@@ -87,7 +87,7 @@ object RozvrhConverter {
 
         for (item in rozvrh3.days) {
 
-            var dayDate : LocalDate = if (date != null) {
+            var dayDate : LocalDate = if (monday != Rozvrh.PERM) {
                 DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ").parseLocalDate(item.date)
             }else{
                 Rozvrh.PERM.plusDays(item.dayOfWeek - 1)

@@ -59,6 +59,14 @@ class RozvrhViewModel(
         statusLD.addSource(currentlyUsedStatusLD!!) {statusLD.value = it}
 
         showError = false
+
+        //prefetch next and prev
+        if (field != PERM) {
+            repository.refresh(monday.plusWeeks(1), false, false, )
+            repository.refresh(monday.minusWeeks(1), false, false)
+        }
+        if (value == 0)
+            repository.refresh(Rozvrh.PERM,false, false)
     }
 
     fun forceRefresh(){

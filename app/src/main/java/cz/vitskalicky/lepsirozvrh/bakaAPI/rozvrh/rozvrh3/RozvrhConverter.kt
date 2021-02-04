@@ -18,6 +18,7 @@ import kotlin.collections.HashMap
 object RozvrhConverter {
     @Throws(RozvrhConversionException::class)
     fun convert(rozvrh3: Rozvrh3, date: LocalDate?): RozvrhRelated{
+        //todo remove unnecessary captions
         val monday : LocalDate = date?.let { Utils.getWeekMonday(date) } ?: Rozvrh.PERM
         val cycle: RozvrhCycle? = if (date == null){
                 null
@@ -30,7 +31,7 @@ object RozvrhConverter {
                 }
             }
 
-        val rozvrh = Rozvrh(monday, DateTime.now(), date == null, cycle)
+        val rozvrh = Rozvrh(monday, DateTime.now(), monday == Rozvrh.PERM, cycle)
 
         //caption3 id and corresponding RozvrhCaption
         val captionsUnsorted = ArrayList<Pair<String,RozvrhCaption>>()

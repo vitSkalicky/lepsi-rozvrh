@@ -2,8 +2,10 @@ package cz.vitskalicky.lepsirozvrh.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -113,14 +115,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void pruneDatabase(){
+        AsyncTask.execute( () -> {
+            ((MainApplication)getApplication()).getRozvrhDb().rozvrhDao().deleteUnnecessary();
+        });
+    }
+
     @Override
     protected void onDestroy() {
+        pruneDatabase();
         super.onDestroy();
-        //todo RozvrhCache.clearOldCache(context);
     }
 
     @Override
     public void onBackPressed() {
+        pruneDatabase();
         moveTaskToBack(true);
     }
 }

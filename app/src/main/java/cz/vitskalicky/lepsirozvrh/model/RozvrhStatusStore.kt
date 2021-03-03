@@ -2,7 +2,6 @@ package cz.vitskalicky.lepsirozvrh.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import org.joda.time.LocalDate
 
 class RozvrhStatusStore {
@@ -26,7 +25,7 @@ class RozvrhStatusStore {
     fun clear(){
         map.clear()
         liveDatas.forEach{
-            it.value.value = null
+            it.value.value = RozvrhStatus.unknown()
         }
     }
 }

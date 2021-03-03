@@ -5,34 +5,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.TooltipCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.cyanea.Cyanea;
 import com.jaredrummler.cyanea.utils.ColorUtils;
 
-import cz.vitskalicky.lepsirozvrh.AppSingleton;
 import cz.vitskalicky.lepsirozvrh.BuildConfig;
-import cz.vitskalicky.lepsirozvrh.DebugUtils;
-import cz.vitskalicky.lepsirozvrh.DisplayInfo;
 import cz.vitskalicky.lepsirozvrh.MainApplication;
 import cz.vitskalicky.lepsirozvrh.R;
 import cz.vitskalicky.lepsirozvrh.SharedPrefs;
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login;
 import cz.vitskalicky.lepsirozvrh.fragment.RozvrhFragment;
 import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification;
-import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity;
 import cz.vitskalicky.lepsirozvrh.theme.Theme;
 import cz.vitskalicky.lepsirozvrh.whatsnew.WhatsNewFragment;
 
@@ -107,11 +91,16 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private boolean finishing = false;
     public void checkLogin() {
+        if (finishing){
+            return;
+        }
         Login login = ((MainApplication)getApplication()).getLogin();
         if (login.checkLogin(this) != null) {
             login.logout();
             finish();
+            finishing = true;
         }
     }
 

@@ -1,32 +1,26 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh
 
 import android.content.Context
-import androidx.annotation.MainThread
-import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cz.vitskalicky.lepsirozvrh.MainApplication
-import cz.vitskalicky.lepsirozvrh.R
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWebservice.Companion.getSchedule
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.Rozvrh3
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3.RozvrhConverter
 import cz.vitskalicky.lepsirozvrh.database.RozvrhDatabase
-import cz.vitskalicky.lepsirozvrh.model.Resource
 import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus
+import cz.vitskalicky.lepsirozvrh.model.RozvrhStatusStore
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
+import io.sentry.Sentry
 import kotlinx.coroutines.*
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 import retrofit2.HttpException
 import java.io.IOException
-import kotlin.Exception
-import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus.Status.*
-import cz.vitskalicky.lepsirozvrh.model.Resource.Status.*
-import cz.vitskalicky.lepsirozvrh.model.RozvrhStatusStore
-import org.joda.time.DateTime
 
 class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
     private val application: MainApplication = context.applicationContext as MainApplication
@@ -51,7 +45,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
         return db.rozvrhDao().loadRozvrhRelatedLive(rozvrhMonday)
     }
 
-    fun refresh(rozvrhMonday: LocalDate,foreground: Boolean, force: Boolean){
+    fun refresh(rozvrhMonday: LocalDate, foreground: Boolean, force: Boolean){
         scope.launch(){
             if (force || refreshNeeded(rozvrhMonday, foreground)){
                 try{
@@ -102,7 +96,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
         }
 
         if (time == null){
-            val next = getRozvrh(Utils.getCurrentMonday().plusWeeks(1),false)
+            val next = getRozvrh(Utils.getCurrentMonday().plusWeeks(1), false)
             if (next == null){
                 return null
             }else{
@@ -177,11 +171,11 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
             }
             is RozvrhConverter.RozvrhConversionException -> {
                 //conversion failed
-                //todo report
+                Sentry.capture(e)
                 RozvrhStatus.unexpectedResponse()
             }
-            is LoginRequiredException ->{
-                //todo solve login problem
+            is LoginRequiredException -> {
+                application.login.logout()
                 RozvrhStatus.loginFailed()
             }
             is HttpException -> {
@@ -190,6 +184,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
             }
             else -> {
                 statusStr[rozvrhId] = RozvrhStatus.unexpectedResponse()
+                Sentry.capture(e)
                 throw e
                 //other reasons
                 //todo report parse error

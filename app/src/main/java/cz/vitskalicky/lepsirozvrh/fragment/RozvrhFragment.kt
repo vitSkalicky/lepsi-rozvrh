@@ -15,16 +15,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import com.jaredrummler.cyanea.Cyanea
 import cz.vitskalicky.lepsirozvrh.*
+import cz.vitskalicky.lepsirozvrh.activity.MainActivity
 import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus
-import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.settings.SettingsActivity
 import cz.vitskalicky.lepsirozvrh.theme.Theme
 import cz.vitskalicky.lepsirozvrh.view.RozvrhLayout
 import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus.Status.*
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
 
 class RozvrhFragment : Fragment() {
 
@@ -135,6 +136,9 @@ class RozvrhFragment : Fragment() {
 
         ibSettings.setOnLongClickListener { v: View? ->
             if (BuildConfig.DEBUG) {
+                SharedPrefs.setString(context, SharedPrefs.SEMESTER_END, ISODateTimeFormat.dateTime().print(DateTime.now().minusWeeks(1)))
+                SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, "afddfgdf")
+                SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, "afddfgdf")
                 DebugUtils.getInstance(context).isDemoMode = !DebugUtils.getInstance(context).isDemoMode
                 Toast.makeText(context, "Demo mode changed", Toast.LENGTH_SHORT).show()
                 return@setOnLongClickListener true
@@ -170,6 +174,19 @@ class RozvrhFragment : Fragment() {
                     ibRefresh.visibility = View.VISIBLE
                     ibRefresh.setImageDrawable(context?.getDrawable(R.drawable.ic_refresh_problem_black_24dp))
                     TooltipCompat.setTooltipText(ibRefresh, getText(it.errMessage ?: R.string.refresh))
+
+                    activity?.let {
+                        if (it is MainActivity){
+                            //makes sure it does not launch login activity twice
+                            it.checkLogin()
+                        }else{
+                            //this is technically redundant. just future proof.
+                            if ((context?.applicationContext as? MainApplication)?.login?.checkLogin(it) != null){
+                                activity?.finish()
+                            }
+                        }
+                    }
+
                 }
                 LOADING -> {
                     progressBar.visibility = View.VISIBLE

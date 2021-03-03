@@ -9,15 +9,19 @@ data class RozvrhStatus(
     val status: Status,
     @StringRes
     val errMessage: Int? = null,
+    /**
+     * Optional addition specification of the status such as type of an error
+     */
+    val statusSpecification: Int = 0
 ){
     companion object{
         fun success(): RozvrhStatus = RozvrhStatus(SUCCESS)
         fun loading(): RozvrhStatus = RozvrhStatus(LOADING)
         fun unknown(): RozvrhStatus = RozvrhStatus(UNKNOWN)
 
-        fun unreachable(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_unreachable)
-        fun loginFailed(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_login_failed)
-        fun unexpectedResponse(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_unexpected_response)
+        fun unreachable(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_unreachable, Specification.ERROR_UNREACHABLE)
+        fun loginFailed(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_login_failed, Specification.ERROR_LOGIN_FAILED)
+        fun unexpectedResponse(): RozvrhStatus = RozvrhStatus(ERROR, R.string.info_unexpected_response, Specification.ERROR_UNEXPECTED_RESPONSE)
     }
 
     fun asResource(rozvrh: RozvrhRelated?): Resource<RozvrhRelated>{
@@ -50,5 +54,11 @@ data class RozvrhStatus(
          * This schedule has not been interacted with in this instance of the app. Some older schedule might be available in database
          */
         UNKNOWN,
+    }
+
+    object Specification{
+        const val ERROR_UNREACHABLE: Int = 1
+        const val ERROR_LOGIN_FAILED: Int = 2
+        const val ERROR_UNEXPECTED_RESPONSE: Int = 3
     }
 }

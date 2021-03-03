@@ -1,7 +1,6 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.login
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -185,8 +184,9 @@ class Login(val app: MainApplication) {
                 putString(SharedPrefs.TYPE_TEXT, user.userTypeText ?: "")
                 val semesterEnd: DateTime? = user.settingModules?.common?.actualSemester?.to?.let {
                     try {
-                        ISODateTimeFormat.dateTime().parseDateTime(it)
+                        ISODateTimeFormat.dateTimeParser().withOffsetParsed().parseDateTime(it)
                     }catch (e: IllegalArgumentException){
+                        e.printStackTrace()
                         null
                     }
                 }

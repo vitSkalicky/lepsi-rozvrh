@@ -7,7 +7,6 @@ import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
-import io.sentry.util.Util
 import org.joda.time.LocalDate
 
 class RozvrhViewModel(
@@ -49,9 +48,11 @@ class RozvrhViewModel(
 
         currentlyUsedLD?.let {
             displayLD.removeSource(it)
+            //todo: do this when an animation is added displayLD.value = null
         }
         currentlyUsedStatusLD?.let {
             statusLD.removeSource(it)
+            //todo: do this when an animation is added statusLD.value = RozvrhStatus.loading()
         }
         currentlyUsedLD = repository.getRozvrhLive(monday, true)
         currentlyUsedStatusLD = repository.getRozvrhStatusLiveData(monday)
@@ -72,6 +73,10 @@ class RozvrhViewModel(
     fun forceRefresh(){
         showError = true
         repository.refresh(monday, true,true)
+    }
+
+    init {
+        weekPosition = weekPosition
     }
 
     companion object{

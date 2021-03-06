@@ -212,6 +212,7 @@ class RozvrhFragment : Fragment() {
             rozvrhLayout.centerToCurrentLesson()
             centerToCurrentLesson = false
         }
+        rozvrhLayout.highlightCurrentLesson()
 
 
         val iconColor = Cyanea.instance.menuIconColor

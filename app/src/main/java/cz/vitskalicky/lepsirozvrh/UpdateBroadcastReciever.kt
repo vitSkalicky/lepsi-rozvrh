@@ -5,11 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
-import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification.update
+import cz.vitskalicky.lepsirozvrh.notification.PermanentNotification
 import cz.vitskalicky.lepsirozvrh.widget.WidgetProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.Continuation
 
 /**
  * Broadcast receiver that updates notification and widgets when receives a broadcast.
@@ -27,7 +26,7 @@ class UpdateBroadcastReciever : BroadcastReceiver() {
         }
         GlobalScope.launch {
             val rozvrh: RozvrhRelated? = application.repository.getRozvrh(Utils.getCurrentMonday(), false)
-            update(rozvrh,application)
+            PermanentNotification.update(rozvrh,application)
             WidgetProvider.updateAll(rozvrh, context)
             application.updateUpdateTime()
             pendingResult.finish()

@@ -2,9 +2,9 @@ package cz.vitskalicky.lepsirozvrh
 
 import android.app.*
 import android.content.Intent
-import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -16,10 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.jaredrummler.cyanea.Cyanea
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.Login
-import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.TokenAuthenticator
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhRepository
 import cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.RozvrhWebservice
@@ -37,8 +35,8 @@ import io.sentry.android.AndroidSentryClientFactory
 import io.sentry.event.User
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.joda.time.LocalDateTime
@@ -173,7 +171,7 @@ class MainApplication : MultiDexApplication() {
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
-        currentWeekObserver = Observer { rozvrh: RozvrhRelated ->
+        currentWeekObserver = Observer { rozvrh: RozvrhRelated? ->
             /*if (rozvrhWrapper!!.oldRozvrh != null) {
                 WidgetProvider.updateAll(rozvrhWrapper.oldRozvrh, this)
                 if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
@@ -181,7 +179,7 @@ class MainApplication : MultiDexApplication() {
                 }
             }
             updateUpdateTime(rozvrhWrapper.oldRozvrh)*/
-            WidgetProvider.updateAll(rozvrh,this)
+            WidgetProvider.updateAll(rozvrh, this)
             if (SharedPrefs.getBooleanPreference(this, R.string.PREFS_NOTIFICATION, true)) {
                 PermanentNotification.update(rozvrh, this)
             }
@@ -231,6 +229,12 @@ class MainApplication : MultiDexApplication() {
                 3 -> theme.themeData = DefaultThemes.getBlackTheme()
             }
         }
+        //this just needs to be run time by time, so I thought this could be a good place
+        mainScope.launch {
+            //delay to give time for the first schedule to load and display as fast as possible and not overload the database with another request.
+            delay(1000)
+            pruneDatabase()
+        }
     }
 
     fun scheduleUpdate(triggerTime: LocalDateTime?) {
@@ -261,8 +265,8 @@ class MainApplication : MultiDexApplication() {
      *
      * @return true if updated, false if the update time could not be determined from the given rozvrh.
      */
-    private fun updateUpdateTime(rozvrh: RozvrhRelated): Boolean {
-        val time = rozvrh.getUpdateDisplayedDataTime() ?: return false
+    private fun updateUpdateTime(rozvrh: RozvrhRelated?): Boolean {
+        val time = rozvrh?.getUpdateDisplayedDataTime() ?: return false
 
         scheduleUpdate(time)
 
@@ -312,11 +316,19 @@ class MainApplication : MultiDexApplication() {
     /**
      * Call this after logout to clear all objects that might have saved url and credentials
      */
-    fun clearObjects(){
+    fun clearObjects() {
         retrofit = null;
         webservice = null;
         noAuthRetrofit = null;
     }
+
+    public fun pruneDatabase() {
+        AsyncTask.execute {
+            rozvrhDb.rozvrhDao().deleteUnnecessary()
+        }
+    }
+
+
 
     override fun onTerminate() {
         //prevent leaks

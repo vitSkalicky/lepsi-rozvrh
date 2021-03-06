@@ -32,7 +32,9 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
 
     fun getCurrentWeekLD(): LiveData<RozvrhRelated>{
         if (currentWeekLD.value == null){
-            refresh(Utils.getCurrentMonday(), false, false)
+            scope.launch {
+                currentWeekLD.value = getRozvrh(Utils.getCurrentMonday(), foreground = false)
+            }
         }
         return currentWeekLD
     }
@@ -120,7 +122,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
             // if it is only for widget or notification, we don't want to drain battery
             DateTime.now().minusHours(3)
         }
-        return db.rozvrhDao().loadRozvrh(rozvrhId)?.lastUpdate?.isBefore(expireTime) != false
+        return db.rozvrhDao().isExpired(rozvrhId,expireTime) != false
     }
 
     /**

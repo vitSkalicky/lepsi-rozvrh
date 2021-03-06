@@ -77,10 +77,10 @@ public class MainActivity extends BaseActivity {
         boolean jumpToToday = intent.getBooleanExtra(EXTRA_JUMP_TO_TODAY, false);
         if (jumpToToday) {
             rFragment.jumpToWeek(0);
+            rFragment.setCenterToCurrentLesson(true);
             intent.removeExtra(EXTRA_JUMP_TO_TODAY);
         } else {
             rFragment.setCenterToCurrentLesson(true);
-            rFragment.jumpToWeek(0);
         }
         boolean fromNotification = intent.getBooleanExtra(PermanentNotification.INSTANCE.getEXTRA_NOTIFICATION(), false);
         intent.removeExtra(PermanentNotification.INSTANCE.getEXTRA_NOTIFICATION());
@@ -104,21 +104,18 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void pruneDatabase(){
-        AsyncTask.execute( () -> {
-            ((MainApplication)getApplication()).getRozvrhDb().rozvrhDao().deleteUnnecessary();
-        });
-    }
+
 
     @Override
     protected void onDestroy() {
-        pruneDatabase();
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-        pruneDatabase();
+        ((MainApplication) getApplication()).pruneDatabase();
+        rFragment.jumpToWeek(0);
+        rFragment.setCenterToCurrentLesson(true);
         moveTaskToBack(true);
     }
 }

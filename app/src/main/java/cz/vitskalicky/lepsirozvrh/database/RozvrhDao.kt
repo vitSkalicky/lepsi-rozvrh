@@ -1,13 +1,11 @@
 package cz.vitskalicky.lepsirozvrh.database
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
-import io.sentry.util.Util
-import kotlinx.coroutines.flow.Flow
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 
 @Dao
@@ -34,6 +32,9 @@ abstract class RozvrhDao {
     @Transaction
     @Query("SELECT * FROM rozvrh WHERE id = :monday")
     abstract suspend fun loadRozvrhRelated(monday: LocalDate): RozvrhRelated?
+
+    @Query("SELECT lastUpdate < :expireTime FROM rozvrh WHERE id= :monday")
+    abstract suspend fun isExpired(monday: LocalDate, expireTime: DateTime): Boolean?
 
     @Query("DELETE FROM Rozvrh WHERE permanent = 0 AND id < :start OR id > :end")
     abstract fun deleteOutside(start: LocalDate, end: LocalDate)

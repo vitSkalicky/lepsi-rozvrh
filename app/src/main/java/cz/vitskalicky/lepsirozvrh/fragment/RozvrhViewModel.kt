@@ -18,6 +18,17 @@ class RozvrhViewModel(
 
     private var currentlyUsedLD: LiveData<RozvrhRelated>? = null
     private var currentlyUsedStatusLD: LiveData<RozvrhStatus>? = null
+
+    //to make switching instant
+    private var nextLD: LiveData<RozvrhRelated>? = null
+    private var nextStatusLD: LiveData<RozvrhStatus>? = null
+    private var prevLD: LiveData<RozvrhRelated>? = null
+    private var prevStatusLD: LiveData<RozvrhStatus>? = null
+    private var permLD: LiveData<RozvrhRelated>? = null
+    private var permStatusLD: LiveData<RozvrhStatus>? = null
+    private var thisWeekLD: LiveData<RozvrhRelated>? = null
+    private var thisWeekStatusLD: LiveData<RozvrhStatus>? = null
+
     /**
      * Tells if the last request was successful. If not, infoline should show "offline" on all weeks.
      */
@@ -34,40 +45,109 @@ class RozvrhViewModel(
      */
     var showError: Boolean = false
 
+    private fun weekToMonday(week: Int): LocalDate = if(week == PERM) {
+        Rozvrh.PERM
+    }else{
+        Utils.getCurrentMonday().plusWeeks(week)
+    }
+
+    /**
+     * Loads the LiveData and triggers data load so that it has a value ready to be instantly displayed. todo replace with a better method if you find any.
+     */
+    private fun prepareLD(week: Int): Pair<LiveData<RozvrhRelated>, LiveData<RozvrhStatus>>{
+        val mnd = weekToMonday(week)
+        val rozvrhLD = repository.getRozvrhLive(mnd, true)
+        val statusLD = repository.getRozvrhStatusLiveData(mnd);
+
+        //we must observe the live data to load the value. Observer is removed as soon as it receives any meaningful data.
+        var rozvrhObserver = Observer<RozvrhRelated?> { }
+        var statusObserver = Observer<RozvrhStatus?> { };
+
+        statusObserver = Observer {
+            if (it?.status == RozvrhStatus.Status.ERROR){
+                statusLD.removeObserver(statusObserver)
+                rozvrhLD.removeObserver(rozvrhObserver)
+            }
+        }
+        rozvrhObserver = Observer {
+            if (it != null){
+                statusLD.removeObserver(statusObserver)
+                rozvrhLD.removeObserver(rozvrhObserver)
+            }
+        }
+
+        //todo this could potentially cause some memory leaks (in case the code above does not remove observers as intended). Would be nice to find a better solution to loading data from database directly into memory.
+        rozvrhLD.observeForever(rozvrhObserver)
+        statusLD.observeForever(statusObserver)
+
+        return Pair(rozvrhLD, statusLD)
+    }
+
     /**
      *  0 = current week, 1 = next week, -1 = previous week, [Int.MIN_VALUE] = permanent
      */
     var weekPosition: Int = 0
     set(value) {
+        val old = field
+        val diff = value - old;
         field = value;
-        monday = if(value == PERM) {
-            Rozvrh.PERM
-        }else{
-            Utils.getCurrentMonday().plusWeeks(value)
-        }
+        monday = weekToMonday(value)
 
         currentlyUsedLD?.let {
             displayLD.removeSource(it)
-            //todo: do this when an animation is added displayLD.value = null
+            displayLD.value = null
         }
         currentlyUsedStatusLD?.let {
             statusLD.removeSource(it)
-            //todo: do this when an animation is added statusLD.value = RozvrhStatus.loading()
+            statusLD.value = RozvrhStatus.loading()
         }
-        currentlyUsedLD = repository.getRozvrhLive(monday, true)
-        currentlyUsedStatusLD = repository.getRozvrhStatusLiveData(monday)
+
+        if (diff == 1){
+            //shift the livedata
+            prevLD = currentlyUsedLD
+            prevStatusLD = currentlyUsedStatusLD
+            currentlyUsedLD = nextLD ?: repository.getRozvrhLive(monday, true)
+            currentlyUsedStatusLD = nextStatusLD ?: repository.getRozvrhStatusLiveData(monday)
+            val nextLDs = prepareLD(field + 1)
+            nextLD = nextLDs.first
+            nextStatusLD = nextLDs.second
+        } else if (diff == -1){
+            //shift the livedata
+            nextLD = currentlyUsedLD
+            nextStatusLD = currentlyUsedStatusLD
+            currentlyUsedLD = prevLD ?: repository.getRozvrhLive(monday, true)
+            currentlyUsedStatusLD = prevStatusLD ?: repository.getRozvrhStatusLiveData(monday)
+            val prevLDs = prepareLD(field - 1)
+            prevLD = prevLDs.first
+            prevStatusLD = prevLDs.second
+        } else {
+
+            if (field == 0){
+                //jumped to current week
+                currentlyUsedLD = thisWeekLD
+                currentlyUsedStatusLD = thisWeekStatusLD
+            }else if (field == PERM){
+                currentlyUsedLD = permLD
+                currentlyUsedStatusLD = permStatusLD
+            }else{
+                currentlyUsedLD = repository.getRozvrhLive(monday, true)
+                currentlyUsedStatusLD = repository.getRozvrhStatusLiveData(monday)
+            }
+
+            if (field != PERM){
+                val prevLDs = prepareLD(field - 1)
+                prevLD = prevLDs.first
+                prevStatusLD = prevLDs.second
+                val nextLDs = prepareLD( field + 1)
+                nextLD = nextLDs.first
+                nextStatusLD = nextLDs.second
+            }
+        }
+
         displayLD.addSource(currentlyUsedLD!!) {displayLD.value = it}
         statusLD.addSource(currentlyUsedStatusLD!!) {statusLD.value = it}
 
         showError = false
-
-        //prefetch next and prev
-        if (field != PERM) {
-            repository.refresh(monday.plusWeeks(1), false, false, )
-            repository.refresh(monday.minusWeeks(1), false, false)
-        }
-        if (value == 0)
-            repository.refresh(Rozvrh.PERM,false, false)
     }
 
     fun forceRefresh(){
@@ -76,6 +156,13 @@ class RozvrhViewModel(
     }
 
     init {
+        val thisWeekLDs = prepareLD( 0)
+        thisWeekLD = thisWeekLDs.first
+        thisWeekStatusLD = thisWeekLDs.second
+        val permLDs = prepareLD( PERM)
+        permLD = permLDs.first
+        permStatusLD = permLDs.second
+
         weekPosition = weekPosition
     }
 

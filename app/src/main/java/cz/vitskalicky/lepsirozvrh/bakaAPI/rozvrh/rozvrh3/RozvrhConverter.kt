@@ -1,17 +1,14 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3
 
 import cz.vitskalicky.lepsirozvrh.Utils
-import cz.vitskalicky.lepsirozvrh.items.RozvrhRoot
 import cz.vitskalicky.lepsirozvrh.model.relations.BlockRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.DayRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.*
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 

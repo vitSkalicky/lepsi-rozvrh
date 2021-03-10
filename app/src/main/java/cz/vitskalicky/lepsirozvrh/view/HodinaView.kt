@@ -14,8 +14,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.R
-import cz.vitskalicky.lepsirozvrh.Utils
-import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
 import cz.vitskalicky.lepsirozvrh.theme.Theme
 import kotlin.math.max

@@ -2,8 +2,6 @@ package cz.vitskalicky.lepsirozvrh.model.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import cz.vitskalicky.lepsirozvrh.items.OldRozvrh.GetNLreturnValues
-import cz.vitskalicky.lepsirozvrh.items.OldRozvrhHodina
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhBlock
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhDay
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson

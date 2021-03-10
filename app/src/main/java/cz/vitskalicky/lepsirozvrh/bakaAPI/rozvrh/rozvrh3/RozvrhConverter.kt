@@ -15,7 +15,9 @@ import kotlin.collections.HashMap
 object RozvrhConverter {
     @Throws(RozvrhConversionException::class)
     fun convert(rozvrh3: Rozvrh3, date: LocalDate?): RozvrhRelated{
-        //todo remove unnecessary captions
+        //todo perform further testing after creating a testing server
+        remove0thCaptionIfUnnecessary(rozvrh3)
+
         val monday : LocalDate = date?.let { Utils.getWeekMonday(date) } ?: Rozvrh.PERM
         val cycle: RozvrhCycle? = if (date == null){
                 null
@@ -204,6 +206,26 @@ object RozvrhConverter {
         }
         
         return RozvrhRelated(rozvrh, captions, days)
+    }
+
+    /**
+     * Romeves 0th caption if present and if unnecessary **from the given rozvrh**. This function **modifies the Rozvrh3 object!**
+     */
+    fun remove0thCaptionIfUnnecessary(rozvrh3: Rozvrh3){
+        val zeroCaptions = rozvrh3.hours.filter { it?.caption?.trim() == "0" }
+        if (zeroCaptions.size != 1 ){
+            return
+        }
+        val zeroCaption = zeroCaptions[0]
+
+        var isEmpty: Boolean = true;
+        rozvrh3.days.forEach {
+            isEmpty = isEmpty && it.atoms.none { it.hourId == zeroCaption.id.toString() }
+        }
+        if (!isEmpty){
+            return
+        }
+        rozvrh3.hours = rozvrh3.hours.toMutableList().apply { removeAll{ it?.id == zeroCaption.id }}.toTypedArray()
     }
 
     class RozvrhConversionException(message: String): RuntimeException(message)

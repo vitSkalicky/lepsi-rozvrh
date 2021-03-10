@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormatter
@@ -54,14 +55,14 @@ object DateTimeConverters {
     @JvmStatic
     fun toDateTime(value: String?): DateTime? {
         return value?.let {
-            return DateTimeConverters.dateTimeFormatter.parseDateTime(value)
+            return DateTimeConverters.dateTimeFormatter.parseDateTime(value).withZone(DateTimeZone.getDefault())
         }
     }
 
     @TypeConverter
     @JvmStatic
     fun fromDateTime(date: DateTime?): String? {
-        return date?.toString(DateTimeConverters.dateTimeFormatter)
+        return date?.withZone(DateTimeZone.UTC)?.toString(DateTimeConverters.dateTimeFormatter)
     }
 }
 

@@ -90,7 +90,7 @@ public class DenView extends CellView {
         if (rozvrhDay != null){
             //Parse date to day of week
             denText = rozvrhDay.getDate().toString("E");
-            if (rozvrhDay.getRozvrh() == Rozvrh.Companion.getPERM()){
+            if (rozvrhDay.getRozvrh().equals(Rozvrh.Companion.getPERM())){
                 datumText = "";
             }else{
                 DateTimeFormatter dtf = DateTimeFormat.forPattern("d. M.");

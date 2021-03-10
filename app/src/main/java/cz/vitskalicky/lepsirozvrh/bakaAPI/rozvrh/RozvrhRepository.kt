@@ -47,11 +47,16 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
         return db.rozvrhDao().loadRozvrhRelatedLive(rozvrhMonday)
     }
 
-    fun refresh(rozvrhMonday: LocalDate, foreground: Boolean, force: Boolean){
+    fun refresh(rozvrhMonday: LocalDate, foreground: Boolean, force: Boolean = false, invalidateOthersIfSuccessful: Boolean = false){
         scope.launch(){
             if (force || refreshNeeded(rozvrhMonday, foreground)){
                 try{
                     fetchAndCache(rozvrhMonday)
+                    if (invalidateOthersIfSuccessful){
+                        withContext(Dispatchers.IO){
+                            db.rozvrhDao().invalidateAllOther(rozvrhMonday)
+                        }
+                    }
                 }catch (e: Exception){
                     e.printStackTrace()
                     withContext(Dispatchers.Main){

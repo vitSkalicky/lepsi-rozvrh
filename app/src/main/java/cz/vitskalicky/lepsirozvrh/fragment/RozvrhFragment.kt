@@ -228,6 +228,8 @@ class RozvrhFragment : Fragment() {
         infoLine.textSize = t.spInfolineTextSize
         infoLine.setTextColor(t.cInfolineText)
         bottomAppBar.setBackgroundColor(Cyanea.instance.primary)
+
+        showHideButtons()
     }
 
     /**

@@ -144,6 +144,14 @@ class RozvrhViewModel(
             }
         }
 
+        //soft refresh in case the data has expired (there is no expiration check when just switching live data)
+        repository.refresh(monday,true, force = false)
+        if (field != PERM){
+            repository.refresh(monday.plusWeeks(1),true, force = false)
+            repository.refresh(monday.plusWeeks(-1),true, force = false)
+        }
+
+
         displayLD.addSource(currentlyUsedLD!!) {displayLD.value = it}
         statusLD.addSource(currentlyUsedStatusLD!!) {statusLD.value = it}
 
@@ -152,7 +160,7 @@ class RozvrhViewModel(
 
     fun forceRefresh(){
         showError = true
-        repository.refresh(monday, true,true)
+        repository.refresh(monday, true, true, true)
     }
 
     init {

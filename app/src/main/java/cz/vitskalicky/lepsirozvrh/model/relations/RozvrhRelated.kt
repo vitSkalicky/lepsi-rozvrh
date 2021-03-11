@@ -43,7 +43,6 @@ data class RozvrhRelated(
      * @param forNotification If true, the first lesson won't be highlighted up until one hour before its start
      */
     fun getHighlightBlock(forNotification: Boolean): BlockRelated? {
-        //todo do not highling after school end
         return days.firstOrNull { it.day.date == LocalDate.now() }?.getHighlightBlock(forNotification)
     }
 
@@ -60,7 +59,6 @@ data class RozvrhRelated(
      * if there is no event on that day.
      */
     fun getWidgetDisplayBlocks(length: Int): Pair<List<BlockRelated>?,String?>?{
-        //todo display "no lessons" instead of empty spaces after school ends
         if (Utils.getCurrentMonday() != rozvrh.id){
             return null
         }

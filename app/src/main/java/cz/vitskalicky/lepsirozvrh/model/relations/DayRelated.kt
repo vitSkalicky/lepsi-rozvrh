@@ -36,10 +36,19 @@ data class DayRelated(
         }
 
         var first = true
-        var lessonIndex = 0
+        //remove empty blocks at the end of the day
+        val blocksToCheck = blocks.toMutableList()
+        while (true){
+            val item = blocksToCheck.last()
+            if (item.block.lessons.isEmpty()){
+                blocksToCheck.removeLast()
+            }else{
+                break
+            }
+        }
 
-        for (i in blocks.indices) {
-            val item: BlockRelated = blocks[i]
+        for (i in blocksToCheck.indices) {
+            val item: BlockRelated = blocksToCheck[i]
             val lesson: RozvrhLesson? = item.block.lessons.getOrNull(0)
             if (lesson != null || !first) {
                 if (forNotification && first && nowTime.isBefore(item.caption.beginTime.minusHours(1))) { //do not highlight
@@ -77,14 +86,34 @@ data class DayRelated(
         if (day.event != null){
             return Pair(null, day.event)
         }
+
+        //remove empty blocks at the end and beginning of the day
+        val blocksToCheck = blocks.toMutableList()
+        while (true){
+            val item = blocksToCheck.last()
+            if (item.block.lessons.isEmpty()){
+                blocksToCheck.removeLast()
+            }else{
+                break
+            }
+        }
+        while (true){
+            val item = blocksToCheck.first()
+            if (item.block.lessons.isEmpty()){
+                blocksToCheck.removeFirst()
+            }else{
+                break
+            }
+        }
+
         var nowIndex = 0;
-        while ( nowIndex < blocks.size && blocks[nowIndex].caption.endTime.minusMinutes(10).isBefore(nowTime)){
+        while ( nowIndex < blocksToCheck.size && blocksToCheck[nowIndex].caption.endTime.minusMinutes(10).isBefore(nowTime)){
             nowIndex++
         }
         val ret = ArrayList<BlockRelated>()
         for (i in 0 until length){
-            if (nowIndex + i < blocks.size){
-                ret.add(blocks[nowIndex + i])
+            if (nowIndex + i < blocksToCheck.size){
+                ret.add(blocksToCheck[nowIndex + i])
             }
         }
         return Pair(ret, null)

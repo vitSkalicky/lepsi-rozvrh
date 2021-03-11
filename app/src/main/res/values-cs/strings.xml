@@ -52,7 +52,7 @@
     <string name="switch_to_next_week">Přepnout na další týden</string>
     <string name="center_to_current_lesson">Skočit na aktuální hodinu</string>
     <string name="notification">Stálé upozornění</string>
-    <string name="notification_desc">Zobrazuje ztišené upozornění, které Vás informuje o další hodině</string>
+    <string name="notification_desc">Zobrazuje tiché upozornění, které Vás informuje o další hodině</string>
     <string name="notification_detials">Stálé upozornění zobrazuje během školy právě probíhající nebo následující hodinu. První hodinu začne zobrazovat 1 hodinu před jejím začátkem a na další hodinu přepíná vždy 10 minut před koncem právě probíhající hodiny. Po skončení školy zmizí.\n\nTuto funkci lze vypnout v nastavení.</string>
     <string name="support_this_app">Podpořit vývojáře</string>
     <string name="support_this_app_desc">Přispějte na vývoj této aplikace</string>

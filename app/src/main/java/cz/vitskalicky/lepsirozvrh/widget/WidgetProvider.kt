@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import cz.vitskalicky.lepsirozvrh.AppSingleton
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.R
@@ -175,7 +177,11 @@ open class WidgetProvider : AppWidgetProvider() {
                     } else {
                         views.setTextViewText(primaryTextId, hodina.subjectAbbrev)
                         views.setViewVisibility(primaryTextId, View.VISIBLE)
-                        views.setTextViewText(secondaryTextId, HtmlCompat.fromHtml("${hodina.teacherAbbrev} <b>${hodina.roomAbbrev}</b>", HtmlCompat.FROM_HTML_MODE_COMPACT))
+                        views.setTextViewText(secondaryTextId, buildSpannedString {
+                            append(tchr)
+                            append(" ")
+                            bold { append(hodina.roomAbbrev) }
+                        })
                     }
                 }
                 views.setInt(primaryTextId, "setTextColor", settings.primaryTextColor)

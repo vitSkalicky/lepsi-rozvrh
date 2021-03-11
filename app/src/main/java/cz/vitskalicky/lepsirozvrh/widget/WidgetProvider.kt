@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import cz.vitskalicky.lepsirozvrh.AppSingleton

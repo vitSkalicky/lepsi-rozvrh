@@ -11,7 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
-import androidx.core.text.HtmlCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import cz.vitskalicky.lepsirozvrh.*
 import cz.vitskalicky.lepsirozvrh.activity.MainActivity
 import cz.vitskalicky.lepsirozvrh.model.relations.BlockRelated
@@ -118,9 +119,15 @@ object PermanentNotification {
         }
         var title: CharSequence = ""
         title = if (!predmet.isBlank() && !mistnost.isBlank()) {
-            HtmlCompat.fromHtml(offsetText + predmet + " " + context.getString(R.string.`in`) + " <b>" + mistnost + "</b>", HtmlCompat.FROM_HTML_MODE_COMPACT)
+            buildSpannedString {
+                append("$offsetText$predmet ${context.getString(R.string.`in`)} ")
+                bold { append(mistnost) }
+            }
         } else {
-            HtmlCompat.fromHtml("$offsetText$predmet<b>$mistnost</b>", HtmlCompat.FROM_HTML_MODE_COMPACT)
+            buildSpannedString {
+                append("$offsetText$predmet")
+                bold { append(mistnost) }
+            }
         }
         /*if (!offsetText.isEmpty()){
             title = offsetText + title;

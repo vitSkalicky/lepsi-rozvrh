@@ -54,6 +54,7 @@ class LoginActivity : BaseActivity() {
         bLogin.setOnClickListener(View.OnClickListener { v: View? ->
             val url = tilURL.editText!!.text.toString()
             if (url.startsWith("http://")) {
+                //todo ban http unless debug is enabled
                 showUnsecureConnectionWanrning()
             } else {
                 logIn()
@@ -84,6 +85,12 @@ class LoginActivity : BaseActivity() {
             progressBar.visibility = View.GONE
             return
         }
+        if (tilPassword.editText!!.text.toString().isBlank()) {
+            tilPassword.error = getText(R.string.enter_password)
+            bLogin.isEnabled = true
+            progressBar.visibility = View.GONE
+            return
+        }
         lifecycleScope.launch {
             val result = (applicationContext as MainApplication).login.firstLogin(tilURL.editText!!.text.toString(), tilUsername.editText!!.text.toString(), tilPassword.editText!!.text.toString())
 
@@ -96,8 +103,7 @@ class LoginActivity : BaseActivity() {
             bLogin.isEnabled = true
             progressBar.visibility = View.GONE
             if (result === LoginResult.WRONG_LOGIN) {
-                //todo indeicate properly wrong username OR password
-                tilUsername.error = " "
+                tilUsername.error = getText(R.string.invalid_login)
                 tilPassword.error = getText(R.string.invalid_login)
             }
             if (result === LoginResult.UNREACHABLE) {

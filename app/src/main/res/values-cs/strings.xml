@@ -22,6 +22,7 @@
     <string name="unexpected_response">Neočekávaná odpověď serveru. Prosím, zkontrolujte zadanou adresu serveru.</string>
     <string name="unreachable">Server nedostupný (zkontrolujte internetové připojení a adresu serveru)</string>
     <string name="enter_username">Zadejte Vaše přihlašovací jméno</string>
+    <string name="enter_password">Zadejte heslo</string>
     <string name="enter_url">Zadejte adresu Vašeho serveru Bakaláři nebo ťukněte na \"vybrat školu\"</string>
     <string name="search">Vyhledávejte…</string>
     <string name="connection_failed">Připojení k serveru selhalo</string>
@@ -38,7 +39,7 @@
     <string name="info_unexpected_response">Chyba: neočekávaná odpověď serveru</string>
     <string name="unsecure_connectio_title">Spojení není zabezpečené!</string>
     <string name="unsecure_connectio">Vaše škola neumožňuje zabezpečené spojení se serverem. Přenášená data tedy <b>nejsou šifrována</b> a kdokoliv ve stejné síti je může <b>odposlouchávat</b> nebo dokonce i měnit. <b>Nebezpečí</b> je obzvlášť vysoké <b>na veřejných wi-fi sítích</b>.\nOpravdu se chcete přihlásit?</string>
-    <string name="unsecure_connection_connect">Přesto se přihlásit</string>
+    <string name="unsecure_connection_connect">Risknu to</string>
     <string name="unsecure_connection_cancel">Zrušit</string>
 
     <string name="user">Uživatel</string>

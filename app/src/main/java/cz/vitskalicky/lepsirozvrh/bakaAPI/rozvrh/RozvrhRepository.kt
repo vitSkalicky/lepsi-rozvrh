@@ -186,15 +186,13 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
                 RozvrhStatus.loginFailed()
             }
             is HttpException -> {
-                //todo unexpected resoponse, probably
+                //todo unexpected response, probably
                 RozvrhStatus.unexpectedResponse()
             }
             else -> {
                 statusStr[rozvrhId] = RozvrhStatus.unexpectedResponse()
                 Sentry.capture(e)
                 throw e
-                //other reasons
-                //todo report parse error
             }
         }
     }

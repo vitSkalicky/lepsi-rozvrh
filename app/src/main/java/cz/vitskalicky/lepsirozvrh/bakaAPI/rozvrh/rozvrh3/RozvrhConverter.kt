@@ -16,7 +16,7 @@ object RozvrhConverter {
     @Throws(RozvrhConversionException::class)
     fun convert(rozvrh3: Rozvrh3, date: LocalDate?): RozvrhRelated{
         //todo perform further testing after creating a testing server
-        remove0thCaptionIfUnnecessary(rozvrh3)
+        val rozvrh3 = remove0thCaptionIfUnnecessary(rozvrh3)
 
         val monday : LocalDate = date?.let { Utils.getWeekMonday(date) } ?: Rozvrh.PERM
         val cycle: RozvrhCycle? = if (date == null){
@@ -142,7 +142,7 @@ object RozvrhConverter {
                     if (!atom.change.typeAbbrev.isNullOrBlank()) {
                         changeType = RozvrhLesson.CANCELLED
                         subjectAbbrev = atom.change.typeAbbrev
-                        subjectName = atom.change.typeName
+                        subjectName = atom.change.typeName ?: ""
                     }
                 }
 
@@ -209,12 +209,12 @@ object RozvrhConverter {
     }
 
     /**
-     * Romeves 0th caption if present and if unnecessary **from the given rozvrh**. This function **modifies the Rozvrh3 object!**
+     * Romeves 0th caption if present and if unnecessary and return a modified copy.
      */
-    fun remove0thCaptionIfUnnecessary(rozvrh3: Rozvrh3){
-        val zeroCaptions = rozvrh3.hours.filter { it?.caption?.trim() == "0" }
+    fun remove0thCaptionIfUnnecessary(rozvrh3: Rozvrh3): Rozvrh3{
+        val zeroCaptions = rozvrh3.hours.filter { it.caption.trim() == "0" }
         if (zeroCaptions.size != 1 ){
-            return
+            return rozvrh3
         }
         val zeroCaption = zeroCaptions[0]
 
@@ -223,9 +223,9 @@ object RozvrhConverter {
             isEmpty = isEmpty && it.atoms.none { it.hourId == zeroCaption.id.toString() }
         }
         if (!isEmpty){
-            return
+            return rozvrh3
         }
-        rozvrh3.hours = rozvrh3.hours.toMutableList().apply { removeAll{ it?.id == zeroCaption.id }}.toTypedArray()
+        return rozvrh3.copy(hours = rozvrh3.hours.toMutableList().apply { removeAll{ it.id == zeroCaption.id }})
     }
 
     class RozvrhConversionException(message: String): RuntimeException(message)

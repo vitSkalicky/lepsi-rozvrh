@@ -1,18 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.model
 
+import android.util.Log
 import androidx.room.TypeConverter
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.type.CollectionType
-import com.fasterxml.jackson.databind.type.SimpleType
 import com.fasterxml.jackson.databind.type.TypeFactory
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCycle
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhGroup
-import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.LocalDate
-import org.joda.time.LocalTime
+import org.joda.time.*
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.ISODateTimeFormat
 
@@ -68,33 +62,6 @@ object DateTimeConverters {
     }
 }
 
-object LessonConverters {
-    @TypeConverter
-    @JvmStatic
-    fun toLesson(value: String): RozvrhLesson {
-        return MainApplication.objectMapper.readValue<RozvrhLesson>(value, RozvrhLesson::class.java)
-    }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromLesson(value: RozvrhLesson): String {
-        return MainApplication.objectMapper.writeValueAsString(value)
-    }
-
-    @TypeConverter
-    @JvmStatic
-    fun toLessons(value: String): List<RozvrhLesson> {
-        val arr: Array<RozvrhLesson> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhLesson::class.java))
-        return arr.toList()
-    }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromLessons(value: List<RozvrhLesson>): String {
-        return MainApplication.objectMapper.writeValueAsString(value)
-    }
-}
-
 object GroupConverters {
     @TypeConverter
     @JvmStatic
@@ -111,8 +78,15 @@ object GroupConverters {
     @TypeConverter
     @JvmStatic
     fun toGroups(value: String): List<RozvrhGroup> {
-        val arr: Array<RozvrhGroup> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhGroup::class.java))
-        return arr.toList()
+        //assigning fields manually, because reflection is too slow
+        val arr: Array<Map<String,String>> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(Map::class.java))
+        return arr.toList().map {
+            RozvrhGroup(
+                    id = it["id"]!!,
+                    name = it["name"]!!,
+                    abbrev = it["abbrev"]!!,
+            )
+        }
     }
 
     @TypeConverter
@@ -138,8 +112,15 @@ object CycleConverters {
     @TypeConverter
     @JvmStatic
     fun toCycles(value: String): List<RozvrhCycle> {
-        val arr: Array<RozvrhCycle> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhCycle::class.java))
-        return arr.toList()
+        //assigning fields manually, because reflection is too slow
+        val arr: Array<Map<String,String>> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(Map::class.java))
+        return arr.toList().map {
+            RozvrhCycle(
+                    id = it["id"]!!,
+                    name = it["name"]!!,
+                    abbrev = it["abbrev"]!!,
+            )
+        }
     }
 
     @TypeConverter

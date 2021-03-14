@@ -269,13 +269,13 @@ class RozvrhLayout : ViewGroup {
 
             den.blocks.forEach {
                 val blck = it
-                it.block.lessons.forEach {
+                it.lessons.forEach {
                     val view = hodinaViewRecycler.retrieve()
                     view.setHodina(it, perm)
                     addView(view)
                     hodinasByCaptions[blck.caption.index][i].add(view)
                 }
-                it.block.lessons.ifEmpty {
+                it.lessons.ifEmpty {
                     val view = hodinaViewRecycler.retrieve()
                     view.setHodina(null, perm)
                     addView(view)

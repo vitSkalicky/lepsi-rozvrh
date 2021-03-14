@@ -119,12 +119,12 @@ open class WidgetProvider : AppWidgetProvider() {
                 views.setFloat(R.id.textViewSecondary, "setTextSize", widgetSettings.secondaryTextSize)
             } else if (width < 250 || allEmpty || !event.isNullOrBlank()) {
                 views = RemoteViews(context.packageName, R.layout.small_widget)
-                val hodina: RozvrhLesson? = hodiny?.firstOrNull()?.block?.lessons?.firstOrNull()
+                val hodina: RozvrhLesson? = hodiny?.firstOrNull()?.lessons?.firstOrNull()
                 updateCell(views, R.id.textViewZkrpr, R.id.textViewSecondary, hodina, event, widgetSettings, false, context)
             } else {
                 views = RemoteViews(context.packageName, R.layout.wide_widget)
 
-                val lesson: List<RozvrhLesson?> = hodiny!!.map { it.block.lessons.firstOrNull() }
+                val lesson: List<RozvrhLesson?> = hodiny!!.map { it.lessons.firstOrNull() }
 
                 updateCell(views, R.id.textViewZkrpr0, R.id.textViewSecondary0, lesson.getOrNull(0), null,widgetSettings, true, context)
                 updateCell(views, R.id.textViewZkrpr1, R.id.textViewSecondary1, lesson.getOrNull(1), null,widgetSettings, true, context)

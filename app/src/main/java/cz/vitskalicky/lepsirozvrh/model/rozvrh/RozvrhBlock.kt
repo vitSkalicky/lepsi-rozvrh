@@ -6,7 +6,7 @@ import androidx.room.Index
 import org.joda.time.LocalDate
 
 @Entity(
-        primaryKeys = ["day","caption"],
+        primaryKeys = ["id"],
         foreignKeys = [
             ForeignKey(
                 entity = RozvrhDay::class,
@@ -25,11 +25,11 @@ import org.joda.time.LocalDate
                 deferred = true
             )
         ],
-        indices = [Index("day"), Index("caption")]
+        indices = [Index("day"), Index("caption"), Index("id")]
 
 )
 data class RozvrhBlock(
         val day: LocalDate,
         val caption: String,
-        val lessons: List<RozvrhLesson>
+        val id: String = "$day-$caption"
 )

@@ -49,9 +49,10 @@ object RozvrhConverter {
 
         //to be extra sure, we sort the caption ascending by begin time to make sure it has the right index
         captionsUnsorted.sortWith( compareBy { it.second.beginTime } )
-        //here we have the RozvrhCaptions
+        //here we have the RozvrhCaptions. Key is the hourId
         val captionsMap = HashMap<String, RozvrhCaption>()
         captionsUnsorted.forEachIndexed { index, pair -> captionsMap[pair.first] = pair.second.copy(index = index) }
+        //and here they are sorted by index
         val captions: List<RozvrhCaption> = captionsUnsorted.mapIndexed { index, pair -> pair.second.copy(index = index) }
 
         val hours = HashMap<String, Hour3>()
@@ -99,12 +100,19 @@ object RozvrhConverter {
                 }
 
             val day = RozvrhDay(dayDate, monday, event)
+            val blocks = Array<RozvrhBlock?>(captions.size) {null}
+            for (i in captions.indices){
+                blocks[i] = RozvrhBlock(
+                        day.date,
+                        captions[i].id
+                )
+            }
 
             val lessons = Array<ArrayList<RozvrhLesson>>(captions.size) { ArrayList() }
             for (atom in item.atoms) {
                 val caption: RozvrhCaption = captionsMap[atom.hourId] ?:
-                //report problem
-                throw RozvrhConversionException("Failed to parse Rozvrh3 to Rozvrh: Could not find a caption for an atom: searched for '${atom.hourId}' available caption ids: ${captionsMap.keys}")
+                    //report problem
+                    throw RozvrhConversionException("Failed to parse Rozvrh3 to Rozvrh: Could not find a caption for an atom: searched for '${atom.hourId}' available caption ids: ${captionsMap.keys}")
 
                 val captionId: String = caption.id
 
@@ -174,6 +182,8 @@ object RozvrhConverter {
                 }
 
                 lessons[caption.index].add(RozvrhLesson(
+                        blocks[caption.index]!!.id ,
+                        lessons[caption.index].size,
                         subjectName,
                         subjectAbbrev,
                         teacherName,
@@ -189,20 +199,20 @@ object RozvrhConverter {
                 ))
             }
 
-            val blocks = ArrayList<BlockRelated>(captions.size)
+            val blocksRelated = ArrayList<BlockRelated>(captions.size)
 
             for (capt in captions){
-                blocks.add(BlockRelated(
+                blocksRelated.add(BlockRelated(
                         RozvrhBlock(
                             dayDate,
-                            capt.id,
-                            lessons[capt.index]
+                            capt.id
                         ),
-                        capt
+                        capt,
+                        lessons[capt.index]
                     )
                 )
             }
-            days.add(DayRelated(day, blocks))
+            days.add(DayRelated(day, blocksRelated))
         }
         
         return RozvrhRelated(rozvrh, captions, days)

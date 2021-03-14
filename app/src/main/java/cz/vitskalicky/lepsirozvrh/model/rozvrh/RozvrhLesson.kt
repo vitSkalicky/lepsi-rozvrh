@@ -1,6 +1,27 @@
 package cz.vitskalicky.lepsirozvrh.model.rozvrh
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import org.joda.time.LocalDate
+
+@Entity(
+        primaryKeys = ["blockId","indexInBlock"],
+        foreignKeys = [
+            ForeignKey(
+                    entity = RozvrhBlock::class,
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("blockId"),
+                    onDelete = ForeignKey.CASCADE,
+                    onUpdate = ForeignKey.CASCADE,
+                    deferred = true
+            )
+        ],
+        indices = [Index("blockId"), Index("indexInBlock")]
+)
 data class RozvrhLesson (
+        val blockId: String,
+        val indexInBlock: Int,
         val subjectName: String,
         val subjectAbbrev: String,
         val teacherName: String,

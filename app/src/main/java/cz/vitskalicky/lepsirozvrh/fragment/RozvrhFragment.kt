@@ -25,6 +25,7 @@ import cz.vitskalicky.lepsirozvrh.theme.Theme
 import cz.vitskalicky.lepsirozvrh.view.RozvrhLayout
 import cz.vitskalicky.lepsirozvrh.model.RozvrhStatus.Status.*
 import org.joda.time.DateTime
+import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
 
 class RozvrhFragment : Fragment() {
@@ -154,6 +155,7 @@ class RozvrhFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getDisplayLD().distinctUntilChanged().observe(viewLifecycleOwner){
+            Log.d("Snek","data received at ${LocalDateTime.now()}")
             rozvrhLayout.setRozvrh(it, centerToCurrentLesson)
             //reset center to current lesson once it happened
             if (it != null){
@@ -198,6 +200,7 @@ class RozvrhFragment : Fragment() {
         viewModel.isOfflineLD.observe(viewLifecycleOwner) {
             updateInfoLine()
         }
+        Log.d("Snek","View created at ${LocalDateTime.now()}")
     }
 
     override fun onResume() {

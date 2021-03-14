@@ -100,7 +100,7 @@ object RozvrhConverter {
                 }
 
             val day = RozvrhDay(dayDate, monday, event)
-            val blocks = ArrayList<RozvrhBlock>(captions.size)
+            val blocks = Array<RozvrhBlock?>(captions.size) {null}
             for (i in captions.indices){
                 blocks[i] = RozvrhBlock(
                         day.date,
@@ -182,7 +182,7 @@ object RozvrhConverter {
                 }
 
                 lessons[caption.index].add(RozvrhLesson(
-                        blocks[caption.index].id,
+                        blocks[caption.index]!!.id ,
                         lessons[caption.index].size,
                         subjectName,
                         subjectAbbrev,

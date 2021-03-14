@@ -40,7 +40,7 @@ data class DayRelated(
         val blocksToCheck = blocks.toMutableList()
         while (true){
             val item = blocksToCheck.last()
-            if (item.block.lessons.isEmpty()){
+            if (item.lessons.isEmpty()){
                 blocksToCheck.removeLast()
             }else{
                 break
@@ -49,7 +49,7 @@ data class DayRelated(
 
         for (i in blocksToCheck.indices) {
             val item: BlockRelated = blocksToCheck[i]
-            val lesson: RozvrhLesson? = item.block.lessons.getOrNull(0)
+            val lesson: RozvrhLesson? = item.lessons.getOrNull(0)
             if (lesson != null || !first) {
                 if (forNotification && first && nowTime.isBefore(item.caption.beginTime.minusHours(1))) { //do not highlight
                     return null
@@ -91,7 +91,7 @@ data class DayRelated(
         val blocksToCheck = blocks.toMutableList()
         while (true){
             val item = blocksToCheck.last()
-            if (item.block.lessons.isEmpty()){
+            if (item.lessons.isEmpty()){
                 blocksToCheck.removeLast()
             }else{
                 break
@@ -99,7 +99,7 @@ data class DayRelated(
         }
         while (true){
             val item = blocksToCheck.first()
-            if (item.block.lessons.isEmpty()){
+            if (item.lessons.isEmpty()){
                 blocksToCheck.removeFirst()
             }else{
                 break

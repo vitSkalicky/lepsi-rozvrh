@@ -1,15 +1,12 @@
 package cz.vitskalicky.lepsirozvrh.database
 
 import androidx.room.*
-import cz.vitskalicky.lepsirozvrh.model.DateTimeConverters
-import cz.vitskalicky.lepsirozvrh.model.LessonConverters
-import cz.vitskalicky.lepsirozvrh.model.LocalDateConverters
-import cz.vitskalicky.lepsirozvrh.model.LocalTimeConverters
+import cz.vitskalicky.lepsirozvrh.model.*
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.*
 
 @Database(entities = [Rozvrh::class, RozvrhCaption::class, RozvrhDay::class, RozvrhBlock::class, RozvrhLesson::class], version = 1)
-@TypeConverters(*[LocalDateConverters::class, LocalTimeConverters::class, DateTimeConverters::class])
+@TypeConverters(*[LocalDateConverters::class, LocalTimeConverters::class, DateTimeConverters::class, CycleConverters::class, GroupConverters::class, StringListConverters::class])
 abstract class RozvrhDatabase : RoomDatabase() {
     abstract fun rozvrhDao(): RozvrhDao
     abstract fun captionDao(): CaptionDao

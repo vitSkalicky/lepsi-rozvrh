@@ -80,7 +80,7 @@ object PermanentNotification {
         var skupina: String = ""
         var cas = ""
 
-        val lesson = block?.block?.lessons?.firstOrNull();
+        val lesson = block?.lessons?.firstOrNull();
         if (block == null || lesson == null) {
             predmet = context.getString(R.string.nothing)
         } else {

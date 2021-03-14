@@ -6,34 +6,18 @@ import androidx.room.Index
 import org.joda.time.LocalDate
 
 @Entity(
-        primaryKeys = ["bockId","indexInBlock"],
+        primaryKeys = ["blockId","indexInBlock"],
         foreignKeys = [
             ForeignKey(
-                    entity = RozvrhDay::class,
-                    parentColumns = arrayOf("date"),
-                    childColumns = arrayOf("day"),
-                    onDelete = ForeignKey.CASCADE,
-                    onUpdate = ForeignKey.CASCADE,
-                    deferred = true
-            ),
-            ForeignKey(
-                    entity = RozvrhCaption::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("caption"),
-                    onDelete = ForeignKey.CASCADE,
-                    onUpdate = ForeignKey.CASCADE,
-                    deferred = true
-            ),
-            ForeignKey(
                     entity = RozvrhBlock::class,
-                    parentColumns = arrayOf("day","caption"),
-                    childColumns = arrayOf("day","caption"),
+                    parentColumns = arrayOf("id"),
+                    childColumns = arrayOf("blockId"),
                     onDelete = ForeignKey.CASCADE,
                     onUpdate = ForeignKey.CASCADE,
                     deferred = true
             )
         ],
-        indices = [Index("day"), Index("caption"), Index("indexInBlock")]
+        indices = [Index("blockId"), Index("indexInBlock")]
 )
 data class RozvrhLesson (
         val blockId: String,

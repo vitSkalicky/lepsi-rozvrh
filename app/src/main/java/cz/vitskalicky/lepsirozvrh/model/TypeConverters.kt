@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.type.CollectionType
 import com.fasterxml.jackson.databind.type.SimpleType
 import com.fasterxml.jackson.databind.type.TypeFactory
 import cz.vitskalicky.lepsirozvrh.MainApplication
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCycle
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhGroup
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhLesson
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -89,6 +91,75 @@ object LessonConverters {
     @TypeConverter
     @JvmStatic
     fun fromLessons(value: List<RozvrhLesson>): String {
+        return MainApplication.objectMapper.writeValueAsString(value)
+    }
+}
+
+object GroupConverters {
+    @TypeConverter
+    @JvmStatic
+    fun toGroup(value: String): RozvrhGroup {
+        return MainApplication.objectMapper.readValue<RozvrhGroup>(value, RozvrhGroup::class.java)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromGroup(value: RozvrhGroup): String {
+        return MainApplication.objectMapper.writeValueAsString(value)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun toGroups(value: String): List<RozvrhGroup> {
+        val arr: Array<RozvrhGroup> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhGroup::class.java))
+        return arr.toList()
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromGroups(value: List<RozvrhGroup>): String {
+        return MainApplication.objectMapper.writeValueAsString(value)
+    }
+}
+
+object CycleConverters {
+    @TypeConverter
+    @JvmStatic
+    fun toCycle(value: String): RozvrhCycle {
+        return MainApplication.objectMapper.readValue<RozvrhCycle>(value, RozvrhCycle::class.java)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromCycle(value: RozvrhCycle): String {
+        return MainApplication.objectMapper.writeValueAsString(value)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun toCycles(value: String): List<RozvrhCycle> {
+        val arr: Array<RozvrhCycle> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(RozvrhCycle::class.java))
+        return arr.toList()
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromCycles(value: List<RozvrhCycle>): String {
+        return MainApplication.objectMapper.writeValueAsString(value)
+    }
+}
+
+object StringListConverters {
+    @TypeConverter
+    @JvmStatic
+    fun toStringLists(value: String): List<String> {
+        val arr: Array<String> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(String::class.java))
+        return arr.toList()
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromStringLists(value: List<String>): String {
         return MainApplication.objectMapper.writeValueAsString(value)
     }
 }

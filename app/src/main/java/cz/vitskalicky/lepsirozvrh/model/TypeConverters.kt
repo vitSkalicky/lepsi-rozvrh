@@ -78,21 +78,33 @@ object GroupConverters {
     @TypeConverter
     @JvmStatic
     fun toGroups(value: String): List<RozvrhGroup> {
+        //DEBUG val start = LocalDateTime.now()
         //assigning fields manually, because reflection is too slow
         val arr: Array<Map<String,String>> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(Map::class.java))
-        return arr.toList().map {
+        val toret = arr.toList().map {
             RozvrhGroup(
                     id = it["id"]!!,
                     name = it["name"]!!,
                     abbrev = it["abbrev"]!!,
             )
         }
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "Groups deserialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 
     @TypeConverter
     @JvmStatic
     fun fromGroups(value: List<RozvrhGroup>): String {
-        return MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val start = LocalDateTime.now()
+        val toret = MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "Groups serialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 }
 
@@ -112,21 +124,33 @@ object CycleConverters {
     @TypeConverter
     @JvmStatic
     fun toCycles(value: String): List<RozvrhCycle> {
+        //DEBUG val start = LocalDateTime.now()
         //assigning fields manually, because reflection is too slow
         val arr: Array<Map<String,String>> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(Map::class.java))
-        return arr.toList().map {
+        val toret = arr.toList().map {
             RozvrhCycle(
                     id = it["id"]!!,
                     name = it["name"]!!,
                     abbrev = it["abbrev"]!!,
             )
         }
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "Cycles deserialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 
     @TypeConverter
     @JvmStatic
     fun fromCycles(value: List<RozvrhCycle>): String {
-        return MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val start = LocalDateTime.now()
+        val toret = MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "Cycles serialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 }
 
@@ -134,13 +158,25 @@ object StringListConverters {
     @TypeConverter
     @JvmStatic
     fun toStringLists(value: String): List<String> {
+        //DEBUG val start = LocalDateTime.now()
         val arr: Array<String> = MainApplication.objectMapper.readValue(value, TypeFactory.defaultInstance().constructArrayType(String::class.java))
-        return arr.toList()
+        val toret = arr.toList()
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "String list deserialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 
     @TypeConverter
     @JvmStatic
     fun fromStringLists(value: List<String>): String {
-        return MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val start = LocalDateTime.now()
+        val toret = MainApplication.objectMapper.writeValueAsString(value)
+        //DEBUG val leng = LocalDateTime.now().millisOfDay - start.millisOfDay
+        //DEBUG if (leng > 10){
+            //DEBUG Log.w("serialization", "String list serialization took $leng ms!")
+        //DEBUG }
+        return toret
     }
 }

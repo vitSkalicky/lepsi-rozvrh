@@ -259,7 +259,9 @@ class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, at
         tableLayout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         val density = context.resources.displayMetrics.density.toInt()
         tableLayout.setPadding(24 * density, 16 * density, 24 * density, 0)
-        addField(tableLayout, R.string.homework, lesson.homeworkIds.size.toString())
+        if (lesson.homeworkIds.isNotEmpty()){
+            addField(tableLayout, R.string.homework, lesson.homeworkIds.size.toString())
+        }
         if (perm) {
             addField(tableLayout, R.string.cycle, lesson.cycles.joinToString(", "){ it.abbrev.ifBlank { it.name }})
         }

@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.fasterxml.jackson.databind.JsonMappingException
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
@@ -166,19 +167,36 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
         return rozvrh
     }
 
+    private val reported = HashSet<String>()
+    /**
+     * prevents overhauling the crash report service by many identical exceptions
+     */
+    private fun sendReport(e: Exception){
+        if (!reported.contains(e.message ?: "")){
+            reported.add(e.message ?: "")
+            Sentry.capture(e)
+        }
+    }
+
     /**
      * must run on UI thread
      */
     private fun reportError(e: Exception, rozvrhId: LocalDate) {
         statusStr.isOffline.value = true
         statusStr[rozvrhId] = when (e) {
+            is JsonMappingException ->{
+                //parsing error
+                //report
+                sendReport(e)
+                RozvrhStatus.unexpectedResponse()
+            }
             is IOException -> {
                 //network error
                 RozvrhStatus.unreachable()
             }
             is RozvrhConverter.RozvrhConversionException -> {
                 //conversion failed
-                Sentry.capture(e)
+                sendReport(e)
                 RozvrhStatus.unexpectedResponse()
             }
             is LoginRequiredException -> {
@@ -186,12 +204,11 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
                 RozvrhStatus.loginFailed()
             }
             is HttpException -> {
-                //todo unexpected response, probably
                 RozvrhStatus.unexpectedResponse()
             }
             else -> {
                 statusStr[rozvrhId] = RozvrhStatus.unexpectedResponse()
-                Sentry.capture(e)
+                sendReport(e)
                 throw e
             }
         }

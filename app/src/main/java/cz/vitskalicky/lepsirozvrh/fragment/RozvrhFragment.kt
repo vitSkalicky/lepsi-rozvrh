@@ -97,7 +97,6 @@ class RozvrhFragment : Fragment() {
         ibRefresh = rootView.findViewById<ImageButton>(R.id.refresh)
         progressBar = rootView.findViewById<ProgressBar>(R.id.progressBar)
 
-        //todo display status
         progressBar.visibility = View.GONE
 
         rozvrhLayout.createViews()

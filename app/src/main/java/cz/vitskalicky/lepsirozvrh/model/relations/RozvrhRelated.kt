@@ -3,6 +3,7 @@ package cz.vitskalicky.lepsirozvrh.model.relations
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Relation
+import com.fasterxml.jackson.annotation.JsonIgnore
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
@@ -36,12 +37,14 @@ data class RozvrhRelated(
     val days: List<DayRelated>
 ) {
 
+
     /**
      * returns the lesson block, which should be highlighted to the user as next or current lesson, or null
      * if the school is over or this is not the week.
      *
      * @param forNotification If true, the first lesson won't be highlighted up until one hour before its start
      */
+    @JsonIgnore
     fun getHighlightBlock(forNotification: Boolean): BlockRelated? {
         return days.firstOrNull { it.day.date == LocalDate.now() }?.getHighlightBlock(forNotification)
     }
@@ -58,6 +61,7 @@ data class RozvrhRelated(
      * are already over or `null` if there is an event on that day. The second parameter is the description of current event or `null`
      * if there is no event on that day.
      */
+    @JsonIgnore
     fun getWidgetDisplayBlocks(length: Int): Pair<List<BlockRelated>?,String?>?{
         if (Utils.getCurrentMonday() != rozvrh.id){
             return null
@@ -68,6 +72,7 @@ data class RozvrhRelated(
     /**
      * Return time when the notification and widget should be updated or `null` if this week is already over.
      */
+    @JsonIgnore
     fun getUpdateDisplayedDataTime(): LocalDateTime?{
         val nowDate = LocalDate.now()
         val nowTime = LocalTime.now()

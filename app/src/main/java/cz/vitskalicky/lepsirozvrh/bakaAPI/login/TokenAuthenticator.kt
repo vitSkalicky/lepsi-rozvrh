@@ -21,6 +21,7 @@ class TokenAuthenticator(val app: MainApplication) : Authenticator, Interceptor 
         }
         val usedAccessToken: String? = origRequest.header("Authorization")?.removePrefix("Bearer ")
         synchronized(app) {
+            //todo debug random logout
             var currentAccessToken: String = sprefs.getString(SharedPrefs.ACCEESS_TOKEN, null) ?: ""
             if (usedAccessToken == currentAccessToken) {
                 val refreshResult: Login.LoginResult = runBlocking {

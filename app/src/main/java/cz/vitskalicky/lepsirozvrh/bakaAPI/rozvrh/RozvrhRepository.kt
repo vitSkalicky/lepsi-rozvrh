@@ -153,7 +153,7 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
                 throw e
         }
 
-        val rozvrh = withContext(Dispatchers.IO){ RozvrhConverter.convert(rozvrh3, rozvrhId) }
+        val rozvrh = withContext(Dispatchers.IO){ RozvrhConverter.convert(rozvrh3, rozvrhId, application) }
         db.insertRozvrhRelated(rozvrh)
         if (rozvrh.rozvrh.id == Utils.getCurrentMonday()){
             withContext(Dispatchers.Main){

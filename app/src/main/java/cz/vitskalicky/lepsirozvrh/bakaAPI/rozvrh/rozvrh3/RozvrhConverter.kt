@@ -1,10 +1,13 @@
 package cz.vitskalicky.lepsirozvrh.bakaAPI.rozvrh.rozvrh3
 
+import android.content.Context
+import cz.vitskalicky.lepsirozvrh.R
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.model.relations.BlockRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.DayRelated
 import cz.vitskalicky.lepsirozvrh.model.relations.RozvrhRelated
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.*
+import io.sentry.Sentry
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
@@ -13,8 +16,22 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object RozvrhConverter {
+    /**
+     * backup text to day description in case it is empty, but it is holiday.
+     */
+    val dayTypes: Map<String, Int> = mapOf(
+            "WorkDay" to R.string.day_type_workday,
+            "Holiday" to R.string.day_type_holiday,
+            "Celebration" to  R.string.day_type_celebration,
+    )
+
+    /**
+     * prevents from sending many reports to Sentry
+     */
+    var sendUnknownDayTypeReport = true
+
     @Throws(RozvrhConversionException::class)
-    fun convert(rozvrh3: Rozvrh3, date: LocalDate?): RozvrhRelated{
+    fun convert(rozvrh3: Rozvrh3, date: LocalDate?, context: Context): RozvrhRelated{
         //todo perform further testing after creating a testing server
         val rozvrh3 = remove0thCaptionIfUnnecessary(rozvrh3)
 
@@ -93,11 +110,27 @@ object RozvrhConverter {
             }else{
                 Rozvrh.PERM.plusDays(item.dayOfWeek - 1)
             }
-            val event: String? = if (item.dayDescription?.isNotBlank() == true){
-                    item.dayDescription
+            var event: String? = null
+            if (item.dayDescription.isNotBlank()){
+                event = item.dayDescription
+            }else if (item.dayType.isNotBlank()){
+                val dayType: Int? = dayTypes[item.dayType]
+                if (dayType == null){
+                    //report unknown day type
+                    //prevent spam
+                    if (sendUnknownDayTypeReport){
+                        sendUnknownDayTypeReport = false
+                        Sentry.capture("Unknown day type: ${item.dayType}")
+                    }
+                    event = null
                 }else{
-                    null
+                    if (dayType == R.string.day_type_workday){
+                        event = null
+                    }else{
+                        event = context.getString(dayType)
+                    }
                 }
+            }
 
             val day = RozvrhDay(dayDate, monday, event)
             val blocks = Array<RozvrhBlock?>(captions.size) {null}

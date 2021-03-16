@@ -14,6 +14,7 @@ import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhBlock
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
 import org.joda.time.LocalDate
 
+//todo all-day events
 class RozvrhLayout : ViewGroup {
     /**
      * Creates a cell with reasonably long data and calculates its minimum width

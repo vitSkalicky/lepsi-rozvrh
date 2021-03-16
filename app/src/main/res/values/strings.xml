@@ -212,6 +212,11 @@
     <string name="purchase_error">Purchase failed (%s)</string>
     <string name="error_code">error %s</string>
 
+    <!-- Day types-->
+    <string name="day_type_workday"></string>
+    <string name="day_type_holiday">Holiday</string>
+    <string name="day_type_celebration">Public holiday</string>
+
     <string name="app_updated">App has been updated</string>
     <string name="whats_new">What\'s new</string>
     <!-- Interesting feature messages-->

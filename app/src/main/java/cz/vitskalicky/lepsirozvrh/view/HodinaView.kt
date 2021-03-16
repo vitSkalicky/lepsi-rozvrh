@@ -20,6 +20,12 @@ import kotlin.math.max
 
 class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, attrs) {
     private var hodina: RozvrhLesson? = null
+    var event: String? = null
+    private set
+    /** combined width of all cells displaying an event, including padding, dividers and everything */
+    var eventWidth: Int = 0
+    /** how far from left does this cell start */
+    var eventStart: Int = 0
     private var perm = false
     private val mistPaint: Paint
     private val highlightPaint: Paint
@@ -81,11 +87,14 @@ class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, at
         get() = (primaryTextSize / 2 + textPadding + secondaryTextSize) * 2 + super.getMinimumHeight()
 
     /**
-     * Updates the content
+     * Updates the content to display a lesson
      */
     fun setHodina(hodina: RozvrhLesson?, perm: Boolean) {
         this.hodina = hodina
         this.perm = perm
+        event = null
+        eventStart = 0
+        eventWidth = 0
         if (hodina == null) {
             backgroundPaint.color = t.cEmptyBg
             primaryTextPaint.color = t.chPrimaryText
@@ -111,6 +120,32 @@ class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, at
         requestLayout()
     }
 
+    /**
+     * Updates the content to display an event. Dont forget to set [eventWidth] and [eventStart]
+     * @param event title of the event, `null` to display normal empty cell
+     */
+    fun setEvent(event: String?){
+        hodina = null
+        perm = false
+        this.event = event
+
+        if (event != null) {
+            //same as RozvrhLesson.CANCELLED
+            backgroundPaint.color = t.caBg
+            primaryTextPaint.color = t.caPrimaryText
+            secondaryTextPaint.color = t.caSecondaryText
+            mistPaint.color = t.caRoomText
+        }else{
+            //same as hodina == null
+            backgroundPaint.color = t.cEmptyBg
+            primaryTextPaint.color = t.chPrimaryText
+            secondaryTextPaint.color = t.chSecondaryText
+            mistPaint.color = t.chRoomText
+        }
+        invalidate()
+        requestLayout()
+    }
+
     fun getHodina(): RozvrhLesson? {
         return hodina
     }
@@ -127,7 +162,7 @@ class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, at
     }
 
     override fun onDraw(canvas: Canvas) {
-        setDrawDividers(!topHighlighted, !cornerHighlighted, !leftHighlighted)
+        setDrawDividers(!topHighlighted, !cornerHighlighted, !leftHighlighted && (event == null || eventStart == 0) )
         super.onDraw(canvas)
         val w = width
         val h = height
@@ -229,6 +264,29 @@ class HodinaView(context: Context?, attrs: AttributeSet?) : CellView(context, at
                 secondaryTextPaint.setTextAlign(Paint.Align.CENTER);
                 canvas.drawText(hodina.getCycle(), middle, cycleBaseline, secondaryTextPaint);
             }*/
+        } else if (event != null){
+            var actualPrimaryTextSize: Float = primaryTextSize.toFloat()
+            var textPaddingLeft: Float = 20 * context.resources.displayMetrics.density
+            val drawableEventWidth: Float = eventWidth.toFloat() - dividerWidth - paddingLeft - textPaddingLeft - paddingRight
+            //correct height
+            if (h < actualPrimaryTextSize){
+                actualPrimaryTextSize = h.toFloat()
+            }
+            primaryTextPaint.textSize = actualPrimaryTextSize
+            var textWidth: Float = primaryTextPaint.measureText(event)
+            if (textWidth > drawableEventWidth){
+                // the text is too long
+                val overflow: Float = textWidth - drawableEventWidth
+                actualPrimaryTextSize *= overflow / textWidth
+                primaryTextPaint.textSize = actualPrimaryTextSize
+                textWidth = primaryTextPaint.measureText(event)
+            }
+
+            primaryTextPaint.textAlign = Paint.Align.LEFT
+            val xTextStart = dividerWidth + paddingLeft + textPaddingLeft
+            val realXTextStart = xTextStart - eventStart
+            val baseline = h /2f + actualPrimaryTextSize /2f
+            canvas.drawText(event!!, realXTextStart, baseline, primaryTextPaint)
         }
     }
 

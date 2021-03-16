@@ -14,7 +14,6 @@ import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhBlock
 import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption
 import org.joda.time.LocalDate
 
-//todo all-day events
 class RozvrhLayout : ViewGroup {
     /**
      * Creates a cell with reasonably long data and calculates its minimum width
@@ -112,14 +111,21 @@ class RozvrhLayout : ViewGroup {
             measureChild(item, hodinaWidthMS, childHeightMS)
             childState = combineMeasuredStates(childState, item.measuredState)
         }
+        var spaceToLeft: Int = 0 //how much space is there to the left from the cell
+        var allHodinaCellsWidth = width - columnSizes[0]
         for (i in hodinasByCaptions.indices) {
             for (j in 0 until hodinasByCaptions[i].size) {
                 for (item in hodinasByCaptions[i][j]) {
-                    val hodinaWidthMS = MeasureSpec.makeMeasureSpec((columnSizes[i] / hodinasByCaptions[i][j].size), MeasureSpec.EXACTLY)
+                    val hodinaWidthMS = MeasureSpec.makeMeasureSpec((columnSizes[i + 1] / hodinasByCaptions[i][j].size), MeasureSpec.EXACTLY)
                     measureChild(item, hodinaWidthMS, childHeightMS)
                     childState = combineMeasuredStates(childState, item.measuredState)
+                    if (item.event != null){
+                        item.eventWidth = allHodinaCellsWidth
+                        item.eventStart = spaceToLeft
+                    }
                 }
             }
+            spaceToLeft += columnSizes[i + 1]
         }
         setMeasuredDimension(resolveSizeAndState(width, widthMeasureSpec, childState),
                 resolveSizeAndState(specHS, heightMeasureSpec,
@@ -268,19 +274,28 @@ class RozvrhLayout : ViewGroup {
             val den: DayRelated = rozvrh.days[i]
             denViews[i].rozvrhDay = den.day
 
-            den.blocks.forEach {
-                val blck = it
-                it.lessonsSorted().forEach {
-                    val view = hodinaViewRecycler.retrieve()
-                    view.setHodina(it, perm)
-                    addView(view)
-                    hodinasByCaptions[blck.caption.index][i].add(view)
+            if (den.day.event == null){
+                den.blocks.forEach {
+                    val blck = it
+                    it.lessonsSorted().forEach {
+                        val view = hodinaViewRecycler.retrieve()
+                        view.setHodina(it, perm)
+                        addView(view)
+                        hodinasByCaptions[blck.caption.index][i].add(view)
+                    }
+                    it.lessonsSorted().ifEmpty {
+                        val view = hodinaViewRecycler.retrieve()
+                        view.setHodina(null, perm)
+                        addView(view)
+                        hodinasByCaptions[blck.caption.index][i].add(view)
+                    }
                 }
-                it.lessonsSorted().ifEmpty {
+            }else{
+                for (j in 0 until columns){
                     val view = hodinaViewRecycler.retrieve()
-                    view.setHodina(null, perm)
+                    view.setEvent(den.day.event)
                     addView(view)
-                    hodinasByCaptions[blck.caption.index][i].add(view)
+                    hodinasByCaptions[j][i].add(view)
                 }
             }
         }

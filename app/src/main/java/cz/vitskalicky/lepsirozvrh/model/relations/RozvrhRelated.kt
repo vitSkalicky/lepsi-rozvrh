@@ -90,7 +90,7 @@ data class RozvrhRelated(
 
             for (i in day.blocks.indices) {
                 val item: BlockRelated = day.blocks[i]
-                val lesson: RozvrhLesson? = item.lessons.getOrNull(0)
+                val lesson: RozvrhLesson? = item.lessonsSorted().getOrNull(0)
                 if (lesson != null || !first) {
                     if (nowTime.isBefore(item.caption.endTime.minusMinutes(10))) {
                         if (first && nowTime.isBefore(item.caption.beginTime.minusHours(3))) {

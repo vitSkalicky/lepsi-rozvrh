@@ -208,7 +208,7 @@ object RozvrhConverter {
                             capt.id
                         ),
                         capt,
-                        lessons[capt.index]
+                        lessons[capt.index].toSet()
                     )
                 )
             }

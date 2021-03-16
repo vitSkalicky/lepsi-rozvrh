@@ -49,7 +49,7 @@ data class DayRelated(
 
         for (i in blocksToCheck.indices) {
             val item: BlockRelated = blocksToCheck[i]
-            val lesson: RozvrhLesson? = item.lessons.getOrNull(0)
+            val lesson: RozvrhLesson? = item.lessonsSorted().getOrNull(0)
             if (lesson != null || !first) {
                 if (forNotification && first && nowTime.isBefore(item.caption.beginTime.minusHours(1))) { //do not highlight
                     return null

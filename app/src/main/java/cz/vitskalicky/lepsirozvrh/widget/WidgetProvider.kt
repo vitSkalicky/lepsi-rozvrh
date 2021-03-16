@@ -124,7 +124,7 @@ open class WidgetProvider : AppWidgetProvider() {
             } else {
                 views = RemoteViews(context.packageName, R.layout.wide_widget)
 
-                val lesson: List<RozvrhLesson?> = hodiny!!.map { it.lessons.firstOrNull() }
+                val lesson: List<RozvrhLesson?> = hodiny!!.map { it.lessonsSorted().firstOrNull() }
 
                 updateCell(views, R.id.textViewZkrpr0, R.id.textViewSecondary0, lesson.getOrNull(0), null,widgetSettings, true, context)
                 updateCell(views, R.id.textViewZkrpr1, R.id.textViewSecondary1, lesson.getOrNull(1), null,widgetSettings, true, context)

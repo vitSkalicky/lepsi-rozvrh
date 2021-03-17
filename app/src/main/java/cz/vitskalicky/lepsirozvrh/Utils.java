@@ -38,9 +38,11 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.Rozvrh;
 import io.sentry.Sentry;
 
 public class Utils {
@@ -68,6 +70,7 @@ public class Utils {
 
     public static LocalDate getWeekMonday(LocalDate date) {
         if (date == null) return null;
+        if (date == Rozvrh.Companion.getPERM()) return date;
         return date.dayOfWeek().setCopy(DateTimeConstants.MONDAY);
 
     }
@@ -135,6 +138,19 @@ public class Utils {
 
     public static interface Listener{
         public void method();
+    }
+    public static String join(List<Object> list, String separator){
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for (Object item :list) {
+            if (!first){
+                sb.append(separator);
+            }
+            first = false;
+            sb.append(item);
+        }
+        return sb.toString();
     }
 
     /**
@@ -233,115 +249,13 @@ public class Utils {
         ad.show();
     }
 
-    public static void somethingWrong(Exception e, View forToast, Context context){
+    /*public static void somethingWrong(Exception e, View forToast, Context context){
         Snackbar.make(forToast, R.string.something_went_wrong, BaseTransientBottomBar.LENGTH_LONG)
                 .setAction(R.string.report,v -> {
                     sendFeedback(false, e, context, forToast);
                 })
                 .show();
-    }
-
-    public static void sendFeedback(boolean includeRozvrh,@Nullable Exception exept, Context context, @Nullable View forToast) {
-        String body = null;
-        try {
-            body = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-            body = "\n\n-----------------------------\n" + context.getString(R.string.email_message) + "\n Device OS: Android \n Device OS version: " +
-                    Build.VERSION.RELEASE + "\n App Version: " + body + "\n Commit hash: " + BuildConfig.GitHash + "Build type: " + BuildConfig.BUILD_TYPE + "\n Device Brand: " + Build.BRAND +
-                    "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
-            if (Sentry.getContext() != null && Sentry.getContext().getUser() != null){
-                body += "\n Sentry client id: " + Sentry.getStoredClient().getContext().getUser().getId();
-            }else {
-                body += "\n Sentry client id not available";
-            }
-            body += "\n Sentry enabled: " + SharedPrefs.getBooleanPreference(context, R.string.PREFS_SEND_CRASH_REPORTS);
-            final String finBody = body;
-            if (exept != null){
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                exept.printStackTrace(pw);
-                body += "\nException stack trace:\n\n" + sw.toString();
-            }
-            if (includeRozvrh) {
-                new Thread(() -> {
-                    String fileCurrent = "rozvrh-" + Utils.dateToString(Utils.getDisplayWeekMonday(context)) + ".xml";
-                    String filePerm = "rozvrh-perm.xml";
-
-                    String current = "";
-                    String permanent = "";
-                    try (FileInputStream inputStream = context.openFileInput(fileCurrent)) {
-                        //converts inputStream to string
-                        java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
-                        current = s.hasNext() ? s.next() : "";
-                    } catch (FileNotFoundException e) {
-                        current = "File not found: " + e.getMessage();
-                    } catch (IOException e) {
-                        current = "IOException: " + e.getMessage();
-                    }
-                    try (FileInputStream inputStream = context.openFileInput(filePerm)) {
-                        //converts inputStream to string
-                        java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
-                        permanent = s.hasNext() ? s.next() : "";
-                    } catch (FileNotFoundException e) {
-                        permanent = "File not found: " + e.getMessage();
-                    } catch (IOException e) {
-                        permanent = "IOException: " + e.getMessage();
-                    }
-
-                    String finCurrent = current;
-                    String finPermanent = permanent;
-
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        String newBody = finBody;
-                        newBody += "\nCurrent schedule:\n\n" + finCurrent + "\n";
-                        newBody += "\nPermanent schedule:\n\n" + finPermanent + "\n";
-
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("message/rfc822");
-                        String address = context.getString(R.string.CONTACT_MAIL);
-                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "");
-                        intent.putExtra(Intent.EXTRA_TEXT, newBody);
-
-                        try {
-                            context.startActivity(Intent.createChooser(intent, context.getString(R.string.send_email)));
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Snackbar snackbar = Snackbar.make(forToast, context.getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
-                            snackbar.setAction(R.string.copy_address, v -> {
-                                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(address, address);
-                                clipboard.setPrimaryClip(clip);
-                                Snackbar.make(forToast, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                            });
-                            snackbar.show();
-                        }
-                    });
-
-                }).run();
-            } else {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("message/rfc822");
-                String address = context.getString(R.string.CONTACT_MAIL);
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "");
-                intent.putExtra(Intent.EXTRA_TEXT, body);
-
-                try {
-                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.send_email)));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Snackbar snackbar = Snackbar.make(forToast, context.getText(R.string.no_email_client), Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.copy_address, v -> {
-                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText(address, address);
-                        clipboard.setPrimaryClip(clip);
-                        Snackbar.make(forToast, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                    });
-                    snackbar.show();
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(context,"!",Toast.LENGTH_SHORT).show();
-        }
-    }
+    }*/
 
     public static interface RecreateWithAnimationActivity{
         /**

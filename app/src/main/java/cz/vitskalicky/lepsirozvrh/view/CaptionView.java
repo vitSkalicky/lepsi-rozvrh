@@ -2,19 +2,20 @@ package cz.vitskalicky.lepsirozvrh.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
-import cz.vitskalicky.lepsirozvrh.R;
-import cz.vitskalicky.lepsirozvrh.items.RozvrhHodinaCaption;
-import cz.vitskalicky.lepsirozvrh.theme.Theme;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.ISODateTimeFormat;
+
+import cz.vitskalicky.lepsirozvrh.model.rozvrh.RozvrhCaption;
 
 public class CaptionView extends CellView {
-    private RozvrhHodinaCaption caption = null;
+    private RozvrhCaption caption = null;
     private String startTime = "";
     private String endTime = "";
     private String captionText = "";
@@ -28,20 +29,20 @@ public class CaptionView extends CellView {
         secondaryTextPaint.setColor(t.getCHeaderSecondaryText());
     }
 
-    public RozvrhHodinaCaption getCaption() {
+    public RozvrhCaption getCaption() {
         return caption;
     }
 
-    public void setCaption(RozvrhHodinaCaption caption) {
+    public void setCaption(RozvrhCaption caption) {
         this.caption = caption;
         if (caption == null){
             startTime = "";
             endTime = "";
             captionText = "";
         }else {
-            startTime = caption.getBegintime();
-            endTime = caption.getEndtime();
-            captionText = caption.getCaption();
+            startTime = caption.getBeginTime().toString("HH:mm");
+            endTime = caption.getEndTime().toString("HH:mm");
+            captionText = caption.getName();
         }
         invalidate();
         requestLayout();

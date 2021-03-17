@@ -37,7 +37,7 @@ public class WelcomeActivity extends BaseActivity {
                     ((MainApplication) getApplication()).diableSentry();
                 }
             }
-            Login.checkLogin(this);
+            ((MainApplication) getApplication()).getLogin().checkLogin(this);
             finish();
         });
 

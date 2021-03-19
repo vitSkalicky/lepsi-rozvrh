@@ -1,2 +1,0 @@
-- Konečně přidán widget s tmavým nebo světlým vzhledem
-- Přidán seznam změn přímo v aplikaci

@@ -1,2 +1,0 @@
-- bug fixes
-- Very weird schedules with lessons "outside of" captions are tolerated.

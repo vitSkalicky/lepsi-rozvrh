@@ -1,2 +1,0 @@
-- Snížena zátěž na školní server.
-- Zvýšena tolerance (hodně) pomalých severů.

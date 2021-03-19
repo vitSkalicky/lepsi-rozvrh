@@ -1,4 +1,0 @@
-- Přidáno automatické hlášení pádů, pro zlepšení stability aplikace.
-- Rozvrh při otočení obrazovky už neskočí na začátek.
-- Opraven popis aplikace na F-Droidu.
-- Drobné opravy.

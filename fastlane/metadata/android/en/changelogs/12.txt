@@ -1,2 +1,0 @@
-- Finally added widget with light or dark theme
-- Added changelog right in the app

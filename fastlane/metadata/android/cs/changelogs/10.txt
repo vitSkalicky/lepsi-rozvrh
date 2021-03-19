@@ -1,2 +1,0 @@
-- Opravy chyb
-- Povoleno nezabezpečené spojení (http), protože některé školy stále nepoužívají https.

@@ -1,4 +1,0 @@
-- Added automatic crash reporting system for better stability of the app.
-- Schedule no longer jumps to beginning when screen is rotated.
-- Fixed description on F-Droid.
-- Minor fixes.

@@ -1,3 +1,0 @@
- 
-- Provedena bleskurychlá oprava pro nové API v3 (protože staré přestalo fungovat)
-- Zbytečné prázdné hodiny na začátku a na konci dne jsou nyní automaticky odstraněny.

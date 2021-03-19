@@ -1,6 +1,0 @@
- 
-- Vylepšen vzhled
-- Přidány motivy
-- Widget nyní může mít jakoukoliv barvu a průhlednost
-- V rozvrhu jsou zvýrazněny domácí úkoly
-- Můžete podpořit vývojáře prostřednictvím plateb Google Play.

@@ -35,3 +35,6 @@ output.json
 #NDK
 obj/
 .externalNativeBuild
+
+# secrets
+secrets.properties

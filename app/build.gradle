@@ -12,6 +12,23 @@ android {
         }
         return stdout.toString().trim()
     }
+
+    // Try reading secrets from file
+    def secretsPropertiesFile = rootProject.file("secrets.properties")
+    def secretProperties = new Properties()
+
+    if (secretsPropertiesFile.exists()) {
+        secretProperties.load(new FileInputStream(secretsPropertiesFile))
+    }
+    // Otherwise read from environment variables, this happens in CI
+    else {
+        secretProperties.setProperty("signing_keystore_location", "${System.getenv('signing_keystore_location')}")
+        secretProperties.setProperty("signing_keystore_password", "${System.getenv('signing_keystore_password')}")
+        secretProperties.setProperty("signing_key_alias", "${System.getenv('signing_key_alias')}")
+        secretProperties.setProperty("signing_key_password", "${System.getenv('signing_key_password')}")
+    }
+
+
     compileSdkVersion 29
     defaultConfig {
         applicationId "cz.vitskalicky.lepsirozvrh"
@@ -28,10 +45,19 @@ android {
         buildConfigField "Boolean", "ALLOW_SENTRY", "false"
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            storeFile file(secretProperties.getProperty("signing_keystore_location"))
+            storePassword secretProperties.getProperty("signing_keystore_password")
+            keyAlias secretProperties.getProperty("signing_key_alias")
+            keyPassword secretProperties.getProperty("signing_key_password")
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             debuggable true

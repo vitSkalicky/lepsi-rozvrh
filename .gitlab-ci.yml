@@ -1,0 +1,80 @@
+# This file is a template, and might need editing before it works on your project.
+# Read more about how to use this script on this blog post https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/
+# You will also need to configure your build.gradle, Dockerfile, and fastlane configuration to make this work.
+# If you are looking for a simpler template that does not publish, see the Android template.
+
+stages:
+  - environment
+  - build
+  - deploy
+
+.updateContainerJob:
+  image: docker:stable
+  stage: environment
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull --quiet $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+updateContainer:
+  extends: .updateContainerJob
+  only:
+    changes:
+      - Dockerfile
+
+ensureContainer:
+  extends: .updateContainerJob
+  allow_failure: true
+  before_script:
+    - "mkdir -p ~/.docker && echo '{\"experimental\": \"enabled\"}' > ~/.docker/config.json"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # Skip update container `script` if the container already exists
+    # via https://gitlab.com/gitlab-org/gitlab-foss/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
+    - docker manifest inspect $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
+
+
+.build_job:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build
+  before_script:
+    # We store this binary file in a variable as hex with this command: `xxd -p android-app.jks`
+    # Then we convert the hex back to a binary file
+    - echo "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.keystore
+    # todo: use for version numbering when you feel like it. For now, version number are signed manually.
+    # - "export VERSION_CODE=$CI_PIPELINE_IID && echo $VERSION_CODE"
+    # - "export VERSION_SHA=`echo ${CI_COMMIT_SHA:0:8}` && echo $VERSION_SHA"
+  after_script:
+    - rm -f android-signing-keystore.keystore || true
+  artifacts:
+    paths:
+      - app/build/outputs
+
+# implement if nescessary
+#buildDebug:
+#  extends: .build_job
+#  script:
+#    - bundle exec fastlane buildDebug
+
+buildOfficial:
+  extends: .build_job
+  script:
+    - bundle exec fastlane buildRelease
+  environment:
+    name: production
+
+deployPlay:
+  # actually, this build and deploys to google play
+  extends: .build_job
+  stage: deploy
+  when: manual
+  before_script:
+    - echo $google_play_service_account_api_key_json > ~/google_play_api_key.json
+  script:
+    - bundle exec fastlane deployPlay
+  after_script:
+    - rm ~/google_play_api_key.json
+  environment:
+    name: production

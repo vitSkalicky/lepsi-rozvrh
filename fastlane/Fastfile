@@ -16,7 +16,7 @@
 default_platform(:android)
 
 platform :android do
-  desc "Deploy a new version to the Google Play"
+  desc "Build and deploy a new version to the Google Play internal track. Promotion to production is done manually from Google Play console"
   lane :deployPlay do
     gradle(
       task: "bundle",
@@ -26,7 +26,7 @@ platform :android do
     upload_to_play_store(track: "internal")
   end
 
-  desc "Deploy a new version to the Google Play"
+  desc "Builds a new release for fdroid or manual distribution"
   lane :buildRelease do
     gradle(
       task: "assemble",

@@ -16,16 +16,16 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## Android
-### android test
-```
-fastlane android test
-```
-Runs all the tests
 ### android deployPlay
 ```
 fastlane android deployPlay
 ```
-Deploy a new version to the Google Play
+Build and deploy a new version to the Google Play internal track. Promotion to production is done manually from Google Play console
+### android buildRelease
+```
+fastlane android buildRelease
+```
+Builds a new release for f-droid or manual distribution
 
 ----
 

@@ -62,6 +62,9 @@ buildOfficial:
   extends: .build_job
   script:
     - bundle exec fastlane buildRelease
+  only:
+    - master
+    - feat/fastlane-ci
   environment:
     name: production
 

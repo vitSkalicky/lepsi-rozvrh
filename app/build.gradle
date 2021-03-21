@@ -44,6 +44,12 @@ android {
          */
         buildConfigField "Boolean", "ALLOW_SENTRY", "false"
         multiDexEnabled true
+        //changes apk name
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Lepší rozvrh v${versionName.replace('.','-')} ${variant.name}.apk"
+            }
+        }
     }
     signingConfigs {
         release {
@@ -67,18 +73,16 @@ android {
     flavorDimensions "version"
     productFlavors {
         /**
-         * For almost anything.
-         *
-         * // it is named "defalt" because "default" is a keyword.
-         */
-        defalt {
+         * Use this flavour.
+        */
+        development {
             dimension "version"
         }
         /**
-         * For official fdroid releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
+         * For official releases only (f-droid and github/gitlab). Allows crash reports using Sentry, which is managed by Vít Skalický.
          * Crashes from your testing are not welcome there.
          */
-        fdroid {
+        official {
             dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }
@@ -87,7 +91,7 @@ android {
          *  Allows crash reports using Sentry, which is managed by Vít Skalický.
          *  Crashes from your testing are not welcome there.
          */
-        play{
+        play {
             dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }

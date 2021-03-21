@@ -34,8 +34,8 @@ android {
         applicationId "cz.vitskalicky.lepsirozvrh"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 19
-        versionName "1.7.3"
+        versionCode 24
+        versionName "1.8-test5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         /**
@@ -47,7 +47,7 @@ android {
         //changes apk name
         applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "Lepší rozvrh v${versionName.replace('.','-')} ${variant.name}.apk"
+                outputFileName = "Lepší rozvrh v${versionName.replace('.','-')}.apk"
             }
         }
     }
@@ -167,3 +167,11 @@ dependencies {
     playImplementation 'com.android.billingclient:billing:2.2.1'
 
 }
+
+/*task finalize {
+    doLast {
+        file("version_code.txt").text = versionCode
+    }
+}
+
+build.finalizedBy(finalize)*/

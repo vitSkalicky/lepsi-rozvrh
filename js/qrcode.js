@@ -627,7 +627,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	let velikost = Math.min(document.getElementsByClassName("entry")[0].offsetWidth || window.innerWidth,window.innerHeight) - 40;
 	
 	qrcode = new QRCode("qr-img", {
-		text: "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=null",
+		text: "https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info/?data=null",
 		width: velikost,
 		height: velikost,
 		correctLevel : QRCode.CorrectLevel.H
@@ -636,7 +636,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //add classes to links to be able to initiate lightboxes
     let elements = document.querySelectorAll('.qr-button');
     elements.forEach(element => {
-        element.setAttribute("href","javascript:showQR('" + 'https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=' + element.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim() + "')");
+        element.setAttribute("href","javascript:showQR('" + 'https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info/?data=' + element.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim() + "')");
     });
 
     //remove the clicked lightbox

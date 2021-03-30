@@ -38,7 +38,7 @@ qr-button: true
         let velikost = Math.min(document.getElementsByClassName("entry")[0].offsetWidth,window.innerHeight) - 40;
 
         let myQrcode = new QRCode("qr-code", {
-            text: "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=" + text,
+            text: "https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info/?data=" + text,
             width: velikost,
             height: velikost,
             correctLevel : QRCode.CorrectLevel.H

@@ -60,9 +60,26 @@ qr-button: true
     <a class="big-button qr-button" role="button">Zobrazit QR kód</a>
 </section>
 
+<!--
+    Pro přidání motivu vložte screenshot do složky themes a zkopírujte tento kód:
+<section>
+    <h2>(Jméno motivu)</h2>
+    <p>
+        (Popis motivu)
+    </p>
+    {% include local-image.html image="themes/(zazev screenshotu).png" class="theme-preview" width_frac=2 alt="screenshot" %}
+    <p class="theme-string">
+        (kód motivu - ten dlouhý text z url motivu)    
+    </p>
+    <a class="big-button copy-button" role="button" href="javascript:kopirovat()" >Kopírovat</a><span> </span>
+    <a class="big-button import-button" role="button" href="javascript:alert('Něco se nepovedlo. Kontaktujte prosím vývojáře na lepsi-rozvrh@email.cz')">Importovat do Lepšího rovrhu</a>
+    <a class="big-button qr-button" role="button">Zobrazit QR kód</a>
+</section>
+-->
+
 <h2>Chcete zde i svůj motiv?</h2>
 <p>
-    Máte nějaký úžasný motiv, který si myslíte, že si zaslouží být na této stránce? Nebojte se mi ho poslat na <a href="mailto:lepsi-rozvrh@email.cz">lepsi-rozvrh@email.cz</a> nebo stránku přímo <a href="https://github.com/vitSkalicky/lepsi-rozvrh/blob/gh-pages/motivy.html">upravte na GitHubu</a>. Vřele uvítám jakékoliv příspěvky a na této stránce je místa dost.
+    Máte nějaký úžasný motiv, který si myslíte, že si zaslouží být na této stránce? Nebojte se mi ho poslat na <a href="mailto:lepsi-rozvrh@email.cz">lepsi-rozvrh@email.cz</a> nebo stránku přímo <a href="{{ site.repo }}blob/webpages/motivy.html">upravte na GitLabu</a>. Vřele uvítám jakékoliv příspěvky a na této stránce je místa dost.
 </p>
 
 <script src="{{ site.baseurl }}/js/copy-button.js"></script>

@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function() {
     var i;
     for (i = 0; i < import_bs.length; i++) {
         var item = import_bs[i];
-        //item.setAttribute("href", "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info?data=" + item.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim().split('+').join('-').split('/').join('_'))
-        item.setAttribute("href", "https://vitskalicky.github.io/lepsi-rozvrh/motiv-info/?data=" + item.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim().split('+').join('-').split('/').join('_'))
+        //item.setAttribute("href", "https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info?data=" + item.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim().split('+').join('-').split('/').join('_'))
+        item.setAttribute("href", "https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info/?data=" + item.closest("section").getElementsByClassName("theme-string")[0].innerHTML.trim().split('+').join('-').split('/').join('_'))
     }
 
     /*var dialogdiv = document.createElement("div");

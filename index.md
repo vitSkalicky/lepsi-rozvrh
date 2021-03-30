@@ -20,7 +20,6 @@ Lepší rozvrh je dostupný z několika zdrojů:
 <a href="https://f-droid.org/packages/cz.vitskalicky.lepsirozvrh">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png" alt="Get it on F-Droid" height="80px">
 </a>
-<a href="https://github.com/vitSkalicky/lepsi-rozvrh/releases/tag/{{ site.git-tag }}"><i class="svg-icon github" style="height: 80px; width: 80px; background-size: cover;"></i></a>
 
 ## Hlavní funkce
 
@@ -35,15 +34,15 @@ Lepší rozvrh je dostupný z několika zdrojů:
 ## Snímky obrazovky
 
 <p class="gallery-box clearfix">
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%201.png" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%202.png" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%203.png" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%207.png" class="half" width_frac="2" %}
-{% include screenshot-gallery-image.html image="phoneScreenshots/screenshot%208.png" class="half" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/1_cs-CZ.png" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/2_cs-CZ.png" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/3_cs-CZ.png" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/7_cs-CZ.png" class="half" width_frac="2" %}
+{% include screenshot-gallery-image.html image="phoneScreenshots/8_cs-CZ.png" class="half" width_frac="2" %}
 </p>
 
 ## Licence a zdrojový kód
 
-Lepší rozvrh je svobodný sofware s otevřeným zdrojovým kódem dostupný pod licencí [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). To znamená, že jej můžete libovolně studovat, upravovat a vylepšené verze dále šířit (ale musíte zachovat licenci). Zdrojový kód naleznete na [GitHubu](https://github.com/vitSkalicky/lepsi-rozvrh).
+Lepší rozvrh je svobodný sofware s otevřeným zdrojovým kódem dostupný pod licencí [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). To znamená, že jej můžete libovolně studovat, upravovat a vylepšené verze dále šířit (ale musíte zachovat licenci). Zdrojový kód naleznete na [GitLabu]({{ site.repo }}).
 
 Text stránek a snímky obrazovky jsou k dispozici pod licencí [Creative Commons Uveďte původ-Zachovejte licenci 4.0 Mezinárodní](https://creativecommons.org/licenses/by-sa/4.0/deed.cs).

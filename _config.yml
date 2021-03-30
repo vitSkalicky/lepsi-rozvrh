@@ -9,7 +9,7 @@ name: Lepší rozvrh
 description: Rychlejší aplikace pro rozvrh systému Bakaláři
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: https://raw.githubusercontent.com/vitSkalicky/lepsi-rozvrh/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+avatar: https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/raw/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
 git-tag: v1.7
 
@@ -23,7 +23,8 @@ footer-links:
   email: lepsi-rozvrh@email.cz
   facebook:
   flickr:
-  github: vitSkalicky/lepsi-rozvrh
+  github:
+  gitlab: vitSkalicky/lepsi-rozvrh
   instagram:
   linkedin:
   pinterest:
@@ -43,13 +44,16 @@ google_analytics:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url: https://vitskalicky.github.io/lepsi-rozvrh/
+url: https://vitskalicky.gitlab.io/lepsi-rozvrh/
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
 # and NOT your User repository (http://yourusername.github.io)
 # then add in the baseurl here, like this: "/repository-name"
 baseurl: "/lepsi-rozvrh"
+
+# Gitlab repository
+repo: "https://gitlab.com/vitSkalicky/lepsi-rozvrh/"
 
 #
 # !! You don't need to change any of the configuration flags below !!

@@ -1,0 +1,1 @@
+- Opravena chyba, která způsobovala pád aplikace při zobrazování zvláštních rozvrhů.

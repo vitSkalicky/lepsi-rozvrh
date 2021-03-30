@@ -26,7 +26,7 @@ platform :android do
     upload_to_play_store(track: "internal")
   end
 
-  desc "Builds a new release for f-droid or manual distribution"
+  desc "Builds a new release for f-droid or official manual distribution. If using yourself, please change flavor below from 'Official' to 'Development'."
   lane :buildRelease do
     gradle(
       task: "assemble",

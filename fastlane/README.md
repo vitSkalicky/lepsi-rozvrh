@@ -25,7 +25,12 @@ Build and deploy a new version to the Google Play internal track. Promotion to p
 ```
 fastlane android buildRelease
 ```
-Builds a new release for f-droid or manual distribution
+Builds a new release for f-droid or official manual distribution. If using yourself, please change flavor below from 'Official' to 'Development'.
+### android buildDebug
+```
+fastlane android buildDebug
+```
+Builds a debug apk
 
 ----
 

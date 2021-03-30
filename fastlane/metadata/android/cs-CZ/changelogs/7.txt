@@ -1,0 +1,2 @@
+- Přidána funkce trvalého upozornění, díky které máte Vaši příští hodinu vždy na očích.
+- Drobné zkrášlení nastavení na starších zařízeních.

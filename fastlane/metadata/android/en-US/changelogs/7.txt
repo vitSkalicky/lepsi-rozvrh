@@ -1,0 +1,2 @@
+- Added a persistent notification feature, thanks to which you don't have to open the any more!
+- Slight improvement of the look of settings on older devices.

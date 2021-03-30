@@ -1,0 +1,3 @@
+- Schedule now scrolls to current lesson on app start.
+- Changed icon for showing current week.
+- Improved feedback button.

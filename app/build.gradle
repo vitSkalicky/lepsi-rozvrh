@@ -12,13 +12,30 @@ android {
         }
         return stdout.toString().trim()
     }
+
+    // Try reading secrets from file
+    def secretsPropertiesFile = rootProject.file("secrets.properties")
+    def secretProperties = new Properties()
+
+    if (secretsPropertiesFile.exists()) {
+        secretProperties.load(new FileInputStream(secretsPropertiesFile))
+    }
+    // Otherwise read from environment variables, this happens in CI
+    else {
+        secretProperties.setProperty("signing_keystore_location", "${System.getenv('signing_keystore_location')}")
+        secretProperties.setProperty("signing_keystore_password", "${System.getenv('signing_keystore_password')}")
+        secretProperties.setProperty("signing_key_alias", "${System.getenv('signing_key_alias')}")
+        secretProperties.setProperty("signing_key_password", "${System.getenv('signing_key_password')}")
+    }
+
+
     compileSdkVersion 29
     defaultConfig {
         applicationId "cz.vitskalicky.lepsirozvrh"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 19
-        versionName "1.7.3"
+        versionCode 24
+        versionName "1.8-test5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         /**
@@ -27,32 +44,46 @@ android {
          */
         buildConfigField "Boolean", "ALLOW_SENTRY", "false"
         multiDexEnabled true
+        //changes apk name
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Lepší rozvrh v${versionName.replace('.','-')}.apk"
+            }
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file(secretProperties.getProperty("signing_keystore_location"))
+            storePassword secretProperties.getProperty("signing_keystore_password")
+            keyAlias secretProperties.getProperty("signing_key_alias")
+            keyPassword secretProperties.getProperty("signing_key_password")
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             debuggable true
             buildConfigField "Boolean", "ALLOW_SENTRY", "false"
+            versionNameSuffix ".debug_${getGitHash()}"
         }
     }
     flavorDimensions "version"
     productFlavors {
         /**
-         * For almost anything.
-         *
-         * // it is named "defalt" because "default" is a keyword.
-         */
-        defalt {
+         * Use this flavour.
+        */
+        development {
             dimension "version"
         }
         /**
-         * For official fdroid releases only. Allows crash reports using Sentry, which is managed by Vít Skalický.
+         * For official releases only (f-droid and github/gitlab). Allows crash reports using Sentry, which is managed by Vít Skalický.
          * Crashes from your testing are not welcome there.
          */
-        fdroid {
+        official {
             dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }
@@ -61,7 +92,7 @@ android {
          *  Allows crash reports using Sentry, which is managed by Vít Skalický.
          *  Crashes from your testing are not welcome there.
          */
-        play{
+        play {
             dimension "version"
             buildConfigField "Boolean", "ALLOW_SENTRY", "true"
         }

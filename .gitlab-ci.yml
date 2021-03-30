@@ -1,0 +1,133 @@
+# This file is a template, and might need editing before it works on your project.
+# Read more about how to use this script on this blog post https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/
+# You will also need to configure your build.gradle, Dockerfile, and fastlane configuration to make this work.
+# If you are looking for a simpler template that does not publish, see the Android template.
+
+stages:
+  - environment
+  - build
+  - deploy
+
+.updateContainerJob:
+  image: docker:stable
+  stage: environment
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull --quiet $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  except:
+    - tags
+
+updateContainer:
+  extends: .updateContainerJob
+  only:
+    refs:
+      - master
+    changes:
+      - Dockerfile
+
+ensureContainer:
+  extends: .updateContainerJob
+  only:
+    - master
+  allow_failure: true
+  before_script:
+    - "mkdir -p ~/.docker && echo '{\"experimental\": \"enabled\"}' > ~/.docker/config.json"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # Skip update container `script` if the container already exists
+    # via https://gitlab.com/gitlab-org/gitlab-foss/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
+    - docker manifest inspect $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
+
+manualContainer:
+  extends: .updateContainerJob
+  when: manual
+
+.build_job:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build
+  before_script:
+    # We store this binary file in a variable as hex with this command: `xxd -p android-app.keystore`
+    # Then we convert the hex back to a binary file
+    - echo "$signing_keystore_file_hex" | xxd -r -p - > android-signing-keystore.keystore    
+  after_script:
+    - rm -f android-signing-keystore.keystore || true
+    # finds all outputs and extracts their verison name and code to text file next to them
+    - find app/build/outputs/apk -name "output.json" -execdir bash -c "jq -r '.[0].apkData.versionCode' {} > ./version_code.txt" \;
+    - find app/build/outputs/apk -name "output.json" -execdir bash -c "jq -r '.[0].apkData.versionName' {} > ./version_name.txt" \;
+  artifacts:
+    paths:
+      - app/build/outputs
+  except:
+    - tags
+
+# implement if nescessary
+buildDebug:
+  extends: .build_job
+  when: manual
+  script:
+    - bundle exec fastlane buildDebug
+  environment:
+    name: development
+
+buildOfficial:
+  extends: .build_job
+  script:
+    - message="Hey! if you forked this project and want to use this CI, you want to change gradle flavour from "Official" to "Development" (do this in ./fastlane/Fastfile > lane "buildRelease") or change Sentry URL in MainApplication.kt > fun enableSentry(). Otherwise I would get your crashes in reports for the official app. Sincerely, Vít Skalický"
+    # After you changed the build type or sentry URL, you can remove the following line
+    - test $CI_PROJECT_URL = https://gitlab.com/vitSkalicky/lepsi-rozvrh || (echo "$message" && exit 1)
+    - bundle exec fastlane buildRelease
+  only:
+    - master
+  environment:
+    name: production
+
+deployPlay:
+  # actually, this build and deploys to google play
+  extends: .build_job
+  stage: build
+  when: manual
+  only:
+    - master
+  script:
+    - echo $google_play_service_account_api_key_json > ../fastlaneGPlayServiceAccountKey.json
+    - bundle exec fastlane deployPlay
+    - rm ../fastlaneGPlayServiceAccountKey.json
+  environment:
+    name: productionPlay
+
+createRelease:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: deploy
+  only:
+    - master
+  except:
+    - tags
+  needs:
+    - job: buildOfficial
+      artifacts: true
+  script:
+    - version_code=$(cat app/build/outputs/apk/official/release/version_code.txt)
+    - version_name=$(cat app/build/outputs/apk/official/release/version_name.txt)
+    
+    - echo $(cat fastlane/metadata/android/cs-CZ/changelogs/$version_code.txt) > description.txt
+    - echo "" >> description.txt
+    - echo "-----" >> description.txt
+    - echo "" >> description.txt
+    - echo $(cat fastlane/metadata/android/en-US/changelogs/$version_code.txt) >> description.txt
+
+    - cd app/build/outputs/apk/official/release/
+    - apk_name=$(ls *.apk)
+    - cd ../../../../../../
+
+    - apk_url=$CI_JOB_URL/artifacts/raw/app/build/outputs/apk/official/release/$apk_name?inline=false
+
+    - release-cli create --name "v$version_name" --description "$(cat description.txt)" --tag-name "v$version_name" --ref "$CI_COMMIT_SHA" --assets-link "{\"name\":\"$apk_name\",\"url\":\"$apk_url\",\"link_type\":\"other\"}"
+  artifacts:
+    paths:
+      - app/build/outputs
+    expire_in: never
+  
+

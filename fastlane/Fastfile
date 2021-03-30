@@ -1,0 +1,46 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Build and deploy a new version to the Google Play internal track. Promotion to production is done manually from Google Play console"
+  lane :deployPlay do
+    gradle(
+      task: "bundle",
+      flavor: "Play",
+      build_type: "Release"
+    )
+    upload_to_play_store(track: "internal")
+  end
+
+  desc "Builds a new release for f-droid or official manual distribution. If using yourself, please change flavor below from 'Official' to 'Development'."
+  lane :buildRelease do
+    gradle(
+      task: "assemble",
+      flavor: "Official",
+      build_type: "Release"
+    )
+  end
+
+  desc "Builds a debug apk"
+  lane :buildDebug do
+    gradle(
+      task: "assemble",
+      flavor: "Development",
+      build_type: "Debug"
+    )
+  end
+end

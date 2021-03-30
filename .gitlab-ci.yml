@@ -27,4 +27,4 @@ pages:
     paths:
       - public
   only:
-    - gh-pages
+    - webpages

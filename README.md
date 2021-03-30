@@ -32,14 +32,12 @@ Pokud nemáte přístup k serveru Bakalářů, můžete použít [jednoduchý te
 
 ## Licence
 
-Lepší rozvrh je *[svobodný software][1]* licencovaný pod licencí [GPLv3][2], což znamená, že
+Lepší rozvrh je *svobodný software* (free and open source software) licencovaný pod licencí [GPLv3][1], což znamená, že
 
 - můžete aplikaci používat jakkoliv chcete
 - studovat zdrojový kód a upravovat ho jakkoliv chcete
 - sdílet s kýmkoliv chcete
 - šířit vaše úpravy, ale musíte zachovat licenci (aby se uchovala svoboda této aplikace)
-
-Pokud se chcete dozvědět více o tom, co *svobodný software* znamená a jaké má výhody, přečtěte si jeho [definici][1].
 
 # Better schedule
 
@@ -66,13 +64,11 @@ If you don't have access to any Bakaláři server you can use a [simple testing 
 
 ## Licence
 
-Better Schedule is a *[free software][3]* (not just a freeware) licensed under [GPLv3][2].
+Better Schedule is a *free and open source software* (not just a freeware) licensed under [GPLv3][1].
 
 # Screenshots
 
-<img src="fastlane/metadata/android/en/images/phoneScreenshots/screenshot%201.png" width="500px">
-<img src="fastlane/metadata/android/en/images/phoneScreenshots/screenshot%202.png" width="500px">
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="500px">
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" width="500px">
 
-[1]: https://www.gnu.org/philosophy/free-sw.cs.html
-[2]: https://www.gnu.org/licenses/gpl-3.0.en.html
-[3]: https://www.gnu.org/philosophy/free-sw.en.html
+[1]: https://www.gnu.org/licenses/gpl-3.0.en.html

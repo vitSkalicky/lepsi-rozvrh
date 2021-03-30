@@ -68,6 +68,7 @@ android {
         debug {
             debuggable true
             buildConfigField "Boolean", "ALLOW_SENTRY", "false"
+            versionNameSuffix ".debug_${getGitHash()}"
         }
     }
     flavorDimensions "version"
@@ -167,11 +168,3 @@ dependencies {
     playImplementation 'com.android.billingclient:billing:2.2.1'
 
 }
-
-/*task finalize {
-    doLast {
-        file("version_code.txt").text = versionCode
-    }
-}
-
-build.finalizedBy(finalize)*/

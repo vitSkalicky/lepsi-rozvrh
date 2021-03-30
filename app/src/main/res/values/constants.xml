@@ -21,8 +21,8 @@
     <string name="PREFS_RESTORE_PURCHASES" translatable="false">prefs-restore-purchases</string>
     <string name="CONTACT_MAIL" translatable="false">lepsi-rozvrh@email.cz</string>
     <string name="PREFS_OSS_LICENCES" translatable="false">prefs-oss-licences</string>
-    <string name="GITHUB_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh</string>
-    <string name="PRIVACY_POLICY_LINK" translatable="false">https://github.com/vitSkalicky/lepsi-rozvrh/blob/master/Z%C3%A1sady%20ochrany%20soukrom%C3%AD.md</string>
+    <string name="GITLAB_LINK" translatable="false">https://gitlab.com/vitSkalicky/lepsi-rozvrh</string>
+    <string name="PRIVACY_POLICY_LINK" translatable="false">https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/blob/master/Z%C3%A1sady%20ochrany%20soukrom%C3%AD.md</string>
     <string name="THEME_CHANGED" translatable="false">theme-changed</string>
     <string name="PREFS_FOLLOW_SYSTEM_THEME" translatable="false">prefs-follow-system-theme</string>]
     <!-- When following system theme set this to true if dark theme is applied-->

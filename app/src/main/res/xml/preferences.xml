@@ -57,7 +57,7 @@
             android:icon="@drawable/ic_web_black_24dp">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/GITHUB_LINK" />
+                android:data="@string/GITLAB_LINK" />
         </Preference>
         <Preference
             android:key="@string/PREFS_SEND_FEEDBACK"

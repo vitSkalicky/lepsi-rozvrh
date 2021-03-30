@@ -22,14 +22,6 @@ aplikace.
 - Motivy - světlý, tmavý nebo Váš vlastní.
 - Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
 
-## Testovací server
-
-Pokud nemáte přístup k serveru Bakalářů, můžete použít [jednoduchý testovací server](https://github.com/vitSkalicky/lepsi-rozvrh-test-server). Stačí zadat následující přihlašovací údaje:
-
-- Přihlašovací jméno: cokoliv
-- Heslo: cokoliv
-- Adresa serveru: [https://lepsi-rozvrh-test-server.herokuapp.com/](https://lepsi-rozvrh-test-server.herokuapp.com/)
-
 ## Licence
 
 Lepší rozvrh je *svobodný software* (free and open source software) licencovaný pod licencí [GPLv3][1], což znamená, že
@@ -53,14 +45,6 @@ because I am annoyed by the slowness of the the official app.
 - Simple interface — Easy switching between weeks.
 - Themes - light, dark or your very own custom theme.
 - Free and open source software — No ads, no spying, free, forever.
-
-## Testing server
-
-If you don't have access to any Bakaláři server you can use a [simple testing server](https://github.com/vitSkalicky/lepsi-rozvrh-test-server). Just enter the following credentials:
-
-- User name: anything
-- Password: anything
-- Server address: [https://lepsi-rozvrh-test-server.herokuapp.com/](https://lepsi-rozvrh-test-server.herokuapp.com/)
 
 ## Licence
 

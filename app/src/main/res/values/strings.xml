@@ -82,7 +82,7 @@
     <string name="export_theme_detail">The following text contains all data about your current theme. Send it to your friends to share your amazing design skills with them!</string>
     <string name="import_theme">Import theme</string>
     <string name="import_theme_desc">Import theme from a text generated using the button above</string>
-    <string name="import_theme_detail">Paste text generated using the \'export theme\' feature here. Get one from your friends or at <a href="https://vitskalicky.github.io/lepsi-rozvrh/motivy">https://vitskalicky.github.io/lepsi-rozvrh/motivy</a></string>
+    <string name="import_theme_detail">Paste text generated using the \'export theme\' feature here. Get one from your friends or at <a href="https://vitskalicky.gitlab.io/lepsi-rozvrh/motivy/">https://vitskalicky.gitlab.io/lepsi-rozvrh/motivy/</a></string>
     <string name="import_invalid">Invalid data. Make sure you haven\'t missed any letters at the end.</string>
     <string name="copy_to_clipboard">Copy</string>
     <string name="paste_from_clipboard">Paste from clipboard</string>
@@ -163,7 +163,7 @@
 
     <string name="about">About</string>
     <string name="source_code">Source code</string>
-    <string name="source_code_desc">Visit GitHub page</string>
+    <string name="source_code_desc">Visit GitLab page</string>
     <string name="feedback">Send feedback</string>
     <string name="feedback_desc">Report a bug, ask a question, etc.</string>
     <string name="send_crash">Send crash reports</string>

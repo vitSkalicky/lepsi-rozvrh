@@ -2,7 +2,7 @@ Lepší rozvrh je rychlejší a přehlednější aplikace pro rozvrh systému Ba
 
 Jsem student, kterého nebavilo čekat na oficiální aplikaci Bakalářů než se uráčí načíst rozvrh na pomalé školní WiFi, tak jsem to vzal do svých rukou. Lepší rozvrh si Váš rozvrh pamatuje i bez internetu, takže jej ukáže během okamžiku. Jednoduché a srozumitelné rozhraní usnadňuje orientaci mezi týdny a díky trvalému upozornění se Vaší další hodinu dozvíte už ze zamčené obrazovky!
 
-Celá aplikace je svobodný software s otevřeným zdrojovým kódem. Pokud chcete navrhnou novou funkci, podívat se, jak všechno funguje nebo umíte programovat a chcete aplikaci vylepšit, navštivte GitHub https://github.com/vitSkalicky/lepsi-rozvrh
+Celá aplikace je svobodný software s otevřeným zdrojovým kódem. Pokud chcete navrhnou novou funkci, podívat se, jak všechno funguje nebo umíte programovat a chcete aplikaci vylepšit, navštivte GitLab https://gitlab.com/vitSkalicky/lepsi-rozvrh
 
 Hlavní funkce:
 • Velmi rychlé zobrazení rozvrhu — Kombinuje offline a online data, aby se rozvrh zobrazil do vteřiny.

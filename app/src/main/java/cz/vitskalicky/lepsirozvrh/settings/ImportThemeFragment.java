@@ -103,7 +103,7 @@ public class ImportThemeFragment extends Fragment {
             ThemeData td = null;
             String original = editTextData.getText().toString().replaceAll("\\s",""); //remove all whitespaces
             String input = original;
-            if (input.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv-info")){
+            if (input.startsWith("https://vitskalicky.github.io/lepsi-rozvrh/motiv-info") || input.startsWith("https://vitskalicky.gitlab.io/lepsi-rozvrh/motiv-info")){
                 Uri uri = Uri.parse(input);
                 input = uri.getQueryParameter("data");
             } else if (input.startsWith("lepsi-rozvrh:motiv/")){

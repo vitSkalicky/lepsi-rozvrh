@@ -82,7 +82,7 @@
     <string name="export_theme_detail">Text níže obsahuje všechna data aktuálního motivu. Pošli ho svým kamarádům, abys s nimi sdílel tvé úžasné designerské dovednosti!</string>
     <string name="import_theme">Importovat motiv</string>
     <string name="import_theme_desc">Naimportuje motiv ze speciálního textu vytvořeného tlačítkem výše</string>
-    <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na <a href="https://vitskalicky.github.io/lepsi-rozvrh/motivy">https://vitskalicky.github.io/lepsi-rozvrh/motivy</a></string>
+    <string name="import_theme_detail">Vložte sem text vytvořený pomocí \"Exportovat motiv\". Sežeňte si nějaký od kamaráda nebo na <a href="https://vitskalicky.gitlab.io/lepsi-rozvrh/motivy/">https://vitskalicky.gitlab.io/lepsi-rozvrh/motivy/</a></string>
     <string name="import_invalid">Neplatná data. Ujistěte se, že nevytratily žádné znaky na začátku ani na konci.</string>
     <string name="copy_to_clipboard">Kopírovat</string>
     <string name="paste_from_clipboard">Vložit ze schránky</string>
@@ -163,7 +163,7 @@
 
     <string name="about">O aplikaci</string>
     <string name="source_code">Zdrojový kód</string>
-    <string name="source_code_desc">Navštivte stránku aplikace na GitHubu</string>
+    <string name="source_code_desc">Navštivte stránku aplikace na GitLabu</string>
     <string name="feedback">Napsat autorovi</string>
     <string name="feedback_desc">Nahlaste chybu, zeptejte se na něco, atd.</string>
     <string name="send_crash">Odesílat hlášení o chybách</string>

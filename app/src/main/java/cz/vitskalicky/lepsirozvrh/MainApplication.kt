@@ -143,6 +143,10 @@ class MainApplication : MultiDexApplication() {
         RozvrhStatusStore()
     }
 
+    val debugUtils: DebugUtils by lazy {
+        DebugUtils(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
 

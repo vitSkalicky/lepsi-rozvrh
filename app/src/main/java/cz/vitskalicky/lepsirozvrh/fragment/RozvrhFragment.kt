@@ -136,10 +136,11 @@ class RozvrhFragment : Fragment() {
 
         ibSettings.setOnLongClickListener { v: View? ->
             if (BuildConfig.DEBUG) {
-                SharedPrefs.setString(context, SharedPrefs.SEMESTER_END, ISODateTimeFormat.dateTime().print(DateTime.now().minusWeeks(1)))
-                SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, "afddfgdf")
-                SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, "afddfgdf")
-                DebugUtils.getInstance(context).isDemoMode = !DebugUtils.getInstance(context).isDemoMode
+                //SharedPrefs.setString(context, SharedPrefs.SEMESTER_END, ISODateTimeFormat.dateTime().print(DateTime.now().minusWeeks(1)))
+                //SharedPrefs.setString(context, SharedPrefs.ACCEESS_TOKEN, "afddfgdf")
+                //SharedPrefs.setString(context, SharedPrefs.REFRESH_TOKEN, "afddfgdf")
+                val du = (requireContext().applicationContext as MainApplication).debugUtils;
+                du.isDemoMode = !du.isDemoMode
                 Toast.makeText(context, "Demo mode changed", Toast.LENGTH_SHORT).show()
                 return@setOnLongClickListener true
             } else {

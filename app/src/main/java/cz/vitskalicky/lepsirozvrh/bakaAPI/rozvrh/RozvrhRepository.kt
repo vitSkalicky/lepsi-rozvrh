@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.fasterxml.jackson.databind.JsonMappingException
+import cz.vitskalicky.lepsirozvrh.DebugUtils
 import cz.vitskalicky.lepsirozvrh.MainApplication
 import cz.vitskalicky.lepsirozvrh.Utils
 import cz.vitskalicky.lepsirozvrh.bakaAPI.login.LoginRequiredException
@@ -22,6 +23,7 @@ import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 import retrofit2.HttpException
 import java.io.IOException
+import kotlin.random.Random
 
 class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
     private val application: MainApplication = context.applicationContext as MainApplication
@@ -145,7 +147,16 @@ class RozvrhRepository(context: Context, scope: CoroutineScope? = null) {
             statusStr[rozvrhId] = RozvrhStatus.loading()
         }
         val rozvrh3: Rozvrh3 = try {
-            application.webservice?.getSchedule(rozvrhId) ?: throw IOException("Webservice not ready")
+            //check for demo mode
+            if (application.debugUtils.isDemoMode){
+                //simulate slow net
+                delay(Random.nextLong(3000))
+                //return demo rozvrh
+                application.debugUtils.getDemoRozvrh3(rozvrhId)
+            }else{
+                //download true from server
+                application.webservice?.getSchedule(rozvrhId) ?: throw IOException("Webservice not ready")
+            }
         }catch (e: HttpException){
             if (e.code() == 401) //unauthorized
                 throw LoginRequiredException()

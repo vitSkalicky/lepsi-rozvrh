@@ -111,23 +111,25 @@ object RozvrhConverter {
                 Rozvrh.PERM.plusDays(item.dayOfWeek - 1)
             }
             var event: String? = null
-            if (item.dayDescription.isNotBlank()){
-                event = item.dayDescription
-            }else if (item.dayType.isNotBlank()){
-                val dayType: Int? = dayTypes[item.dayType]
-                if (dayType == null){
-                    //report unknown day type
-                    //prevent spam
-                    if (sendUnknownDayTypeReport){
-                        sendUnknownDayTypeReport = false
-                        Sentry.capture("Unknown day type: ${item.dayType}")
-                    }
-                    event = null
-                }else{
-                    if (dayType == R.string.day_type_workday){
+            if (monday != Rozvrh.PERM){ //events in permanent schedule are ignored to "fix" a bug in Bakaláři API which puts celebration events into permanent schedule. You cannot have holiday in permanent schedule.
+                if (item.dayDescription.isNotBlank()){
+                    event = item.dayDescription
+                }else if (item.dayType.isNotBlank()){
+                    val dayType: Int? = dayTypes[item.dayType]
+                    if (dayType == null){
+                        //report unknown day type
+                        //prevent spam
+                        if (sendUnknownDayTypeReport){
+                            sendUnknownDayTypeReport = false
+                            Sentry.capture("Unknown day type: ${item.dayType}")
+                        }
                         event = null
                     }else{
-                        event = context.getString(dayType)
+                        if (dayType == R.string.day_type_workday){
+                            event = null
+                        }else{
+                            event = context.getString(dayType)
+                        }
                     }
                 }
             }

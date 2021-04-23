@@ -46,6 +46,15 @@
         <div class="container">
           <footer class="footer">
             {% include svg-icons.html %}
+            {% if page.gplay == true %}
+            <p class="legal">
+              {% if page.lang == "en" %}
+              Google Play and the Google Play logo are trademarks of Google LLC.
+              {% else %}
+              Google Play a logo Google Play jsou ochranné známky společnosti Google LLC.
+              {% endif %}
+            </p>
+            {% endif %}
           </footer>
         </div>
       </div>

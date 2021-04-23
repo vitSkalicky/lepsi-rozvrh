@@ -1,6 +1,7 @@
 ---
 layout: default
 gallery: true
+gplay: true
 ---
 
 # Lepší rozvrh
@@ -15,10 +16,13 @@ aplikace.
 Lepší rozvrh je dostupný z několika zdrojů:
 
 <a href="https://play.google.com/store/apps/details?id=cz.vitskalicky.lepsirozvrh&utm_source=website&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-    <img alt='Nyní na Google Play' height="80px" src='https://play.google.com/intl/en_us/badges/static/images/badges/cs_badge_web_generic.png'/>
+    <img alt='Nyní na Google Play' height="80px" src='{{ site.baseurl }}/images/google-play-badge-cs.png'/>
 </a>
 <a href="https://f-droid.org/packages/cz.vitskalicky.lepsirozvrh">
-    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png" alt="Get it on F-Droid" height="80px">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png" alt="Nyní na F-Droid" height="80px">
+</a>
+<a href="https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/releases">
+    <img src="images/gitlab-logo-gray-rgb.svg" alt="Stahujte z GitLabu" height="80px">
 </a>
 
 ## Hlavní funkce
@@ -28,7 +32,7 @@ Lepší rozvrh je dostupný z několika zdrojů:
 - Trvalé upozornění — Kvůli další hodině už aplikaci ani nemusíte otevírat.
 - Stylový widget — Další hodina nebo přehled celého dne vždy na domovské obrazovce.
 - Přehledné rozhraní — Snadné a rychlé přepínání mezi týdny.
-- Motivy - světlý, tmavý nebo Váš vlastní.
+- Motivy - světlý, tmavý nebo Váš vlastní. Další motivy najdete [v sekci motivy]({{ site.baseurl }}/motivy)
 - Svobodný software — Žádné reklamy, žádné špehování, zdarma a navždy.
 
 ## Snímky obrazovky

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{% if page.lang %}{{ page.lang }}{% else %}cs{% endif %}">
+  <head>
+    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
+    <noscript><meta id="redirect" http-equiv="refresh" content="0; url={{ page.domain }}"></noscript>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        body {background-color: #222; color: #eee;}
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="flex-wrapper">    
+      <div id="main" role="main" class="container">
+        {% if page.lang == "en" %}
+        <p>Loading...</p>
+        <p>If nothing happens for a while, click <a id="manualLink" href="{{ page.domain }}">here</a></p>
+        {% else %}
+        <p>Načítání...</p>
+        <p>Pokud se dlouho nic neděje, klikněte <a id="manualLink" href="{{ page.domain }}">sem</a></p>
+        {% endif %}
+      </div>
+    
+  <!-- Redirect in JavaScript with meta refresh fallback above in noscript -->
+  <script>
+  let destination = '{{ page.domain }}'
+  let complete = destination + (window.location.search || '') + (window.location.hash || '');
+  document.getElementById('manualLink').href = complete
+  window.location.href = complete;
+  </script>
+  </body>
+</html>

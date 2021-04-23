@@ -30,7 +30,7 @@ qr-button: true
     }
 
     var text = getParameterByName("data");
-    text =text.split('<').join('').split('>').join();
+    text =text.split('<').join('').split('>').join('');
     document.querySelector(".theme-string").innerHTML = text;
 
     document.addEventListener("DOMContentLoaded", function() {

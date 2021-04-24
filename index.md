@@ -15,15 +15,10 @@ aplikace.
 
 Lepší rozvrh je dostupný z několika zdrojů:
 
-<a href="https://play.google.com/store/apps/details?id=cz.vitskalicky.lepsirozvrh&utm_source=website&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-    <img alt='Nyní na Google Play' height="80px" src='{{ site.baseurl }}/images/google-play-badge-cs.png'/>
-</a>
-<a href="https://f-droid.org/packages/cz.vitskalicky.lepsirozvrh">
-    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png" alt="Nyní na F-Droid" height="80px">
-</a>
-<a href="https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/releases">
-    <img src="images/gitlab-logo-gray-rgb.svg" alt="Stahujte z GitLabu" height="80px">
-</a>
+<!-- Do not put any whitespace around the images in the <a> because it would get underlined on hover-->
+<a href="https://play.google.com/store/apps/details?id=cz.vitskalicky.lepsirozvrh&utm_source=website&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt='Nyní na Google Play' height="80px" src='{{ site.baseurl }}/images/google-play-badge-cs.png'/></a>
+<a href="https://f-droid.org/packages/cz.vitskalicky.lepsirozvrh"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-cs.png" alt="Nyní na F-Droid" height="80px"></a>
+<a href="https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/releases"><img src="images/gitlab-logo-gray-rgb.svg" alt="Stahujte z GitLabu" height="80px"></a>
 
 ## Hlavní funkce
 

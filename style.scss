@@ -49,6 +49,10 @@ h1 {
   font-size: 30px;
   a {
     color: inherit;
+
+    &:hover, &:active {
+      text-decoration: none;
+    }
   }
 }
 
@@ -80,6 +84,7 @@ a {
   &:hover, &:active {
     color: $blue;
     outline: none;
+    text-decoration: underline;
   }
 }
 
@@ -238,7 +243,11 @@ nav {
     text-align: right;
     font-weight: 300;
     letter-spacing: 1px;
-
+     
+    &:hover, &:active {
+      text-decoration: none;
+    }
+    
     @include mobile {
       margin: 0 10px;
       color: $blue;

@@ -40,6 +40,19 @@ Better schedule can be downloaded from several sources:
 {% include screenshot-gallery-image.html image="phoneScreenshots/8_en-US.png" class="half" lang="en-US" width_frac="2" %}
 </p>
 
+## Testing server
+
+If you don't have any Bakaláři account you can try out Better Schedule using the [testing server](https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server).
+
+1. Open Better Schedule
+2. In school picker search and choose "Testovací server pro Lepší rozvrh"
+3. Username: `student`
+4. Password is the same as username
+
+⚠ Testing server may be very slow so you might need several attempts to log in the first time. I also logs you out after roughly an hour.
+
+Source code and more details on the testing server can be found here: [https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server](https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server)
+
 ## Licence and source code
 
 Better schedule is a [free and open source software](https://en.wikipedia.org/wiki/Free_software) licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) licence. This means that you can study the source code, modify and further share your modified version of this app. You can find the source code on [GitLab]({{ site.repo }}).

@@ -40,6 +40,19 @@ Lepší rozvrh je dostupný z několika zdrojů:
 {% include screenshot-gallery-image.html image="phoneScreenshots/8_cs-CZ.png" class="half" width_frac="2" %}
 </p>
 
+## Testovací server
+
+Pokud nemáte účet na žádném Bakaláři serveru, můžete Lepší rozvrh vyzkoušet pomocí [testovacího serveru](https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server).
+
+1. Otevřete Lepší rozvrh
+2. Ve výběru školy vyhledejte a vyberte "Testovací server pro Lepší rozvrh"
+3. Přihlašovací jméno: `student`
+4. Heslo je stejné jako přihlašovací jméno
+
+⚠ Testovací server může být velmi pomalý, takže se Vám nejspíše nepovede přihlásit napoprvé. Zároveň Vás přibližně po hodině odhlásí.
+
+Zdrojový kód a podrobnější instrukce k testovacímu serveru najdete zde: [https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server](https://gitlab.com/vitSkalicky/lepis-rozvrh-test-server)
+
 ## Licence a zdrojový kód
 
 Lepší rozvrh je svobodný sofware s otevřeným zdrojovým kódem dostupný pod licencí [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). To znamená, že jej můžete libovolně studovat, upravovat a vylepšené verze dále šířit (ale musíte zachovat licenci). Zdrojový kód naleznete na [GitLabu]({{ site.repo }}).

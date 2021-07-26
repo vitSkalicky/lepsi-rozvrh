@@ -1,11 +1,7 @@
-# Webové stránky lepšího rozvrh
+# Přesunuto na [GitLab](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/tree/webpages) / Moved to [GitLab](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/tree/webpages)
 
-Zde najdete zdrojový kód webových stránek Lepšího rozvrhu, které mimo jiné obsahují seznam dalších motivů pro Lepší rozvrh. Pokud chcete přidat svůj motiv, [upravte webovou stránku na Gitlabu](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/blob/webpages/motivy.html) nebo mi napište na [lepsi-rozvrh@email.cz](mailto:lepsi-rozvrh@email.cz).
+Lepší rozvrh byl přesunut na GitLab: [Webové stránky](https://vitskalicky.gitlab.io/lepsi-rozvrh/) / [Zdrojový kód webových stránek](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/tree/webpages) / [Zdrojový kód aplikace](https://gitlab.com/vitSkalicky/lepsi-rozvrh/)
 
-Stránky používají generátor statických stránek [Jekyll](https://jekyllrb.com/).
+Better schedule was moved to GitLab: [Website](https://vitskalicky.gitlab.io/lepsi-rozvrh/en) / [Website source code](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/tree/webpages) / [App source code](https://gitlab.com/vitSkalicky/lepsi-rozvrh/)
 
-# Better Schedule web pages
-
-Here you can find source code of the Better Schedule web pages, which also contain list of some other themes. If you would like to have your theme included, [edit the web page on Gitlab](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/blob/webpages/motivy.html) or write me at [lepsi-rozvrh@email.cz](mailto:lepsi-rozvrh@email.cz).
-
-The web pages use [Jekyll](https://jekyllrb.com/).
+[![GitLab](gitlab-logo-gray-rgb.svg)](https://gitlab.com/vitSkalicky/lepsi-rozvrh/-/tree/webpages)

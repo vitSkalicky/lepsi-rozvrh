@@ -1,8 +1,0 @@
-{% if include.width_frac %}
-    {% assign divider = include.width_frac %}
-{% else %}
-    {% assign divider = 3 %}
-{% endif %}
-<a {% if include.class %} class="{{ include.class }}" {% endif %} href="{{ site.repo }}-/raw/master/fastlane/metadata/android/{% if include.lang %}{{ include.lang }}{% else %}cs-CZ{% endif %}/images/{{ include.image }}">
-    <img alt="screenshot" srcset="https:////images.weserv.nl/?url={{ site.repo }}-/raw/master/fastlane/metadata/android/{% if include.lang %}{{ include.lang }}{% else %}cs-CZ{% endif %}/images/{{ include.image }}" >
-</a>

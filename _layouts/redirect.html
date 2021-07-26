@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="{% if page.lang %}{{ page.lang }}{% else %}cs{% endif %}">
   <head>
+    <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
     <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
-    <noscript><meta id="redirect" http-equiv="refresh" content="0; url={{ page.domain }}"></noscript>
+    <noscript><meta id="redirect" http-equiv="refresh" content="0; url={{ page.redirect-to }}"></noscript>
     <style>
       @media (prefers-color-scheme: dark) {
         body {background-color: #222; color: #eee;}
@@ -11,23 +16,22 @@
   </head>
 
   <body>
-    <div class="flex-wrapper">    
-      <div id="main" role="main" class="container">
-        {% if page.lang == "en" %}
-        <p>Loading...</p>
-        <p>If nothing happens for a while, click <a id="manualLink" href="{{ page.domain }}">here</a></p>
-        {% else %}
-        <p>Načítání...</p>
-        <p>Pokud se dlouho nic neděje, klikněte <a id="manualLink" href="{{ page.domain }}">sem</a></p>
-        {% endif %}
-      </div>
+    <main>
+      {% if page.lang == "en" %}
+      <p>Loading...</p>
+      <p>If nothing happens for a while, click <a id="manualLink" href="{{ page.redirect-to }}">here</a></p>
+      {% else %}
+      <p>Načítání...</p>
+      <p>Pokud se dlouho nic neděje, klikněte <a id="manualLink" href="{{ page.redirect-to }}">sem</a></p>
+      {% endif %}
+    </main>
     
-  <!-- Redirect in JavaScript with meta refresh fallback above in noscript -->
-  <script>
-  let destination = '{{ page.domain }}'
-  let complete = destination + (window.location.search || '') + (window.location.hash || '');
-  document.getElementById('manualLink').href = complete
-  window.location.href = complete;
-  </script>
+    <!-- Redirect in JavaScript with meta refresh fallback above in noscript -->
+    <script>
+      let destination = '{{ page.redirect-to }}'
+      let complete = destination + (window.location.search || '') + (window.location.hash || '');
+      document.getElementById('manualLink').href = complete
+      window.location.href = complete;
+    </script>
   </body>
 </html>
